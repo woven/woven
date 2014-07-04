@@ -6,33 +6,50 @@ import 'package:firebase/firebase.dart';
 var f = new Firebase('https://luminous-fire-4671.firebaseio.com');
 
 void main() {
-  querySelector('#HelloWorld').text = 'Hello world!';
+  querySelector('#doButton').onClick.listen(doStuff);
 
-  querySelector('#doStuff').onClick.listen(doStuff);
+  var doForm = querySelector('#doForm');
+  doForm.onSubmit.listen((e) {
+    print("Form was submitted...");
+  });
+
 
   print("Ready to roll...");
 
 
+  // Placeholder for when we want to do stuff after Polymer elements fully loaded
   initPolymer().run(() {
     // code here works most of the time
     Polymer.onReady.then((_) {
       // some things must wait until onReady callback is called
-      // for an example look at the discussion linked below
       print("Polymer ready...");
     });
   });
+
+
+  List inboxItems = new List();
+  print(f.onChildAdded);
+
+  f.onChildAdded.forEach((e) {
+    //TODO: Create my own list
+    print(e.snapshot.val());
+    inboxItems.add("Hi");
+  });
+
 }
 
-void doStuff(_) {
+
+doStuff(Event e) {
+  e.preventDefault();
+  DateTime now = new DateTime.now();
+  var message = querySelector('#messageInput').value;
+
   List items = querySelectorAll('.item-text');
   items.forEach((e) {
-    e..text = "Yay we did it!";
+    e..text = "New message: $message";
   });
 
   // Is the following stuff in the right place? It only seems to work properly here.
-  DateTime now = new DateTime.now();
-  var message = querySelector('#message').value;
-
   Future setTest(Firebase f) {
     //var setF = f.set({'date': '$now'});
     var pushRef = f.push();
@@ -42,3 +59,4 @@ void doStuff(_) {
 
   setTest(f);
 }
+

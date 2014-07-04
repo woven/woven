@@ -55,30 +55,12 @@
         font-weight: bold;
       }
     </style>
+    <template repeat="{{ item in items }}">
       <core-item icon="star" id="item_1" horizontal center layout class="item">
-        <div class="item-text" flex>Project Tracker – a way to see what's going on</div>
+        <div class="item-text" flex>New message: {{ item }}</div>
         <div class="item-updated">3d ago by Dave</div>
       </core-item>
-      <core-item icon="star" id="item_2" horizontal center layout class="item">
-        <div class="item-text" flex>Project Tracker – a wonderful way to see what's going on</div>
-        <div class="item-updated">3d ago by Bob Dylan</div>
-      </core-item>
-      <core-item icon="star" id="item_3" horizontal center layout class="item">
-        <div class="item-text" flex>Project Tracker – a way to see what's going on</div>
-        <div class="item-updated">3d ago by Dave</div>
-      </core-item>
-      <core-item icon="star" id="item_4" horizontal center layout class="item">
-        <div class="item-text" flex>Project Tracker – a way to see what's going on</div>
-        <div class="item-updated">3d ago by Frank</div>
-      </core-item>
-      <core-item icon="star" id="item_5" horizontal center layout class="item">
-        <div class="item-text" flex>Project Tracker – a way to see what's going on</div>
-        <div class="item-updated">3d ago by Dave</div>
-      </core-item>
-    <h3>Hello {{name}}!</h3>
-    Name: <input type="text" ng-model="name">
+    </template>
   </template>
-
-  <script type="application/dart" src="inbox-list.dart"></script>
-
+<script type="application/dart" src="inbox-list.dart"></script>
 </polymer-element>

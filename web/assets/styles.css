@@ -1,0 +1,51 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  transition: opacity ease-in 0.2s;
+  font-size: 85%;
+}
+
+#core_header_panel {
+  width: 300px;
+  height: 400px;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+}
+#core_scaffold {
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: green;
+}
+#core_toolbar {
+  color: rgb(255, 255, 255);
+  padding: 0px 0px 0px 8px;
+  background-color: rgb(24, 146, 25);
+}
+#core_menu {
+  font-size: 16px;
+}
+.item {
+  padding: 8px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(244, 244, 244);
+  background-color: white;
+}
+.item:hover {
+  cursor: pointer;
+  overflow: hidden;
+  background-color: rgb(244, 244, 244);
+}
+.item-text {
+  overflow: hidden;
+}
+.item-updated {
+  color: rgb(102, 102, 102);
+  margin: 0px 5px;
+  font-weight: bold;
+}
