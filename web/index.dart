@@ -22,18 +22,16 @@ void main() {
     // code here works most of the time
     Polymer.onReady.then((_) {
       // some things must wait until onReady callback is called
+
+      List inboxItems = (querySelector('inbox-list') as InboxList).inboxItems;
+
+      f.onChildAdded.forEach((e) {
+        print(e.snapshot.val());
+        inboxItems.add(e.snapshot.val());
+      });
+
       print("Polymer ready...");
     });
-  });
-
-
-  List inboxItems = new List();
-  print(f.onChildAdded);
-
-  f.onChildAdded.forEach((e) {
-    //TODO: Create my own list
-    print(e.snapshot.val());
-    inboxItems.add("Hi");
   });
 
 }
