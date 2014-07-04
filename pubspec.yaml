@@ -1,0 +1,12 @@
+name: woven-app
+version: 0.0.1
+dependencies:
+  #angular: any
+  #angular_node_bind: any
+  shadow_dom: any
+  browser: any
+  polymer: any
+  core_elements: ">=0.0.6 <0.1.0"
+  firebase: ">=0.1.0 <0.2.0"
+dependency_overrides:
+  browser: any
