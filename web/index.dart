@@ -2,6 +2,7 @@ import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
 import 'package:firebase/firebase.dart';
+import 'package:../../lib/components/inbox_list/inbox_list.dart';
 
 var f = new Firebase('https://luminous-fire-4671.firebaseio.com');
 
@@ -18,6 +19,7 @@ void main() {
 
 
   // Placeholder for when we want to do stuff after Polymer elements fully loaded
+  //TODO: What's a cleaner way to organize this?
   initPolymer().run(() {
     // code here works most of the time
     Polymer.onReady.then((_) {
