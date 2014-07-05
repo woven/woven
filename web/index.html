@@ -13,9 +13,10 @@
     <link rel="import" href="packages/core_elements/core_header_panel.html">
     <link rel="import" href="packages/core_elements/core_menu.html">
     <link rel="import" href="packages/core_elements/core_item.html">
-    <link rel="import" href="packages/core_elements/core_icon_button.html">
     <link rel="import" href="packages/core_elements/core_toolbar.html">
     <link rel="import" href="packages/core_elements/core_submenu.html">
+    <link rel="import" href="packages/core_elements/core_field.html">
+    <link rel="import" href="packages/core_elements/core_field.html">
     <link rel="import" href="../lib/components/inbox_list/inbox_list.html">
     <link rel="import" href="../lib/components/my_element/my_element.html">
     <link rel="stylesheet" href="assets/styles.css">
@@ -31,8 +32,10 @@
           <core-item label="Updates" icon="settings" id="core_item" horizontal center layout class="pointer" active></core-item>
           <p>
             <form method="post" id="doForm" on-submit="{{doStuff}}">
-              <input type="text" id="messageInput" placeholder="Your message">
-              <button id="doButton">Do stuff</button>
+              <core-item>
+                <input id="messageInput" placeholder="Your message" autocomplete="off" flex>
+                <button id="doButton">Do stuff</button>
+              </core-item>
             </form>
           </p>
         </core-menu>

@@ -49,3 +49,33 @@ body {
   margin: 0px 5px;
   font-weight: bold;
 }
+
+#messageInput {
+  border: 1px solid #ddd;
+  margin: 5px;
+  padding: 2px 5px;
+  height: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  outline: none;
+}
+
+button {
+  border-radius: 2px;
+  background-color: white;
+  border: solid 1px #EEEEEE;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px 10px;
+  height: 27px;
+}
+
+button:hover {
+  background-color: #f8f8f2;
+  cursor: pointer;
+}
+
+button:focus {
+  background-color: #f8f8f2;
+  outline: none;
+}

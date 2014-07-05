@@ -7,13 +7,8 @@ import 'package:firebase/firebase.dart' as db;
 final f = new db.Firebase('https://luminous-fire-4671.firebaseio.com');
 
 void main() {
+  _messageInput.focus();
   querySelector('#doButton').onClick.listen(doStuff);
-
-  var doForm = querySelector('#doForm');
-
-  doForm.onSubmit.listen((e) {
-    print("Form was submitted...");
-  });
 
   // Placeholder for when we want to do stuff after Polymer elements fully loaded
   //TODO: What's a cleaner way to organize this?
@@ -35,13 +30,16 @@ doStuff(Event e) {
   var message = _messageInput.value;
 
   // Is the following stuff in the right place? It only seems to work properly here.
-  Future setTest(db.Firebase f) {
+  Future set(db.Firebase f) {
     //var setF = f.set({'date': '$now'});
     var pushRef = f.push();
     var setF = pushRef.set('$message');
     return setF.then((e){print('Message sent: $message');});
   }
 
-  setTest(f);
+  set(f);
+
+  _messageInput.value = '';
+  _messageInput.focus();
 }
 
