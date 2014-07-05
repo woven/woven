@@ -55,7 +55,7 @@
         font-weight: bold;
       }
     </style>
-    <template repeat="{{ item in reverse }}">
+    <template repeat="{{ item in items }}">
       <core-item icon="star" id="item_1" horizontal center layout class="item">
         <div class="item-text" flex>New message: {{ item }}</div>
         <div class="item-updated">3d ago by Dave</div>

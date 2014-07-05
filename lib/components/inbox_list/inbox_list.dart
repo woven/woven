@@ -11,19 +11,17 @@ class InboxList extends PolymerElement with Observable {
 
   getItems() {
     f.onChildAdded.forEach((e) {
-      items.add(e.snapshot.val());
-      reverse = toObservable(items.reversed);
-      print(e.snapshot.val());
+      items.insert(0, e.snapshot.val());
+      //reverse = toObservable(items.reversed);
     });
   }
 
   InboxList.created() : super.created() {
     getItems();
-    //items = items.reversed.toList();
   }
 
-  attached() => print("+b");
-  detached() => print("-b");
+  attached() => print("+InboxList");
+  detached() => print("-InboxList");
 
 }
 

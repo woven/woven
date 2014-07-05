@@ -15,17 +15,6 @@ void main() {
     print("Form was submitted...");
   });
 
-  //var inboxList = new InboxList();
-  //List inboxItems = InboxList.items;
-  //inboxItems = ['Cool','Awesome','Rad as heck', 'Lorem ipsum dwewedolot sit amet'];
-
-//  f.onChildAdded.forEach((e) {
-//    inboxItems.add(e.snapshot.val());
-//  });
-
-  //print("Outside of initPolymer: $inboxItems");
-  //print("Outside of initPolymer: $InboxList.items");
-
   // Placeholder for when we want to do stuff after Polymer elements fully loaded
   //TODO: What's a cleaner way to organize this?
   initPolymer().run(() {
@@ -35,24 +24,15 @@ void main() {
       print("Polymer ready...");
     });
   });
-
 }
 
+// Called to make dartanalyzer happy
 InputElement get _messageInput => querySelector('#messageInput');
 
 doStuff(Event e) {
   e.preventDefault();
-  DateTime now = new DateTime.now();
-
 
   var message = _messageInput.value;
-
-//  List items = querySelectorAll('.item-text');
-//  items.forEach((e) {
-//    e..text = "New message: $message";
-//  });
-
-  //print("Here they are:$inboxItems");
 
   // Is the following stuff in the right place? It only seems to work properly here.
   Future setTest(db.Firebase f) {
