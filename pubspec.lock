@@ -5,14 +5,22 @@ packages:
     description: analyzer
     source: hosted
     version: "0.15.7"
+  angular:
+    description: angular
+    source: hosted
+    version: "0.12.0"
+  angular_node_bind:
+    description: angular_node_bind
+    source: hosted
+    version: "0.2.0"
   args:
     description: args
     source: hosted
-    version: "0.11.0+1"
+    version: "0.10.0+2"
   barback:
     description: barback
     source: hosted
-    version: "0.14.0+3"
+    version: "0.13.0"
   browser:
     description: browser
     source: hosted
@@ -33,6 +41,10 @@ packages:
     description: csslib
     source: hosted
     version: "0.10.0+1"
+  di:
+    description: di
+    source: hosted
+    version: "0.0.40"
   firebase:
     description: firebase
     source: hosted
@@ -41,6 +53,10 @@ packages:
     description: html5lib
     source: hosted
     version: "0.11.0+1"
+  intl:
+    description: intl
+    source: hosted
+    version: "0.9.10"
   logging:
     description: logging
     source: hosted
@@ -53,6 +69,10 @@ packages:
     description: path
     source: hosted
     version: "1.2.1"
+  perf_api:
+    description: perf_api
+    source: hosted
+    version: "0.0.8"
   polymer:
     description: polymer
     source: hosted
@@ -65,6 +85,10 @@ packages:
     description: quiver
     source: hosted
     version: "0.18.2"
+  route_hierarchical:
+    description: route_hierarchical
+    source: hosted
+    version: "0.4.21"
   shadow_dom:
     description: shadow_dom
     source: hosted

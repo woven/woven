@@ -1,9 +1,12 @@
 import 'package:polymer/polymer.dart';
+import 'package:angular/angular.dart';
 import 'dart:html';
 import 'dart:async';
 import '../lib/components/inbox_list/inbox_list.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_item.dart';
+import 'package:angular/application_factory.dart';
+
 
 final f = new db.Firebase('https://luminous-fire-4671.firebaseio.com');
 
@@ -20,6 +23,8 @@ void main() {
       print("Polymer ready...");
     });
   });
+
+  applicationFactory().run();
 }
 
 // Called to make dartanalyzer happy.

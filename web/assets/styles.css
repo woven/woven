@@ -79,3 +79,8 @@ button:focus {
   background-color: #f8f8f2;
   outline: none;
 }
+
+/* Hack as per http://goo.gl/Tnj7Us */
+.ng-cloak {
+  display: none;
+}
