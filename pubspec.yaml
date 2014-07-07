@@ -4,12 +4,14 @@ dependencies:
   #angular: any
   #angular_node_bind: any
   shadow_dom: any
-  browser: anyvi .
+  browser: any
   polymer: ">=0.11.0 <0.12.0"
   core_elements: ">=0.0.6 <0.1.0"
   firebase: ">=0.1.0 <0.2.0"
 transformers:
   - polymer:
-      entry_points: web/index.html
+      entry_points:
+          - web/index.html
 dependency_overrides:
   browser: any
+

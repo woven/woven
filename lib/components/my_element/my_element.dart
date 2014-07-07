@@ -1,5 +1,3 @@
-//library binding_data.my_element;
-
 import 'package:polymer/polymer.dart';
 
 @CustomTag('my-element')

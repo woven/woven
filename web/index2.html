@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <script src="packages/web_components/platform.js"></script>
+  <script src="packages/web_components/dart_support.js"></script>
+  <link rel="import" href="packages/polymer/polymer.html">
+
+
+  <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+
+  <!-- This .html page exists to test a view w/o the following element, which is breaking dart2js. -->
+  <!--<link rel="import" href="packages/core_elements/core_scaffold.html">-->
+  <link rel="import" href="packages/core_elements/core_header_panel.html">
+  <link rel="import" href="packages/core_elements/core_menu.html">
+  <link rel="import" href="packages/core_elements/core_item.html">
+  <link rel="import" href="packages/core_elements/core_toolbar.html">
+  <link rel="import" href="packages/core_elements/core_submenu.html">
+  <link rel="import" href="packages/core_elements/core_field.html">
+  <link rel="import" href="packages/core_elements/core_field.html">
+  <link rel="import" href="packages/core_elements/core_drawer_panel.html">
+  <link rel="import" href="../lib/components/inbox_list/inbox_list.html">
+  <link rel="import" href="../lib/components/my_element/my_element.html">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    /* [START styles] */
+    body {
+      font-family: sans-serif;
+    }
+    core-header-panel {
+      background: white;
+      /* height: 100% fails here on some browsers */
+      height: 100vh;
+      width: 100%;
+      top: 0;
+      left: 0;
+      position: absolute;
+    }
+    core-toolbar {
+      background-color: #03A9F4;
+    }
+    p {
+      margin: 20px;
+      padding: 80px 20px;
+      border-radius: 20px;
+      background-color: #eee;
+    }
+
+    #core-scaffold-temp {
+
+
+    }
+
+    /* [END styles] */
+  </style>
+</head>
+
+<body>
+<!--<core-scaffold id="core_scaffold">-->
+<core-drawer-panel>
+  <div drawer>
+    <core-header-panel mode="seamed" id="core_header_panel1" navigation flex>
+      <core-toolbar id="core_toolbar">Inbox</core-toolbar>
+      <core-menu selected="Updates" valueattr="label" selectedindex="2" id="core_menu" theme="core-light-theme">
+        <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
+        <core-item label="Watching" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
+        <core-item label="Updates" icon="settings" id="core_item" horizontal center layout class="pointer" active></core-item>
+        <form method="post" id="doForm" on-submit="{{doStuff}}">
+          <core-item>
+            <input id="messageInput" placeholder="Your message" autocomplete="off" flex>
+            <button id="doButton">Do stuff</button>
+          </core-item>
+        </form>
+      </core-menu>
+    </core-header-panel>
+  </div>
+  <div main>
+    <core-toolbar id="core_toolbar"></core-toolbar>
+
+    <inbox-list />
+  </div>
+  <core-drawer-panel>
+
+
+    <!--</core-scaffold>-->
+
+    <script type="application/dart" src="index.dart"></script>
+    <!--<script src="packages/browser/dart.js"></script>-->
+</body>
+</html>

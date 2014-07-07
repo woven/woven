@@ -26,17 +26,17 @@
     <core-scaffold id="core_scaffold">
       <core-header-panel mode="seamed" id="core_header_panel1" navigation flex>
         <core-toolbar id="core_toolbar">Inbox</core-toolbar>
-        <core-menu selected="Updates" valueattr="label" selectedindex="2" id="core_menu" theme="core-light-theme">
-          <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
+        <core-menu selected="All" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
+          <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active></core-item>
           <core-item label="Watching" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
-          <core-item label="Updates" icon="settings" id="core_item" horizontal center layout class="pointer" active></core-item>
+          <core-item label="Updates" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
           <p>
-            <form method="post" id="doForm" on-submit="{{doStuff}}">
-              <core-item>
-                <input id="messageInput" placeholder="Your message" autocomplete="off" flex>
-                <button id="doButton">Do stuff</button>
-              </core-item>
-            </form>
+          <form method="post" id="doForm" on-submit="{{doStuff}}">
+            <core-item>
+              <input id="messageInput" placeholder="Your message" autocomplete="off" flex>
+              <button id="doButton">Do stuff</button>
+            </core-item>
+          </form>
           </p>
         </core-menu>
       </core-header-panel>
@@ -48,6 +48,6 @@
     </core-scaffold>
 
     <script type="application/dart" src="index.dart"></script>
-    <!--<script src="packages/browser/dart.js"></script>-->
+  <!--<script src="packages/browser/dart.js"></script>-->
   </body>
 </html>
