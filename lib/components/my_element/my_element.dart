@@ -2,6 +2,6 @@ import 'package:polymer/polymer.dart';
 
 @CustomTag('my-element')
 class MyElement extends PolymerElement {
-  @observable String owner = 'Daniel';
+  @published String name = 'Some default';
   MyElement.created() : super.created();
 }

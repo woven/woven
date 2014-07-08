@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html ng-app>
+<html>
   <head>
     <script src="packages/web_components/platform.js"></script>
     <script src="packages/web_components/dart_support.js"></script>
@@ -25,7 +25,7 @@
   <body>
     <core-scaffold id="core_scaffold">
 
-      <core-header-panel mode="seamed" id="core_header_panel1" navigation flex>
+      <core-header-panel mode="seamed" id="core_header_panel1" navigation flex ng-app>
         <core-toolbar id="core_toolbar">Inbox</core-toolbar>
         <core-menu selected="All" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
           <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active></core-item>
@@ -42,8 +42,14 @@
 
               <!-- Angular fun! -->
               <div class="ng-cloak">
+                <p>Angular:</p>
                 <h3 ng-cloak>Hello {{name}}!</h3>
-                Name: <input type="text" ng-model="name">
+                Name: <input type="text" class="niceInput" ng-model="name">
+              </div>
+
+              <div class="ng-cloak">
+                <p>Polymer:</p>
+                <my-element name="[[ name ]]"></my-element>
               </div>
 
             </p>

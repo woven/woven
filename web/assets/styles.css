@@ -50,7 +50,7 @@ body {
   font-weight: bold;
 }
 
-#messageInput {
+#messageInput, .niceInput {
   border: 1px solid #ddd;
   margin: 5px;
   padding: 2px 5px;
