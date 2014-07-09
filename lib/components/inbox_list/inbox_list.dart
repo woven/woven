@@ -16,17 +16,16 @@ class InboxList extends PolymerElement with Observable {
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
   getItems() {
-    f.onChildAdded.forEach((e) {
+    f.onChildAdded.listen((e) {
       // Insert each new item at top of list so the list is ascending
       items.insert(0, e.snapshot.val());
-      //reverse = toObservable(items.reversed);
     });
   }
 
-  void selectItem(Event e, var detail, Node target) {
-    // TODO: Is there a better way to find the .item-text in the core-item?
-    var message = target.childNodes[1].text;
-    print("Item clicked! $message");
+  void selectItem(Event e, var detail, Element target) {
+    var message = target.dataset['msg'];
+    //var message = target.childNodes[1].text;
+    print("Item clicked: $message");
     window.alert("You selected: $message");
   }
 

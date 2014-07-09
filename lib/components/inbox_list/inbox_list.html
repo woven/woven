@@ -2,8 +2,8 @@
   <template>
     <link rel="stylesheet" href="inbox_list.css">
     <template repeat="{{ item in items }}">
-      <core-item icon="star" id="item_1" horizontal center layout class="item" on-click="{{ selectItem }}">
-        <div class="item-text" flex>New message: {{ item }}</div>
+      <core-item icon="star" id="item_1" horizontal center layout class="item" on-click="{{ selectItem }}" data-msg="{{ item }}">
+        <div class="item-text" data-msg="{{ item }}" flex>New message: {{ item }}</div>
         <div class="item-updated">3d ago by Dave</div>
       </core-item>
     </template>

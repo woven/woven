@@ -23,3 +23,10 @@ A simple Dart stack I'm experimenting with. No server code whatsoever.
 ### Known issues
 
 - dart2js has an issue with core-scaffold; remove that element before `pub build` or `pub serve` (both of which use dart2js)
+
+### Updates
+
+Latest notable updates at top.
+
+- Showing 
+- Handles on-click events in Polymer elements 
