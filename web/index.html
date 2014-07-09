@@ -28,7 +28,7 @@
       <core-header-panel mode="seamed" id="core_header_panel1" navigation flex ng-app>
         <core-toolbar id="core_toolbar">Inbox</core-toolbar>
         <core-menu selected="All" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-          <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active></core-item>
+          <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active ng-onclick="doStuff"></core-item>
           <core-item label="Watching" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
           <core-item label="Updates" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
             <p>
@@ -44,7 +44,7 @@
               <div class="ng-cloak">
                 <p>Angular:</p>
                 <h3 ng-cloak>Hello {{name}}!</h3>
-                Name: <input type="text" class="niceInput" ng-model="name">
+                <input type="text" class="niceInput" ng-model="name" placeholder="Your name">
               </div>
 
               <div class="ng-cloak">

@@ -56,7 +56,7 @@
       }
     </style>
     <template repeat="{{ item in items }}">
-      <core-item icon="star" id="item_1" horizontal center layout class="item">
+      <core-item icon="star" id="item_1" horizontal center layout class="item" on-click="{{ selectItem }}">
         <div class="item-text" flex>New message: {{ item }}</div>
         <div class="item-updated">3d ago by Dave</div>
       </core-item>

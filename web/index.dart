@@ -37,13 +37,14 @@ InputElement get _messageInput => querySelector('#messageInput');
 // It writes to the Firebase database and resets the messageInput's state.
 // *
 doStuff(Event e) {
-  e.preventDefault();
+  //e.preventDefault();
 
   var message = _messageInput.value;
 
   // Is the following stuff in the right place? It only seems to work properly here.
   Future set(db.Firebase f) {
     //var setF = f.set({'date': '$now'});
+    //f.push().set('$message').then((e) => print('Message sent: $message')); <-- could also do this one-liner
     var pushRef = f.push();
     var setF = pushRef.set('$message');
     return setF.then((e){print('Message sent: $message');});
@@ -51,6 +52,7 @@ doStuff(Event e) {
 
   set(f);
 
-  _messageInput.value = '';
-  _messageInput.focus();
+  _messageInput
+    ..value = ''
+    ..focus();
 }
