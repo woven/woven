@@ -64,7 +64,7 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.10.1+2"
+    version: "0.11.0-dev"
   path:
     description: path
     source: hosted
@@ -76,11 +76,11 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.11.0+5"
+    version: "0.11.1-dev"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
-    version: "0.11.2"
+    version: "0.12.0-dev"
   quiver:
     description: quiver
     source: hosted
@@ -112,7 +112,7 @@ packages:
   template_binding:
     description: template_binding
     source: hosted
-    version: "0.11.0"
+    version: "0.12.0-dev"
   utf:
     description: utf
     source: hosted

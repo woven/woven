@@ -5,7 +5,8 @@
     <script src="packages/web_components/platform.js"></script>
     <script src="packages/web_components/dart_support.js"></script>
     <link rel="import" href="packages/polymer/polymer.html">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
     <script src="https://cdn.firebase.com/v0/firebase.js"></script>
 
@@ -29,14 +30,13 @@
         <core-toolbar id="core_toolbar">Inbox</core-toolbar>
         <core-menu selected="All" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
           <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active ng-onclick="doStuff"></core-item>
-          <core-item label="Watching" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
-          <core-item label="Updates" icon="settings" id="core_item" horizontal center layout class="pointer"></core-item>
+          <core-item label="Starred" icon="star" id="core_item" horizontal center layout class="pointer"></core-item>
             <p>
 
-              <form method="post" id="doForm" on-submit="{{doStuff}}">
+              <form method="post" id="doForm" on-submit="{{addMessage}}">
                 <core-item>
                   <input id="messageInput" placeholder="Your message" autocomplete="off" flex>
-                  <button id="doButton">Do stuff</button>
+                  <button id="doButton">Send</button>
                 </core-item>
               </form>
 

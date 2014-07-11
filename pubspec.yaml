@@ -1,4 +1,4 @@
-name: woven-app
+name: wovenapp
 version: 0.0.2
 dependencies:
   angular: 0.12.0
@@ -13,7 +13,10 @@ transformers:
 - polymer:
     entry_points:
     - web/index.html
+    - web/index2.html
+    - web/index3.html
 dependency_overrides:
+  polymer: ">= 0.11.1-dev < 0.12.0"
   browser: any
   web_components: 0.4.0
   analyzer: ">=0.15.6 <0.16.0"

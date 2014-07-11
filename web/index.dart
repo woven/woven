@@ -8,12 +8,10 @@ import '../lib/components/inbox_list/inbox_list.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_item.dart';
 
-final f = new db.Firebase('https://luminous-fire-4671.firebaseio.com');
-
 void main() {
   // Give the messageInput focus and listen for onClick
   _messageInput.focus();
-  querySelector('#doButton').onClick.listen(doStuff);
+  querySelector('#doButton').onClick.listen(addMessage);
 
   // Placeholder for when we want to do stuff after Polymer elements fully loaded
   initPolymer().run(() {
@@ -36,21 +34,22 @@ InputElement get _messageInput => querySelector('#messageInput');
 // This function called when the onClick.listen event above fires.
 // It writes to the Firebase database and resets the messageInput's state.
 // *
-doStuff(Event e) {
+addMessage(Event e) {
   //e.preventDefault();
 
+  final messages = new db.Firebase('https://luminous-fire-4671.firebaseio.com/nodes');
+
   var message = _messageInput.value;
+  DateTime now = new DateTime.now();
 
   // Is the following stuff in the right place? It only seems to work properly here.
   Future set(db.Firebase f) {
-    //var setF = f.set({'date': '$now'});
-    //f.push().set('$message').then((e) => print('Message sent: $message')); <-- could also do this one-liner
-    var pushRef = f.push();
-    var setF = pushRef.set('$message');
-    return setF.then((e){print('Message sent: $message');});
+
+    f.push().set({'body': '$message', 'createdDate': '$now', 'user': 'dave'}).then((e){print('Message sent: $message');});
+
   }
 
-  set(f);
+  set(messages);
 
   _messageInput
     ..value = ''

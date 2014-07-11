@@ -1,7 +1,9 @@
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'dart:html';
+import '../../src/input_formatter.dart';
 export 'package:polymer/init.dart';
+
 
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.
@@ -10,15 +12,18 @@ export 'package:polymer/init.dart';
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
   @observable List items = toObservable([]);
-  @observable List reverse;
 
-  var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com');
+  var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com/nodes');
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
   getItems() {
     f.onChildAdded.listen((e) {
+      var node = e.snapshot.val();
+      var createdAgo =  InputFormatter.formatMomentDate(DateTime.parse(node['createdDate']));
+      node['createdDate'] = createdAgo;
+
       // Insert each new item at top of list so the list is ascending
-      items.insert(0, e.snapshot.val());
+      items.insert(0, node);
     });
   }
 
