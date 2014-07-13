@@ -2,7 +2,7 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'dart:html';
 import '../../src/input_formatter.dart';
-export 'package:polymer/init.dart';
+//export 'package:polymer/init.dart';
 
 
 // *

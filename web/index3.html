@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <script src="packages/web_components/platform.js"></script>
+  <script src="packages/web_components/dart_support.js"></script>
+  <link rel="import" href="packages/polymer/polymer.html">
+
+  <meta charset="UTF-8">
+  <title>Hello there</title>
+  <link rel="import" href="packages/core_elements/core_scaffold.html">
+  <link rel="import" href="packages/core_elements/core_header_panel.html">
+  <link rel="import" href="packages/core_elements/core_menu.html">
+  <link rel="import" href="packages/core_elements/core_item.html">
+  <link rel="import" href="packages/core_elements/core_toolbar.html">
+  <link rel="import" href="packages/core_elements/core_submenu.html">
+  <link rel="import" href="packages/core_elements/core_field.html">
+  <link rel="import" href="packages/core_elements/core_field.html">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      transition: opacity ease-in 0.2s;
+      font-size: 85%;
+    }
+    .item {
+      padding: 8px;
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      border-bottom-color: rgb(244, 244, 244);
+      background-color: white;
+    }
+    #core_toolbar {
+      color: rgb(255, 255, 255);
+      padding: 0px 0px 0px 8px;
+      background-color: rgb(24, 146, 25);
+    }
+  </style>
+</head>
+<body>
+<core-scaffold id="core_scaffold">
+
+  <core-header-panel mode="seamed" id="core_header_panel1" navigation flex ng-app>
+    <core-toolbar id="core_toolbar">Inbox</core-toolbar>
+    <core-menu selected="All" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
+      <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active></core-item>
+      <core-item label="Starred" icon="star" id="core_item" horizontal center layout class="pointer"></core-item>
+      <p>
+        This is some text in the sidebar.
+      </p>
+    </core-menu>
+  </core-header-panel>
+
+  <div id="page-title" tool>All</div>
+  <core-item icon="star" horizontal center layout class="item">This is an item</core-item>
+  <core-item icon="star" horizontal center layout class="item">This is an item</core-item>
+  <core-item icon="star" horizontal center layout class="item">Lorem ipsum dolor sit amet</core-item>
+</core-scaffold>
+
+
+</body>
+</html>

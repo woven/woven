@@ -61,6 +61,10 @@ packages:
     description: logging
     source: hosted
     version: "0.9.1+1"
+  meta:
+    description: meta
+    source: hosted
+    version: "0.8.8"
   observe:
     description: observe
     source: hosted
@@ -76,7 +80,7 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.11.1-dev"
+    version: "0.12.0-dev"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -89,10 +93,6 @@ packages:
     description: route_hierarchical
     source: hosted
     version: "0.4.21"
-  shadow_dom:
-    description: shadow_dom
-    source: hosted
-    version: "0.10.0"
   smoke:
     description: smoke
     source: hosted

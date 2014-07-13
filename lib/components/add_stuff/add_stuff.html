@@ -1,0 +1,15 @@
+<link rel="import" href="../../../lib/components/widgets/dialog/dialog.html">
+<!--<link rel="import" href="../../../packages/polymer/polymer.html">-->
+<polymer-element name="add-stuff">
+  <template>
+    <link rel="stylesheet" href="add_stuff.css">
+    <button id="add-stuff" on-tap="{{ toggleOverlay }}">Add Stuff</button>
+
+    <x-dialog id="add-stuff-overlay" class="dialog">
+      <h2>Add Stuff</h2>
+      <p>Woot! An overlay for dialogs.</p>
+      <button core-overlay-toggle>OK</button>
+    </x-dialog>
+  </template>
+  <script type="application/dart" src="add_stuff.dart"></script>
+</polymer-element>

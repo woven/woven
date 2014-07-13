@@ -8,7 +8,7 @@ A simple Dart stack I'm experimenting with. No server code whatsoever.
 - Polymer.dart <–– custom elements, aka Web Components
 - Polymer core-elements <–– some rad elements
 - AngularDart <–– framework with routes, MVC and more
-- angular_node_bind <–– Polymer<–>Angular bi-directional data binding
+- angular_node_bind <–– Polymer<–>Angular bi-directional data binding (see Known Issues)
 - firebase.dart <-- simple db in the cloud (replace with your own URI)
 
 ### Requirements
@@ -22,7 +22,7 @@ A simple Dart stack I'm experimenting with. No server code whatsoever.
 
 ### Known issues
 
-None
+- Polymer <-> Angular bi-directional data binding not working at the moment for some reason
 
 ### Updates
 
