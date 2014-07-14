@@ -15,3 +15,10 @@
 #dialog {
   width: 500px;
 }
+
+.add-button {
+  position: absolute !important;
+  bottom: 2em;
+  right: 2em;
+  background-color: rgb(24, 146, 25);
+}

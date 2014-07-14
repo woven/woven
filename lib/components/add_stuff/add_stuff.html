@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="add_stuff.css">
     <button id="add-stuff" on-tap="{{ toggleOverlay }}">Add Stuff</button>
 
+    <paper-fab id="add-button" class="add-button" icon="create" on-tap="{{ toggleOverlay }}"></paper-fab>
+
     <x-dialog id="add-stuff-overlay" class="dialog">
       <h2>Add Stuff</h2>
       <p>Woot! An overlay for dialogs.</p>

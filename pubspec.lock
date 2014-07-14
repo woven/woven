@@ -69,6 +69,10 @@ packages:
     description: observe
     source: hosted
     version: "0.11.0-dev"
+  paper_elements:
+    description: paper_elements
+    source: hosted
+    version: "0.0.1"
   path:
     description: path
     source: hosted

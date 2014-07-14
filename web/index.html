@@ -26,10 +26,15 @@
     <link rel="import" href="../lib/components/add_stuff/add_stuff.html">
     <link rel="import" href="../lib/components/my_element/my_element.html">
     <link rel="import" href="packages/core_elements/core_transition_css.html">
+
+    <!--<link href="packages/core_elements/core_icons.html" rel="import">-->
+    <link href="packages/paper_elements/paper_fab.html" rel="import">
+    <link href="packages/paper_elements/paper_ripple.html" rel="import">
+
     <link rel="stylesheet" href="assets/styles.css">
   </head>
 
-  <body>
+  <body unresolved>
     <core-scaffold id="core_scaffold">
 
       <core-header-panel mode="seamed" id="core_header_panel1" navigation flex ng-app>
@@ -45,8 +50,6 @@
                   <button id="doButton">Send</button>
                 </core-item>
               </form>
-
-              <add-stuff></add-stuff>
 
               <!-- Angular fun! -->
               <div class="ng-cloak">
@@ -64,10 +67,15 @@
         </core-menu>
       </core-header-panel>
 
+      <!-- Main inbox column -->
       <div id="page-title" tool>All</div>
       <inbox-list />
 
     </core-scaffold>
+
+    <add-stuff></add-stuff>
+
+
 
     <script type="application/dart" src="index.dart"></script>
   </body>

@@ -15,6 +15,10 @@ var tempUser = tempNames.elementAt(rng);
 
 void main() {
 
+  // Give the messageInput focus and listen for onClick
+  _messageInput.focus();
+  querySelector('#doButton').onClick.listen(addMessage);
+
   // Placeholder for when we want to do stuff after Polymer elements fully loaded
   initPolymer().run(() {
     // Add the node_bind module for Angular
@@ -25,11 +29,6 @@ void main() {
     Polymer.onReady.then((_) {
       // Some things must wait until onReady callback is called
       print("Polymer ready...");
-
-      // Give the messageInput focus and listen for onClick
-      _messageInput.focus();
-      querySelector('#doButton').onClick.listen(addMessage);
-
 
     });
   });
