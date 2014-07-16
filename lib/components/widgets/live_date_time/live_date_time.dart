@@ -9,7 +9,7 @@ import '../../../src/input_formatter.dart';
 class LiveDateTime extends PolymerElement {
   @observable String formattedValue;
 
-  @observable DateTime value;
+  @PublishedProperty(reflect: true) DateTime value;
   @observable DateTime toValue;
   @published var formatter;
   @published bool stripAgo = false;
