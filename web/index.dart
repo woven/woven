@@ -15,10 +15,6 @@ var tempUser = tempNames.elementAt(rng);
 
 void main() {
 
-  // Give the messageInput focus and listen for onClick
-  _messageInput.focus();
-  querySelector('#doButton').onClick.listen(addMessage);
-
   // Placeholder for when we want to do stuff after Polymer elements fully loaded
   initPolymer().run(() {
     // Add the node_bind module for Angular
@@ -32,38 +28,4 @@ void main() {
 
     });
   });
-}
-
-// Called to make dartanalyzer happy.
-InputElement get _messageInput => querySelector('#messageInput');
-
-// *
-// This function called when the onClick.listen event above fires.
-// It writes to the Firebase database and resets the messageInput's state.
-// *
-addMessage(Event e) {
-  //e.preventDefault();
-
-  if (_messageInput.value.trim().isEmpty) {
-    window.alert("Your message is empty.");
-    return;
-  }
-
-  final messages = new db.Firebase('https://luminous-fire-4671.firebaseio.com/nodes');
-
-  var message = _messageInput.value;
-  DateTime now = new DateTime.now().toUtc();
-
-  // Is the following stuff in the right place? It only seems to work properly here.
-  Future set(db.Firebase messages) {
-
-    messages.push().set({'body': '$message', 'createdDate': '$now', 'user': '$tempUser'}).then((e){print('Message sent: $message');});
-
-  }
-
-  set(messages);
-
-  _messageInput
-    ..value = ''
-    ..focus();
 }

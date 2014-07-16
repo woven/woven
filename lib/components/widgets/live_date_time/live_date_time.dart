@@ -33,8 +33,8 @@ class LiveDateTime extends PolymerElement {
   }
 
   update() {
-    if (value is DateTime) formattedValue = InputFormatter.formatMomentDate(value);
-    print(formattedValue);
+    if (value is DateTime) formattedValue = InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+    print(value);
 
     if (stripAgo && formattedValue != null) formattedValue = formattedValue.replaceAll(' ago', '');
 
