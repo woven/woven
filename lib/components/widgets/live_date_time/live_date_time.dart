@@ -18,6 +18,7 @@ class LiveDateTime extends PolymerElement {
 
 
   attached() {
+
     subs.clear();
 
     update();
@@ -33,8 +34,16 @@ class LiveDateTime extends PolymerElement {
   }
 
   update() {
+
+
+    //value = DateTime.toLocal(value);
     if (value is DateTime) formattedValue = InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
-    print(value);
+    if (value is! DateTime) {
+      print("""
+      Not DateTime: $value
+      """);
+    }
+    print(value.runtimeType.toString());
 
     if (stripAgo && formattedValue != null) formattedValue = formattedValue.replaceAll(' ago', '');
 
