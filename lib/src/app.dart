@@ -2,6 +2,6 @@ library application;
 
 import 'package:polymer/polymer.dart';
 
-class App {
+class App extends Observable {
   @observable var selectedItem = 'test';
 }
