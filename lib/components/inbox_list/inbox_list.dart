@@ -19,10 +19,7 @@ class InboxList extends PolymerElement with Observable {
   getItems() {
     f.onChildAdded.listen((e) {
       var item = e.snapshot.val();
-      //var createdAgo =  InputFormatter.formatMomentDate(DateTime.parse(node['createdDate']), short: true, momentsAgo: true);
-      //node['createdDate'] = createdAgo;
-      //item['createdDate'] = DateTime.parse(item['createdDate']);
-      //print(item['createdDate']);
+      item['createdDate'] = DateTime.parse(item['createdDate']);
 
       // Insert each new item at top of list so the list is ascending
       items.insert(0, item);

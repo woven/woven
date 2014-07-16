@@ -9,32 +9,24 @@ import '../../../src/input_formatter.dart';
 class LiveDateTime extends PolymerElement {
   @observable String formattedValue;
 
-  @PublishedProperty(reflect: true) DateTime value;
+  @published DateTime value;
   @observable DateTime toValue;
   @published var formatter;
   @published bool stripAgo = false;
 
   var subs = [];
 
-
   attached() {
-    subs.clear();
-
     update();
-
-
-//    observe(() => value, (_) {
-//      update();
-//    });
   }
 
   detached() {
     subs.forEach((sub) => sub.cancel());
+    subs.clear();
   }
 
   update() {
     if (value is DateTime) formattedValue = InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
-    print(value);
 
     if (stripAgo && formattedValue != null) formattedValue = formattedValue.replaceAll(' ago', '');
 
