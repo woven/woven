@@ -7,7 +7,7 @@
       <core-item icon="star" id="item_1" horizontal center layout class="item" on-click="{{ selectItem }}" data-msg="{{ item['body'] }}">
         <div class="item-subject">{{ item['subject'] }}</div>
         <div class="item-body" flex>{{ item['body'] }}</div>
-        <div class="item-updated"><live-date-time value="{{ item['createdDate'] }}"></live-date-time>by {{ item['user'] }}</div>
+        <div class="item-updated"><live-date-time value="{{ item['createdDate'] }}" formatter="{{formatItemDate}}"></live-date-time>by {{ item['user'] }}</div>
       </core-item>
     </template>
   </template>

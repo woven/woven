@@ -40,5 +40,7 @@ class InboxList extends PolymerElement with Observable {
   attached() => print("+InboxList");
   detached() => print("-InboxList");
 
+  formatItemDate(DateTime value) {
+    return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+  }
 }
-

@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:polymer/polymer.dart';
-import '../../../src/input_formatter.dart';
 
 @CustomTag('live-date-time')
 class LiveDateTime extends PolymerElement {
@@ -26,7 +25,7 @@ class LiveDateTime extends PolymerElement {
   }
 
   update() {
-    if (value is DateTime) formattedValue = InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+    if (value is DateTime) formattedValue = formatter(value);
 
     if (stripAgo && formattedValue != null) formattedValue = formattedValue.replaceAll(' ago', '');
 
