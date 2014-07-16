@@ -2,8 +2,7 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'dart:html';
 import '../../src/input_formatter.dart';
-//export 'package:polymer/init.dart';
-
+import '../../src/app.dart';
 
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.
@@ -11,6 +10,7 @@ import '../../src/input_formatter.dart';
 
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
+  @published App app;
   @observable List items = toObservable([]);
 
   var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com/nodes');
@@ -28,9 +28,7 @@ class InboxList extends PolymerElement with Observable {
 
   void selectItem(Event e, var detail, Element target) {
     var message = target.dataset['msg'];
-    //var message = target.childNodes[1].text;
-    print("Item clicked: $message");
-    window.alert("You selected: $message");
+    app.selectedItem = message;
   }
 
   InboxList.created() : super.created() {

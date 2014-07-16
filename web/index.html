@@ -17,6 +17,7 @@
     <link rel="import" href="packages/core_elements/core_toolbar.html">
     <link rel="import" href="packages/woven/components/inbox_list/inbox_list.html">
     <link rel="import" href="packages/woven/components/add_stuff/add_stuff.html">
+    <link rel="import" href="packages/woven/components/item_preview/item_preview.html">
     <link rel="import" href="packages/woven/components/my_element/my_element.html">
     <link rel="import" href="packages/core_elements/core_transition_css.html">
     <link href="packages/paper_elements/paper_fab.html" rel="import">
@@ -60,7 +61,10 @@
 
       <!-- Main inbox column -->
       <div id="page-title" tool>All</div>
-      <inbox-list />
+      <div>
+        <item-preview id="item-preview" style="z-index: 1; position: absolute;"></item-preview>
+        <inbox-list id="inbox-list"></inbox-list>
+      </div>
 
     </core-scaffold>
 
