@@ -9,8 +9,13 @@
 
     <x-dialog id="add-stuff-overlay" class="dialog">
       <h2>Add Stuff</h2>
-      <p>Woot! An overlay for dialogs.</p>
-      <button core-overlay-toggle>OK</button>
+
+      <form id="doForm" on-submit="{{addItem}}">
+        <input id="name" placeholder="Name" autocomplete="off" flex>
+        <input id="subject" placeholder="Subject" autocomplete="off" flex>
+        <div><textarea id="body" placeholder="Sharing is caring..." autocomplete="off" flex></textarea></div>
+        <button>Send</button>
+      </form>
     </x-dialog>
   </template>
   <script type="application/dart" src="add_stuff.dart"></script>

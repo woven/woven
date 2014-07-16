@@ -2,7 +2,7 @@ import 'dart:html';
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-//import 'package:polymer/polymer.dart';
+import 'package:polymer/polymer.dart';
 import '../../../src/input_formatter.dart';
 
 @CustomTag('live-date-time')
@@ -11,32 +11,30 @@ class LiveDateTime extends PolymerElement {
 
   @observable DateTime value;
   @observable DateTime toValue;
-  var formatter;
-  bool stripAgo = false;
+  @published var formatter;
+  @published bool stripAgo = false;
 
   var subs = [];
 
 
   attached() {
-    print("+LiveDateTime");
-
     subs.clear();
 
     update();
 
-    // Hmm?
+
 //    observe(() => value, (_) {
 //      update();
 //    });
   }
 
   detached() {
-    print("-LiveDateTime");
     subs.forEach((sub) => sub.cancel());
   }
 
   update() {
-    if (value is DateTime) formattedValue = formatter(value);
+    if (value is DateTime) formattedValue = InputFormatter.formatMomentDate(value);
+    print(formattedValue);
 
     if (stripAgo && formattedValue != null) formattedValue = formattedValue.replaceAll(' ago', '');
 

@@ -2,24 +2,10 @@
 <link rel="import" href="../../../../../packages/core_elements/core_overlay.html">
 <polymer-element name="x-dialog">
   <template>
-    <style>
-
-      :host {
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 13px;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        overflow: hidden;
-        background: white;
-        padding:30px 42px;
-        outline: 1px solid rgba(0,0,0,0.2);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-      }
-    </style>
-    <core-overlay id="overlay" layered backdrop opened="{{opened}}" autoCloseDisabled="{{autoCloseDisabled}}"  transition="core-transition-center"></core-overlay>
-    <content></content>
+    <link rel="stylesheet" href="dialog.css">
+    <core-overlay id="overlay" layered backdrop opened="{{opened}}" autoCloseDisabled="{{autoCloseDisabled}}"  transition="core-transition-center">
+      <content></content>
+    </core-overlay>
   </template>
   <script type="application/dart" src="dialog.dart"></script>
 </polymer-element>

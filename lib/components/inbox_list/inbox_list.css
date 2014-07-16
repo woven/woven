@@ -32,7 +32,7 @@
   font-size: 16px;
 }
 .item {
-  padding: 8px;
+  padding: 6px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: rgb(244, 244, 244);
@@ -43,11 +43,20 @@
   overflow: hidden;
   background-color: rgb(244, 244, 244);
 }
-.item-text {
+.item-subject {
   overflow: hidden;
+  white-space: nowrap;
+  margin-right: 5px;
+  font-weight: bold;
+}
+.item-body {
+  color: #5c5c5c;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .item-updated {
   color: rgb(102, 102, 102);
   margin: 0px 5px;
+  overflow: hidden;
   font-weight: bold;
 }

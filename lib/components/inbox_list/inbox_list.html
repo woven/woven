@@ -1,11 +1,13 @@
 <link rel="import" href="../../../../packages/polymer/polymer.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
     <template repeat="{{ item in items }}">
       <core-item icon="star" id="item_1" horizontal center layout class="item" on-click="{{ selectItem }}" data-msg="{{ item['body'] }}">
-        <div class="item-text" data-msg="{{ item }}" flex>{{ item['body'] }}</div>
-        <div class="item-updated">{{ item['createdDate']}} by {{ item['user'] }}</div>
+        <div class="item-subject">{{ item['subject'] }} {{ item['createdDate'] }}</div>
+        <div class="item-body" flex>{{ item['body'] }}</div>
+        <div class="item-updated"><live-date-time value="{{ item['createdDate'] }}" formatter="ok"></live-date-time>by {{ item['user'] }}</div>
       </core-item>
     </template>
   </template>

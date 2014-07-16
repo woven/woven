@@ -55,9 +55,9 @@ addMessage(Event e) {
   DateTime now = new DateTime.now().toUtc();
 
   // Is the following stuff in the right place? It only seems to work properly here.
-  Future set(db.Firebase f) {
+  Future set(db.Firebase messages) {
 
-    f.push().set({'body': '$message', 'createdDate': '$now', 'user': '$tempUser'}).then((e){print('Message sent: $message');});
+    messages.push().set({'body': '$message', 'createdDate': '$now', 'user': '$tempUser'}).then((e){print('Message sent: $message');});
 
   }
 

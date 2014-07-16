@@ -18,12 +18,14 @@ class InboxList extends PolymerElement with Observable {
   //TODO: Move this out and pass in a List with a Polymer attribute?
   getItems() {
     f.onChildAdded.listen((e) {
-      var node = e.snapshot.val();
-      var createdAgo =  InputFormatter.formatMomentDate(DateTime.parse(node['createdDate']));
-      node['createdDate'] = createdAgo;
+      var item = e.snapshot.val();
+      //var createdAgo =  InputFormatter.formatMomentDate(DateTime.parse(node['createdDate']), short: true, momentsAgo: true);
+      //node['createdDate'] = createdAgo;
+      //item['createdDate'] = DateTime.parse(item['createdDate']);
+      //print(item['createdDate']);
 
       // Insert each new item at top of list so the list is ascending
-      items.insert(0, node);
+      items.insert(0, item);
     });
   }
 
