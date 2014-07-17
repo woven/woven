@@ -19,7 +19,7 @@ class AddStuff extends PolymerElement {
   // *
   toggleOverlay() {
     overlay.toggle();
-    subject.focus();
+    name.focus();
   }
 
   // *
@@ -43,7 +43,7 @@ class AddStuff extends PolymerElement {
           'subject': subject.value,
           'body': body.value,
           'createdDate': '$now'
-      }).then((e){print('Message sent: body.value');});
+      }).then((e){print('Message sent: ' + body.value);});
     }
 
     set(nodes);
@@ -54,7 +54,6 @@ class AddStuff extends PolymerElement {
 
   attached() {
     print("+AddStuff");
-    subject.focus();
   }
 }
 
