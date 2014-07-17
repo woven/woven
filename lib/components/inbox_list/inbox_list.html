@@ -3,13 +3,20 @@
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
-    <template repeat="{{ item in items }}">
-      <core-item icon="star" id="item_1" horizontal center layout class="item" on-click="{{ selectItem }}" data-msg="{{ item['body'] }}">
-        <div class="item-subject">{{ item['subject'] }}</div>
-        <div class="item-body" flex>{{ item['body'] }}</div>
-        <div class="item-updated"><live-date-time value="{{ item['createdDate'] }}" formatter="{{formatItemDate}}"></live-date-time>by {{ item['user'] }}</div>
-      </core-item>
-    </template>
+    <core-pages id="pages" selected="0">
+      <div>
+        <template repeat="{{ item in items }}">
+          <core-item icon="star" class="item" on-click="{{ selectItem }}" data-msg="{{ item['body'] }}">
+            <div class="item-subject">{{ item['subject'] }}</div>
+            <div class="item-body" flex>{{ item['body'] }}</div>
+            <div class="item-updated"><live-date-time value="{{ item['createdDate'] }}" formatter="{{formatItemDate}}"></live-date-time>by {{ item['user'] }}</div>
+          </core-item>
+        </template>
+      </div>
+      <div>
+        <item-preview id="item-preview" style="z-index: 1; position: absolute;"></item-preview>
+      </div>
+    </core-pages>
   </template>
 <script type="application/dart" src="inbox_list.dart"></script>
 </polymer-element>

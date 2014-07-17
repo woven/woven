@@ -10,67 +10,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link rel="import" href="packages/core_elements/core_scaffold.html">
-    <link rel="import" href="packages/core_elements/core_header_panel.html">
-    <link rel="import" href="packages/core_elements/core_menu.html">
-    <link rel="import" href="packages/core_elements/core_item.html">
-    <link rel="import" href="packages/core_elements/core_toolbar.html">
-    <link rel="import" href="packages/woven/components/inbox_list/inbox_list.html">
-    <link rel="import" href="packages/woven/components/add_stuff/add_stuff.html">
-    <link rel="import" href="packages/woven/components/item_preview/item_preview.html">
-    <link rel="import" href="packages/woven/components/my_element/my_element.html">
-    <link rel="import" href="packages/core_elements/core_transition_css.html">
-    <link href="packages/paper_elements/paper_fab.html" rel="import">
-    <link href="packages/paper_elements/paper_ripple.html" rel="import">
+    <link rel="import" href="packages/polymer/polymer.html">
+    <link rel="import" href="packages/woven/components/page/woven-app/woven-app.html">
 
     <link rel="stylesheet" href="assets/styles.css">
   </head>
 
   <body unresolved>
-    <core-scaffold id="core_scaffold">
 
-      <core-header-panel mode="seamed" id="core_header_panel1" navigation flex ng-app>
-        <core-toolbar id="core_toolbar">LAB Collective</core-toolbar>
-        <core-menu selected="All" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-          <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active ng-onclick="doStuff"></core-item>
-          <core-item label="Starred" icon="star" id="core_item" horizontal center layout class="pointer"></core-item>
-            <p>
-
-              <!--<form method="post" id="doForm" on-submit="{{addMessage}}">-->
-                <!--<core-item>-->
-                  <!--<input id="messageInput" placeholder="Your message" autocomplete="off" flex>-->
-                  <!--<button id="doButton">Send</button>-->
-                <!--</core-item>-->
-              <!--</form>-->
-
-              <!--&lt;!&ndash; Angular fun! &ndash;&gt;-->
-              <!--<div class="ng-cloak">-->
-                <!--<p>Angular:</p>-->
-                <!--<h3 ng-cloak>Hello {{name}}!</h3>-->
-                <!--<input type="text" class="niceInput" ng-model="name" placeholder="Your name">-->
-              <!--</div>-->
-
-              <!--<div class="ng-cloak">-->
-                <!--<p>Polymer:</p>-->
-                <!--<my-element name="[[ name ]]"></my-element>-->
-              <!--</div>-->
-
-            </p>
-        </core-menu>
-      </core-header-panel>
-
-      <!-- Main inbox column -->
-      <div id="page-title" tool>All</div>
-      <div>
-        <item-preview id="item-preview" style="z-index: 1; position: absolute;"></item-preview>
-        <inbox-list id="inbox-list"></inbox-list>
-      </div>
-
-    </core-scaffold>
-
-    <add-stuff></add-stuff>
-
-
+    <woven-app></woven-app>
 
     <script type="application/dart" src="index.dart"></script>
   </body>

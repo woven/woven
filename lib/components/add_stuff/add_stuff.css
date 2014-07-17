@@ -16,11 +16,11 @@
   width: 500px;
 }
 
-.add-button {
-  position: absolute !important;
-  bottom: 2em;
-  right: 2em;
-  background-color: rgb(24, 146, 25);
+#add-button {
+  fill: #f1f1f1;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 input {
