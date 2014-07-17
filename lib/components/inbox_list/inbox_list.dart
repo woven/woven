@@ -16,7 +16,6 @@ class InboxList extends PolymerElement with Observable {
 
   var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com/nodes');
 
-  CorePages get pages =>  $['pages'];
   InputElement get subject => $['subject'];
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
@@ -31,14 +30,12 @@ class InboxList extends PolymerElement with Observable {
   }
 
   void selectItem(Event e, var detail, Element target) {
-    var message = target.dataset['msg'];
-    print(app);
-    //app.selectedItem = message;
+    // If your items had an ID, you would find the actual item based on its ID.
+    // I'm finding the item based on the body for now.
+    var item = items.firstWhere((i) => i['body'] == target.dataset['body']);
 
-    pages.selected = 1;
-    print(pages);
-    print(pages.runtimeType.toString());
-
+    app.selectedItem = item;
+    app.selectedPage = 1;
   }
 
   formatItemDate(DateTime value) {

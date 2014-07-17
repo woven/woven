@@ -44,14 +44,13 @@
       <!--</core-header-panel>-->
 
     <core-scaffold>
-
       <core-header-panel navigation flex mode="seamed">
         <core-toolbar id="toolbar-drawer" class="toolbar">
           <span>LAB Collective</span>
         </core-toolbar>
         <core-menu selected="All" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-          <core-item label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active ng-onclick="doStuff"></core-item>
-          <core-item label="Starred" icon="star" id="core_item" horizontal center layout class="pointer"></core-item>
+          <core-item data-page="0" label="All" icon="settings" id="core_item" horizontal center layout class="pointer" active on-click="{{switchPage}}"></core-item>
+          <core-item data-page="2" label="Starred" icon="star" id="core_item" horizontal center layout class="pointer" on-click="{{switchPage}}"></core-item>
         </core-menu>
       </core-header-panel>
       <div tool>
@@ -59,11 +58,15 @@
         <add-stuff></add-stuff>
       </div>
       <div class="content">
-        <inbox-list id="inbox-list"></inbox-list>
+        <core-pages id="pages" selected="{{app.selectedPage}}">
+          <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+          <item-preview id="item-preview" app="{{app}}"></item-preview>
+          <div>
+            <h1>hello I'm favs page</h1>
+          </div>
+        </core-pages>
       </div>
     </core-scaffold>
-
-
 
     <!--<core-scaffold>-->
     <!--<core-drawer-panel id="drawer-panel">-->

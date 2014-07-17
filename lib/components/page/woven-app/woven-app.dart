@@ -5,23 +5,16 @@ import 'dart:html';
 
 @CustomTag('woven-app')
 class WovenApp extends PolymerElement with Observable {
-  @published App app;
+  @published App app = new App();
 
   CoreDrawerPanel get drawer => $['drawer-panel'];
 
-  toggleDrawer() {
-
-
-
+  void switchPage(Event e, var detail, Element target) {
+    app.selectedPage = target.dataset['page'];
   }
-
-
-
 
   WovenApp.created() : super.created();
 
   attached() => print("+WovenApp");
   detached() => print("-WovenApp");
-
 }
-
