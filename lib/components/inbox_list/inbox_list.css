@@ -32,7 +32,7 @@
   font-size: 16px;
 }
 .item {
-  padding: 6px;
+  padding: 6px 13px 6px 13px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: rgb(244, 244, 244);
@@ -59,4 +59,27 @@
   margin: 0px 5px;
   overflow: hidden;
   font-weight: bold;
+}
+
+core-icon {
+  fill: #666;
+  color: #666;
+  margin-right: 2px;
+}
+
+#icons {
+  margin-right: 4px;
+}
+
+#icon-fav svg {
+  height: 24px !important;
+  width: 22px !important;
+}
+
+#icon-fav.selected {
+  fill: red;
+}
+
+#icon-star.selected {
+  fill: #f99b15;
 }

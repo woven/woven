@@ -24,6 +24,11 @@ class InboxList extends PolymerElement with Observable {
       var item = e.snapshot.val();
       item['createdDate'] = DateTime.parse(item['createdDate']);
 
+      // This is Firebase's ID, i.e. "the name of the Firebase location"
+      print(e.snapshot.name());
+      // So we'll add that to our local list
+      item['id'] = e.snapshot.name();
+
       // Insert each new item at top of list so the list is ascending
       items.insert(0, item);
     });
@@ -36,6 +41,30 @@ class InboxList extends PolymerElement with Observable {
 
     app.selectedItem = item;
     app.selectedPage = 1;
+  }
+
+  toggleLike(Event e, var detail, Element target) {
+    // Prevent the whole core-item's on-click event from firing
+    e.stopPropagation();
+    target..classes.toggle("selected");
+
+    if (target.attributes["icon"] == "favorite") {
+      target.attributes["icon"] = "favorite-outline";
+    } else {
+      target.attributes["icon"] = "favorite";
+    }
+  }
+
+  toggleStar(Event e, var detail, Element target) {
+    // Prevent the whole core-item's on-click event from firing
+    e.stopPropagation();
+    target..classes.toggle("selected");
+
+    if (target.attributes["icon"] == "star") {
+      target.attributes["icon"] = "star-outline";
+    } else {
+      target.attributes["icon"] = "star";
+    }
   }
 
   formatItemDate(DateTime value) {
