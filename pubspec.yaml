@@ -24,5 +24,5 @@ dependency_overrides:
   web_components: 0.4.0
   analyzer: ">=0.15.6 <0.16.0"
   html5lib: ">=0.11.0 <0.12.0"
-  firebase:
-    path: /Users/dave/packages_overridden/firebase-0.1.0
+  #firebase:
+  #  path: /Users/dave/packages_overridden/firebase-0.1.0
