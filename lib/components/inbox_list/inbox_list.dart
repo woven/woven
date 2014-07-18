@@ -37,7 +37,7 @@ class InboxList extends PolymerElement with Observable {
   void selectItem(Event e, var detail, Element target) {
     // If your items had an ID, you would find the actual item based on its ID.
     // I'm finding the item based on the body for now.
-    var item = items.firstWhere((i) => i['body'] == target.dataset['body']);
+    var item = items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.selectedItem = item;
     app.selectedPage = 1;

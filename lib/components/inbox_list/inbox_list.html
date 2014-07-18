@@ -4,7 +4,7 @@
   <template>
     <link rel="stylesheet" href="inbox_list.css">
     <template repeat="{{ item in items }}">
-      <core-item class="item" on-click="{{ selectItem }}" data-body="{{ item['body'] }}">
+      <core-item class="item" on-click="{{ selectItem }}" data-id="{{ item['id'] }}">
         <div id="icons">
           <core-icon icon="star-outline" id="icon-star" on-click="{{ toggleStar }}"></core-icon>
           <core-icon icon="favorite-outline" id="icon-fav" on-click="{{ toggleLike }}"></core-icon>

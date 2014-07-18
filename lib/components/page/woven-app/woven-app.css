@@ -57,3 +57,8 @@ core-drawer-panel:not([narrow]) #navicon {
 .ng-cloak {
   display: none;
 }
+
+/* TODO: Why the hell can't I make the main area's toolbar green? */
+core-scaffold > core-drawer-panel > core-header-panel > core-toolbar {
+background-color: rgb(24, 146, 25) !important;
+}
