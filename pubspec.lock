@@ -46,8 +46,10 @@ packages:
     source: hosted
     version: "0.0.40"
   firebase:
-    description: firebase
-    source: hosted
+    description:
+      path: "/Users/dave/packages_overridden/firebase-0.1.0"
+      relative: false
+    source: path
     version: "0.1.0"
   html5lib:
     description: html5lib

@@ -20,7 +20,9 @@ class InboxList extends PolymerElement with Observable {
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
   getItems() {
-    f.onChildAdded.listen((e) {
+    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
+    var lastItemsQuery = f.limit(20);
+    lastItemsQuery.onChildAdded.listen((e) {
       var item = e.snapshot.val();
       item['createdDate'] = DateTime.parse(item['createdDate']);
 
