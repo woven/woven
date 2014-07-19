@@ -1,0 +1,15 @@
+#content {
+  padding: 8px;
+}
+
+core-field {
+  border: 1px solid #ddd;
+  margin: 10px;
+  padding-left: 5px;
+  height: 40px;
+  background-color: #fff;
+}
+
+core-field input {
+  font-family: arial, sans-serif;
+}
