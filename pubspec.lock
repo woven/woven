@@ -34,9 +34,12 @@ packages:
     source: hosted
     version: "0.9.4"
   core_elements:
-    description: core_elements
-    source: hosted
-    version: "0.0.6"
+    description:
+      ref: null
+      resolved-ref: "1e3d41c8b8a475723f95edad030fa78544816315"
+      url: "https://github.com/dart-lang/core-elements.git"
+    source: git
+    version: "0.1.0-dev"
   csslib:
     description: csslib
     source: hosted
@@ -46,10 +49,8 @@ packages:
     source: hosted
     version: "0.0.40"
   firebase:
-    description:
-      path: "/Users/dave/packages_overridden/firebase-0.1.0"
-      relative: false
-    source: path
+    description: firebase
+    source: hosted
     version: "0.1.0"
   html5lib:
     description: html5lib

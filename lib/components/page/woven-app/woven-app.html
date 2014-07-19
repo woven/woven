@@ -10,26 +10,30 @@
 <link rel="import" href="../../../../../packages/woven/components/inbox_list/inbox_list.html">
 <link rel="import" href="../../../../../packages/woven/components/add_stuff/add_stuff.html">
 <link rel="import" href="../../../../../packages/woven/components/item_preview/item_preview.html">
+<link rel="import" href="../../../../../packages/woven/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../packages/woven/components/my_element/my_element.html">
 <link rel="import" href="../../../../../packages/core_elements/core_transition_css.html">
 <link rel="import" href="../../../../../packages/paper_elements/paper_fab.html">
 <link rel="import" href="../../../../../packages/paper_elements/paper_ripple.html">
+<link rel="import" href="../../../../../packages/core_elements/core_animated_pages.html">
+<link rel="import" href="../../../../../packages/core_elements/src/core-animated-pages/transitions/slide-from-right.html">
+<link rel="import" href="../../../../../packages/core_elements/src/core-animated-pages/transitions/cross-fade.html">
 
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven-app.css">
 
-    <!--&lt;!&ndash;&lt;!&ndash; Angular fun! &ndash;&gt;&ndash;&gt;-->
-    <!--&lt;!&ndash;<div class="ng-cloak">&ndash;&gt;-->
-    <!--&lt;!&ndash;<p>Angular:</p>&ndash;&gt;-->
-    <!--&lt;!&ndash;<h3 ng-cloak>Hello {{name}}!</h3>&ndash;&gt;-->
-    <!--&lt;!&ndash;<input type="text" class="niceInput" ng-model="name" placeholder="Your name">&ndash;&gt;-->
-    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--<!--<!-- Angular fun! -->-->-->
+    <!--<!--<div class="ng-cloak">-->-->
+    <!--<!--<p>Angular:</p>-->-->
+    <!--<!--<h3 ng-cloak>Hello {{name}}!</h3>-->-->
+    <!--<!--<input type="text" class="niceInput" ng-model="name" placeholder="Your name">-->-->
+    <!--<!--</div>-->-->
 
-    <!--&lt;!&ndash;<div class="ng-cloak">&ndash;&gt;-->
-    <!--&lt;!&ndash;<p>Polymer:</p>&ndash;&gt;-->
-    <!--&lt;!&ndash;<my-element name="[[ name ]]"></my-element>&ndash;&gt;-->
-    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--<!--<div class="ng-cloak">-->-->
+    <!--<!--<p>Polymer:</p>-->-->
+    <!--<!--<my-element name="[[ name ]]"></my-element>-->-->
+    <!--<!--</div>-->-->
 
     <core-scaffold>
       <core-header-panel navigation flex mode="seamed">
@@ -37,26 +41,46 @@
           <span>LAB Collective</span>
         </core-toolbar>
         <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-          <core-item data-page="0" label="Everything" icon="settings" id="core_item" horizontal center layout class="pointer" active on-click="{{switchPage}}"></core-item>
-          <core-item data-page="2" label="Starred" icon="star" id="core_item" horizontal center layout class="pointer" on-click="{{switchPage}}"></core-item>
+          <core-item data-page="0" label="Everything" icon="settings" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
+          <core-item data-page="2" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
         </core-menu>
       </core-header-panel>
-      <div tool>
+      <div tool id="toolbar-main">
         <span flex>Everything</span>
         <add-stuff></add-stuff>
       </div>
       <div class="content">
-        <core-pages id="pages" selected="{{app.selectedPage}}">
-          <div id="0">
-            <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
-          </div>
-          <div id="1">
-            <item-preview id="item-preview" app="{{app}}"></item-preview>
-          </div>
-          <div id="2">
-            <h1>Starred page is coming soon.</h1>
-          </div>
-        </core-pages>
+        <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
+          <section>
+            <div cross-fade="{{app.selectedPage === 1}}">
+              <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+            </div>
+          </section>
+          <section layout vertical>
+            <div cross-fade="{{app.selectedPage === 0}}">
+              <item-preview id="item-preview" app="{{app}}"></item-preview>
+              <item-activities app="{{app}}"></item-activities>
+            </div>
+          </section>
+          <section layout vertical>
+            <div slide-from-right="true">
+              <h1>Starred page is coming soon.</h1>
+            </div>
+          </section>
+        </core-animated-pages>
+
+
+        <!--<core-pages id="pages" selected="{{app.selectedPage}}">-->
+          <!--<div id="0">-->
+            <!--<inbox-list id="inbox-list" app="{{app}}"></inbox-list>-->
+          <!--</div>-->
+          <!--<div id="1">-->
+            <!--<item-preview id="item-preview" app="{{app}}"></item-preview>-->
+          <!--</div>-->
+          <!--<div id="2">-->
+            <!--<h1>Starred page is coming soon.</h1>-->
+          <!--</div>-->
+        <!--</core-pages>-->
       </div>
     </core-scaffold>
 

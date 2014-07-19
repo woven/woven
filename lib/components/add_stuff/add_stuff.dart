@@ -33,12 +33,12 @@ class AddStuff extends PolymerElement {
       return false;
     }
 
-    final nodes = new db.Firebase('https://luminous-fire-4671.firebaseio.com/nodes');
+    final items = new db.Firebase('https://luminous-fire-4671.firebaseio.com/items');
 
     DateTime now = new DateTime.now().toUtc();
 
-    Future set(db.Firebase nodes) {
-      nodes.push().set({
+    Future set(db.Firebase items) {
+      items.push().set({
           'user': name.value,
           'subject': subject.value,
           'body': body.value,
@@ -46,7 +46,7 @@ class AddStuff extends PolymerElement {
       }).then((e){print('Message sent: ' + body.value);});
     }
 
-    set(nodes);
+    set(items);
     overlay.toggle();
     body.value = "";
     subject.value = "";

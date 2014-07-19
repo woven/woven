@@ -8,13 +8,12 @@ import 'package:core_elements/core_pages.dart';
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.
 // *
-
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
   @published App app;
   @observable List items = toObservable([]);
 
-  var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com/nodes');
+  var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com/items');
 
   InputElement get subject => $['subject'];
 
@@ -26,9 +25,8 @@ class InboxList extends PolymerElement with Observable {
       var item = e.snapshot.val();
       item['createdDate'] = DateTime.parse(item['createdDate']);
 
-      // This is Firebase's ID, i.e. "the name of the Firebase location"
-      print(e.snapshot.name());
-      // So we'll add that to our local list
+      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+      // So we'll add that to our local item list
       item['id'] = e.snapshot.name();
 
       // Insert each new item at top of list so the list is ascending
@@ -37,8 +35,8 @@ class InboxList extends PolymerElement with Observable {
   }
 
   void selectItem(Event e, var detail, Element target) {
-    // If your items had an ID, you would find the actual item based on its ID.
-    // I'm finding the item based on the body for now.
+    // Look in the items list for the item that matches the
+    // id passed in the data-id attribute on the element
     var item = items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.selectedItem = item;
@@ -46,19 +44,20 @@ class InboxList extends PolymerElement with Observable {
   }
 
   toggleLike(Event e, var detail, Element target) {
-    // Prevent the whole core-item's on-click event from firing
+    // Don't fire the core-item's on-click, just the icon's
     e.stopPropagation();
-    target..classes.toggle("selected");
 
     if (target.attributes["icon"] == "favorite") {
       target.attributes["icon"] = "favorite-outline";
     } else {
       target.attributes["icon"] = "favorite";
     }
+
+    target..classes.toggle("selected");
   }
 
   toggleStar(Event e, var detail, Element target) {
-    // Prevent the whole core-item's on-click event from firing
+    // Don't fire the core-item's on-click, just the icon's
     e.stopPropagation();
     target..classes.toggle("selected");
 

@@ -1,11 +1,18 @@
 <link rel="import" href="../../../../packages/polymer/polymer.html">
 <polymer-element name="item-preview">
   <template>
+    <link rel="stylesheet" href="item_preview.css">
     <div>
       <div template if="{{app.selectedItem != null}}">
-        <h1>{{app.selectedItem['subject']}}</h1>
-        <em>{{formattedDate}}</em>
-        <p>{{app.selectedItem['body']}}</p>
+        <div id="content">
+          <div>
+            <h1>{{app.selectedItem['subject']}}</h1>
+          </div>
+          <div><em>{{formattedDate}}</em></div>
+          <div>
+            <p>{{app.selectedItem['body']}}</p>
+          </div>
+        </div>
       </div>
     </div>
   </template>
