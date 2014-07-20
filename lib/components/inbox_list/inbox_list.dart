@@ -76,6 +76,9 @@ class InboxList extends PolymerElement with Observable {
     getItems();
   }
 
-  attached() => print("+InboxList");
+  attached() {
+    print("+InboxList");
+
+  }
   detached() => print("-InboxList");
 }

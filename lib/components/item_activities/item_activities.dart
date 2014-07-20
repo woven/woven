@@ -62,7 +62,6 @@ class ItemActivities extends PolymerElement {
   attached() {
     print("+ItemActivities");
     getActivities();
-//    app.changes.where((PropertyChangeRecord prop) => prop.name == const Symbol('selectedItem') && prop.newValue != null).first.then(() => getActivities());
   }
 
   ItemActivities.created() : super.created();
