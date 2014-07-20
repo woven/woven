@@ -52,15 +52,19 @@
       <div class="content">
         <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
           <section>
-            <div cross-fade="{{app.selectedPage === 1}}">
-              <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
-            </div>
+            <template if="{{app.selectedPage === 0}}">
+              <div cross-fade="{{app.selectedPage === 0}}">
+                <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+              </div>
+            </template>
           </section>
           <section layout vertical>
-            <div cross-fade="{{app.selectedPage === 0}}">
-              <item-preview id="item-preview" app="{{app}}"></item-preview>
-              <item-activities app="{{app}}" data-item="{{app.selectedItem}}"></item-activities>
-            </div>
+            <template if="{{app.selectedPage === 1}}">
+              <div cross-fade="{{app.selectedPage === 1}}">
+                <item-preview id="item-preview" app="{{app}}"></item-preview>
+                <item-activities app="{{app}}"></item-activities>
+              </div>
+            </template>
           </section>
           <section layout vertical>
             <div slide-from-right="true">

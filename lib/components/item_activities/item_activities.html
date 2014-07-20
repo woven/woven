@@ -1,23 +1,25 @@
 <link rel="import" href="../../../../packages/polymer/polymer.html">
-<!--<link rel="import" href="../../../../packages/core_elements/core_field.html">-->
-<!--<link rel="import" href="../../../../packages/core_elements/core_icon_button.html">-->
+<link rel="import" href="../../../../packages/core_elements/core_field.html">
+<link rel="import" href="../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <polymer-element name="item-activities">
   <template>
     <link rel="stylesheet" href="item_activities.css">
-    <!--<core-field>-->
-      <!--<input id="name" placeholder="Name" flex>-->
-    <!--</core-field>-->
-    <!--<core-field>-->
-      <!--<input id="comment" placeholder="Comment" flex>-->
-    <!--</core-field>-->
-    <!--<button on-click="{{ addComment }}">Send</button>-->
+    <core-field>
+      <input id="name" placeholder="Name" flex>
+    </core-field>
+    <core-field>
+      <input id="comment" placeholder="Comment" flex>
+    </core-field>
+    <button on-click="{{addComment}}">Send</button>
 
     <hr/>
     <p>Comments:</p>
-    <template repeat="{{ comment in comments }}">
-      <div>{{ $comment['name'] }}</div>
-      <div>{{ $comment['comment'] }}</div>
-      <div>{{ $comment['id'] }}</div>
+    <template repeat="{{comment in comments}}">
+      <div>{{comment['user']}}</div>
+      <div>{{comment['comment']}}</div>
+      <div>{{comment['id']}}</div>
+      <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
     </template>
   </template>
   <script type="application/dart" src="item_activities.dart"></script>
