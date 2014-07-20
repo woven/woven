@@ -11,8 +11,11 @@ class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
 
+  get item { return app; }
+
 //  InputElement get name => $['name'];
 //  InputElement get comment => $['comment'];
+
 
   get formattedDate {
 //    if (app.selectedItem == null) return '';
@@ -21,6 +24,7 @@ class ItemActivities extends PolymerElement {
 
   getActivities() {
     if (app.selectedItem == null) return;
+    return;
     print("Got here");
 
     var itemId = app.selectedItem['id'];
@@ -66,8 +70,17 @@ class ItemActivities extends PolymerElement {
 
   attached() {
     print("+ItemActivities");
-    getActivities();
+    //getActivities();
+//    app.changes.where((PropertyChangeRecord prop) => prop.name == const Symbol('selectedItem') && prop.newValue != null).first.then(() => getActivities());
   }
 
-  ItemActivities.created() : super.created();
+  itemChanged() {
+    var selectedItem = app.selectedItem;
+    print("Changed: $selectedItem");
+  }
+
+
+  ItemActivities.created() : super.created() {
+    print(item);
+  }
 }
