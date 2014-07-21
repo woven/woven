@@ -2,7 +2,7 @@ import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_scaffold.dart';
 import 'package:woven/src/app.dart';
 import 'dart:html';
-import 'package:core_elements/core_animated_pages.dart';
+import 'package:paper_elements/core_animated_pages.dart';
 
 @CustomTag('woven-app')
 class WovenApp extends PolymerElement with Observable {

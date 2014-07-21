@@ -34,12 +34,9 @@ packages:
     source: hosted
     version: "0.9.4"
   core_elements:
-    description:
-      ref: null
-      resolved-ref: "1e3d41c8b8a475723f95edad030fa78544816315"
-      url: "https://github.com/dart-lang/core-elements.git"
-    source: git
-    version: "0.1.0-dev"
+    description: core_elements
+    source: hosted
+    version: "0.0.6"
   csslib:
     description: csslib
     source: hosted
