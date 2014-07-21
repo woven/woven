@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../packages/core_elements/core_pages.html">
+<link rel="import" href="../../../../../packages/core_elements/core_overlay.html">
 <link rel="import" href="../../../../../packages/woven/components/inbox_list/inbox_list.html">
 <link rel="import" href="../../../../../packages/woven/components/add_stuff/add_stuff.html">
 <link rel="import" href="../../../../../packages/woven/components/item_preview/item_preview.html">
@@ -22,19 +23,6 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-
-    <!--<!--<!-- Angular fun! -->-->-->
-    <!--<!--<div class="ng-cloak">-->-->
-    <!--<!--<p>Angular:</p>-->-->
-    <!--<!--<h3 ng-cloak>Hello {{name}}!</h3>-->-->
-    <!--<!--<input type="text" class="niceInput" ng-model="name" placeholder="Your name">-->-->
-    <!--<!--</div>-->-->
-
-    <!--<!--<div class="ng-cloak">-->-->
-    <!--<!--<p>Polymer:</p>-->-->
-    <!--<!--<my-element name="[[ name ]]"></my-element>-->-->
-    <!--<!--</div>-->-->
-
     <core-scaffold>
       <core-header-panel navigation flex mode="seamed">
         <core-toolbar id="toolbar-drawer" class="toolbar">
@@ -46,7 +34,7 @@
         </core-menu>
       </core-header-panel>
       <div tool id="toolbar-main">
-        <span flex>Everything</span>
+        <span flex>{{ app.pageTitle }}</span>
         <add-stuff></add-stuff>
       </div>
       <div class="content">
@@ -59,12 +47,7 @@
             </template>
           </section>
           <section layout vertical>
-            <template if="{{app.selectedPage === 1}}">
-              <div cross-fade="{{app.selectedPage === 1}}">
-                <item-preview id="item-preview" app="{{app}}"></item-preview>
-                <item-activities app="{{app}}"></item-activities>
-              </div>
-            </template>
+            sss
           </section>
           <section layout vertical>
             <div slide-from-right="true">
@@ -72,20 +55,13 @@
             </div>
           </section>
         </core-animated-pages>
-
-
-        <!--<core-pages id="pages" selected="{{app.selectedPage}}">-->
-          <!--<div id="0">-->
-            <!--<inbox-list id="inbox-list" app="{{app}}"></inbox-list>-->
-          <!--</div>-->
-          <!--<div id="1">-->
-            <!--<item-preview id="item-preview" app="{{app}}"></item-preview>-->
-          <!--</div>-->
-          <!--<div id="2">-->
-            <!--<h1>Starred page is coming soon.</h1>-->
-          <!--</div>-->
-        <!--</core-pages>-->
       </div>
+      <template if="{{app.selectedPage === 0}}">
+        <div id="rightPanel">
+          <item-preview id="item-preview" app="{{app}}"></item-preview>
+          <item-activities app="{{app}}"></item-activities>
+        </div>
+      </template>
     </core-scaffold>
 
   </template>

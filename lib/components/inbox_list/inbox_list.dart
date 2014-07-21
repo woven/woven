@@ -40,7 +40,7 @@ class InboxList extends PolymerElement with Observable {
     var item = items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.selectedItem = item;
-    app.selectedPage = 1;
+    //app.selectedPage = 1;
   }
 
   toggleLike(Event e, var detail, Element target) {
@@ -78,7 +78,7 @@ class InboxList extends PolymerElement with Observable {
 
   attached() {
     print("+InboxList");
-
   }
+
   detached() => print("-InboxList");
 }

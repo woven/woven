@@ -12,7 +12,7 @@ class WovenApp extends PolymerElement with Observable {
   //CoreAnimatedPages get pages => $['drawer-panel'];
 
   void switchPage(Event e, var detail, Element target) {
-    app.selectedPage = target.dataset['page'];
+    app.selectedPage = int.parse(target.dataset['page']);
   }
 
   WovenApp.created() : super.created();

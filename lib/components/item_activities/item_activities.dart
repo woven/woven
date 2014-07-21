@@ -64,5 +64,9 @@ class ItemActivities extends PolymerElement {
     getActivities();
   }
 
+  detached() {
+    print("-ItemActivities");
+  }
+
   ItemActivities.created() : super.created();
 }

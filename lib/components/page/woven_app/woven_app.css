@@ -74,3 +74,23 @@ core-scaffold core-item {
 core-scaffold core-menu core-item:hover {
   cursor: pointer !important;
 }
+
+#rightPanel {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  overflow: hidden;
+  background: white;
+  padding: 30px 42px;
+  outline: 1px solid rgba(143, 135, 135, 0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 6;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  width: 340px;
+}
