@@ -55,9 +55,11 @@
             </template>
           </section>
           <section layout vertical>
-            <div class="page-content">
-              <h1>Starred page is coming soon.</h1>
-            </div>
+            <template if="{{app.selectedPage === 2}}">
+              <div class="page-content">
+                <h1>Starred page is coming soon.</h1>
+              </div>
+            </template>
           </section>
         </core-animated-pages>
       </div>

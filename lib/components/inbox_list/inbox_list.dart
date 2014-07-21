@@ -13,12 +13,12 @@ class InboxList extends PolymerElement with Observable {
   @published App app;
   @observable List items = toObservable([]);
 
-  var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com/items');
-
   InputElement get subject => $['subject'];
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
   getItems() {
+    var f = new db.Firebase(app.firebaseURL + '/items');
+
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     var lastItemsQuery = f.limit(20);
     lastItemsQuery.onChildAdded.listen((e) {
@@ -73,10 +73,11 @@ class InboxList extends PolymerElement with Observable {
   }
 
   InboxList.created() : super.created() {
-    getItems();
+
   }
 
   attached() {
+    getItems();
     print("+InboxList");
   }
 

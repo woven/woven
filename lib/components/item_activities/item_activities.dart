@@ -20,7 +20,7 @@ class ItemActivities extends PolymerElement {
 
   getActivities() {
     var itemId = app.selectedItem['id'];
-    var f = new db.Firebase('https://luminous-fire-4671.firebaseio.com/items/' + itemId + '/activities/comments');
+    var f = new db.Firebase(app.firebaseURL + '/items/' + itemId + '/activities/comments');
     f.onChildAdded.listen((e) {
       var comment = e.snapshot.val();
       comment['createdDate'] = DateTime.parse(comment['createdDate']);
