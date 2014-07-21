@@ -6,7 +6,7 @@
   <template>
     <link rel="stylesheet" href="item_activities.css">
     <core-field>
-      <input id="name" placeholder="Name" flex>
+      <input id="name" placeholder="Name" value="{{app.user}}" flex>
     </core-field>
     <core-field>
       <input id="comment" placeholder="Comment" flex>
@@ -16,10 +16,15 @@
     <hr/>
     <p>Comments:</p>
     <template repeat="{{comment in comments}}">
-      <div>{{comment['user']}}</div>
-      <div>{{comment['comment']}}</div>
-      <div>{{comment['id']}}</div>
-      <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+      <div class="activity-card">
+        <div id="content">
+          <div class="user">{{comment['user']}}</div>
+          <p>{{comment['comment']}}</p>
+          <div class="date-time">
+            <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+          </div>
+        </div>
+      </div>
     </template>
   </template>
   <script type="application/dart" src="item_activities.dart"></script>

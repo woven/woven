@@ -75,6 +75,10 @@ core-scaffold core-menu core-item:hover {
   cursor: pointer !important;
 }
 
+core-scaffold core-header-panel #mainContainer {
+  background-color: #fff;
+}
+
 #rightPanel {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -93,4 +97,9 @@ core-scaffold core-menu core-item:hover {
   right: 0px;
   height: 100%;
   width: 340px;
+}
+
+.page-content {
+  margin: 15px;
+  background-color: #fff;
 }

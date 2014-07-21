@@ -2,19 +2,17 @@
 <polymer-element name="item-preview">
   <template>
     <link rel="stylesheet" href="item_preview.css">
-    <div>
       <div template if="{{app.selectedItem != null}}">
-        <div id="content">
-          <div>
-            <h1>{{app.selectedItem['subject']}}</h1>
-          </div>
-          <div><em>{{formattedDate}}</em></div>
-          <div>
-            <p>{{app.selectedItem['body']}}</p>
-          </div>
+        <div>
+          <h1>{{app.selectedItem['subject']}}</h1>
+        </div>
+        <div>
+          <em>{{formattedDate}}</em>
+        </div>
+        <div>
+          <p>{{app.selectedItem['body']}}</p>
         </div>
       </div>
-    </div>
   </template>
   <script type="application/dart" src="item_preview.dart"></script>
 </polymer-element>

@@ -1,5 +1,5 @@
 import 'package:polymer/polymer.dart';
-import 'package:core_elements/core_drawer_panel.dart';
+import 'package:core_elements/core_scaffold.dart';
 import 'package:woven/src/app.dart';
 import 'dart:html';
 import 'package:core_elements/core_animated_pages.dart';
@@ -8,11 +8,11 @@ import 'package:core_elements/core_animated_pages.dart';
 class WovenApp extends PolymerElement with Observable {
   @published App app = new App();
 
-  CoreDrawerPanel get drawer => $['drawer-panel'];
-  //CoreAnimatedPages get pages => $['drawer-panel'];
+  CoreScaffold get scaffold => $['scaffold'];
 
   void switchPage(Event e, var detail, Element target) {
     app.selectedPage = int.parse(target.dataset['page']);
+    scaffold.closeDrawer();
   }
 
   WovenApp.created() : super.created();

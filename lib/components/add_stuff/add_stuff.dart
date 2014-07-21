@@ -4,10 +4,12 @@ import 'dart:async';
 import 'dart:math';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
+import '../../src/app.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
   AddStuff.created() : super.created();
+  @published App app;
 
   InputElement get name => $['name'];
   InputElement get subject => $['subject'];
@@ -50,6 +52,9 @@ class AddStuff extends PolymerElement {
     overlay.toggle();
     body.value = "";
     subject.value = "";
+
+    app.user = name.value;
+    app.selectedPage = 0;
   }
 
   attached() {

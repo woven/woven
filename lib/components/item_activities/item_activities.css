@@ -1,6 +1,6 @@
 core-field {
   border: 1px solid #ddd;
-  margin: 10px;
+  margin-bottom: 10px;
   padding-left: 5px;
   height: 40px;
   background-color: #fff;
@@ -8,4 +8,32 @@ core-field {
 
 core-field input {
   font-family: arial, sans-serif;
+}
+
+.activity-card {
+  width: 300px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;
+  margin-bottom: 10px;
+}
+
+.activity-card #content {
+  padding: 10px;
+}
+
+@media all and (max-width: 600px)  {
+  .activity-card {
+    width: 100%;
+  }
+}
+
+.user {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.date-time {
+  color: #3F3F3F;
+  font-size: 85%;
 }

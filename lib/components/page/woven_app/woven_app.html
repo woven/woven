@@ -23,8 +23,8 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <core-scaffold>
-      <core-header-panel navigation flex mode="seamed">
+    <core-scaffold id="scaffold">
+      <core-header-panel id="drawerPanel" navigation flex mode="seamed">
         <core-toolbar id="toolbar-drawer" class="toolbar">
           <span>LAB Collective</span>
         </core-toolbar>
@@ -35,7 +35,7 @@
       </core-header-panel>
       <div tool id="toolbar-main">
         <span flex>{{ app.pageTitle }}</span>
-        <add-stuff></add-stuff>
+        <add-stuff app="{{app}}"></add-stuff>
       </div>
       <div class="content">
         <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
@@ -47,23 +47,21 @@
             </template>
           </section>
           <section layout vertical>
-            sss
+            <template if="{{app.selectedPage === 1}}">
+              <div class="page-content">
+                <item-preview id="item-preview" app="{{app}}"></item-preview>
+                <item-activities app="{{app}}"></item-activities>
+              </div>
+            </template>
           </section>
           <section layout vertical>
-            <div slide-from-right="true">
+            <div class="page-content">
               <h1>Starred page is coming soon.</h1>
             </div>
           </section>
         </core-animated-pages>
       </div>
-      <template if="{{app.selectedPage === 0}}">
-        <div id="rightPanel">
-          <item-preview id="item-preview" app="{{app}}"></item-preview>
-          <item-activities app="{{app}}"></item-activities>
-        </div>
-      </template>
     </core-scaffold>
-
   </template>
   <script type="application/dart" src="woven_app.dart"></script>
 </polymer-element>
