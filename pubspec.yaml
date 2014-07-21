@@ -1,8 +1,8 @@
 name: woven
 version: 0.0.2
 dependencies:
-  angular: 0.12.0
-  angular_node_bind: any
+  #angular: 0.12.0
+  #angular_node_bind: any
   browser: any
   polymer: ">=0.11.0 <0.12.0"
   core_elements: ">=0.0.6 <0.1.0"
@@ -10,9 +10,9 @@ dependencies:
   firebase: ">=0.1.0 <0.2.0"
   meta: ">=0.8.8 <0.9.0"
 transformers:
-- angular:
-    html_files:
-    - web/index.html
+#- angular:
+#    html_files:
+#    - web/index.html
 - polymer:
     entry_points:
     - web/index.html

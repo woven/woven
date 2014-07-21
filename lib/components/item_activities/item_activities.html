@@ -15,7 +15,7 @@
 
     <hr/>
     <p>Comments:</p>
-    <template repeat="{{comment in comments}}">
+    <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
       <div class="activity-card">
         <div id="content">
           <div class="user">{{comment['user']}}</div>
