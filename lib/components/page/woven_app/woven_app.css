@@ -103,3 +103,8 @@ core-scaffold core-header-panel #mainContainer {
   margin: 15px;
   background-color: #fff;
 }
+
+#page-title {
+  opacity: .5;
+  transition: 1s opacity;
+}

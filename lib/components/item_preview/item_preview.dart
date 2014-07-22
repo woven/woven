@@ -22,10 +22,13 @@ class ItemPreview extends PolymerElement {
 
   attached() {
     print("+ItemPreview");
+    app.changeTitle(app.selectedItem['subject']);
   }
 
   detached() {
     print("-ItemPreview");
+//    app.pageTitle = "";
+    app.changeTitle("");
   }
 
   ItemPreview.created() : super.created();

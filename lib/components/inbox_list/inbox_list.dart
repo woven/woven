@@ -16,6 +16,7 @@ class InboxList extends PolymerElement with Observable {
   InputElement get subject => $['subject'];
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
+
   getItems() {
     var f = new db.Firebase(app.firebaseURL + '/items');
 
@@ -53,13 +54,15 @@ class InboxList extends PolymerElement with Observable {
       target.attributes["icon"] = "favorite";
     }
 
-    target..classes.toggle("selected");
+    target
+      ..classes.toggle("selected");
   }
 
   toggleStar(Event e, var detail, Element target) {
     // Don't fire the core-item's on-click, just the icon's
     e.stopPropagation();
-    target..classes.toggle("selected");
+    target
+      ..classes.toggle("selected");
 
     if (target.attributes["icon"] == "star") {
       target.attributes["icon"] = "star-outline";
@@ -79,7 +82,11 @@ class InboxList extends PolymerElement with Observable {
   attached() {
     getItems();
     print("+InboxList");
+    app.changeTitle("Everything");
   }
 
-  detached() => print("-InboxList");
+  detached() {
+    app.changeTitle("");
+    print("-InboxList");
+  }
 }
