@@ -10,13 +10,22 @@ import 'package:firebase/firebase.dart' as db;
 class ItemPreview extends PolymerElement {
   @published App app;
 
+  //Unused, this is for simple gets
   get formattedDate {
     if (app.selectedItem == null) return '';
     return InputFormatter.formatMomentDate(app.selectedItem['createdDate'], short: true, momentsAgo: true);
   }
 
+  String formatItemDate(DateTime value) {
+    return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+  }
+
   attached() {
     print("+ItemPreview");
+  }
+
+  detached() {
+    print("-ItemPreview");
   }
 
   ItemPreview.created() : super.created();

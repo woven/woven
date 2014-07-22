@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../packages/polymer/polymer.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <polymer-element name="item-preview">
   <template>
     <link rel="stylesheet" href="item_preview.css">
@@ -7,7 +8,7 @@
           <h1>{{app.selectedItem['subject']}}</h1>
         </div>
         <div>
-          <!--<em>{{formattedDate}}</em>-->
+          <live-date-time value="{{app.selectedItem['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
         </div>
         <div>
           <p>{{app.selectedItem['body']}}</p>
