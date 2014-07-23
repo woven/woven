@@ -19,6 +19,7 @@
 <link rel="import" href="../../../../../packages/paper_elements/core_animated_pages.html">
 <link rel="import" href="../../../../../packages/paper_elements/src/core-animated-pages/transitions/slide-from-right.html">
 <link rel="import" href="../../../../../packages/paper_elements/src/core-animated-pages/transitions/cross-fade.html">
+<link rel="import" href="../../../../../packages/woven/components/widgets/google_signin/google_signin.html">
 
 <polymer-element name="woven-app">
   <template>
@@ -31,6 +32,9 @@
         <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
           <core-item data-page="0" label="Everything" icon="settings" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
           <core-item data-page="2" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+          <a href="{{ loginLinkUrl }}">Login with Facebook</a>
+          <google-signin clientId="918967185937-o8iolmjgbrk6nr81422j89mg6ems7q7o.apps.googleusercontent.com"
+                         signInMsg="Please sign in"></google-signin>
         </core-menu>
       </core-header-panel>
       <div tool id="toolbar-main">

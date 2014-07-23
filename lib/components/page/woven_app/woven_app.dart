@@ -3,10 +3,18 @@ import 'package:core_elements/core_scaffold.dart';
 import 'package:woven/src/app.dart';
 import 'dart:html';
 import 'package:paper_elements/core_animated_pages.dart';
+import "package:google_oauth2_client/google_oauth2_browser.dart";
+import 'package:woven/src/config.dart';
+
+get fbConfig => config['authentication']['facebook'];
+get appId => fbConfig['appId'];
+get url => fbConfig['url'];
 
 @CustomTag('woven-app')
 class WovenApp extends PolymerElement with Observable {
   @published App app = new App();
+
+  var loginLinkUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&state=TEST_TOKEN&scope=email';
 
   CoreScaffold get scaffold => $['scaffold'];
 
@@ -20,3 +28,7 @@ class WovenApp extends PolymerElement with Observable {
   attached() => print("+WovenApp");
   detached() => print("-WovenApp");
 }
+
+
+
+
