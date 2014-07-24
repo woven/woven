@@ -5,6 +5,7 @@ import 'dart:html';
 import 'package:paper_elements/core_animated_pages.dart';
 import "package:google_oauth2_client/google_oauth2_browser.dart";
 import 'package:woven/src/config.dart';
+import 'package:angular/angular.dart';
 
 get fbConfig => config['authentication']['facebook'];
 get appId => fbConfig['appId'];

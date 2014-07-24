@@ -1,8 +1,9 @@
 name: woven
 version: 0.0.2
 dependencies:
-  #angular: 0.12.0
-  #angular_node_bind: any
+  angular: 0.12.0
+  angular_node_bind: any
+  shadow_dom: any
   browser: any
   polymer: ">=0.11.0 <0.12.0"
   core_elements: ">=0.0.6 <0.1.0"
@@ -15,9 +16,9 @@ dependencies:
   uri: ">=0.9.3 <0.10.0"
   query_string: any
 transformers:
-#- angular:
-#    html_files:
-#    - web/index.html
+- angular:
+    html_files:
+    - web/index.html
 - polymer:
     entry_points:
     - web/index.html
@@ -27,7 +28,3 @@ dependency_overrides:
   web_components: 0.4.0
   analyzer: ">=0.15.6 <0.16.0"
   html5lib: ">=0.11.0 <0.12.0"
-  #core_elements:
-  #  git: https://github.com/dart-lang/core-elements.git
-  #firebase:
-  #  path: /Users/dave/packages_overridden/firebase-0.1.0
