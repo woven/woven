@@ -95,8 +95,6 @@ void saveUser(user) {
   http.put('${config['datastore']['firebaseLocation']}/users/$username.json', body: mainBody).then((res) {
     print("We put something:\n${res.body}");
   });
-
-  //TODO: Where do I close the response?
 }
 
 

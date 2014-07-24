@@ -15,6 +15,7 @@ dependencies:
   google_plus_v1_api: any
   uri: ">=0.9.3 <0.10.0"
   query_string: any
+  route: any
 transformers:
 - angular:
     html_files:
