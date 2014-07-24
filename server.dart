@@ -71,6 +71,8 @@ The Facebook code is: ${user['id']}
 
       saveUser(user);
 
+      staticHandler(req);
+
 
     });
   });
