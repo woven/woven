@@ -6,4 +6,7 @@ var config = {
             'url': 'http://woven.app/login/facebook'
         }
     },
+    'datastore': {
+        'firebaseLocation': 'https://luminous-fire-4671.firebaseio.com'
+    }
 };
