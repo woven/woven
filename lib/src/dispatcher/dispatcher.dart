@@ -1,0 +1,5 @@
+library dispatcher;
+
+class Dispatcher {
+
+}
