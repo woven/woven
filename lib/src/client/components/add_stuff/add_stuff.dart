@@ -53,7 +53,7 @@ class AddStuff extends PolymerElement {
     body.value = "";
     subject.value = "";
 
-    app.user = name.value;
+    //app.user = name.value;
     app.selectedPage = 0;
   }
 

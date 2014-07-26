@@ -4,11 +4,11 @@ import 'dart:io';
 import '../app.dart';
 
 class HelloController {
-  static String sayHello(App app, HttpRequest request, String person) {
+  static sayHello(App app, HttpRequest request, String person) {
     return 'Hello $person!';
   }
 
-  static String sayFoo(App app, HttpRequest request) {
+  static sayFoo(App app, HttpRequest request) {
     return 'foo!';
   }
 }

@@ -1,12 +1,17 @@
-<link rel="import" href="../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../packages/core_elements/core_field.html">
-<link rel="import" href="../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="/packages/polymer/polymer.html">
+<link rel="import" href="/packages/core_elements/core_field.html">
+<link rel="import" href="/packages/core_elements/core_icon_button.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <polymer-element name="item-activities">
   <template>
     <link rel="stylesheet" href="item_activities.css">
     <core-field>
-      <input id="name" placeholder="Name" value="{{app.user}}" flex>
+      <template if="{{app.user == null}}">
+        <input id="name" placeholder="Name" value="Unknown" flex>
+      </template>
+      <template if="{{app.user != null}}">
+        <input id="name" placeholder="Name" value="{{app.user.username}}" flex>
+      </template>
     </core-field>
     <core-field>
       <input id="comment" placeholder="Comment" flex>

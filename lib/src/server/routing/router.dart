@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:mirrors';
 import 'package:route/url_pattern.dart';
+import '../../shared/routing/routes.dart';
 import '../app.dart';
 
 class Router {
@@ -17,7 +18,7 @@ class Router {
     return new Future(() {
       var matchingPattern = routes.keys.firstWhere((UrlPattern pattern) => pattern.matches(request.uri.path), orElse: () => null);
 
-      if (matchingPattern == null) return null;
+      if (matchingPattern == null) return new NoMatchingRoute();
 
       var action = routes[matchingPattern];
       ClosureMirror mirror = reflect(action);

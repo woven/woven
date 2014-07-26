@@ -4,14 +4,13 @@ import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_animation.dart';
 import 'dart:html';
 import 'dart:async';
-
-
+import 'package:woven/src/shared/model/user.dart';
 
 class App extends Observable {
   @observable var selectedItem;
   @observable var selectedPage = 0;
   @observable String pageTitle = "";
-  @observable var user = "";
+  @observable UserModel user;
 
   void changeTitle(String newTitle) {
     HtmlElement el;

@@ -122,5 +122,4 @@ class GoogleSignin extends PolymerElement {
   attached() {
     print("+GoogleSignin");
   }
-
 }
