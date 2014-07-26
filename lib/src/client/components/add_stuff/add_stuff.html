@@ -1,0 +1,20 @@
+<link rel="import" href="../../../../packages/polymer/polymer.html">
+<link rel="import" href="../widgets/dialog/dialog.html">
+<polymer-element name="add-stuff">
+  <template>
+    <link rel="stylesheet" href="add_stuff.css">
+    <core-icon-button id="add-button" icon="add" on-tap="{{toggleOverlay}}"></core-icon-button>
+
+    <x-dialog id="add-stuff-overlay" class="dialog">
+      <h2>Add Stuff</h2>
+
+      <form id="doForm" on-submit="{{addItem}}">
+        <input id="name" placeholder="Name" autocomplete="off" flex>
+        <input id="subject" placeholder="Subject" autocomplete="off" flex>
+        <div><textarea id="body" placeholder="Sharing is caring..." autocomplete="off" flex></textarea></div>
+        <button>Send</button>
+      </form>
+    </x-dialog>
+  </template>
+  <script type="application/dart" src="add_stuff.dart"></script>
+</polymer-element>

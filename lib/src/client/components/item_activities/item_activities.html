@@ -1,0 +1,31 @@
+<link rel="import" href="../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../packages/core_elements/core_field.html">
+<link rel="import" href="../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<polymer-element name="item-activities">
+  <template>
+    <link rel="stylesheet" href="item_activities.css">
+    <core-field>
+      <input id="name" placeholder="Name" value="{{app.user}}" flex>
+    </core-field>
+    <core-field>
+      <input id="comment" placeholder="Comment" flex>
+    </core-field>
+    <button on-click="{{addComment}}">Send</button>
+
+    <hr/>
+    <p>Comments:</p>
+    <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
+      <div class="activity-card">
+        <div id="content">
+          <div class="user">{{comment['user']}}</div>
+          <p>{{comment['comment']}}</p>
+          <div class="date-time">
+            <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+          </div>
+        </div>
+      </div>
+    </template>
+  </template>
+  <script type="application/dart" src="item_activities.dart"></script>
+</polymer-element>

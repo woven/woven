@@ -1,0 +1,22 @@
+<link rel="import" href="../../../../packages/polymer/polymer.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<polymer-element name="inbox-list">
+  <template>
+    <link rel="stylesheet" href="inbox_list.css">
+    <template repeat="{{ item in items }}">
+      <core-item class="item" on-click="{{ selectItem }}" data-id="{{ item['id'] }}">
+        <div id="icons">
+          <core-icon icon="star-outline" id="icon-star" on-click="{{ toggleStar }}"></core-icon>
+          <core-icon icon="favorite-outline" id="icon-fav" on-click="{{ toggleLike }}"></core-icon>
+        </div>
+        <div class="item-subject">{{ item['subject'] }}</div>
+        <div class="item-body" flex>{{ item['body'] }}</div>
+        <div class="item-updated">
+          <live-date-time value="{{ item['createdDate'] }}" formatter="{{ formatItemDate }}"></live-date-time>
+          by {{ item['user'] }}
+        </div>
+      </core-item>
+    </template>
+  </template>
+  <script type="application/dart" src="inbox_list.dart"></script>
+</polymer-element>
