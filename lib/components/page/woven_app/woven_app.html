@@ -13,6 +13,7 @@
 <link rel="import" href="../../../../../packages/woven/components/item_preview/item_preview.html">
 <link rel="import" href="../../../../../packages/woven/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../packages/woven/components/my_element/my_element.html">
+<link rel="import" href="../../../../../packages/woven/components/sign_in/sign_in.html">
 <link rel="import" href="../../../../../packages/core_elements/core_transition_css.html">
 <link rel="import" href="../../../../../packages/paper_elements/paper_fab.html">
 <link rel="import" href="../../../../../packages/paper_elements/paper_ripple.html">
@@ -32,21 +33,8 @@
         <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
           <core-item data-page="0" label="Everything" icon="settings" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
           <core-item data-page="2" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
-
-          <!-- Angular fun! -->
-          <div class="ng-cloak">
-            <p>Angular:</p>
-            <!--<h3 ng-cloak>Hello {{name}}!</h3>-->
-            Name: <input type="text" class="niceInput" ng-model="name">
-          </div>
-
-          <div class="ng-cloak">
-            <p>Polymer:</p>
-            <!--<my-element name="[[ name ]]"></my-element>-->
-          </div>
-
-          <a href="{{ loginLinkUrl }}">Login with Facebook</a>
-
+          <sign-in app="{{app}}"></sign-in>
+          <!--<a href="{{ loginLinkUrl }}">Login with Facebook</a>-->
           <!--<google-signin clientId="918967185937-o8iolmjgbrk6nr81422j89mg6ems7q7o.apps.googleusercontent.com"-->
                          <!--signInMsg="Please sign in"></google-signin>-->
         </core-menu>

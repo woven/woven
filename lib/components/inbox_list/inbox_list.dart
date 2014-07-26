@@ -4,6 +4,7 @@ import 'dart:html';
 import '../../src/input_formatter.dart';
 import '../../src/app.dart';
 import 'package:core_elements/core_pages.dart';
+import 'package:woven/src/config.dart';
 
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.
@@ -14,11 +15,12 @@ class InboxList extends PolymerElement with Observable {
   @observable List items = toObservable([]);
 
   InputElement get subject => $['subject'];
+  var firebaseLocation = config['datastore']['firebaseLocation'];
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
 
   getItems() {
-    var f = new db.Firebase(app.firebaseURL + '/items');
+    var f = new db.Firebase(firebaseLocation + '/items');
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     var lastItemsQuery = f.limit(20);

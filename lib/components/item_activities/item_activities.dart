@@ -3,6 +3,7 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:math';
 import '../../src/app.dart';
+import '../../src/config.dart';
 import '../../src/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
 
@@ -13,6 +14,7 @@ class ItemActivities extends PolymerElement {
 
   InputElement get name => $['name'];
   InputElement get comment => $['comment'];
+  var firebaseLocation = config['datastore']['firebaseLocation'];
 
   String formatItemDate(DateTime value) {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
@@ -20,7 +22,7 @@ class ItemActivities extends PolymerElement {
 
   getActivities() {
     var itemId = app.selectedItem['id'];
-    var f = new db.Firebase(app.firebaseURL + '/items/' + itemId + '/activities/comments');
+    var f = new db.Firebase(firebaseLocation + '/items/' + itemId + '/activities/comments');
     f.onChildAdded.listen((e) {
       var comment = e.snapshot.val();
       comment['createdDate'] = DateTime.parse(comment['createdDate']);
