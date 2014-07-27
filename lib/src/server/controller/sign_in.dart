@@ -42,7 +42,7 @@ class SignInController {
         ..location = userData['location'] != null ? userData['location']['name'] : null;
 
       // TODO: We should have a real ID. Maybe we should generate one ourselves? Or just wait until we have a 'real' db.
-      return Firebase.put('/users/${user.facebookId}.json', user.encode()).then((_) {
+      return Firebase.put('/users.json', user.encode()).then((_) {
         // Save the user to the session.
         request.session['facebookId'] = user.facebookId;
 

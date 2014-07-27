@@ -10,7 +10,7 @@ class Firebase {
   static Future put(String path, data) {
     if (data is! String) data = JSON.encode(data);
 
-    return http.put('${config['datastore']['firebaseLocation']}$path', body: data).then((response) {
+    return http.post('${config['datastore']['firebaseLocation']}$path', body: data).then((response) {
       var message = JSON.decode(response.body);
       if (message['error'] != null) {
         throw 'Firebase returned an error.\nPath: $path\nData: $data\nResponse: ${message["error"]}';

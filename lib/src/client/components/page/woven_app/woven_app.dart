@@ -30,6 +30,10 @@ class WovenApp extends PolymerElement with Observable {
     window.location.assign(signInUrl);
   }
 
+  void signOut() {
+    app.user = null;
+  }
+
   WovenApp.created() : super.created();
 
   attached() {

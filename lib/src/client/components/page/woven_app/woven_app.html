@@ -38,7 +38,7 @@
           </template>
 
           <template if="{{app.user != null}}">
-            <span>Signed in as {{app.user.facebookId}} !</span>
+            <span>Signed in as {{app.user.facebookId}}! <a on-click="{{signOut}}">Sign out</a></span>
           </template>
           <!--<google-signin clientId="918967185937-o8iolmjgbrk6nr81422j89mg6ems7q7o.apps.googleusercontent.com"-->
           <!--signInMsg="Please sign in"></google-signin>-->
