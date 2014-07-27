@@ -5,11 +5,12 @@ import '../app.dart';
 import '../firebase.dart';
 import '../../shared/response.dart';
 import '../../shared/model/user.dart';
+import '../../../config/config.dart';
 
 class MainController {
   static home(App app, HttpRequest request) {
     // If you return an instance of File, it will be served.
-    return new File('web/index.html');
+    return new File(config['server']['directory'] + '/index.html');
   }
 
   static getCurrentUser(App app, HttpRequest request) {
