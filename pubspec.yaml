@@ -17,9 +17,6 @@ dependencies:
   query_string: any
   route: any
 transformers:
-- angular:
-    html_files:
-    - web/index.html
 - polymer:
     entry_points:
     - web/index.html
