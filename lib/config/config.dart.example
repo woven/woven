@@ -4,7 +4,7 @@ var config = {
   'server': {
     'address': '0.0.0.0',
     'port': 80,
-    'directory': 'web'
+    'directory': 'web' // No leading slash!
   },
   'authentication': {
     'facebook': {
