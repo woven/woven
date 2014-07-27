@@ -6,8 +6,6 @@ import 'dart:html';
 // *
 @CustomTag('facebook-login')
 class InboxList extends PolymerElement with Observable {
-  @published ;
-
   InputElement get subject => $['subject'];
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
