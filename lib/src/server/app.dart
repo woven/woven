@@ -30,7 +30,7 @@ class App {
       ..routes[Routes.currentUser] = MainController.getCurrentUser;
 
     // Set up the virtual directory.
-    virtualDirectory = new VirtualDirectory('web')
+    virtualDirectory = new VirtualDirectory(config['server']['directory'])
       ..allowDirectoryListing = false
       ..jailRoot = false;
   }

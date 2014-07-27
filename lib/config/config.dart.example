@@ -3,7 +3,8 @@ library config;
 var config = {
   'server': {
     'address': '0.0.0.0',
-    'port': 80
+    'port': 80,
+    'directory': 'web'
   },
   'authentication': {
     'facebook': {
