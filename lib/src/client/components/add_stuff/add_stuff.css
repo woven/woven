@@ -17,7 +17,9 @@
 }
 
 #add-button {
+  background-color: #CF3301;
   fill: #f1f1f1;
+  /*float: right;*/
   position: absolute;
   top: 10px;
   right: 10px;

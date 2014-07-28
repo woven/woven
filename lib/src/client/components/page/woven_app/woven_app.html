@@ -27,24 +27,26 @@
     <core-scaffold id="scaffold">
       <core-header-panel id="drawerPanel" navigation flex mode="seamed">
         <core-toolbar id="toolbar-drawer" class="toolbar">
-          <span>LAB Collective</span>
+          <span>woven</span>
         </core-toolbar>
         <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
           <core-item data-page="0" label="Everything" icon="settings" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
           <core-item data-page="2" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
 
-          <template if="{{app.user == null}}">
-            <button on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
-          </template>
+          <div id="button-area">
+            <template if="{{app.user == null}}">
+              <button class="btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+            </template>
 
-          <template if="{{app.user != null}}">
-            <span>Signed in as {{app.user.facebookId}}! <a on-click="{{signOut}}">Sign out</a></span>
-          </template>
-          <!--<google-signin clientId="918967185937-o8iolmjgbrk6nr81422j89mg6ems7q7o.apps.googleusercontent.com"-->
-          <!--signInMsg="Please sign in"></google-signin>-->
+            <template if="{{app.user != null}}">
+              <p>Hello, {{app.user.username}}!</p>
+              <button class="btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
+            </template>
+          </div>
+
         </core-menu>
       </core-header-panel>
-      <div tool id="toolbar-main">
+      <div tool id="toolbar-main" flex>
         <span id="page-title" flex>{{ app.pageTitle }}</span>
         <add-stuff app="{{app}}"></add-stuff>
       </div>

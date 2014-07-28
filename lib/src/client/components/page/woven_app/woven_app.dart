@@ -14,9 +14,8 @@ import 'package:woven/src/shared/model/user.dart';
 class WovenApp extends PolymerElement with Observable {
   @published App app = new App();
 
-  CoreScaffold get scaffold => $['scaffold'];
-
   void switchPage(Event e, var detail, Element target) {
+    CoreScaffold scaffold = $['scaffold'];
     app.selectedPage = int.parse(target.dataset['page']);
     scaffold.closeDrawer();
   }
@@ -40,6 +39,8 @@ class WovenApp extends PolymerElement with Observable {
     print("+WovenApp");
 
     // Whenever we load the app, try to see what's the current user (i.e. have we signed in?).
+
+
     HttpRequest.getString(Routes.currentUser.reverse([])).then((String contents) {
       var response = Response.decode(contents);
       if (response.success) {

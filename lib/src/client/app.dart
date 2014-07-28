@@ -16,7 +16,7 @@ class App extends Observable {
     HtmlElement el;
     el = document.querySelector('body /deep/ #page-title');
     el.style.opacity = '0';
-    new Timer(new Duration(milliseconds: 500), () {
+    new Timer(new Duration(milliseconds: 1000), () {
       pageTitle = newTitle;
       el.style.opacity = '1';
     });

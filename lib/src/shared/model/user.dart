@@ -1,6 +1,7 @@
 library user_model;
 
 class UserModel {
+  String id;
   String username;
   String firstName;
   String lastName;

@@ -14,7 +14,7 @@ class MainController {
   }
 
   static getCurrentUser(App app, HttpRequest request) {
-    var id = request.session['facebookId'];
+    var id = request.session['id'];
     if (id == null) return new Response(false);
 
     return Firebase.get('/users/$id.json').then((userData) {
