@@ -23,3 +23,7 @@ dependency_overrides:
   web_components: 0.4.0
   analyzer: ">=0.15.6 <0.16.0"
   html5lib: ">=0.11.0 <0.12.0"
+#  core_elements:
+#    git: http://github.com/dart-lang/core-elements
+#  paper_elements:
+#    git: http://github.com/dart-lang/paper-elements
