@@ -21,7 +21,7 @@ class AddStuff extends PolymerElement {
   // *
   toggleOverlay() {
     overlay.toggle();
-    name.focus();
+    name.focus(); //Doesn't work
   }
 
   // *

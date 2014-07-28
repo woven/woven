@@ -81,6 +81,17 @@ core-scaffold::shadow core-toolbar {
   width: 100%;
 }
 
+/* This somehow makes for nicer margins with the menu icon in the toolbar */
+core-scaffold::shadow core-toolbar > * {
+  margin: 0 -4px;
+}
+
+core-scaffold::shadow core-icon-button,
+core-scaffold::shadow core-icon-button:active {
+  fill: #f1f1f1;
+  background-color: #333;
+}
+
 core-scaffold core-item {
   padding: 6px 13px 6px 13px;
   border-bottom-width: 1px;

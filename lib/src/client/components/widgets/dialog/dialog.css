@@ -13,6 +13,13 @@
   width: 400px;
 }
 
+@media all and (max-width: 600px)  {
+  :host {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
 content::content h1 {
   margin: 0 0 15px 0;
   color: #334C80;
