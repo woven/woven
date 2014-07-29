@@ -69,6 +69,7 @@ core-drawer-panel:not([narrow]) #navicon {
 
 core-scaffold::shadow core-toolbar {
   /*background-color: rgb(24, 146, 25);*/
+  background-color: #f1f1f1;
   padding: 0px 0px 0px 8px;
   background-image: url(http://thepatternlibrary.com/img/bc.png);
   background-repeat: repeat;
