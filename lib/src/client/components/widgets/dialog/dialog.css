@@ -13,6 +13,8 @@
   width: 400px;
 }
 
+
+
 @media all and (max-width: 600px)  {
   :host {
     width: 100vw;
@@ -20,27 +22,27 @@
   }
 }
 
-content::content h1 {
-  margin: 0 0 15px 0;
-  color: #334C80;
+polyfill-next-selector { content: ':host h1'; }
+::content h1 {
+  color: red;
 }
 
-core-overlay::content h1 {
-  color: orange;
-}
 
-/* This content::content stuff styles content passed into this element. See http://goo.gl/Fh9xz5 */
-content::content input {
+/*This stuff styles content passed into this dialog element.*/
+/*See http://www.polymer-project.org/docs/polymer/styling.html#directives */
+polyfill-next-selector { content: ':host input'; }
+::content input {
   border: 1px solid #ddd;
   margin-bottom: 8px;
-  padding: 2px 5px;
-  height: 20px;
+  padding: 8px 10px 8px 10px;
+  height: 35px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
+  font-size: 16px;
   outline: none;
 }
 
-content::content textarea {
+polyfill-next-selector { content: ':host textarea'; }
+::content textarea {
   border: 1px solid #ddd;
   margin: 5px;
   padding: 2px 5px;
@@ -50,33 +52,38 @@ content::content textarea {
   width: 100%;
 }
 
-content::content button {
+polyfill-next-selector { content: ':host button'; }
+::content button {
   background-color: white;
   border-radius: 2px;
   border: solid 1px #EEEEEE;
   font-size: 13px;
   font-weight: bold;
   padding: 2px 10px;
-  height: 27px;
+  height: 40px;
   margin: 0;
   margin-bottom: 10px;
 }
 
-content::content button:hover {
+polyfill-next-selector { content: ':host button:hover'; }
+::content button:hover {
   background-color: #f8f8f2;
   cursor: pointer;
 }
 
-content::content button:focus {
+polyfill-next-selector { content: ':host button:focus'; }
+::content button:focus {
   background-color: #f8f8f2;
   outline: none;
 }
 
-content::content a {
+polyfill-next-selector { content: ':host a'; }
+::content a {
   cursor: pointer;
   color: #0000ee;
 }
 
-content::content a:hover {
+polyfill-next-selector { content: ':host a:hover'; }
+::content a:hover {
   text-decoration: underline;
 }
