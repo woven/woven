@@ -1,19 +1,20 @@
 library config;
 
 var config = {
-  'server': {
-    'address': '0.0.0.0',
-    'port': 80,
-    'directory': 'web' // No leading slash!
-  },
-  'authentication': {
-    'facebook': {
-      'appId': '820721287940975',
-      'appSecret': 'e09435e26e2fc560bd7b1754d9baf334',
-      'url': 'http://woven.app/sign-in/facebook'
+    'server': {
+        'address': '0.0.0.0',
+        'port': 80,
+        'domain': 'woven.app',
+        'directory': 'web'
+    },
+    'authentication': {
+        'facebook': {
+            'appId': '820721287940975',
+            'appSecret': 'e09435e26e2fc560bd7b1754d9baf334',
+            'url': 'http://woven.app/signin/facebook'
+        }
+    },
+    'datastore': {
+        'firebaseLocation': 'https://luminous-fire-4671.firebaseio.com'
     }
-  },
-  'datastore': {
-    'firebaseLocation': 'https://luminous-fire-4671.firebaseio.com'
-  }
 };

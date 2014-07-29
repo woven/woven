@@ -164,3 +164,9 @@ core-scaffold core-header-panel #mainContainer {
   color: #fff;
   background: #3e5a9b;
 }
+
+#message {
+  opacity: 0;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
+}

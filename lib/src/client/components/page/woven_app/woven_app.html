@@ -35,6 +35,7 @@
 
           <div id="button-area">
             <template if="{{app.user == null}}">
+              <p id="message"></p>
               <button class="btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
             </template>
 

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="item_activities.css">
     <core-field>
       <template if="{{app.user == null}}">
-        <input id="name" placeholder="Name" value="Unknown" flex>
+        <input id="name" placeholder="Name" value="" flex>
       </template>
       <template if="{{app.user != null}}">
         <input id="name" placeholder="Name" value="{{app.user.username}}" flex>
