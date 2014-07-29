@@ -9,15 +9,19 @@
     <core-icon-button id="add-button" icon="create" on-tap="{{toggleOverlay}}"></core-icon-button>
 
     <x-dialog id="add-stuff-overlay" class="dialog">
-      <h2>Add Stuff</h2>
+      <h1>Add Stuff</h1>
+      <p>Post <strong>asks, offers, announcements, projects and updates, suggestions, member profiles</strong> and more.</p>
+      <p>Stay tuned, this is just a rough start. :)</p>
 
       <form id="doForm" on-submit="{{addItem}}">
-        <input id="name" placeholder="Name" autocomplete="off" flex>
-        <input id="subject" placeholder="Subject" autocomplete="off" flex>
-        <div><textarea id="body" placeholder="Sharing is caring..." autocomplete="off" flex></textarea></div>
-        <button>Send</button>
+        <div vertical layout>
+          <input id="name" placeholder="Your name" autocomplete="off" flex>
+          <input id="subject" placeholder="Subject" autocomplete="off" flex>
+          <input id="body" placeholder="Sharing is caring..." autocomplete="off" flex>
+          <button>Send</button>
+          <button on-click="{{toggleOverlay}}">Cancel</button>
+        </div>
       </form>
-      <span><button on-click="{{toggleOverlay}}">Cancel</button></span>
     </x-dialog>
   </template>
   <script type="application/dart" src="add_stuff.dart"></script>

@@ -25,6 +25,10 @@ content::content h1 {
   color: #334C80;
 }
 
+core-overlay::content h1 {
+  color: orange;
+}
+
 /* This content::content stuff styles content passed into this element. See http://goo.gl/Fh9xz5 */
 content::content input {
   border: 1px solid #ddd;
@@ -55,6 +59,7 @@ content::content button {
   padding: 2px 10px;
   height: 27px;
   margin: 0;
+  margin-bottom: 10px;
 }
 
 content::content button:hover {

@@ -1,23 +1,5 @@
-.dialog {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  overflow: hidden;
-  background: white;
-  padding:30px 42px;
-  outline: 1px solid rgba(0,0,0,0.2);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-}
-
-#dialog {
-  width: 500px;
-}
-
 #add-button {
-  #background-color: #CF3301;
+  /*background-color: #CF3301;*/
   background-color: #333;
   fill: #f1f1f1;
   /*float: right;*/
@@ -25,35 +7,4 @@
   top: 10px;
   right: 10px;
   box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.1);
-}
-
-input {
-  border: 1px solid #ddd;
-  margin: 5px;
-  padding: 2px 5px;
-  height: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  outline: none;
-  width: 100%;
-}
-
-button {
-  border-radius: 2px;
-  background-color: white;
-  border: solid 1px #EEEEEE;
-  font-size: 13px;
-  font-weight: bold;
-  padding: 2px 10px;
-  height: 27px;
-}
-
-button:hover {
-  background-color: #f8f8f2;
-  cursor: pointer;
-}
-
-button:focus {
-  background-color: #f8f8f2;
-  outline: none;
 }

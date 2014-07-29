@@ -38,7 +38,6 @@ core-drawer-panel:not([narrow]) #navicon {
   display: none;
 }
 
-
 #core_menu {
   font-size: 16px;
 }
@@ -68,9 +67,8 @@ core-drawer-panel:not([narrow]) #navicon {
   display: none;
 }
 
-/* TODO: Why the hell can't I make the main area's toolbar green? */
 core-scaffold::shadow core-toolbar {
-  background-color: rgb(24, 146, 25);
+  /*background-color: rgb(24, 146, 25);*/
   padding: 0px 0px 0px 8px;
   background-image: url(http://thepatternlibrary.com/img/bc.png);
   background-repeat: repeat;
