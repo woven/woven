@@ -21,17 +21,16 @@ class WovenApp extends PolymerElement with Observable {
   }
 
   void signInWithFacebook(Event e, var detail, Element target) {
-    HtmlElement messageP = $['message'];
-    messageP.text = "Sign in coming soon! :)";
-    messageP.style.opacity = '1';
+//    HtmlElement messageP = $['message'];
+//    messageP.text = "Sign in coming soon! :)";
+//    messageP.style.opacity = '1';
 
-//TODO: Bring this back
-//    var cfg = config['authentication']['facebook'];
-//    var appId = cfg['appId'];
-//    var url = cfg['url'];
-//
-//    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&state=TEST_TOKEN&scope=email';
-//    window.location.assign(signInUrl);
+    var cfg = config['authentication']['facebook'];
+    var appId = cfg['appId'];
+    var url = cfg['url'];
+
+    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&state=TEST_TOKEN&scope=email';
+    window.location.assign(signInUrl);
   }
 
   void signOut() {

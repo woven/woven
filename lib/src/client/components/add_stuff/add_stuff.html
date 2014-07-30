@@ -13,16 +13,19 @@
       <p>Post <strong>asks, offers, announcements, projects and updates, suggestions, member profiles</strong> and more.</p>
       <p>Stay tuned, this is just a rough start. :)</p>
 
-      <form id="doForm" on-submit="{{addItem}}">
-        <div vertical layout>
-          <input id="name" placeholder="Your name" autocomplete="off" flex>
-          <input id="subject" placeholder="Subject" autocomplete="off" flex>
-          <input id="body" placeholder="Sharing is caring..." autocomplete="off" flex>
-          <button>Send</button>
-          <br/>
-          <button type="button" on-click="{{toggleOverlay}}">Cancel</button>
-        </div>
-      </form>
+      <div class="field-wrapper first">
+        <core-input id="name" placeholder="Your name" autocomplete="off"></core-input>
+      </div>
+      <div class="field-wrapper">
+        <core-input id="subject" placeholder="Subject" autocomplete="off"></core-input>
+      </div>
+      <div class="field-wrapper">
+        <core-input class="full-height" id="body" multiline rows="5" required placeholder="Sharing is caring..." autocomplete="off"></core-input>
+      </div>
+      <footer>
+        <button class="primary" on-click="{{addItem}}">Send</button>
+        <button on-click="{{toggleOverlay}}">Cancel</button>
+      </footer>
     </x-dialog>
   </template>
   <script type="application/dart" src="add_stuff.dart"></script>
