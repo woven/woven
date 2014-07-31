@@ -27,7 +27,7 @@ polyfill-next-selector { content: ':host h1'; }
 
 polyfill-next-selector { content: ':host p'; }
 ::content p {
-  margin: 10px 20px 10px 20px;
+  margin: 10px 20px 15px 15px;
 }
 
 polyfill-next-selector { content: ':host .field-wrapper'; }
@@ -51,7 +51,8 @@ polyfill-next-selector { content: ':host core-input'; }
 
 polyfill-next-selector { content: ':host core-input.full-height'; }
 ::content core-input.full-height {
-  height: 100%;
+  height: 500px;
+  overflow: hidden;
 }
 
 polyfill-next-selector { content: ':host footer'; }
@@ -117,3 +118,37 @@ polyfill-next-selector { content: ':host a:hover'; }
 ::content a:hover {
   text-decoration: underline;
 }
+
+
+/* Tab-like things */
+polyfill-next-selector { content: ':host .list'; }
+::content .list {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: wrap;
+  -webkit-flex-flow: row wrap;
+  list-style: none;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+polyfill-next-selector { content: ':host .list > *'; }
+::content .list > * {
+  cursor: pointer;
+  color: #000;
+  background: peachpuff;
+  padding: 10px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+
+polyfill-next-selector { content: ':host .list > *.core-selected'; }
+::content .list > *.core-selected {
+  background: #333;
+  color: #fff;
+}
+

@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_selector.html">
 <link rel="import" href="../widgets/dialog/dialog.html">
 <polymer-element name="add-stuff">
   <template>
@@ -10,17 +11,32 @@
 
     <x-dialog id="add-stuff-overlay" class="dialog">
       <h1>Add Stuff</h1>
-      <p>Post <strong>asks, offers, announcements, projects and updates, suggestions, member profiles</strong> and more.</p>
-      <p>Stay tuned, this is just a rough start. :)</p>
+      <p>Stay tuned, this is just a rough start. :)
+
+      <core-selector target="{{$['list']}}" selected="6"></core-selector>
+      <ul id="list" class="list">
+        <li>Announcement</li>
+        <li>Ask</li>
+        <li>Offer</li>
+        <li>Idea</li>
+        <li>Event</li>
+        <li>Project</li>
+        <li>Other</li>
+      </ul>
 
       <div class="field-wrapper first">
-        <core-input id="name" placeholder="Your name" autocomplete="off"></core-input>
+        <template if="{{app.user == null}}">
+          <core-input id="name" placeholder="Your name" autocomplete="off"></core-input>
+        </template>
+        <template if="{{app.user != null}}">
+          <core-input id="name" placeholder="Your name" autocomplete="off" value="{{app.user.username}}" disabled></core-input>
+        </template>
       </div>
       <div class="field-wrapper">
         <core-input id="subject" placeholder="Subject" autocomplete="off"></core-input>
       </div>
       <div class="field-wrapper">
-        <core-input class="full-height" id="body" multiline rows="5" required placeholder="Sharing is caring..." autocomplete="off"></core-input>
+        <core-input class="full-height" id="body" multiline rows="fit" required placeholder="Sharing is caring..." autocomplete="off"></core-input>
       </div>
       <footer>
         <button class="primary" on-click="{{addItem}}">Send</button>

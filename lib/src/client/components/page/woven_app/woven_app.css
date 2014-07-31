@@ -169,3 +169,7 @@ core-scaffold core-header-panel #mainContainer {
   -webkit-transition: opacity 1s;
   transition: opacity 1s;
 }
+
+core-scaffold .list > *.core-selected {
+  background: #333;
+}
