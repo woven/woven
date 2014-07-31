@@ -20,6 +20,13 @@
   }
 }
 
+polyfill-next-selector { content: ':host core-toolbar'; }
+::content core-toolbar {
+  background: #000;
+  color: #fff;
+  fill: #fff;
+}
+
 polyfill-next-selector { content: ':host h1'; }
 ::content h1 {
   margin: 20px 20px 20px 20px;
@@ -27,7 +34,7 @@ polyfill-next-selector { content: ':host h1'; }
 
 polyfill-next-selector { content: ':host p'; }
 ::content p {
-  margin: 10px 20px 15px 15px;
+  margin: 10px 20px 5px 15px;
 }
 
 polyfill-next-selector { content: ':host .field-wrapper'; }
@@ -49,20 +56,11 @@ polyfill-next-selector { content: ':host core-input'; }
   width: 100%;
 }
 
-polyfill-next-selector { content: ':host core-input.full-height'; }
-::content core-input.full-height {
-  height: 500px;
-  overflow: hidden;
-}
-
 polyfill-next-selector { content: ':host footer'; }
 ::content footer {
   height: 45px;
   background-color: #F5F5F5;
   border-top: solid 1px #D5D5D5;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
 }
 
 polyfill-next-selector { content: ':host footer button'; }
@@ -128,10 +126,10 @@ polyfill-next-selector { content: ':host .list'; }
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  flex-flow: wrap;
+  flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
   list-style: none;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   padding: 10px;
 }
 
@@ -152,3 +150,43 @@ polyfill-next-selector { content: ':host .list > *.core-selected'; }
   color: #fff;
 }
 
+polyfill-next-selector { content: ':host #container'; }
+::content #container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+}
+
+@media all and (max-width: 600px)  {
+  polyfill-next-selector { content: ':host #container'; }
+  ::content #container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+}
+
+polyfill-next-selector { content: ':host #container > *'; }
+::content #container > * {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+polyfill-next-selector { content: ':host .full-height'; }
+::content .full-height {
+  flex-grow: 1 !important;
+  flex-shrink: 1 !important;
+  height: 100%;
+  position: relative;
+  display: flex;
+  min-height: 100px;
+}
+
+polyfill-next-selector { content: ':host .expand'; }
+::content .expand {
+  flex-grow: 1;
+}
