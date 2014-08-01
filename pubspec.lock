@@ -40,7 +40,7 @@ packages:
   core_elements:
     description: core_elements
     source: hosted
-    version: "0.0.6"
+    version: "0.1.1"
   crypto:
     description: crypto
     source: hosted
@@ -108,11 +108,11 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.11.0-dev"
+    version: "0.11.0"
   paper_elements:
     description: paper_elements
     source: hosted
-    version: "0.0.1"
+    version: "0.1.0+2"
   path:
     description: path
     source: hosted
@@ -120,11 +120,11 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.12.0-dev"
+    version: "0.12.0"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
-    version: "0.12.0-dev"
+    version: "0.12.0"
   query_string:
     description: query_string
     source: hosted
@@ -144,7 +144,7 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.1.0+1"
+    version: "0.2.0+2"
   source_maps:
     description: source_maps
     source: hosted
@@ -160,7 +160,7 @@ packages:
   template_binding:
     description: template_binding
     source: hosted
-    version: "0.12.0-dev"
+    version: "0.12.0+3"
   unittest:
     description: unittest
     source: hosted
@@ -176,7 +176,7 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.4.0"
+    version: "0.5.0"
   yaml:
     description: yaml
     source: hosted

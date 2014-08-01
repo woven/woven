@@ -5,15 +5,14 @@ import 'dart:math';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:woven/config/config.dart';
+import 'package:core_elements/core_input.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
   AddStuff.created() : super.created();
   @published App app;
 
-  InputElement get name => $['name'];
-  InputElement get subject => $['subject'];
-  InputElement get body => $['body'];
   CoreOverlay get overlay => $['add-stuff-overlay'];
 
   // *
@@ -30,12 +29,18 @@ class AddStuff extends PolymerElement {
   addItem(Event e) {
     e.preventDefault();
 
+    CoreInput name = $['name'];
+    CoreInput subject = $['subject'];
+    CoreInput body = $['body'];
+
     if (subject.value.trim().isEmpty) {
       window.alert("Your message is empty.");
       return false;
     }
 
-    final items = new db.Firebase('https://luminous-fire-4671.firebaseio.com/items');
+    var firebaseLocation = config['datastore']['firebaseLocation'];
+
+    final items = new db.Firebase("$firebaseLocation/items");
 
     DateTime now = new DateTime.now().toUtc();
 
@@ -45,7 +50,9 @@ class AddStuff extends PolymerElement {
           'subject': subject.value,
           'body': body.value,
           'createdDate': '$now'
-      }).then((e){print('Message sent: ' + body.value);});
+      }).then((e){
+//        print("Message sent: ${body.value}");
+      });
     }
 
     set(items);
@@ -53,7 +60,7 @@ class AddStuff extends PolymerElement {
     body.value = "";
     subject.value = "";
 
-    //app.user = name.value;
+    app.user.username = name.value;
     app.selectedPage = 0;
   }
 

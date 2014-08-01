@@ -2,7 +2,7 @@ import 'dart:html';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_scaffold.dart';
-import 'package:paper_elements/core_animated_pages.dart';
+import 'package:core_elements/core_animated_pages.dart';
 
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
