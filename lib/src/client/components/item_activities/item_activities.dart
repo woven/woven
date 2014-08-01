@@ -46,7 +46,7 @@ class ItemActivities extends PolymerElement {
 
     var itemId = app.selectedItem['id'];
 
-    final comments = new db.Firebase('https://luminous-fire-4671.firebaseio.com/items/' + itemId + '/activities/comments');
+    final comments = new db.Firebase(firebaseLocation + '/items/' + itemId + '/activities/comments');
 
     DateTime now = new DateTime.now().toUtc();
 
