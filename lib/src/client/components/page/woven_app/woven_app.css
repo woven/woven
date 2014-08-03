@@ -17,9 +17,8 @@
   fill: #f1f1f1;
 }
 .toolbar {
-  background-color: rgb(24, 146, 25);
   padding: 0px 0px 0px 8px;
-  background-image: url(http://thepatternlibrary.com/img/s.png);
+  background-image: url(/static/images/patt_1.png);
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;
@@ -71,7 +70,7 @@ core-scaffold::shadow core-toolbar {
   /*background-color: rgb(24, 146, 25);*/
   background-color: #f1f1f1;
   padding: 0px 0px 0px 8px;
-  background-image: url(http://thepatternlibrary.com/img/bc.png);
+  background-image: url(/static/images/patt_2.png);
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;

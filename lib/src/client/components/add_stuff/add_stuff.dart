@@ -46,9 +46,9 @@ class AddStuff extends PolymerElement {
 
     Future set(db.Firebase items) {
       items.push().set({
-          'user': name.value,
-          'subject': subject.value,
-          'body': body.value,
+          'user': name.inputValue,
+          'subject': subject.inputValue,
+          'body': body.inputValue,
           'createdDate': '$now'
       }).then((e){
 //        print("Message sent: ${body.value}");
@@ -60,7 +60,10 @@ class AddStuff extends PolymerElement {
     body.value = "";
     subject.value = "";
 
-    app.user.username = name.value;
+    if (app.user != null) {
+      app.user.username = name.inputValue;
+    }
+
     app.selectedPage = 0;
   }
 
