@@ -144,7 +144,7 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.2.0+2"
+    version: "0.2.0+3"
   source_maps:
     description: source_maps
     source: hosted
