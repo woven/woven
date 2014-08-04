@@ -7,6 +7,7 @@ import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
 import 'package:core_elements/core_input.dart';
+import 'package:core_elements/core_selector.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
@@ -29,6 +30,7 @@ class AddStuff extends PolymerElement {
   addItem(Event e) {
     e.preventDefault();
 
+    CoreSelector type = $['content-type'];
     CoreInput name = $['name'];
     CoreInput subject = $['subject'];
     CoreInput body = $['body'];
@@ -48,6 +50,7 @@ class AddStuff extends PolymerElement {
       items.push().set({
           'user': name.inputValue,
           'subject': subject.inputValue,
+          'type' : type.selected,
           'body': body.inputValue,
           'createdDate': '$now'
       }).then((e){

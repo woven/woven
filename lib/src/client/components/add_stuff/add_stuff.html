@@ -22,15 +22,15 @@
         </core-toolbar>
         <p>Stay tuned, this is just a rough start. :)
 
-        <core-selector target="{{$['list']}}" selected="6"></core-selector>
+        <core-selector id="content-type" target="{{$['list']}}" itemsSelector="li" valueattr="value" selected="6"></core-selector>
         <ul id="list" class="list">
-          <li>Announcement</li>
-          <li>Ask</li>
-          <li>Offer</li>
-          <li>Idea</li>
-          <li>Event</li>
-          <li>Project</li>
-          <li>Other</li>
+          <li value="announcement">Announcement</li>
+          <li value="ask">Ask</li>
+          <li value="offer">Offer</li>
+          <li value="idea">Idea</li>
+          <li value="event">Event</li>
+          <li value="project">Project</li>
+          <li value="other">Other</li>
         </ul>
 
         <div class="field-wrapper first">
