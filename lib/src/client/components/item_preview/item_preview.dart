@@ -10,6 +10,11 @@ import 'package:firebase/firebase.dart' as db;
 class ItemPreview extends PolymerElement {
   @published App app;
 
+  get formattedBody {
+    if (app.selectedItem == null) return '';
+    return "${InputFormatter.nl2br(app.selectedItem['body'])}";
+  }
+
   //Unused, this is for simple gets
   get formattedDate {
     if (app.selectedItem == null) return '';
@@ -23,6 +28,9 @@ class ItemPreview extends PolymerElement {
   attached() {
     print("+ItemPreview");
     app.changeTitle(app.selectedItem['subject']);
+    // Respect line breaks
+    HtmlElement body = $['body'];
+    body.innerHtml = formattedBody;
   }
 
   detached() {

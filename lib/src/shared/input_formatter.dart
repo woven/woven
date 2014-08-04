@@ -77,4 +77,16 @@ class InputFormatter {
     }
   }
 
+  /**
+   * Replaces newlines with breaklines.
+   */
+  static String nl2br(String content, {onlyIfHtml: false}) {
+    if (content == null) return '';
+
+    if (onlyIfHtml && content.allMatches('<p>').length == 0) return content;
+
+    content = content.replaceAll('\\n', '\n');
+
+    return content.replaceAll('\n', '<br />');
+  }
 }
