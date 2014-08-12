@@ -27,7 +27,7 @@ class ItemPreview extends PolymerElement {
 
   attached() {
     print("+ItemPreview");
-    app.changeTitle(app.selectedItem['subject']);
+//    app.changeTitle(app.selectedItem['subject']);
     // Respect line breaks
     HtmlElement body = $['body'];
     body.innerHtml = formattedBody;
@@ -36,7 +36,7 @@ class ItemPreview extends PolymerElement {
   detached() {
     print("-ItemPreview");
 //    app.pageTitle = "";
-    app.changeTitle("");
+//    app.changeTitle("");
   }
 
   ItemPreview.created() : super.created();

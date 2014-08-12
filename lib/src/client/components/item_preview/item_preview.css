@@ -1,3 +1,14 @@
 h1 {
   margin: 0;
 }
+
+.item-card {
+  width: 100%;
+  background-color: #fff;
+  /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
+  margin-bottom: 10px;
+}
+
+.item-card .content {
+  padding: 10px;
+}

@@ -11,10 +11,9 @@ core-field input {
 }
 
 .activity-card {
-  width: 300px;
+  max-width: 500px;
   background-color: #fff;
-  border-radius: 2px;
-  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;
+  /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
   margin-bottom: 10px;
 }
 
@@ -36,4 +35,74 @@ core-field input {
 .date-time {
   color: #3F3F3F;
   font-size: 85%;
+}
+
+.field-wrapper {
+  padding: 10px;
+  border-top: solid 1px #eee;
+}
+
+.field-wrapper.first {
+  border-top: none;
+}
+
+core-input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+
+#post-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;
+  background: #fff;
+  max-width: 500px;
+  margin-bottom: 10px;
+}
+
+@media all and (max-width: 600px)  {
+  #post-container {
+    width: 100%;
+  }
+}
+
+footer {
+  background-color: #F5F5F5;
+  border-top: solid 1px #e7e7e7;
+}
+
+footer .btn {
+  float: right;
+  vertical-align: middle;
+}
+
+.btn {
+  background-color: white;
+}
+
+.btn.primary {
+  background-color: rgb(64, 136, 214);
+  color: white;
+}
+
+.btn.primary:hover {
+  background-color: rgb(45, 104, 214);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #f8f8f2;
+  cursor: pointer;
+}
+
+.btn:focus {
+  background-color: #f8f8f2;
+  outline: none;
 }

@@ -12,16 +12,17 @@ class App extends Observable {
   @observable String pageTitle = "";
   @observable UserModel user;
 
-  void changeTitle(String newTitle) {
-// TODO: This was breaking Safari
-//    HtmlElement el;
-//    el = document.querySelector('body /deep/ #page-title');
-//    el.style.opacity = '0';
-//    new Timer(new Duration(milliseconds: 1000), () {
-//      pageTitle = newTitle;
-//      el.style.opacity = '1';
-//    });
-  }
+//  void changeTitle(newTitle) {
+//    print("DEBUG: changeTitle");
+//// TODO: This was breaking Safari
+////    HtmlElement el;
+////    el = document.querySelector('body /deep/ #page-title');
+////    el.style.opacity = '0';
+////    new Timer(new Duration(milliseconds: 1000), () {
+////      pageTitle = newTitle;
+////      el.style.opacity = '1';
+////    });
+//  }
 }
 
 

@@ -35,7 +35,8 @@
 
         <div class="field-wrapper first">
             <core-input id="name" placeholder="Your name" autocomplete="off"
-                        value="{{(app.user != null) ? app.user.username : ''}}"></core-input>
+                        value="{{(app.user != null) ? app.user.username : ''}}"
+                        disabled="{{(app.user != null) ? true : false}}"></core-input>
         </div>
         <div class="field-wrapper">
           <core-input id="subject" placeholder="Subject" autocomplete="off"></core-input>

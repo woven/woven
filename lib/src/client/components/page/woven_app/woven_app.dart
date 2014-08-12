@@ -4,7 +4,7 @@ import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_scaffold.dart';
 import 'package:core_elements/core_animated_pages.dart';
 
-import 'package:woven/config/config.dart';
+import 'package:woven/config/config2.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
@@ -20,7 +20,7 @@ class WovenApp extends PolymerElement with Observable {
     scaffold.closeDrawer();
   }
 
-  void signInWithFacebook(Event e, var detail, Element target) {
+  signInWithFacebook(Event e, var detail, Element target) {
 //    HtmlElement messageP = $['message'];
 //    messageP.text = "Sign in coming soon! :)";
 //    messageP.style.opacity = '1';

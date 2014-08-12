@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
+import 'package:woven/config/config2.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
 

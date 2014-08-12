@@ -3,17 +3,18 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:math';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
+import 'package:woven/config/config2.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
+import 'package:core_elements/core_input.dart';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
 
-  InputElement get name => $['name'];
-  InputElement get comment => $['comment'];
+  CoreInput get name => $['name'];
+  CoreInput get comment => $['comment'];
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
   String formatItemDate(DateTime value) {
@@ -39,10 +40,8 @@ class ItemActivities extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    if (name.value.trim().isEmpty) {
-      window.alert("Your name is empty.");
-      return false;
-    }
+    if (name.inputValue.trim().isEmpty) { window.alert("Your name is empty."); return false; }
+    if (comment.inputValue.trim().isEmpty) { window.alert("Your comment is empty."); return false; }
 
     var itemId = app.selectedItem['id'];
 
@@ -52,10 +51,10 @@ class ItemActivities extends PolymerElement {
 
     Future set(db.Firebase comments) {
       comments.push().set({
-          'user': name.value,
-          'comment': comment.value,
+          'user': name.inputValue,
+          'comment': comment.inputValue,
           'createdDate': '$now'
-      }).then((e){print('Commented: ' + comment.value);});
+      }).then((e){print('Commented: ' + comment.inputValue);});
     }
 
     set(comments);

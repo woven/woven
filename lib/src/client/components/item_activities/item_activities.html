@@ -1,25 +1,24 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_field.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <polymer-element name="item-activities">
   <template>
     <link rel="stylesheet" href="item_activities.css">
-    <core-field>
-      <template if="{{app.user == null}}">
-        <input id="name" placeholder="Name" value="" flex>
-      </template>
-      <template if="{{app.user != null}}">
-        <input id="name" placeholder="Name" value="{{app.user.username}}" flex>
-      </template>
-    </core-field>
-    <core-field>
-      <input id="comment" placeholder="Comment" flex>
-    </core-field>
-    <button on-click="{{addComment}}">Send</button>
+    <div id="post-container">
+      <div class="field-wrapper first">
+        <core-input id="name" placeholder="Your name" autocomplete="off"
+                    value="{{(app.user != null) ? app.user.username : ''}}"></core-input>
+      </div>
+      <div class="field-wrapper full-height">
+        <core-input class="expand" id="comment" multiline rows="3" required placeholder="Your comment..." autocomplete="off"></core-input>
+      </div>
+      <footer>
+        <core-icon-button class="btn primary" icon="send" on-tap="{{addComment}}"></core-icon-button>
+      </footer>
+    </div>
 
-    <hr/>
-    <p>Comments:</p>
     <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
       <div class="activity-card">
         <div id="content">

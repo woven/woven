@@ -4,14 +4,18 @@
   <template>
     <link rel="stylesheet" href="item_preview.css">
       <div template if="{{app.selectedItem != null}}">
-        <div>
-          <h1>{{app.selectedItem['subject']}}</h1>
-        </div>
-        <div>
-          <live-date-time value="{{app.selectedItem['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-        </div>
-        <div>
-          <p id="body">Loading...</p>
+        <div class="item-card">
+          <div class="content">
+            <div>
+              <h1>{{app.selectedItem['subject']}}</h1>
+            </div>
+            <div>
+              <live-date-time value="{{app.selectedItem['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+            </div>
+            <div>
+              <p id="body">Loading...</p>
+            </div>
+          </div>
         </div>
       </div>
   </template>
