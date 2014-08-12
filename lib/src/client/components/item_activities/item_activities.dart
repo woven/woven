@@ -3,7 +3,7 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:math';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config2.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_input.dart';

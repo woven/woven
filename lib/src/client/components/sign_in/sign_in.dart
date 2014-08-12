@@ -2,7 +2,7 @@ import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config2.dart';
+import 'package:woven/config/config.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
 

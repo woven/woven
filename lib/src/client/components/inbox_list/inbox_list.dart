@@ -4,7 +4,7 @@ import 'dart:html';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
-import 'package:woven/config/config2.dart';
+import 'package:woven/config/config.dart';
 
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.

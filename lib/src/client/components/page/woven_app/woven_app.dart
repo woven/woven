@@ -4,7 +4,7 @@ import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_scaffold.dart';
 import 'package:core_elements/core_animated_pages.dart';
 
-import 'package:woven/config/config2.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
