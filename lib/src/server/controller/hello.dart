@@ -2,6 +2,7 @@ library hello_controller;
 
 import 'dart:io';
 import '../app.dart';
+import '../../../config/config.dart';
 
 class HelloController {
   static sayHello(App app, HttpRequest request, String person) {

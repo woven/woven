@@ -29,7 +29,7 @@ class WovenApp extends PolymerElement with Observable {
     var appId = cfg['appId'];
     var url = cfg['url'];
 
-    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&state=TEST_TOKEN&scope=email';
+    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
     window.location.assign(signInUrl);
   }
 

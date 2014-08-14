@@ -43,7 +43,6 @@ class SignInController {
 //      print(UserExists(username));
 //      if (!UserExists(username)) {
 //        print(UserExists(user.username));
-        // TODO: We should have a real ID. Maybe we should generate one ourselves? Or just wait until we have a 'real' db.
         return Firebase.put('/users/${user.username}.json', user.encode()).then((_) {
           // Save the user to the session.
           request.session['id'] = user.username;
@@ -52,7 +51,7 @@ class SignInController {
 
           // Redirect.
           request.response.statusCode = 302;
-          request.response.headers.add(HttpHeaders.LOCATION, '/');
+          request.response.headers.add(HttpHeaders.LOCATION, '/welcome');
         });
 //      }
     });
@@ -61,7 +60,7 @@ class SignInController {
 
 
 //UserExists(String user) {
-//  return Firebase.get('/users/wedwede$user.json').then((res) {
+//  return Firebase.get('/users/$user.json').then((res) {
 //    return (res == null ? false : true);
 //  });
 //}
