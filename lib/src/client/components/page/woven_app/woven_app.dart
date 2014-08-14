@@ -18,6 +18,8 @@ class WovenApp extends PolymerElement with Observable {
     CoreScaffold scaffold = $['scaffold'];
     app.selectedPage = int.parse(target.dataset['page']);
     scaffold.closeDrawer();
+
+    app.router.dispatch(url: target.dataset['url']);
   }
 
   signInWithFacebook(Event e, var detail, Element target) {

@@ -8,7 +8,7 @@ import '../../shared/model/user.dart';
 import '../../../config/config.dart';
 
 class MainController {
-  static home(App app, HttpRequest request) {
+  static serveApp(App app, HttpRequest request) {
     // If you return an instance of File, it will be served.
     return new File(config['server']['directory'] + '/index.html');
   }

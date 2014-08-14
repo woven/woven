@@ -9,6 +9,7 @@ class Routes {
   static final signInFacebook = new UrlPattern(r'/signin/facebook');
   static final currentUser = new UrlPattern(r'/current-user');
   static final sayWelcome = new UrlPattern(r'/welcome');
+  static final starred = new UrlPattern(r'/starred');
 }
 
 class NoMatchingRoute {}
