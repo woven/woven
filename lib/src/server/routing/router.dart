@@ -1,4 +1,4 @@
-library router;
+library router_server;
 
 import 'dart:io';
 import 'dart:async';

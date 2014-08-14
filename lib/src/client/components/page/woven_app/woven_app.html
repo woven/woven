@@ -27,8 +27,8 @@
           <span data-page="0" on-tap="{{switchPage}}">The LAB Collective</span>
         </core-toolbar>
         <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-          <core-item data-page="0" label="Everything" icon="list" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
-          <core-item data-page="2" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+          <core-item data-page="0" data-url="/" label="Everything" icon="list" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
+          <core-item data-page="2" data-url="/starred" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
 
           <div id="button-area">
             <template if="{{app.user == null}}">
@@ -39,6 +39,10 @@
             <template if="{{app.user != null}}">
               <p>Hello, {{app.user.username}}!</p>
               <button class="btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
+            </template>
+
+            <template if="{{app.router.route.pattern == '/starred'}}">
+              <p>We are on Starred page!</p>
             </template>
           </div>
 
