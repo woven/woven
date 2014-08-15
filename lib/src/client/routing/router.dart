@@ -19,6 +19,7 @@ class Router extends Observable {
   @observable UrlPattern route;
 
   Router() {
+    // This is fired when the browser goes back or forward through the URL history.
     window.onPopState.listen((PopStateEvent e) {
       resolve();
     });
@@ -42,6 +43,7 @@ class Router extends Observable {
   }
 
   void dispatch({String url, String title, bool flash: false, bool alwaysDispatch: false}) {
+    print("dispatch");
     // Determine if we should just reload instead.
     if (Uri.parse(url).host != window.location.hostname && Uri.parse(url).host != '') {
       window.location.href = url;
@@ -57,7 +59,9 @@ class Router extends Observable {
       });
     }
 
-    if (window.location.pathname == url && alwaysDispatch == false) return;
+    if (window.location.pathname == url && alwaysDispatch == false) {
+      return;
+    }
 
     if (History.supportsState == false) {
       window.location.assign(url);
@@ -67,8 +71,14 @@ class Router extends Observable {
     if (title == null) title = document.title;
 
     window.history.pushState(null, title, url);
+    resolve();
+
   }
 
+//  I used this method like this in Woven:
+//  <a href="/foo" title="Foo page" on-click="{{app.router.changePage}}">click here</a>
+//  And it would automatically look into the event target's (<a>) title and href attributes
+//  and do the rest to switch the URL.
   bool changePage(e) {
     if (e.button == 1) return true;
 

@@ -3,4 +3,4 @@
 packages
 web/packages
 build
-#/lib/config/config.dart
+/lib/config/config.dart

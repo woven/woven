@@ -1,0 +1,56 @@
+<link rel="import" href="../../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_selector.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_toolbar.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_input.html">
+<link rel="import" href="../../widgets/dialog/dialog.html">
+<polymer-element name="welcome-dialog">
+  <template>
+    <!--<link rel="stylesheet" href="welcome.css">-->
+    <!--<core-icon-button id="add-button" icon="create" on-tap="{{toggleOverlay}}"></core-icon-button>-->
+
+    <x-dialog id="welcome-overlay" class="dialog" opened="true">
+      <div id="container">
+        <core-toolbar center-justified>
+          <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
+          <div flex horizontal center-justified layout>
+            <div>Create an account</div>
+          </div>
+          <core-icon-button icon="send" on-tap="{{addItem}}"></core-icon-button>
+        </core-toolbar>
+        <p>Please create an account.</p>
+
+        <!--<core-selector id="content-type" target="{{$['list']}}" itemsSelector="li" valueattr="value" selected="other"></core-selector>-->
+        <!--<ul id="list" class="list">-->
+          <!--<li value="announcement">Announcement</li>-->
+          <!--<li value="ask">Ask</li>-->
+          <!--<li value="offer">Offer</li>-->
+          <!--<li value="idea">Idea</li>-->
+          <!--<li value="event">Event</li>-->
+          <!--<li value="project">Project</li>-->
+          <!--<li value="other">Other</li>-->
+        <!--</ul>-->
+
+        <div class="field-wrapper first">
+          <core-input id="firstname" placeholder="Your first name" autocomplete="off"
+                      value="{{(app.user != null) ? app.user.firstName : ''}}"></core-input>
+        </div>
+        <div class="field-wrapper">
+          <core-input id="lastname" placeholder="Your last name" autocomplete="off"
+                      value="{{(app.user != null) ? app.user.lastName : ''}}"></core-input>
+        </div>
+        <div class="field-wrapper">
+          <core-input id="email" placeholder="Your email" autocomplete="off"
+                      value="{{(app.user != null) ? app.user.email : ''}}"></core-input>
+        </div>
+        <div class="field-wrapper">
+          <core-input id="username" placeholder="Choose a username" autocomplete="off"></core-input>
+        </div>
+
+      </div>
+    </x-dialog>
+  </template>
+  <script type="application/dart" src="welcome.dart"></script>
+</polymer-element>

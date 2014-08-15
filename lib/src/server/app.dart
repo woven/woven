@@ -28,7 +28,8 @@ class App {
       ..routes[Routes.sayFoo] = HelloController.sayFoo
       ..routes[Routes.sayHello] = HelloController.sayHello
       ..routes[Routes.signInFacebook] = SignInController.facebook
-      ..routes[Routes.currentUser] = MainController.getCurrentUser;
+      ..routes[Routes.currentUser] = MainController.getCurrentUser
+      ..routes[Routes.starred] = MainController.serveApp;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])

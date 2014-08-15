@@ -42,22 +42,14 @@ class WovenApp extends PolymerElement with Observable {
   WovenApp.created() : super.created();
 
   attached() {
-    print("+WovenApp");
-
     // Whenever we load the app, try to see what's the current user (i.e. have we signed in?).
-
-
     HttpRequest.getString(Routes.currentUser.reverse([])).then((String contents) {
+      print("DEBUG: $contents");
       var response = Response.decode(contents);
-      if (response.success) {
+      if (response.success && response.data !=null) {
         app.user = UserModel.decode(response.data);
       }
     });
+
   }
-
-  detached() => print("-WovenApp");
 }
-
-
-
-

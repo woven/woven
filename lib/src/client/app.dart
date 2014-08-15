@@ -29,7 +29,7 @@ class App extends Observable {
     }
 
     void globalHandler(String path) {
-      print('example of a global handler for ANY url change.');
+      print('example of a global handler for ANY url change: $path');
 
       /* TODO: Things like G tracking could be handled here.
       if (js.context['_gaq'] != null) {

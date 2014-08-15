@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../../packages/core_elements/core_overlay.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/inbox_list/inbox_list.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/add_stuff/add_stuff.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/welcome/welcome.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_preview/item_preview.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
@@ -79,6 +80,9 @@
         </core-animated-pages>
       </div>
     </core-scaffold>
+    <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">
+      <welcome-dialog app="{{app}}"></welcome-dialog>
+    </template>
   </template>
   <script type="application/dart" src="woven_app.dart"></script>
 </polymer-element>
