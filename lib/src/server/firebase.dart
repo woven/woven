@@ -50,19 +50,15 @@ class Firebase {
 
   static Future<Map> get(String path) {
     return http.get('${config['datastore']['firebaseLocation']}$path').then((response) {
-      print("RESPONSE BODY: ${response.body}");
-      //TODO: Aggh, this evaluates to true even if response.body is really null
-      if (response.body != null) {
-        print("IT IS NOT NULL");
+      if (response.body != 'null') {
         var message = JSON.decode(response.body);
         if (message['error'] != null) {
           throw 'Firebase returned an error.\nPath: $path\nResponse: ${message["error"]}';
         }
         return message;
-      } else {
-        print("IT IS NULL");
-        return null;
       }
+
+      return null;
     });
   }
 }

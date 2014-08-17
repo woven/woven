@@ -13,9 +13,9 @@ import 'package:woven/src/server/session_manager.dart';
 
 class SignInController {
   static facebook(App app, HttpRequest request) {
-    var code        = Uri.encodeComponent(request.uri.queryParameters['code']);
-    var appId       = Uri.encodeComponent(config['authentication']['facebook']['appId']);
-    var appSecret   = Uri.encodeComponent(config['authentication']['facebook']['appSecret']);
+    var code = Uri.encodeComponent(request.uri.queryParameters['code']);
+    var appId = Uri.encodeComponent(config['authentication']['facebook']['appId']);
+    var appSecret = Uri.encodeComponent(config['authentication']['facebook']['appSecret']);
     var callbackUrl = Uri.encodeComponent(config['authentication']['facebook']['url']);
 
     var url = 'https://graph.facebook.com/oauth/access_token?client_id=$appId&redirect_uri=$callbackUrl&client_secret=$appSecret&code=$code';
@@ -30,6 +30,7 @@ class SignInController {
       Map userData = JSON.decode(userInfo);
 
       var username = userData['username'] != null ? userData['username'] : userData['id'];
+      var facebookId = userData['id'];
 
       var user = new UserModel()
         ..username = userData['username'] != null ? userData['username'] : userData['id']
@@ -39,38 +40,39 @@ class SignInController {
         ..email = userData['email']
         ..location = userData['location'] != null ? userData['location']['name'] : null;
 
-      print("Got here: ${user.username}");
+      // Save the user to the session.
+      request.session['id'] = facebookId;
 
-      var goUrl = '/';
-      return userExists(username).then((bool exists) {
-        if (exists) {
-          print("1");
-          goUrl = '/';
-        } else {
-          print("2");
-          //TODO: This is probably in wrong place
-          Firebase.put('/users/${user.username}.json', user.encode());
-          goUrl = '/welcome';
+      return facebookIdExists(facebookId).then((bool facebookIdExists) {
+        print('Facebook ID already exists: $facebookIdExists');
+
+        if (!facebookIdExists) {
+          //Store the Facebook ID in an index that references the associated username.
+          Firebase.put('/facebook_index/$facebookId.json', {'username': '$username'});
+
+          // Store the user, and we can use the index to find it and set a different username later.
+          Firebase.put('/users/$username.json', user.encode());
         }
-      }).then((_){
-//        return user.encode();
-
-        // Save the user to the session.
-        request.session['id'] = user.username;
 
         // Redirect.
         request.response.statusCode = 302;
-        request.response.headers.add(HttpHeaders.LOCATION, goUrl);
+        request.response.headers.add(HttpHeaders.LOCATION, facebookIdExists ? '/' : '/welcome');
       });
     });
   }
-}
 
-Future<bool> userExists(String user) {
-  return Firebase.get('/users/$user.json').then((res) {
-    print("Got here!");
-    return (res == null ? false : true);
-  });
+  static Future<bool> userExists(String user) {
+    return Firebase.get('/users/$user.json').then((res) {
+      return (res == null ? false : true);
+    });
+  }
+
+  static Future<bool> facebookIdExists(String id) {
+    return Firebase.get('/facebook_index/$id.json').then((res) {
+      return (res == null ? false : true);
+    });
+  }
+
 }
 
 

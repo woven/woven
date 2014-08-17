@@ -16,12 +16,16 @@ class App extends Observable {
   Router router;
 
   App() {
+    void home(String path) {
+      selectedPage = 0;
+    }
+
     void welcome(String path) {
       print('welcome!!');
     }
 
     void starred(String path) {
-      print('starrred!!');
+      selectedPage = 2;
     }
 
     void notFound(String path) {
@@ -41,7 +45,7 @@ class App extends Observable {
 
     router = new Router()
       // Every route has to be registered... but if you don't need a handler, pass null.
-      ..routes[Routes.home] = null
+      ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
       ..routes[Routes.sayWelcome] = welcome;
 

@@ -25,7 +25,7 @@
     <core-scaffold id="scaffold">
       <core-header-panel id="drawerPanel" navigation flex mode="seamed">
         <core-toolbar id="toolbar-drawer" class="toolbar">
-          <span data-page="0" on-tap="{{switchPage}}">The LAB Collective</span>
+          <span data-page="0" data-url="/" on-tap="{{switchPage}}">The LAB Collective</span>
         </core-toolbar>
         <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
           <core-item data-page="0" data-url="/" label="Everything" icon="list" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>

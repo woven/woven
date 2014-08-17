@@ -1,6 +1,8 @@
 library main_controller;
 
 import 'dart:io';
+import 'dart:convert';
+import 'dart:async';
 import '../app.dart';
 import '../firebase.dart';
 import '../../shared/response.dart';
@@ -17,9 +19,14 @@ class MainController {
     var id = request.session['id'];
     if (id == null) return new Response(false);
 
-    return Firebase.get('/users/$id.json').then((userData) {
-      return new Response()
-        ..data = userData;
+    // Find the username associated with the Facebook ID
+    // that's in session.id, then get that user data.
+    return Firebase.get('/facebook_index/$id.json').then((indexData) {
+      var username = indexData['username'];
+      return Firebase.get('/users/$username.json').then((userData) {
+        return new Response()
+          ..data = userData;
+      });
     });
   }
 }
