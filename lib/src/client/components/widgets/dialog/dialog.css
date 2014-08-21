@@ -174,15 +174,6 @@ polyfill-next-selector { content: ':host #container'; }
   }
 }
 
-
-@media all and (max-width: 600px)  {
-  polyfill-next-selector { content: ':host #content-container'; }
-  ::content #content-container {
-    position: relative;
-    overflow: scroll;
-  }
-}
-
 polyfill-next-selector { content: ':host #container > *'; }
 ::content #container > * {
   flex-grow: 0;
