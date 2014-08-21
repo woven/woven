@@ -12,14 +12,14 @@
     <core-icon-button id="add-button" icon="create" on-tap="{{toggleOverlay}}"></core-icon-button>
 
     <x-dialog id="add-stuff-overlay" class="dialog">
+      <core-toolbar center-justified>
+        <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
+        <div flex horizontal center-justified layout>
+          <div>Add Stuff</div>
+        </div>
+        <core-icon-button icon="send" on-tap="{{addItem}}"></core-icon-button>
+      </core-toolbar>
       <div id="container">
-        <core-toolbar center-justified>
-          <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
-          <div flex horizontal center-justified layout>
-            <div>Add Stuff</div>
-          </div>
-          <core-icon-button icon="send" on-tap="{{addItem}}"></core-icon-button>
-        </core-toolbar>
         <div id="content-container">
           <p>Stay tuned, this is just a rough start. :)</p>
 
