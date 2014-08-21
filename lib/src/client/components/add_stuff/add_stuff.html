@@ -20,29 +20,31 @@
           </div>
           <core-icon-button icon="send" on-tap="{{addItem}}"></core-icon-button>
         </core-toolbar>
-        <p>Stay tuned, this is just a rough start. :)</p>
+        <div id="content-container">
+          <p>Stay tuned, this is just a rough start. :)</p>
 
-        <core-selector id="content-type" target="{{$['list']}}" itemsSelector="li" valueattr="value" selected="other"></core-selector>
-        <ul id="list" class="list">
-          <li value="announcement">Announcement</li>
-          <li value="ask">Ask</li>
-          <li value="offer">Offer</li>
-          <li value="idea">Idea</li>
-          <li value="event">Event</li>
-          <li value="project">Project</li>
-          <li value="other">Other</li>
-        </ul>
+          <core-selector id="content-type" target="{{$['list']}}" itemsSelector="li" valueattr="value" selected="other"></core-selector>
+          <ul id="list" class="list">
+            <li value="announcement">Announcement</li>
+            <li value="ask">Ask</li>
+            <li value="offer">Offer</li>
+            <li value="idea">Idea</li>
+            <li value="event">Event</li>
+            <li value="project">Project</li>
+            <li value="other">Other</li>
+          </ul>
 
-        <div class="field-wrapper first">
-            <core-input id="name" placeholder="Your name" autocomplete="off"
-                        value="{{(app.user != null) ? app.user.username : ''}}"
-                        disabled="{{(app.user != null) ? true : false}}"></core-input>
-        </div>
-        <div class="field-wrapper">
-          <core-input id="subject" placeholder="Subject" autocomplete="off"></core-input>
-        </div>
-        <div class="field-wrapper full-height">
-          <core-input class="expand" id="body" multiline rows="fit" required placeholder="Sharing is caring..." autocomplete="off"></core-input>
+          <div class="field-wrapper first">
+              <core-input id="name" placeholder="Your name" autocomplete="off"
+                          value="{{(app.user != null) ? app.user.username : ''}}"
+                          disabled="{{(app.user != null) ? true : false}}"></core-input>
+          </div>
+          <div class="field-wrapper">
+            <core-input id="subject" placeholder="Subject" autocomplete="off"></core-input>
+          </div>
+          <div class="field-wrapper full-height">
+            <core-input class="expand" id="body" multiline rows="fit" required placeholder="Sharing is caring..." autocomplete="off"></core-input>
+          </div>
         </div>
       </div>
     </x-dialog>

@@ -170,6 +170,16 @@ polyfill-next-selector { content: ':host #container'; }
     width: 100vw;
     height: 100vh;
     position: relative;
+    overflow: scroll;
+  }
+}
+
+
+@media all and (max-width: 600px)  {
+  polyfill-next-selector { content: ':host #content-container'; }
+  ::content #content-container {
+    position: relative;
+    overflow: scroll;
   }
 }
 
