@@ -37,7 +37,7 @@ polyfill-next-selector { content: ':host h1'; }
 
 polyfill-next-selector { content: ':host p'; }
 ::content p {
-  margin: 10px 20px 5px 15px;
+  margin: 15px 20px 15px 10px;
 }
 
 polyfill-next-selector { content: ':host .field-wrapper'; }
