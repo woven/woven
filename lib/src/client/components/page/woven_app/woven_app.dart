@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_scaffold.dart';
 import 'package:core_elements/core_animated_pages.dart';
+import 'package:core_elements/core_icon_button.dart';
 
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
@@ -16,8 +17,8 @@ class WovenApp extends PolymerElement with Observable {
 
   void switchPage(Event e, var detail, Element target) {
     CoreScaffold scaffold = $['scaffold'];
-    app.selectedPage = int.parse(target.dataset['page']);
     scaffold.closeDrawer();
+    app.selectedPage = int.parse(target.dataset['page']);
 
     app.router.dispatch(url: target.dataset['url']);
   }

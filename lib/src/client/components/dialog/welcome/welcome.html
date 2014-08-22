@@ -13,7 +13,7 @@
 
     <x-dialog id="welcome-overlay" class="dialog" opened="true">
       <core-toolbar center-justified>
-        <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
+        <core-icon-button icon="close" on-tap="{{updateUser}}"></core-icon-button>
         <div flex horizontal center-justified layout>
           <div>Create an account</div>
         </div>
@@ -21,7 +21,7 @@
       </core-toolbar>
       <div id="container">
         <div id="content-container">
-          <p>Please create an account.</p>
+          <p>Please create a personal account.</p>
 
           <!--<core-selector id="content-type" target="{{$['list']}}" itemsSelector="li" valueattr="value" selected="other"></core-selector>-->
           <!--<ul id="list" class="list">-->

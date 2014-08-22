@@ -32,6 +32,10 @@ class App extends Observable {
       print('404!' + path);
     }
 
+    void showItem(String path) {
+      window.alert("We're on an item!");
+    }
+
     void globalHandler(String path) {
       print('example of a global handler for ANY url change: $path');
 
@@ -47,7 +51,8 @@ class App extends Observable {
       // Every route has to be registered... but if you don't need a handler, pass null.
       ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
-      ..routes[Routes.sayWelcome] = welcome;
+      ..routes[Routes.sayWelcome] = welcome
+      ..routes[Routes.showItem] = showItem;
 
     router.onNotFound.listen(notFound);
     router.onDispatch.listen(globalHandler);

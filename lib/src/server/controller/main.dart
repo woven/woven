@@ -15,6 +15,11 @@ class MainController {
     return new File(config['server']['directory'] + '/index.html');
   }
 
+  static showItem(App app, HttpRequest request, String item) {
+    // Serve the app as usual, and client router will handle showing the item.
+    return new File(config['server']['directory'] + '/index.html');
+  }
+
   static getCurrentUser(App app, HttpRequest request) {
     var id = request.session['id'];
     if (id == null) return new Response(false);
