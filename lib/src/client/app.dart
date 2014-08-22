@@ -7,9 +7,9 @@ import 'dart:async';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
+import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:utf/utf.dart';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -39,7 +39,7 @@ class App extends Observable {
       // Decode the base64 URL and determine the item.
       var base64 = Uri.parse(path).pathSegments[1];
       var bytes = CryptoUtils.base64StringToBytes(base64);
-      var decodedItem = decodeUtf8(bytes);
+      var decodedItem = UTF8.decode(bytes);
       window.alert("We're on an item: $decodedItem");
     }
 

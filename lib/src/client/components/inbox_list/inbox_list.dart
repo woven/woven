@@ -6,8 +6,9 @@ import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
 
+import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
-import 'package:utf/utf.dart';
 
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.
@@ -49,7 +50,7 @@ class InboxList extends PolymerElement with Observable {
     app.selectedPage = 1;
 
     var str = target.dataset['id'];
-    var bytes = encodeUtf8(str);
+    var bytes = UTF8.encode(str);
     var base64 = CryptoUtils.bytesToBase64(bytes);
 
     app.router.dispatch(url: "item/$base64");
