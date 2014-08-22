@@ -44,6 +44,8 @@ class InboxList extends PolymerElement with Observable {
 
     app.selectedItem = item;
     app.selectedPage = 1;
+
+    app.router.dispatch(url: "item/${target.dataset['id']}");
   }
 
   toggleLike(Event e, var detail, Element target) {
