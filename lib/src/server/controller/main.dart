@@ -17,7 +17,10 @@ class MainController {
 
   static showItem(App app, HttpRequest request, String item) {
     // Serve the app as usual, and client router will handle showing the item.
-    return new File(config['server']['directory'] + '/index.html');
+    // TODO: Apparently everything hear is infinite looping.
+    // return new File(config['server']['directory'] + '/index.html');
+    request.response.statusCode = 302;
+    request.response.headers.add(HttpHeaders.LOCATION, 'item/$item');
   }
 
   static getCurrentUser(App app, HttpRequest request) {

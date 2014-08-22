@@ -6,6 +6,9 @@ import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
 
+import 'package:crypto/crypto.dart';
+import 'package:utf/utf.dart';
+
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.
 // *
@@ -45,7 +48,11 @@ class InboxList extends PolymerElement with Observable {
     app.selectedItem = item;
     app.selectedPage = 1;
 
-    app.router.dispatch(url: "item/${target.dataset['id']}");
+    var str = target.dataset['id'];
+    var bytes = encodeUtf8(str);
+    var base64 = CryptoUtils.bytesToBase64(bytes);
+
+    app.router.dispatch(url: "item/$base64");
   }
 
   toggleLike(Event e, var detail, Element target) {

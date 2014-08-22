@@ -43,7 +43,6 @@ class Router extends Observable {
   }
 
   void dispatch({String url, String title, bool flash: false, bool alwaysDispatch: false}) {
-    print("dispatch");
     // Determine if we should just reload instead.
     if (Uri.parse(url).host != window.location.hostname && Uri.parse(url).host != '') {
       window.location.href = url;

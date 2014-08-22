@@ -8,6 +8,9 @@ import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 
+import 'package:crypto/crypto.dart';
+import 'package:utf/utf.dart';
+
 class App extends Observable {
   @observable var selectedItem;
   @observable var selectedPage = 0;
@@ -33,7 +36,11 @@ class App extends Observable {
     }
 
     void showItem(String path) {
-      window.alert("We're on an item!");
+      // Decode the base64 URL and determine the item.
+      var base64 = Uri.parse(path).pathSegments[1];
+      var bytes = CryptoUtils.base64StringToBytes(base64);
+      var decodedItem = decodeUtf8(bytes);
+      window.alert("We're on an item: $decodedItem");
     }
 
     void globalHandler(String path) {
