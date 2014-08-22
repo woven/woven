@@ -22,7 +22,6 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <core-scaffold id="scaffold">
       <core-header-panel id="drawerPanel" navigation flex mode="seamed">
         <core-toolbar id="toolbar-drawer" class="toolbar">
           <span data-page="0" data-url="/" on-tap="{{switchPage}}">The LAB Collective</span>
@@ -42,9 +41,9 @@
               <button class="btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
             </template>
 
-            <!--<template if="{{app.router.route.pattern == '/starred'}}">-->
-              <!--<p>We are on Starred page!</p>-->
-            <!--</template>-->
+            <template if="{{app.router.route.pattern == '/starred'}}">
+              <p>We are on Starred page!</p>
+            </template>
           </div>
 
         </core-menu>
@@ -79,7 +78,6 @@
           </section>
         </core-animated-pages>
       </div>
-    </core-scaffold>
     <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">
       <welcome-dialog app="{{app}}"></welcome-dialog>
     </template>
