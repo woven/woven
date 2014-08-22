@@ -8,6 +8,8 @@ import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'dart:convert';
+import 'package:firebase/firebase.dart' as db;
+import 'package:woven/config/config.dart';
 
 import 'package:crypto/crypto.dart';
 
@@ -41,6 +43,22 @@ class App extends Observable {
       var bytes = CryptoUtils.base64StringToBytes(base64);
       var decodedItem = UTF8.decode(bytes);
       window.alert("We're on an item: $decodedItem");
+      print(selectedItem);
+      selectedItem = decodedItem;
+      selectedPage = 1;
+      print(decodedItem);
+
+//      var firebaseLocation = config['datastore']['firebaseLocation'];
+
+//      var f = new db.Firebase(firebaseLocation + '/items');
+
+     /* TODO: I want to get the item as per the URL...
+        but that item may not be in the local item list (called in InboxList.getItems)
+        so we need to handle it separately. I could add the item to the local list
+        but then I run the risk of having some older item randomly inserted into
+        what is now the most recent items as per InboxList.getitems.
+      */
+
     }
 
     void globalHandler(String path) {
