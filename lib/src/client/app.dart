@@ -42,11 +42,16 @@ class App extends Observable {
       var base64 = Uri.parse(path).pathSegments[1];
       var bytes = CryptoUtils.base64StringToBytes(base64);
       var decodedItem = UTF8.decode(bytes);
-      window.alert("We're on an item: $decodedItem");
-      print(selectedItem);
-      selectedItem = decodedItem;
-      selectedPage = 1;
-      print(decodedItem);
+      print("We're on an item: $decodedItem");
+
+////      print(selectedItem);
+//////      TODO: I guess I need to make the items list global somehow.
+////      var item = items.firstWhere((i) => i['id'] == decodedItem);
+////      app.selectedItem = item;
+//
+//      selectedItem = item;
+//      selectedPage = 1;
+//      print(item);
 
 //      var firebaseLocation = config['datastore']['firebaseLocation'];
 
