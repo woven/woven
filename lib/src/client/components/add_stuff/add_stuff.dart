@@ -52,7 +52,8 @@ class AddStuff extends PolymerElement {
           'subject': subject.inputValue,
           'type' : type.selected,
           'body': body.inputValue,
-          'createdDate': '$now'
+          'createdDate': '$now',
+          'updatedDate': '$now'
       }).then((e){
 //        print("Message sent: ${body.value}");
       });

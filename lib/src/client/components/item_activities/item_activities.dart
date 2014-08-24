@@ -45,19 +45,32 @@ class ItemActivities extends PolymerElement {
 
     var itemId = app.selectedItem['id'];
 
-    final comments = new db.Firebase(firebaseLocation + '/items/' + itemId + '/activities/comments');
-
     DateTime now = new DateTime.now().toUtc();
+
+    // Add the comment.
+    final comments = new db.Firebase(firebaseLocation + '/items/' + itemId + '/activities/comments');
 
     Future set(db.Firebase comments) {
       comments.push().set({
           'user': name.inputValue,
           'comment': comment.inputValue,
           'createdDate': '$now'
-      }).then((e){print('Commented: ' + comment.inputValue);});
+      }).then((e){});
     }
 
     set(comments);
+
+    // Update some details on the parent item.
+    final item = new db.Firebase(firebaseLocation + '/items/' + itemId);
+
+    // TODO: About time to create a item model?
+    Future update(db.Firebase item) {
+      item.update({
+        'updatedDate': '$now'
+      }).then((e){});
+    }
+
+    update(item);
   }
 
   attached() {

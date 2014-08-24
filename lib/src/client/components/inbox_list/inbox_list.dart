@@ -7,7 +7,6 @@ import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
 
 import 'dart:convert';
-
 import 'package:crypto/crypto.dart';
 
 // *
@@ -30,20 +29,33 @@ class InboxList extends PolymerElement with Observable {
     var lastItemsQuery = f.limit(20);
     lastItemsQuery.onChildAdded.listen((e) {
       var item = e.snapshot.val();
-      item['createdDate'] = DateTime.parse(item['createdDate']);
+
+
+      // If no updated date, use the created date.
+      if (item['updatedDate'] == null) {
+        item['updatedDate'] = item['createdDate'];
+      }
+
+      item['updatedDate'] = DateTime.parse(item['updatedDate']);
 
       // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-      // So we'll add that to our local item list
+      // So we'll add that to our local item list.
       item['id'] = e.snapshot.name();
 
-      // Insert each new item at top of list so the list is ascending
-      items.insert(0, item);
+      // Insert each new item into the list.
+      items.add(item);
+
+      // Sort the list by the item's updatedDate, then reverse it.
+      items.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
+      items = items.reversed.toList();
+
+//      items.forEach((n) => print(n));
     });
   }
 
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
-    // id passed in the data-id attribute on the element
+    // id passed in the data-id attribute on the element.
     var item = items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.selectedItem = item;
@@ -57,7 +69,7 @@ class InboxList extends PolymerElement with Observable {
   }
 
   toggleLike(Event e, var detail, Element target) {
-    // Don't fire the core-item's on-click, just the icon's
+    // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
 
     if (target.attributes["icon"] == "favorite") {
@@ -71,7 +83,7 @@ class InboxList extends PolymerElement with Observable {
   }
 
   toggleStar(Event e, var detail, Element target) {
-    // Don't fire the core-item's on-click, just the icon's
+    // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
     target
       ..classes.toggle("selected");
