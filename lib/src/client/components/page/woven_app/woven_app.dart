@@ -4,6 +4,7 @@ import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_scaffold.dart';
 import 'package:core_elements/core_animated_pages.dart';
 import 'package:core_elements/core_icon_button.dart';
+import 'package:paper_elements/paper_toast.dart';
 
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
@@ -45,12 +46,37 @@ class WovenApp extends PolymerElement with Observable {
   attached() {
     // Whenever we load the app, try to see what's the current user (i.e. have we signed in?).
     HttpRequest.getString(Routes.currentUser.reverse([])).then((String contents) {
-      print("CONTENTS: $contents");
       var response = Response.decode(contents);
       if (response.success && response.data !=null) {
         app.user = UserModel.decode(response.data);
+
+        // Show the toast message welcoming the user.
+
+        var greeting;
+        DateTime now = new DateTime.now();
+
+        if (now.hour < 12) {
+          greeting = "Good morning";
+        }
+        else {
+          if (now.hour >= 12 && now.hour <= 17) {
+            greeting = "Good afternoon";
+          }
+          else if (now.hour > 17 && now.hour <= 24) {
+            greeting = "Good evening";
+          }
+          else {
+            greeting = "Hello";
+          }
+        }
+
+        PaperToast toastMessage = $['toast-message'];
+        toastMessage.text = "$greeting, ${app.user.firstName}.";
+        toastMessage.opened = true;
       }
     });
+
+
 
   }
 }

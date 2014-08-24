@@ -15,6 +15,7 @@
 <link rel="import" href="/packages/woven/src/client/components/my_element/my_element.html">
 <link rel="import" href="/packages/woven/src/client/components/sign_in/sign_in.html">
 <link rel="import" href="/packages/core_elements/core_transition_css.html">
+<link rel="import" href="/packages/paper_elements/paper_toast.html">
 <!--<link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">-->
 <!--<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/slide-from-right.html">-->
 <!--<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/cross-fade.html">-->
@@ -80,6 +81,7 @@
         </core-animated-pages>
       </div>
     </core-scaffold>
+    <paper-toast id="toast-message" duration="4000">
     <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">
       <welcome-dialog app="{{app}}"></welcome-dialog>
     </template>

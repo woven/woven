@@ -29,6 +29,7 @@
 
 .toolbar span {
   width: 100%;
+  cursor: pointer;
 }
 
 /* drawer is always visible on a wide screen
@@ -174,4 +175,10 @@ core-scaffold core-header-panel #mainContainer {
 
 core-scaffold .list > *.core-selected {
   background: #333;
+}
+
+paper-toast {
+  right: 10px;
+  left: auto;
+  background: forestgreen;
 }
