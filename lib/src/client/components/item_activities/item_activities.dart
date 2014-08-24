@@ -71,6 +71,10 @@ class ItemActivities extends PolymerElement {
     }
 
     update(item);
+
+    // Reset the fields.
+    comment.inputValue = "";
+    // TODO: Focus the field: http://goo.gl/wDYQOx
   }
 
   attached() {

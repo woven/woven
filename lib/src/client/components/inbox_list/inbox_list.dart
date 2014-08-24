@@ -30,13 +30,14 @@ class InboxList extends PolymerElement with Observable {
     lastItemsQuery.onChildAdded.listen((e) {
       var item = e.snapshot.val();
 
-
       // If no updated date, use the created date.
       if (item['updatedDate'] == null) {
         item['updatedDate'] = item['createdDate'];
       }
 
+      // The live-date-time element needs parsed dates.
       item['updatedDate'] = DateTime.parse(item['updatedDate']);
+      item['createdDate'] = DateTime.parse(item['createdDate']);
 
       // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
       // So we'll add that to our local item list.
@@ -51,6 +52,30 @@ class InboxList extends PolymerElement with Observable {
 
 //      items.forEach((n) => print(n));
     });
+
+    lastItemsQuery.onChildChanged.listen((e) {
+      var item = e.snapshot.val();
+
+      // If no updated date, use the created date.
+      if (item['updatedDate'] == null) {
+        item['updatedDate'] = item['createdDate'];
+      }
+
+      item['updatedDate'] = DateTime.parse(item['updatedDate']);
+
+      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+      // So we'll add that to our local item list.
+      item['id'] = e.snapshot.name();
+
+      // Insert each new item into the list.
+      items.removeWhere((oldItem) => oldItem['id'] == e.snapshot.name());
+      items.add(item);
+
+      // Sort the list by the item's updatedDate, then reverse it.
+      items.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
+      items = items.reversed.toList();
+    });
+
   }
 
   void selectItem(Event e, var detail, Element target) {

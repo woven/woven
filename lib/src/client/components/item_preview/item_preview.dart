@@ -15,12 +15,6 @@ class ItemPreview extends PolymerElement {
     return "${InputFormatter.nl2br(app.selectedItem['body'])}";
   }
 
-  //Unused, this is for simple gets
-  get formattedDate {
-    if (app.selectedItem == null) return '';
-    return InputFormatter.formatMomentDate(app.selectedItem['createdDate'], short: true, momentsAgo: true);
-  }
-
   String formatItemDate(DateTime value) {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
   }
