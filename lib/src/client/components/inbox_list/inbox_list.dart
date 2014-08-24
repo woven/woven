@@ -90,7 +90,7 @@ class InboxList extends PolymerElement with Observable {
     var bytes = UTF8.encode(str);
     var base64 = CryptoUtils.bytesToBase64(bytes);
 
-    app.router.dispatch(url: "/item/$base64");
+    app.router.dispatch(url: "item/$base64");
   }
 
   toggleLike(Event e, var detail, Element target) {
