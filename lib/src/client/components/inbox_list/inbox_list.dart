@@ -131,11 +131,11 @@ class InboxList extends PolymerElement with Observable {
   attached() {
     getItems();
     print("+InboxList");
-//    app.changeTitle("Everything");
+    app.pageTitle = "Everything";
   }
 
   detached() {
-//    app.changeTitle("");
+    app.pageTitle = "";
     print("-InboxList");
   }
 }

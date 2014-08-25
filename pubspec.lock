@@ -80,7 +80,7 @@ packages:
   paper_elements:
     description: paper_elements
     source: hosted
-    version: "0.1.0+2"
+    version: "0.1.0+3"
   path:
     description: path
     source: hosted
@@ -92,7 +92,7 @@ packages:
   polymer_expressions:
     description: polymer_expressions
     source: hosted
-    version: "0.12.0"
+    version: "0.12.0+1"
   query_string:
     description: query_string
     source: hosted
@@ -128,11 +128,11 @@ packages:
   template_binding:
     description: template_binding
     source: hosted
-    version: "0.12.0+3"
+    version: "0.12.0+4"
   unittest:
     description: unittest
     source: hosted
-    version: "0.11.0+4"
+    version: "0.11.0+5"
   uri:
     description: uri
     source: hosted

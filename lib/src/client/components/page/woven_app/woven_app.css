@@ -5,17 +5,17 @@
   top: 0px;
   position: absolute;
 }
-#core_scaffold {
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  top: 0px;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: green;
-  fill: #f1f1f1;
-}
+/*#core_scaffold {*/
+  /*right: 0px;*/
+  /*bottom: 0px;*/
+  /*left: 0px;*/
+  /*top: 0px;*/
+  /*position: absolute;*/
+  /*width: 100%;*/
+  /*height: 100%;*/
+  /*background: green;*/
+  /*fill: #f1f1f1;*/
+/*}*/
 .toolbar {
   padding: 0px 0px 0px 8px;
   background-image: url(/static/images/patt_1.png);
@@ -34,8 +34,24 @@
 
 /* drawer is always visible on a wide screen
    so menu button isn't required */
-core-drawer-panel:not([narrow]) #navicon {
+core-drawer-panel:not([narrow]) #menu-button {
   display: none;
+}
+
+/*core-drawer-oanel #menu-button:active {*/
+  /*background-color: #333;*/
+  /*box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.12);*/
+/*}*/
+
+core-icon-button {
+  fill: #f1f1f1 !important;
+  background-color: #333 !important;
+}
+
+core-icon-button:active {
+  fill: #fff !important;
+  color: #fff;
+  background-color: #757575 !important;
 }
 
 #core_menu {
@@ -67,10 +83,9 @@ core-drawer-panel:not([narrow]) #navicon {
   display: none;
 }
 
-core-scaffold::shadow core-toolbar {
+#toolbar-main {
   /*background-color: rgb(24, 146, 25);*/
   background-color: #f1f1f1;
-  padding: 0px 0px 0px 8px;
   background-image: url(/static/images/patt_2.png);
   background-repeat: repeat;
   background-size: inherit;
@@ -80,18 +95,7 @@ core-scaffold::shadow core-toolbar {
   width: 100%;
 }
 
-/* This somehow makes for nicer margins with the menu icon in the toolbar */
-core-scaffold::shadow core-toolbar > * {
-  margin: 0 -4px;
-}
-
-core-scaffold::shadow core-icon-button,
-core-scaffold::shadow core-icon-button:active {
-  fill: #f1f1f1;
-  background-color: #333;
-}
-
-core-scaffold core-item {
+core-item {
   padding: 6px 13px 6px 13px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
@@ -99,12 +103,18 @@ core-scaffold core-item {
   background-color: white;
 }
 
-core-scaffold core-menu core-item:hover {
+core-menu core-item:hover {
   cursor: pointer !important;
 }
 
-core-scaffold core-header-panel #mainContainer {
-  /*background-color: #fff;*/
+#side-panel {
+  background-color: #fff;
+  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+}
+
+#main-panel {
+  /*border-left: solid 1px #eee;*/
+  background: #eee;
 }
 
 #rightPanel {
@@ -167,13 +177,7 @@ core-scaffold core-header-panel #mainContainer {
   background: #3e5a9b;
 }
 
-#message {
-  opacity: 0;
-  -webkit-transition: opacity 1s;
-  transition: opacity 1s;
-}
-
-core-scaffold .list > *.core-selected {
+.list > *.core-selected {
   background: #333;
 }
 

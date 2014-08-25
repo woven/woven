@@ -8,6 +8,8 @@ class UserModel {
   String location;
   String facebookId;
   String email;
+  String createdDate;
+  bool isNew = false;
 
   Map encode() {
     return {
@@ -16,7 +18,8 @@ class UserModel {
       "lastName": lastName,
       "email": email,
       "facebookId": facebookId,
-      "location": location
+      "location": location,
+      "createdDate": createdDate
     };
   }
 
@@ -27,6 +30,7 @@ class UserModel {
       ..username = data['username']
       ..email = data['email']
       ..facebookId = data['facebookId']
-      ..location = data['location'];
+      ..location = data['location']
+      ..createdDate = data['createdDate'];
   }
 }

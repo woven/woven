@@ -22,7 +22,6 @@ class WelcomeDialog extends PolymerElement {
   // *
   toggleOverlay() {
     overlay.toggle();
-//    name.focus(); //Doesn't work
   }
 
   // *
@@ -31,7 +30,6 @@ class WelcomeDialog extends PolymerElement {
   updateUser(Event e) {
     e.preventDefault();
 
-//    CoreSelector type = $['content-type'];
     CoreInput firstname = $['firstname'];
     CoreInput lastname = $['lastname'];
     CoreInput email = $['email'];
@@ -44,12 +42,16 @@ class WelcomeDialog extends PolymerElement {
 
     var firebaseLocation = config['datastore']['firebaseLocation'];
 
+    DateTime now = new DateTime.now().toUtc();
+
     var user = new UserModel()
       ..username = username.inputValue
       ..firstName = firstname.inputValue
       ..lastName = lastname.inputValue
       ..email = email.inputValue
-      ..facebookId = app.user.facebookId;
+      ..facebookId = app.user.facebookId
+      ..createdDate = now.toString()
+      ..isNew = true;
 
 
     final userData = new db.Firebase("$firebaseLocation/users/${username.inputValue}");
@@ -76,24 +78,14 @@ class WelcomeDialog extends PolymerElement {
       app.user = user;
     }
 
-//    DateTime now = new DateTime.now().toUtc();
-
     Future set(db.Firebase userData) {
-      userData.set(user.encode()).then((e){
-//        print("User updated: ${body.value}");
-      });
+      userData.set(user.encode());
     }
 
     set(userData);
     overlay.toggle();
-//    body.value = "";
-//    subject.value = "";
-//
-//    if (app.user != null) {
-//      app.user.username = name.inputValue;
-//    }
-//
-//    app.selectedPage = 0;
+
+    app.user.isNew = true;
   }
 
   attached() {

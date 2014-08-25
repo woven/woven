@@ -13,6 +13,7 @@ import 'package:core_elements/core_selector.dart';
 class AddStuff extends PolymerElement {
   AddStuff.created() : super.created();
   @published App app;
+  @published bool opened = false;
 
   CoreOverlay get overlay => $['add-stuff-overlay'];
 

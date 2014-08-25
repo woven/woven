@@ -2,6 +2,7 @@ library application;
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_animation.dart';
+import 'package:paper_elements/paper_toast.dart';
 import 'dart:html';
 import 'dart:async';
 import 'package:woven/src/shared/model/user.dart';
@@ -11,6 +12,7 @@ import 'dart:convert';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 
+
 import 'package:crypto/crypto.dart';
 
 class App extends Observable {
@@ -18,6 +20,7 @@ class App extends Observable {
   @observable var selectedPage = 0;
   @observable String pageTitle = "";
   @observable UserModel user;
+//  @observable bool isNewUser = false;
   Router router;
 
   App() {
@@ -88,17 +91,30 @@ class App extends Observable {
     router.onDispatch.listen(globalHandler);
   }
 
-//  void changeTitle(newTitle) {
-//    print("DEBUG: changeTitle");
-//// TODO: This was breaking Safari
-////    HtmlElement el;
-////    el = document.querySelector('body /deep/ #page-title');
-////    el.style.opacity = '0';
-////    new Timer(new Duration(milliseconds: 1000), () {
-////      pageTitle = newTitle;
-////      el.style.opacity = '1';
-////    });
-//  }
+  // Show the toast message welcoming the user.
+  void greetUser() {
+    var greeting;
+    DateTime now = new DateTime.now();
+
+    if (now.hour < 12) {
+      greeting = "Good morning";
+    }
+    else {
+      if (now.hour >= 12 && now.hour <= 17) {
+        greeting = "Good afternoon";
+      }
+      else if (now.hour > 17 && now.hour <= 24) {
+        greeting = "Good evening";
+      }
+      else {
+        greeting = "Hello";
+      }
+    }
+
+    PaperToast toastMessage = document.querySelector('#toast-message');
+    toastMessage.text = "$greeting, ${this.user.firstName}.";
+    toastMessage.show();
+  }
 }
 
 

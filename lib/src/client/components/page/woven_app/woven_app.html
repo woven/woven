@@ -1,3 +1,8 @@
+
+
+
+
+
 <link rel="import" href="../../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_scaffold.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_header_panel.html">
@@ -13,7 +18,6 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_preview/item_preview.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
-<link rel="import" href="../../../../../../../packages/woven/src/client/components/sign_in/sign_in.html">
 <link rel="import" href="../../../../../../../packages/paper_elements/paper_toast.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_transition_css.html">
 <!--<link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">-->
@@ -23,65 +27,78 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <core-scaffold id="scaffold">
-      <core-header-panel id="drawerPanel" navigation flex mode="seamed">
-        <core-toolbar id="toolbar-drawer" class="toolbar">
-          <span data-page="0" data-url="/" on-tap="{{switchPage}}">The LAB Collective</span>
-        </core-toolbar>
-        <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-          <core-item data-page="0" data-url="/" label="Everything" icon="list" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
-          <core-item data-page="2" data-url="/starred" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+    <core-drawer-panel responsiveWidth="{{responsiveWidth}}">
 
-          <div id="button-area">
-            <template if="{{app.user == null}}">
-              <p id="message"></p>
-              <button class="btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
-            </template>
+      <div vertical layout drawer>
+        <core-header-panel id="side-panel" navigation flex mode="seamed">
+          <core-toolbar id="toolbar-drawer" class="toolbar">
+            <span data-page="0" data-url="/" on-tap="{{switchPage}}">The LAB Collective</span>
+          </core-toolbar>
+          <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
+            <core-item data-page="0" data-url="/" label="Everything" icon="list" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
+            <core-item data-page="2" data-url="/starred" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
 
-            <template if="{{app.user != null}}">
-              <p>Hello, {{app.user.username}}!</p>
-              <button class="btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
-            </template>
+            <div id="button-area">
+              <template if="{{app.user == null}}">
+                <p id="message"></p>
+                <button class="btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+              </template>
 
-            <!--<template if="{{app.router.route.pattern == '/starred'}}">-->
+              <template if="{{app.user != null}}">
+                <p>Hello, {{app.user.username}}!</p>
+                <button class="btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
+              </template>
+
+              <!--<template if="{{app.router.route.pattern == '/starred'}}">-->
               <!--<p>We are on Starred page!</p>-->
-            <!--</template>-->
-          </div>
+              <!--</template>-->
+            </div>
 
-        </core-menu>
+          </core-menu>
+        </core-header-panel>
+
+      </div>
+
+      <core-header-panel id="main-panel" main mode="seamed">
+
+        <core-toolbar id="toolbar-main">
+          <core-icon-button id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
+          <span id="page-title" flex></span>
+          <core-icon-button id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
+        </core-toolbar>
+
+        <div class="content">
+          <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
+            <section>
+              <template if="{{app.selectedPage === 0}}">
+                <div cross-fade="{{app.selectedPage === 0}}">
+                  <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+                </div>
+              </template>
+            </section>
+            <section layout vertical>
+              <template if="{{app.selectedPage === 1}}">
+                <div class="page-content">
+                  <item-preview id="item-preview" app="{{app}}"></item-preview>
+                  <item-activities app="{{app}}"></item-activities>
+                </div>
+              </template>
+            </section>
+            <section layout vertical>
+              <template if="{{app.selectedPage === 2}}">
+                <div class="page-content">
+                  <h1>Starred page is coming soon.</h1>
+                </div>
+              </template>
+            </section>
+          </core-animated-pages>
+        </div>
+
       </core-header-panel>
-      <div tool id="toolbar-main" flex>
-        <span id="page-title" flex>{{ app.pageTitle }}</span>
-        <add-stuff app="{{app}}"></add-stuff>
-      </div>
-      <div class="content">
-        <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
-          <section>
-            <template if="{{app.selectedPage === 0}}">
-              <div cross-fade="{{app.selectedPage === 0}}">
-                <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
-              </div>
-            </template>
-          </section>
-          <section layout vertical>
-            <template if="{{app.selectedPage === 1}}">
-              <div class="page-content">
-                <item-preview id="item-preview" app="{{app}}"></item-preview>
-                <item-activities app="{{app}}"></item-activities>
-              </div>
-            </template>
-          </section>
-          <section layout vertical>
-            <template if="{{app.selectedPage === 2}}">
-              <div class="page-content">
-                <h1>Starred page is coming soon.</h1>
-              </div>
-            </template>
-          </section>
-        </core-animated-pages>
-      </div>
-    </core-scaffold>
-    <paper-toast id="toast-message" duration="4000">
+
+    </core-drawer-panel>
+    <add-stuff app="{{app}}"></add-stuff>
+    <paper-toast id="toast-message" duration="4000"></paper-toast>
     <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">
       <welcome-dialog app="{{app}}"></welcome-dialog>
     </template>

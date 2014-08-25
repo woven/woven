@@ -9,9 +9,8 @@
 <polymer-element name="add-stuff">
   <template>
     <link rel="stylesheet" href="add_stuff.css">
-    <core-icon-button id="add-button" icon="create" on-tap="{{toggleOverlay}}"></core-icon-button>
 
-    <x-dialog id="add-stuff-overlay" class="dialog">
+    <x-dialog id="add-stuff-overlay" class="dialog" opened="{{opened}}">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
         <div flex horizontal center-justified layout>
