@@ -11,7 +11,6 @@ class Routes {
   static final currentUser = new UrlPattern(r'/currentuser');
   static final sayWelcome = new UrlPattern(r'/welcome');
   static final starred = new UrlPattern(r'/starred');
-  static final packageFiles = new UrlPattern(r'.*/packages/.*');
 }
 
 class NoMatchingRoute {}

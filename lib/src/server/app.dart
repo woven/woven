@@ -30,8 +30,7 @@ class App {
       ..routes[Routes.sayHello] = HelloController.sayHello
       ..routes[Routes.signInFacebook] = SignInController.facebook
       ..routes[Routes.currentUser] = MainController.getCurrentUser
-      ..routes[Routes.starred] = MainController.serveApp
-      ..routes[Routes.packageFiles] = MainController.serveFile;
+      ..routes[Routes.starred] = MainController.serveApp;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
@@ -43,37 +42,61 @@ class App {
     print("Server started.");
 
     server.listen((HttpRequest request) {
-      router.dispatch(request).then((response) {
-        if (response is File) {
-          // A controller action responded with a File.
-          virtualDirectory.serveFile(response, request);
-        } else if (response is! NoMatchingRoute) {
-          // 302 means redirection.
-          if (request.response.statusCode != 302) {
-            // null?
-            if (response == null) response = 'The controller action returned null?';
+      // Rewrite URLs from relative to absolute so URLs
+      // like /item/whatever properly load the app.
+      // See http://goo.gl/Y5ERIY
+      if (request.uri.path.contains('packages/')) {
+        var path = request.uri.path.replaceFirst(new RegExp('^.*?packages/'), '');
+        var file = new File(config['server']['directory'] + '/packages/$path');
+        virtualDirectory.serveFile(file, request);
+      } else if (request.uri.path.contains('static/')) {
+        var path = request.uri.path.replaceFirst(new RegExp('^.*?static/'), '');
+        var file = new File(config['server']['directory'] + '/static/$path');
+        virtualDirectory.serveFile(file, request);
+      // The following will handle either index.html or
+      // post-build assets like index.html_bootstrap.dart.js etc.
+      } else if (request.uri.path.contains('index.html')) {
+        var path = request.uri.path.replaceFirst(new RegExp('^.*?index.html'), '');
+        var file = new File(config['server']['directory'] + '/index.html$path');
+        virtualDirectory.serveFile(file, request);
+      } else if (request.uri.path.contains('index.dart')) {
+        var path = request.uri.path.replaceFirst(new RegExp('^.*?index.dart'), '');
+        var file = new File(config['server']['directory'] + '/index.dart$path');
+        virtualDirectory.serveFile(file, request);
+      // End of ugly relative/absolute handling.
+      } else {
+        router.dispatch(request).then((response) {
+          if (response is File) {
+            // A controller action responded with a File.
+            virtualDirectory.serveFile(response, request);
+          } else if (response is! NoMatchingRoute) {
+            // 302 means redirection.
+            if (request.response.statusCode != 302) {
+              // null?
+              if (response == null) response = 'The controller action returned null?';
 
-            // If the action returned an instance of Response, then let's JSON encode it.
-            // This is useful for AJAX and non-HTTP requests.
-            if (response is Response) response = response.encode();
+              // If the action returned an instance of Response, then let's JSON encode it.
+              // This is useful for AJAX and non-HTTP requests.
+              if (response is Response) response = response.encode();
 
-            // A controller action responded with some data.
-            request.response.write(response);
+              // A controller action responded with some data.
+              request.response.write(response);
+            }
+
+            request.response.close();
+          } else {
+            // No matching route, i.e. no response so far.
+            serveFileBasedOnRequest(request);
           }
+        }).catchError((Exception error) {
+          print(error);
 
+          // The controller failed. Instead of crashing, just nicely show the error.
+          request.response.statusCode = 500;
+          request.response.write('<h1>Internal server error</h1><p>${error.toString().replaceAll("\n", "<br />")}</p>');
           request.response.close();
-        } else {
-          // No matching route, i.e. no response so far.
-          serveFileBasedOnRequest(request);
-        }
-      }).catchError((Exception error) {
-        print(error);
-
-        // The controller failed. Instead of crashing, just nicely show the error.
-        request.response.statusCode = 500;
-        request.response.write('<h1>Internal server error</h1><p>${error.toString().replaceAll("\n", "<br />")}</p>');
-        request.response.close();
-      });
+        });
+      }
     }, onError: printError);
   }
 
