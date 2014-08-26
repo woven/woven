@@ -21,6 +21,14 @@ class MainController {
     return new File(config['server']['directory'] + '/index.html');
   }
 
+  static serveFile(App app, HttpRequest request) {
+    print(request.uri.path);
+    var path = request.uri.path.replaceFirst(new RegExp('^.*?packages/'), '');
+    print(path);
+
+    return new File(config['server']['directory'] + '/packages/$path');
+  }
+
   static getCurrentUser(App app, HttpRequest request) {
     var id = request.session['id'];
     if (id == null) return new Response(false);

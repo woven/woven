@@ -30,7 +30,8 @@ class App {
       ..routes[Routes.sayHello] = HelloController.sayHello
       ..routes[Routes.signInFacebook] = SignInController.facebook
       ..routes[Routes.currentUser] = MainController.getCurrentUser
-      ..routes[Routes.starred] = MainController.serveApp;
+      ..routes[Routes.starred] = MainController.serveApp
+      ..routes[Routes.packageFiles] = MainController.serveFile;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
@@ -79,7 +80,6 @@ class App {
   void serveFileBasedOnRequest(HttpRequest req) {
     // We do not wish to output all those /packages/* stuff to the console. Ugly.
     if (!req.uri.path.contains('/packages')) print("${req.method} ${req.uri}");
-
     virtualDirectory.serveRequest(req);
   }
 
