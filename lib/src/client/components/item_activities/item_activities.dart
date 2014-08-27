@@ -7,6 +7,8 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_input.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
@@ -22,7 +24,18 @@ class ItemActivities extends PolymerElement {
   }
 
   getActivities() {
-    var itemId = app.selectedItem['id'];
+    var itemId;
+    // If there's no app.selectedItem, we probably
+    // came here directly, so let's use itemId from the URL.
+    if (app.selectedItem == null) {
+      // Decode the base64 URL and determine the item.
+      var base64 = Uri.parse(window.location.toString()).pathSegments[1];
+      var bytes = CryptoUtils.base64StringToBytes(base64);
+      itemId = UTF8.decode(bytes);
+    } else {
+      itemId = app.selectedItem['id'];
+    }
+
     var f = new db.Firebase(firebaseLocation + '/items/' + itemId + '/activities/comments');
     f.onChildAdded.listen((e) {
       var comment = e.snapshot.val();

@@ -43,12 +43,12 @@ core-drawer-panel:not([narrow]) #menu-button {
   /*box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.12);*/
 /*}*/
 
-core-icon-button {
+.btn.primary {
   fill: #f1f1f1 !important;
   background-color: #333 !important;
 }
 
-core-icon-button:active {
+.btn.primary:active {
   fill: #fff !important;
   color: #fff;
   background-color: #757575 !important;
@@ -147,7 +147,7 @@ core-menu core-item:hover {
   transition: .5s opacity;
 }
 
-.btn {
+.signin-btn {
   border-radius: 2px;
   padding: 10px;
   outline: none;

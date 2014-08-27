@@ -41,12 +41,12 @@
             <div id="button-area">
               <template if="{{app.user == null}}">
                 <p id="message"></p>
-                <button class="btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+                <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
               </template>
 
               <template if="{{app.user != null}}">
                 <p>Hello, {{app.user.username}}!</p>
-                <button class="btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
+                <button class="signin-btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
               </template>
 
               <!--<template if="{{app.router.route.pattern == '/starred'}}">-->
@@ -62,9 +62,9 @@
       <core-header-panel id="main-panel" main mode="seamed">
 
         <core-toolbar id="toolbar-main">
-          <core-icon-button id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
+          <core-icon-button class="btn primary" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
           <span id="page-title" flex></span>
-          <core-icon-button id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
+          <core-icon-button class="btn primary" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
         </core-toolbar>
 
         <div class="content">
