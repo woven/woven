@@ -90,6 +90,10 @@ class ItemActivities extends PolymerElement {
     // TODO: Focus the field: http://goo.gl/wDYQOx
   }
 
+  signInWithFacebook() {
+    app.signInWithFacebook();
+  }
+
   attached() {
     print("+ItemActivities");
     getActivities();

@@ -15,7 +15,7 @@ class AddStuff extends PolymerElement {
   @published App app;
   @published bool opened = false;
 
-  CoreOverlay get overlay => $['add-stuff-overlay'];
+  CoreOverlay get overlay => $['overlay'];
 
   // *
   // Toggle the overlay.

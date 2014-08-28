@@ -6,19 +6,34 @@
 <polymer-element name="item-activities">
   <template>
     <link rel="stylesheet" href="item_activities.css">
+
+
     <div id="post-container">
-      <div class="field-wrapper first">
-        <core-input id="name" placeholder="Your name" autocomplete="off"
-                    value="{{(app.user != null) ? app.user.username : ''}}"
-                    disabled="{{(app.user != null) ? true : false}}"></core-input>
-      </div>
-      <div class="field-wrapper full-height">
-        <core-input class="expand" id="comment" multiline rows="3" required placeholder="Your comment..." autocomplete="off"></core-input>
-      </div>
-      <footer>
-        <core-icon-button class="btn action" icon="send" on-tap="{{addComment}}"></core-icon-button>
-      </footer>
+      <template if="{{app.user != null}}">
+        <div class="field-wrapper first">
+          <core-input id="name" placeholder="Your name" autocomplete="off"
+                      value="{{(app.user != null) ? app.user.username : ''}}"
+                      disabled="{{(app.user != null) ? true : false}}"></core-input>
+        </div>
+        <div class="field-wrapper full-height">
+          <core-input class="expand" id="comment" multiline rows="3" required placeholder="Your comment..." autocomplete="off"></core-input>
+        </div>
+        <footer>
+          <core-icon-button class="btn action" icon="send" on-tap="{{addComment}}"></core-icon-button>
+        </footer>
+      </template>
+      <template if="{{app.user == null}}">
+        <div id="signin-container">
+          <span id="message">Please sign in to comment.</span>
+          <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+        </div>
+      </template>
     </div>
+
+
+
+
+
 
     <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
       <div class="activity-card">

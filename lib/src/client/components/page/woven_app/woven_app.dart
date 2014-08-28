@@ -4,7 +4,6 @@ import 'dart:js' show JsObject;
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_drawer_panel.dart';
-import 'package:core_elements/core_animated_pages.dart';
 import 'package:core_elements/core_icon_button.dart';
 import 'package:paper_elements/paper_toast.dart';
 
@@ -15,6 +14,9 @@ import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
 
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
+//import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
+import 'package:core_elements/core_overlay.dart';
+
 
 @CustomTag('woven-app')
 class WovenApp extends PolymerElement with Observable {
@@ -30,13 +32,8 @@ class WovenApp extends PolymerElement with Observable {
     app.router.dispatch(url: target.dataset['url']);
   }
 
-  signInWithFacebook(Event e, var detail, Element target) {
-    var cfg = config['authentication']['facebook'];
-    var appId = cfg['appId'];
-    var url = cfg['url'];
-
-    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
-    window.location.assign(signInUrl);
+  signInWithFacebook() {
+    app.signInWithFacebook();
   }
 
   void signOut() {
@@ -78,8 +75,17 @@ class WovenApp extends PolymerElement with Observable {
 
   // Toggle the Add Stuff dialog.
   toggleAddStuff() {
-    AddStuff a = this.shadowRoot.querySelector('add-stuff');
-    a.toggleOverlay();
+    AddStuff e = this.shadowRoot.querySelector('add-stuff');
+    e.toggleOverlay();
+  }
+
+// Toggle the sign in dialog.
+  toggleSignIn() {
+    window.alert("Kindly sign in first.");
+//    SignInDialog e = this.shadowRoot.querySelector('sign-in');
+//    e.toggle();
+//    CoreOverlay e = this.shadowRoot.querySelector('#sign-in-overlay');
+//    e.toggle();
   }
 
   attached() {

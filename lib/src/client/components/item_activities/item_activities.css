@@ -106,3 +106,42 @@ footer .btn {
 background-color: rgb(45, 104, 214);
 cursor: pointer;
 }
+
+.signin-btn {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+}
+
+#facebook-signin {
+  color: #fff;
+  background: #3e5a9b;
+  width: 200px;
+}
+
+#facebook-signin:active {
+  background: #223E8D;
+}
+
+#message {
+  opacity: 1;
+  transition: opacity 2s;
+  font-size: 13px;
+  display: inline;
+  margin-bottom: 8px;
+}
+
+#signin-container {
+  padding: 10px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+}

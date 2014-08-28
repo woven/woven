@@ -1,10 +1,5 @@
-
-
-
-
-
 <link rel="import" href="../../../../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_scaffold.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_overlay.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_header_panel.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_drawer_panel.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_menu.html">
@@ -15,6 +10,7 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/inbox_list/inbox_list.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/add_stuff/add_stuff.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/welcome/welcome.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/sign_in/sign_in.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_preview/item_preview.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
@@ -64,11 +60,16 @@
         <core-toolbar id="toolbar-main">
           <core-icon-button class="btn primary" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
           <span id="page-title" flex></span>
-          <core-icon-button class="btn primary" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
+          <template if="{{app.user != null}}">
+            <core-icon-button class="btn primary" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
+          </template>
+          <template if="{{app.user == null}}">
+            <core-icon-button class="btn primary" id="add-button" icon="create" on-tap="{{toggleSignIn}}"></core-icon-button>
+          </template>
         </core-toolbar>
 
         <div class="content">
-          <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
+          <core-animated-pages id="pages" selected="{{app.selectedPage}}">
             <section>
               <template if="{{app.selectedPage === 0}}">
                 <div cross-fade="{{app.selectedPage === 0}}">
@@ -97,7 +98,16 @@
       </core-header-panel>
 
     </core-drawer-panel>
-    <add-stuff app="{{app}}"></add-stuff>
+    <template if="{{app.user != null}}">
+      <add-stuff app="{{app}}"></add-stuff>
+    </template>
+    <template if="{{app.user == null}}">
+      <!--<sign-in app="{{app}}"></sign-in>-->
+      <core-overlay id="sign-in-overlay" class="sign-in-overlay" layered backdrop opened="false" transition="core-transition-center">
+        <span id="message">Please sign in to comment.</span>
+        <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+      </core-overlay>
+    </template>
     <paper-toast id="toast-message" duration="4000"></paper-toast>
     <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">
       <welcome-dialog app="{{app}}"></welcome-dialog>

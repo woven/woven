@@ -5,12 +5,13 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_selector.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_overlay.html">
 <link rel="import" href="../widgets/dialog/dialog.html">
+
 <polymer-element name="add-stuff">
   <template>
     <link rel="stylesheet" href="add_stuff.css">
-
-    <x-dialog id="add-stuff-overlay" class="dialog" opened="{{opened}}">
+    <x-dialog id="overlay" class="dialog" opened="{{opened}}">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
         <div flex horizontal center-justified layout>

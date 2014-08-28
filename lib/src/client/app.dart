@@ -10,6 +10,7 @@ import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'dart:convert';
 import 'package:firebase/firebase.dart' as db;
+import 'package:woven/config/config.dart';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -85,6 +86,17 @@ class App extends Observable {
     PaperToast toastMessage = document.querySelector('#toast-message');
     toastMessage.text = "$greeting, ${this.user.firstName}.";
     toastMessage.show();
+  }
+
+  void signInWithFacebook() {
+    var cfg = config['authentication']['facebook'];
+    var appId = cfg['appId'];
+    // Unused: Grab the current URL so we can return the user after sign in.
+    var returnPath = Uri.parse(window.location.toString()).path;
+    var url = "${cfg['url']}";
+
+    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
+    window.location.assign(signInUrl);
   }
 }
 

@@ -1,0 +1,12 @@
+<link rel="import" href="../../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_overlay.html">
+<polymer-element name="sign-in">
+  <template>
+    <link rel="stylesheet" href="sign_in.css">
+    <core-overlay id="overlay" class="overlay" layered backdrop opened="false" transition="core-transition-center">
+      <span id="message">Please sign in to comment.</span>
+      <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+    </core-overlay>
+  </template>
+  <script type="application/dart" src="sign_in.dart"></script>
+</polymer-element>
