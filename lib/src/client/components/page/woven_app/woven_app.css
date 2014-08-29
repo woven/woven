@@ -19,7 +19,7 @@
 .toolbar {
   padding: 0px 0px 0px 8px;
   /*background-image: url(/static/images/patt_1.png);*/
-  background-color: #E63797;
+  background-color: #D12D87;
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;
@@ -101,6 +101,7 @@ core-item {
   border-bottom-style: solid;
   border-bottom-color: rgb(244, 244, 244);
   background-color: white;
+  /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
 }
@@ -232,4 +233,12 @@ paper-toast {
   font-size: 13px;
   display: inline;
   margin-bottom: 8px;
+}
+
+.flashing-fix {
+  /* Fix for flashing text, see http://goo.gl/dtbpK. */
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
 }

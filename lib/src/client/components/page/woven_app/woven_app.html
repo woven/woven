@@ -30,12 +30,12 @@
       <div vertical layout drawer>
         <core-header-panel id="side-panel" navigation flex mode="seamed">
           <core-toolbar id="toolbar-drawer" class="toolbar">
-            <span data-page="0" data-url="/" on-tap="{{switchPage}}">The LAB Collective</span>
+            <span data-page="0" data-url="/" on-tap="{{switchPage}}" class="flashing-fix">The LAB Collective</span>
           </core-toolbar>
-          <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-            <core-item data-page="0" data-url="/" label="Everything" icon="list" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
-            <core-item data-page="2" data-url="/starred" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
-            <core-item data-page="3" data-url="/people" label="People" icon="account-circle" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+          <core-menu selected="Everything" valueattr="label" id="core_menu" theme="core-light-theme">
+            <core-item data-page="0" data-url="/" label="Everything" icon="list" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
+            <core-item data-page="2" data-url="/starred" label="Starred" icon="star" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+            <core-item data-page="3" data-url="/people" label="People" icon="account-circle" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
 
             <div id="button-area">
               <template if="{{app.user == null}}">
@@ -61,13 +61,13 @@
       <core-header-panel id="main-panel" main mode="seamed">
 
         <core-toolbar id="toolbar-main">
-          <core-icon-button class="btn primary" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
+          <core-icon-button class="btn primary flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
           <span id="page-title" flex></span>
           <template if="{{app.user != null}}">
-            <core-icon-button class="btn primary" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
+            <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
           </template>
           <template if="{{app.user == null}}">
-            <core-icon-button class="btn primary" id="add-button" icon="create" on-tap="{{toggleSignIn}}"></core-icon-button>
+            <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleSignIn}}"></core-icon-button>
           </template>
         </core-toolbar>
 

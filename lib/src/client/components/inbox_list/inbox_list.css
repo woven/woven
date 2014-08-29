@@ -51,6 +51,9 @@ core-icon {
   border-bottom-style: solid;
   border-bottom-color: rgb(244, 244, 244);
   background-color: white;
+  /* Disable iOS highlighting the element on tap. */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .item:hover {

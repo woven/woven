@@ -28,8 +28,10 @@ class WovenApp extends PolymerElement with Observable {
 
   void switchPage(Event e, var detail, Element target) {
     togglePanel();
-    app.selectedPage = int.parse(target.dataset['page']);
-    app.pageTitle = target.attributes['label'];
+//    new Timer(new Duration(milliseconds: 2750), () {
+//      app.selectedPage = int.parse(target.dataset['page']);
+//      app.pageTitle = target.attributes['label'];
+//    });
 
     app.router.dispatch(url: target.dataset['url']);
   }
