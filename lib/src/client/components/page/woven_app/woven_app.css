@@ -137,7 +137,7 @@ core-menu core-item:hover {
   width: 340px;
 }
 
-.page-content {
+.page-wrapper {
   margin: 10px;
   /*background-color: #fff;*/
 }

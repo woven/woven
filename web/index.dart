@@ -1,16 +1,12 @@
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-//export 'package:polymer/init.dart';
-
-
-// HACK until we fix code gen size. This doesn't really fix it,
-// just makes it better.
-//@MirrorsUsed(override: '*')
-//import 'dart:mirrors';
+import 'package:template_binding/template_binding.dart';
+import 'package:woven/src/client/components/people_page/people_page.dart';
 
 main() => initPolymer();
 
-@initMethod
-init() => Polymer.onReady.then((_) {
-  //
-});
+@initMethod init() {
+  Polymer.onReady.then((_) {
+//    templateBind(querySelector('body /deep/ template[is="auto-binding-dart"]')).model = PeoplePage;
+  });
+}

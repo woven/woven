@@ -30,22 +30,19 @@
       </template>
     </div>
 
-
-
-
-
-
-    <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
-      <div class="activity-card">
-        <div id="content">
-          <div class="user">{{comment['user']}}</div>
-          <p>{{comment['comment']}}</p>
-          <div class="date-time">
-            <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+    <div id="activity-wrapper">
+      <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
+        <div class="activity-card">
+          <div id="content">
+            <div class="user">{{comment['user']}}</div>
+            <p>{{comment['comment']}}</p>
+            <div class="date-time">
+              <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+            </div>
           </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
   </template>
   <script type="application/dart" src="item_activities.dart"></script>
 </polymer-element>
