@@ -16,9 +16,9 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
 <link rel="import" href="../../../../../../../packages/paper_elements/paper_toast.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_transition_css.html">
-<!--<link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">-->
-<!--<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/slide-from-right.html">-->
-<!--<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/cross-fade.html">-->
+<link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">
+<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/slide-from-right.html">
+<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/cross-fade.html">
 
 <polymer-element name="woven-app">
   <template>
@@ -69,7 +69,7 @@
         </core-toolbar>
 
         <div class="content">
-          <core-animated-pages id="pages" selected="{{app.selectedPage}}">
+          <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
             <section>
               <template if="{{app.selectedPage === 0}}">
                 <div cross-fade="{{app.selectedPage === 0}}">

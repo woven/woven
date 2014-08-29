@@ -2,9 +2,9 @@ name: woven
 version: 0.0.2
 dependencies:
   browser: any
-  polymer: ">=0.12.0 <0.13.0"
-  core_elements: ">=0.1.1 <0.2.0"
-  paper_elements: ">=0.1.0+2 <0.2.0"
+  polymer: ">=0.13.0 <0.14.0"
+  core_elements: ">=0.2.0+1 <0.3.0"
+  paper_elements: ">=0.1.1+2 <0.2.0"
   firebase: ">=0.1.0 <0.2.0"
   meta: ">=0.8.8 <0.9.0"
   http_server: any
@@ -17,12 +17,3 @@ transformers:
 - polymer:
     entry_points:
     - web/index.html
-dependency_overrides:
-#  browser: any
-#  web_components: 0.4.0
-#  analyzer: ">=0.15.6 <0.16.0"
-#  html5lib: ">=0.11.0 <0.12.0"
-#  core_elements:
-#    git: http://github.com/dart-lang/core-elements
-#  paper_elements:
-#    git: http://github.com/dart-lang/paper-elements
