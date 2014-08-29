@@ -18,11 +18,12 @@
 /*}*/
 .toolbar {
   padding: 0px 0px 0px 8px;
-  background-image: url(/static/images/patt_1.png);
+  /*background-image: url(/static/images/patt_1.png);*/
+  background-color: #E63797;
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;
-  color: black;
+  color: #fff;
   text-align: center;
   width: 100%;
 }
@@ -84,9 +85,8 @@ core-drawer-panel:not([narrow]) #menu-button {
 }
 
 #toolbar-main {
-  /*background-color: rgb(24, 146, 25);*/
-  background-color: #f1f1f1;
-  background-image: url(/static/images/patt_2.png);
+  background-color: #118512;
+  /*background-image: url(/static/images/patt_2.png);*/
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;
