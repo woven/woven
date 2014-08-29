@@ -1,0 +1,134 @@
+:host {
+  box-sizing: border-box;
+  position: relative;
+  /*top: 0px;*/
+  /*left: 0px;*/
+  width: 100%;
+  height: 100%;
+}
+
+core-item core-icon {
+  margin: 0 !important;
+}
+
+#core_toolbar {
+  color: rgb(255, 255, 255);
+  padding: 0px 0px 0px 8px;
+  background-color: rgb(24, 146, 25);
+}
+#core_menu {
+  font-size: 16px;
+}
+
+
+core-icon {
+  fill: #666;
+  color: #666;
+  /*margin-right: 2px;*/
+}
+
+#icons {
+  margin-right: 4px;
+}
+
+#icon-fav svg {
+  height: 24px !important;
+  width: 22px !important;
+}
+
+#icon-fav.selected {
+  fill: red;
+}
+
+#icon-star.selected {
+  fill: #f99b15;
+}
+
+.item {
+  padding: 6px 13px 6px 10px;
+  margin: 5px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(244, 244, 244);
+  background-color: white;
+}
+
+.item:hover {
+  cursor: pointer;
+  overflow: hidden;
+  background-color: rgb(244, 244, 244);
+}
+
+.user-username {
+  /*overflow: hidden;*/
+  white-space: nowrap;
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 2px 0 0 0;
+}
+.user-name {
+  color: #5c5c5c;
+  /*overflow: hidden;*/
+  white-space: nowrap;
+}
+.item-updated {
+  color: rgb(102, 102, 102);
+  overflow: hidden;
+  font-size: 90%;
+  display: inline;
+}
+
+.item-users {
+  /*color: #3A89BE;*/
+  color: #333;
+  font-size: 90%;
+  display: inline;
+  margin-right: 2px;
+  font-weight: bold;
+}
+
+.item-type {
+  color: #5CA556;
+  text-transform: uppercase;
+  margin-right: 3px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.item-col1 {
+  /*border: solid red 1px;*/
+  text-align: center;
+  padding-top: 3px;
+}
+.item-col1 span {
+  font-size: 10px;
+  color: #3F3F3F;
+}
+.item-col2 {
+  /*border: solid peachpuff 1px;*/
+  margin-left: 10px;
+  margin-right: 5px;
+}
+
+.item-col3 {
+  /*border: solid burlywood 1px;*/
+  padding-top: 5px;
+}
+
+.item-col2 > * {
+  margin-bottom: 5px;
+}
+
+.item-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.user-photo {
+  width:50px;
+  height:50px;
+  background: #F5F5F5;
+  border: solid 1px #FCB5FF;
+}

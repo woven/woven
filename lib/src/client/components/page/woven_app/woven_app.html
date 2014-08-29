@@ -15,6 +15,7 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/people_page/people_page.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/people_list/people_list.html">
 <link rel="import" href="../../../../../../../packages/paper_elements/paper_toast.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_transition_css.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">
@@ -34,7 +35,7 @@
           <core-menu selected="Everything" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
             <core-item data-page="0" data-url="/" label="Everything" icon="list" id="core_item" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
             <core-item data-page="2" data-url="/starred" label="Starred" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
-            <core-item data-page="3" data-url="/people" label="People" icon="star" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+            <core-item data-page="3" data-url="/people" label="People" icon="account-circle" id="core_item" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
 
             <div id="button-area">
               <template if="{{app.user == null}}">
@@ -96,9 +97,7 @@
             </section>
             <section layout vertical>
               <template if="{{app.selectedPage === 3}}">
-                <div class="page-wrapper">
-                  <people-page></people-page>
-                </div>
+                <people-list app="{{app}}"></people-list>
               </template>
             </section>
           </core-animated-pages>

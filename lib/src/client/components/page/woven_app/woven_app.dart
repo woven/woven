@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'dart:async';
 import 'dart:js' show JsObject;
+import 'dart:mirrors';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_drawer_panel.dart';
@@ -28,6 +29,7 @@ class WovenApp extends PolymerElement with Observable {
   void switchPage(Event e, var detail, Element target) {
     togglePanel();
     app.selectedPage = int.parse(target.dataset['page']);
+    app.pageTitle = target.attributes['label'];
 
     app.router.dispatch(url: target.dataset['url']);
   }
@@ -102,25 +104,29 @@ class WovenApp extends PolymerElement with Observable {
     });
 
     // Listen for App changes so we can do some things.
-    app.changes.listen((e) {
+    app.changes.listen((List<ChangeRecord> records) {
+      PropertyChangeRecord record = records[0] as PropertyChangeRecord;
+      String changedValue = MirrorSystem.getName(record.name);
+      print(changedValue);
+//      if (changedValue == "pageTitle") {
+        print("Changed from ${record.oldValue} to ${record.newValue}");
+        // If page title changes, show it awesomely.
+        HtmlElement el;
+        el = this.shadowRoot.querySelector('#page-title');
+
+//        if (record.oldValue != record.newValue) {
+          el.style.opacity = '0';
+          new Timer(new Duration(milliseconds: 750), () {
+            el.style.opacity = '1';
+            el.text = app.pageTitle;
+          });
+//        }
+//      }
       // If brand new user, greet them.
       if (app.user != null && app.user.isNew == true) {
         greetUser();
         app.user.isNew = false;
       }
-
-      // If page title changes, show it awesomely.
-      HtmlElement el;
-      el = this.shadowRoot.querySelector('#page-title');
-
-      if (app != null && el.text != app.pageTitle) {
-        el.style.opacity = '0';
-        new Timer(new Duration(milliseconds: 750), () {
-          el.text = app.pageTitle;
-          el.style.opacity = '1';
-        });
-      }
     });
-
   }
 }

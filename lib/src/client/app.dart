@@ -31,6 +31,11 @@ class App extends Observable {
 
     void starred(String path) {
       selectedPage = 2;
+      pageTitle = "Starred";
+    }
+
+    void people(String path) {
+      selectedPage = 3;
     }
 
     void notFound(String path) {
@@ -56,6 +61,7 @@ class App extends Observable {
       // Every route has to be registered... but if you don't need a handler, pass null.
       ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
+      ..routes[Routes.people] = people
       ..routes[Routes.sayWelcome] = welcome
       ..routes[Routes.showItem] = showItem;
 

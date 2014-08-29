@@ -61,6 +61,7 @@ class ItemPreview extends PolymerElement {
 
   attached() {
     getItem();
+    app.pageTitle = "";
   }
 
   detached() {

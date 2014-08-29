@@ -7,6 +7,5 @@ main() => initPolymer();
 
 @initMethod init() {
   Polymer.onReady.then((_) {
-//    templateBind(querySelector('body /deep/ template[is="auto-binding-dart"]')).model = PeoplePage;
   });
 }

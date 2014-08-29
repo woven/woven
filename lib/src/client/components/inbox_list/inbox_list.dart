@@ -124,9 +124,7 @@ class InboxList extends PolymerElement with Observable {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
   }
 
-  InboxList.created() : super.created() {
-
-  }
+  InboxList.created() : super.created();
 
   attached() {
     getItems();
@@ -134,6 +132,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   detached() {
-    app.pageTitle = "";
+    //
   }
 }
