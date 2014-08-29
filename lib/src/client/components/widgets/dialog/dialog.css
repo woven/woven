@@ -171,6 +171,7 @@ polyfill-next-selector { content: ':host #container'; }
     height: 100vh;
     position: relative;
     overflow: scroll;
+    background-color: white;
   }
 }
 
