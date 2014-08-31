@@ -8,10 +8,13 @@ import 'package:query_string/query_string.dart';
 
 import '../shared/routing/routes.dart';
 import '../shared/response.dart';
+
 import 'controller/hello.dart';
 import 'controller/main.dart';
 import 'controller/sign_in.dart';
 import 'routing/router.dart';
+
+import 'firebase.dart';
 
 class App {
   Router router;
@@ -86,8 +89,22 @@ class App {
 
             request.response.close();
           } else {
-            // No matching route, i.e. no response so far.
-            serveFileBasedOnRequest(request);
+            // If no matching route, let's also check if the alias exists.
+            if (Uri.parse(request.uri.path).pathSegments[0].length > 0) {
+              var alias;
+              alias = Uri.parse(request.uri.path).pathSegments[0];
+              // Wait for the aliasExists future to complete.
+              Future checkIfAliasExists = aliasExists(alias);
+              checkIfAliasExists.then((res) {
+                // If the alias exists, serve the app.
+                if (res == true) {
+                  virtualDirectory.serveFile(new File(config['server']['directory'] + '/index.html'), request);
+                } else {
+                  // No route, no alias, so let's see if there's a file to serve.
+                  serveFileBasedOnRequest(request);
+                }
+              });
+            }
           }
         }).catchError((Exception error) {
           print(error);
@@ -99,6 +116,12 @@ class App {
         });
       }
     }, onError: printError);
+  }
+
+  aliasExists(String alias) {
+    return Firebase.get('/alias_index/$alias.json').then((res) {
+      return (res == null ? false : true);
+    });
   }
 
   void serveFileBasedOnRequest(HttpRequest req) {

@@ -23,6 +23,7 @@ import 'package:core_elements/core_overlay.dart';
 class WovenApp extends PolymerElement with Observable {
   @published App app = new App();
   @observable var responsiveWidth = "600px";
+  @observable String get communityName => app.community.name;
 
   WovenApp.created() : super.created();
 
@@ -109,21 +110,18 @@ class WovenApp extends PolymerElement with Observable {
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
       String changedValue = MirrorSystem.getName(record.name);
-      print(changedValue);
-//      if (changedValue == "pageTitle") {
-        print("Changed from ${record.oldValue} to ${record.newValue}");
-        // If page title changes, show it awesomely.
-        HtmlElement el;
-        el = this.shadowRoot.querySelector('#page-title');
 
-//        if (record.oldValue != record.newValue) {
-          el.style.opacity = '0';
-          new Timer(new Duration(milliseconds: 750), () {
-            el.style.opacity = '1';
-            el.text = app.pageTitle;
-          });
-//        }
-//      }
+      print("$changedValue changed from ${record.oldValue} to ${record.newValue}");
+
+      // If page title changes, show it awesomely.
+      HtmlElement el;
+      el = this.shadowRoot.querySelector('#page-title');
+      el.style.opacity = '0';
+      new Timer(new Duration(milliseconds: 750), () {
+        el.style.opacity = '1';
+        el.text = app.pageTitle;
+      });
+
       // If brand new user, greet them.
       if (app.user != null && app.user.isNew == true) {
         greetUser();

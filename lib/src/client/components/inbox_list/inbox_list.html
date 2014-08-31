@@ -5,13 +5,13 @@
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
-    <template repeat="{{ item in items }}">
-      <core-item class="item" on-click="{{ selectItem }}" data-id="{{ item['id'] }}">
+    <template repeat="{{item in items}}">
+      <core-item class="item" on-click="{{selectItem}}" data-id="{{ item['id'] }}">
         <div class="item-container" horizontal layout>
           <div class="item-col1" vertical layout>
-            <core-icon icon="favorite-outline" id="icon-fav" on-click="{{ toggleLike }}"></core-icon>
+            <core-icon icon="favorite-outline" id="icon-fav" on-click="{{toggleLike}}"></core-icon>
             <span class="item-count">23</span>
-            <core-icon icon="star-outline" id="icon-star" on-click="{{ toggleStar }}"></core-icon>
+            <core-icon icon="star-outline" id="icon-star" on-click="{{toggleStar}}"></core-icon>
             <span class="item-count">5</span>
           </div>
           <div class="item-col2" flex>
@@ -22,7 +22,7 @@
           <div class="item-col3">
             <div class="item-users">{{ item['user'] }}</div>
             <div class="item-updated">
-            <live-date-time value="{{ item['updatedDate'] }}" formatter="{{ formatItemDate }}"></live-date-time>
+            <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
             </div>
           </div>
         </div>

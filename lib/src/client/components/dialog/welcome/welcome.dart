@@ -34,6 +34,7 @@ class WelcomeDialog extends PolymerElement {
     CoreInput lastname = $['lastname'];
     CoreInput email = $['email'];
     CoreInput username = $['username'];
+    CoreInput location = $['location'];
 
     if (username.inputValue.trim().isEmpty) {
       window.alert("You must choose a username.");
@@ -50,6 +51,7 @@ class WelcomeDialog extends PolymerElement {
       ..lastName = lastname.inputValue
       ..email = email.inputValue
       ..facebookId = app.user.facebookId
+      ..location = location.inputValue
       ..createdDate = now.toString()
       ..isNew = true;
 

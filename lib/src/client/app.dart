@@ -6,6 +6,7 @@ import 'package:paper_elements/paper_toast.dart';
 import 'dart:html';
 import 'dart:async';
 import 'package:woven/src/shared/model/user.dart';
+import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'dart:convert';
@@ -13,10 +14,12 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 
 class App extends Observable {
+  @observable var currentCommunity = "thelab";
   @observable var selectedItem;
   @observable var selectedPage = 0;
   @observable String pageTitle = "";
   @observable UserModel user;
+  @observable CommunityModel community;
 //  @observable bool isNewUser = false;
   Router router;
 
@@ -43,11 +46,12 @@ class App extends Observable {
     }
 
     void showItem(String path) {
+      print("Show item");
       selectedPage = 1;
     }
 
     void globalHandler(String path) {
-      print('example of a global handler for ANY url change: $path');
+      print("Global handler fired at: $path");
 
       /* TODO: Things like G tracking could be handled here.
       if (js.context['_gaq'] != null) {
@@ -63,10 +67,40 @@ class App extends Observable {
       ..routes[Routes.starred] = starred
       ..routes[Routes.people] = people
       ..routes[Routes.sayWelcome] = welcome
+//      ..routes[Routes.anyAlias] = home
       ..routes[Routes.showItem] = showItem;
 
     router.onNotFound.listen(notFound);
     router.onDispatch.listen(globalHandler);
+
+    // Use the first part of the path as the alias.
+    var path = window.location.toString();
+    if (Uri.parse(path).pathSegments.length > 0) {
+      String alias = Uri.parse(path).pathSegments[0];
+      // Get the community instance.
+
+      var f = new db.Firebase(config['datastore']['firebaseLocation'] + '/communities/' + alias);
+
+      f.onValue.first.then((e) {
+        Map communityData = e.snapshot.val();
+        print(e.snapshot.val());
+        print(communityData);
+
+        if (communityData != null) {
+          print("Got here");
+          community = new CommunityModel()
+            ..alias = communityData['alias']
+            ..name = communityData['name']
+            ..shortDescription = communityData['shortDescription'];
+
+          // For now, assume all aliases are community aliases.
+          currentCommunity = community.alias;
+          print("Community: $communityData");
+          print("1");
+        }
+
+      });
+    }
   }
 
   // Show the toast message welcoming the user.

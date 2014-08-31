@@ -60,6 +60,7 @@ class ItemPreview extends PolymerElement {
   }
 
   attached() {
+    print("+Item");
     getItem();
     app.pageTitle = "";
   }

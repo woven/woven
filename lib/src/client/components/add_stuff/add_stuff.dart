@@ -8,6 +8,7 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
+import 'package:woven/src/shared/model/item.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
@@ -41,39 +42,41 @@ class AddStuff extends PolymerElement {
       return false;
     }
 
-    var firebaseLocation = config['datastore']['firebaseLocation'];
-
-    final items = new db.Firebase("$firebaseLocation/items");
-
     DateTime now = new DateTime.now().toUtc();
 
-    Future set(db.Firebase items) {
-      items.push().set({
-          'user': name.inputValue,
-          'subject': subject.inputValue,
-          'type' : type.selected,
-          'body': body.inputValue,
-          'createdDate': '$now',
-          'updatedDate': '$now'
-      }).then((e){
-//        print("Message sent: ${body.value}");
+    var item = new ItemModel()
+      ..user = name.inputValue
+      ..subject = subject.inputValue
+      ..type = type.selected
+      ..body = body.inputValue
+      ..createdDate = now.toString()
+      ..updatedDate = now.toString();
+
+    var encodedItem = item.encode();
+
+    var root = new db.Firebase(config['datastore']['firebaseLocation']);
+    var id = root.child("/items").push();
+
+    // Set the item in multiple places because denormalization equals speed.
+    Future setItem(db.Firebase itemRef) {
+      itemRef.set(encodedItem).then((e){
+        var nameRef = id.name();
+        root.child('/communities/' + app.currentCommunity + '/items/' + nameRef)
+          ..set(encodedItem);
       });
     }
 
-    set(items);
+    setItem(id);
+
     overlay.toggle();
     body.value = "";
     subject.value = "";
-
-    if (app.user != null) {
-      app.user.username = name.inputValue;
-    }
 
     app.selectedPage = 0;
   }
 
   attached() {
-    print("+AddStuff");
+    //
   }
 }
 

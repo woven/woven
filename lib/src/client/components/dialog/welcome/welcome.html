@@ -43,6 +43,10 @@
                         value="{{(app.user != null) ? app.user.lastName : ''}}"></core-input>
           </div>
           <div class="field-wrapper">
+            <core-input id="location" placeholder="Your location" autocomplete="off"
+                        value="{{(app.user != null) ? app.user.location : ''}}"></core-input>
+          </div>
+          <div class="field-wrapper">
             <core-input id="email" placeholder="Your email" autocomplete="off"
                         value="{{(app.user != null) ? app.user.email : ''}}"></core-input>
           </div>

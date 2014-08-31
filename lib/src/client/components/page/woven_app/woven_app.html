@@ -74,7 +74,7 @@
         <div class="content">
           <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
             <section>
-              <template if="{{app.selectedPage === 0}}">
+              <template if="{{app.selectedPage === 0 && app.community.alias != null}}">
                 <div cross-fade="{{app.selectedPage === 0}}">
                   <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
                 </div>
