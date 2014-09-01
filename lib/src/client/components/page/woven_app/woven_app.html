@@ -98,10 +98,16 @@ core-icons/iconsets/<iconset>.html
         <div class="content">
           <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
             <section>
-              <template if="{{app.selectedPage === 0 && app.community != null}}">
+              <template if="{{app.selectedPage === 0}}">
                 <div cross-fade="{{app.selectedPage === 0}}">
-                  <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+                  <template if="{{app.community != null && app.selectedPage === 0}}">
+                    <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+                    </template>
+                  <template if="{{app.community == null && app.selectedPage === 0}}">
+                      <community-list id="community-list" app="{{app}}"></community-list>
+                  </template>
                 </div>
+
               </template>
             </section>
             <section layout vertical>

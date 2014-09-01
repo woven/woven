@@ -23,36 +23,34 @@ class CommunityList extends PolymerElement with Observable {
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
   getCommunities() {
-    print("Got here!!!");
     var f = new db.Firebase(firebaseLocation + '/communities');
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     var communityRef = f.limit(20);
     communityRef.onChildAdded.listen((e) {
-      print("Got here!!! 2");
       var community = e.snapshot.val();
       print(community.runtimeType);
 
-      print(community['name'] + community['createdDate']);
+//      print(community['name'] + community['createdDate']);
       // If no updated date, use the created date.
-//      if (community['updatedDate'] == null) {
-//        community['updatedDate'] = DateTime.parse(community['createdDate']);
-//      }
-//
-//      // The live-date-time element needs parsed dates.
+      if (community['updatedDate'] == null) {
+        community['updatedDate'] = DateTime.parse(community['createdDate']);
+      }
+
+      // The live-date-time element needs parsed dates.
 //      community['updatedDate'] = DateTime.parse(community['updatedDate']);
 //      community['createdDate'] = DateTime.parse(community['createdDate']);
-//
-//      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-//      // So we'll add that to our local item list.
-//      community['id'] = e.snapshot.name();
-//
-//      // Insert each new community into the list.
-//      communities.add(community);
-//
-//      // Sort the list by the item's updatedDate, then reverse it.
-//      communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//      communities = communities.reversed.toList();
+
+      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+      // So we'll add that to our local item list.
+      community['id'] = e.snapshot.name();
+
+      // Insert each new community into the list.
+      communities.add(community);
+
+      // Sort the list by the item's updatedDate, then reverse it.
+      communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
+      communities = communities.reversed.toList();
     });
 
 //    communityRef.onChildChanged.listen((e) {

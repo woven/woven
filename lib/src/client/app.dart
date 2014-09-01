@@ -26,8 +26,8 @@ class App extends Observable {
   App() {
     void home(String path) {
       // Home goes to the community list for now.
+      selectedPage = 0;
       community = null;
-      selectedPage = 4;
     }
 
     void welcome(String path) {
@@ -46,9 +46,7 @@ class App extends Observable {
     void notFound(String path) {
       var pathUri = Uri.parse(path);
       if (community != null && pathUri.pathSegments[0] == community.alias) {
-        print("The current community is in the path.");
         if (pathUri.pathSegments.length == 1) {
-          print("The path doesn't have a secondary page, so go to the inbox.");
           selectedPage = 0;
         } else {
           // If we're at <community>/<something>, see if <something> is a valid page.
@@ -96,13 +94,12 @@ class App extends Observable {
     var path = window.location.toString();
     if (Uri.parse(path).pathSegments.length > 0) {
       String alias = Uri.parse(path).pathSegments[0];
-      // Get the community instance.
 
+      // Get the community instance.
       var f = new db.Firebase(config['datastore']['firebaseLocation'] + '/communities/' + alias);
 
       f.onValue.first.then((e) {
         var communityData = e.snapshot.val();
-        print(communityData);
 
         if (communityData != null) {
           community = new CommunityModel()
