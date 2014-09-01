@@ -57,7 +57,7 @@ core-icons/iconsets/<iconset>.html
                          on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
                          on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
-              <core-item label="Back" icon="home" horizontal center layout class="item"
+              <core-item label="Back" icon="chevron-left" horizontal center layout class="item"
                          on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
             </template>
             <template if="{{app.community == null}}">
@@ -103,11 +103,6 @@ core-icons/iconsets/<iconset>.html
                   <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
                 </div>
               </template>
-              <template if="{{app.community == null}}">
-                <div cross-fade="{{app.selectedPage === 0}}">
-                  <community-list id="community-list" app="{{app}}"></community-list>
-                </div>
-              </template>
             </section>
             <section layout vertical>
               <template if="{{app.selectedPage === 1}}">
@@ -127,6 +122,13 @@ core-icons/iconsets/<iconset>.html
             <section layout vertical>
               <template if="{{app.selectedPage === 3}}">
                 <people-list app="{{app}}"></people-list>
+              </template>
+            </section>
+            <section layout vertical>
+              <template if="{{app.community == null && app.selectedPage === 4}}">
+                <div>
+                  <community-list id="community-list" app="{{app}}"></community-list>
+                </div>
               </template>
             </section>
           </core-animated-pages>

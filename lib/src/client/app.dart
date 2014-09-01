@@ -25,9 +25,9 @@ class App extends Observable {
 
   App() {
     void home(String path) {
-      print("Handler: home");
-      selectedPage = 0;
+      // Home goes to the community list for now.
       community = null;
+      selectedPage = 4;
     }
 
     void welcome(String path) {
@@ -40,7 +40,6 @@ class App extends Observable {
     }
 
     void people(String path) {
-      print("Handler: people");
       selectedPage = 3;
     }
 
@@ -102,10 +101,12 @@ class App extends Observable {
       var f = new db.Firebase(config['datastore']['firebaseLocation'] + '/communities/' + alias);
 
       f.onValue.first.then((e) {
-        Map communityData = e.snapshot.val();
+        var communityData = e.snapshot.val();
+        print(communityData);
 
         if (communityData != null) {
           community = new CommunityModel()
+            ..createdDate = communityData['createdDate']
             ..alias = communityData['alias']
             ..name = communityData['name']
             ..shortDescription = communityData['shortDescription'];
