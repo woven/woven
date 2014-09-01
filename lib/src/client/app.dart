@@ -12,6 +12,7 @@ import 'package:woven/src/shared/routing/routes.dart';
 import 'dart:convert';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
+import 'package:woven/src/client/components/page/woven_app/woven_app.dart';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -127,29 +128,13 @@ class App extends Observable {
     }
   }
 
-  // Show the toast message welcoming the user.
-  void greetUser() {
-    var greeting;
-    DateTime now = new DateTime.now();
-
-    if (now.hour < 12) {
-      greeting = "Good morning";
+  void showMessage(String message, [String severity]) {
+    PaperToast toastElement = document.querySelector('woven-app::shadow #toast-message');
+    if (severity == "important") {
+      toastElement.classes.add("important");
     }
-    else {
-      if (now.hour >= 12 && now.hour <= 17) {
-        greeting = "Good afternoon";
-      }
-      else if (now.hour > 17 && now.hour <= 24) {
-        greeting = "Good evening";
-      }
-      else {
-        greeting = "Hello";
-      }
-    }
-
-    PaperToast toastMessage = document.querySelector('#toast-message');
-    toastMessage.text = "$greeting, ${this.user.firstName}.";
-    toastMessage.show();
+    toastElement.text = "$message";
+    toastElement.show();
   }
 
   void signInWithFacebook() {

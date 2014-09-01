@@ -5,6 +5,7 @@ import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
+import 'package:woven/src/client/components/page/woven_app/woven_app.dart' show showToastMessage;
 
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
@@ -79,7 +80,8 @@ class PeopleList extends PolymerElement with Observable {
 
   void selectUser(Event e, var detail, Element target) {
     var selectedUser = target.dataset['user'];
-    window.alert('More about $selectedUser coming soon!');
+    // TODO: Revisit this? Odd way of doing this, see: http://goo.gl/LJcuzR
+    document.querySelector("woven-app").showToastMessage("More about $selectedUser coming soon!", "important");
 
     // TODO: User pages, routes, etc.
   }

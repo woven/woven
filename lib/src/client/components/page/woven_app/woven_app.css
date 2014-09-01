@@ -69,14 +69,22 @@ core-drawer-panel:not([narrow]) #menu-button {
   background-color: #333 !important;
 }
 
-.btn.primary:active {
+.btn.primary:hover {
   fill: #fff !important;
   color: #fff;
-  background-color: #757575 !important;
+  background-color: #000 !important;
 }
 
 .menu {
   font-size: 16px;
+}
+
+.menu-section {
+  margin-top: 15px;
+}
+
+.menu-section .item {
+  border: none;
 }
 
 .container {
@@ -117,9 +125,7 @@ core-drawer-panel:not([narrow]) #menu-button {
 
 core-item {
   padding: 6px 13px 6px 13px;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: rgb(244, 244, 244);
+  border-bottom: 1px solid rgb(244, 244, 244);
   background-color: white;
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -203,6 +209,10 @@ paper-toast {
   right: 10px;
   left: auto;
   background: forestgreen;
+}
+
+paper-toast.important {
+  background: orangered;
 }
 
 #sign-in-overlay {

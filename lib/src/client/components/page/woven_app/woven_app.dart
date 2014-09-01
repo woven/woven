@@ -56,14 +56,17 @@ class WovenApp extends PolymerElement with Observable {
       }
     }
 
-    showToastMessage("$greeting, ${app.user.firstName}.");
+    app.showMessage("$greeting, ${app.user.firstName}.");
   }
 
-  // Show the toast message.
-  showToastMessage(String message) {
-    PaperToast toastMessage = $['toast-message'];
-    toastMessage.text = "$message";
-    toastMessage.show();
+  // Unused, moved this to App.
+  showToastMessage(String message, [String severity]) {
+    PaperToast toastElement = $['toast-message'];
+    if (severity == "important") {
+      toastElement.classes.add("important");
+    }
+    toastElement.text = "$message";
+    toastElement.show();
   }
 
   // Toggle the drawer panel.
@@ -80,7 +83,7 @@ class WovenApp extends PolymerElement with Observable {
 
 // Toggle the sign in dialog.
   toggleSignIn() {
-    window.alert("Kindly sign in first.");
+    showToastMessage("Kindly sign in first.", "important");
 //    SignInDialog e = this.shadowRoot.querySelector('sign-in');
 //    e.toggle();
 //    CoreOverlay e = this.shadowRoot.querySelector('#sign-in-overlay');
@@ -105,7 +108,7 @@ class WovenApp extends PolymerElement with Observable {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
       String changedValue = MirrorSystem.getName(record.name);
 
-      print("$changedValue changed from ${record.oldValue} to ${record.newValue}");
+      print("$changedValue changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
       HtmlElement el;

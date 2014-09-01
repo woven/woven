@@ -32,7 +32,8 @@ core-icons/iconsets/<iconset>.html
       <div vertical layout drawer>
         <core-header-panel id="side-panel" navigation flex mode="seamed">
             <core-toolbar id="toolbar-drawer" class="toolbar {{app.community == null ? 'has-logo' : ''}}">
-              <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix" data-page="0" data-url="/" on-tap="{{switchPage}}">
+              <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
+                    data-page="0" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
                 <template if="{{app.community == null}}">
                   <img src="http://cdn.woven.co/assets/images/woven-logo-small-expanded.png">
                 </template>
@@ -48,14 +49,20 @@ core-icons/iconsets/<iconset>.html
               <!--</span>-->
             <!--</core-toolbar>-->
 
-          <core-menu selected="{{app.selectedPage}}" valueattr="data-page" class="menu" theme="core-light-theme">
+          <core-menu valueattr="data-page" class="menu" theme="core-light-theme">
             <template if="{{app.community != null}}">
-              <core-item data-page="0" data-url="/{{app.community.alias}}" label="Everything" icon="list" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
-              <core-item data-page="2" data-url="/starred" label="Starred" icon="star" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
-              <core-item data-page="3" data-url="/people" label="People" icon="account-circle" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+              <core-item label="Everything" icon="list" horizontal center layout class="item"
+                         on-click="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
+              <core-item label="Starred" icon="star" horizontal center layout class="item"
+                         on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
+              <core-item label="People" icon="account-circle" horizontal center layout class="item"
+                         on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
+              <core-item label="Back" icon="home" horizontal center layout class="item"
+                         on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
             </template>
             <template if="{{app.community == null}}">
-              <core-item data-page="0" data-url="/" label="Communities" icon="social:communities" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
+              <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
+                         on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
             </template>
 
             <div id="button-area">
