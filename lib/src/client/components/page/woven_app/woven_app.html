@@ -14,13 +14,15 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_preview/item_preview.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
-<link rel="import" href="../../../../../../../packages/woven/src/client/components/people_page/people_page.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/people_list/people_list.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/community_list/community_list.html">
 <link rel="import" href="../../../../../../../packages/paper_elements/paper_toast.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_transition_css.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/slide-from-right.html">
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/cross-fade.html">
+<link rel="import" href="../../../../../../../packages/core_elements/social_icons.html">
+core-icons/iconsets/<iconset>.html
 
 <polymer-element name="woven-app">
   <template>
@@ -29,13 +31,32 @@
 
       <div vertical layout drawer>
         <core-header-panel id="side-panel" navigation flex mode="seamed">
-          <core-toolbar id="toolbar-drawer" class="toolbar">
-            <span data-page="0" data-url="/" on-tap="{{switchPage}}" class="flashing-fix">The LAB Collective</span>
-          </core-toolbar>
-          <core-menu selected="Everything" valueattr="label" id="core_menu" theme="core-light-theme">
-            <core-item data-page="0" data-url="/" label="Everything" icon="list" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
-            <core-item data-page="2" data-url="/starred" label="Starred" icon="star" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
-            <core-item data-page="3" data-url="/people" label="People" icon="account-circle" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+            <core-toolbar id="toolbar-drawer" class="toolbar {{app.community == null ? 'has-logo' : ''}}">
+              <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix" data-page="0" data-url="/" on-tap="{{switchPage}}">
+                <template if="{{app.community == null}}">
+                  <img src="http://cdn.woven.co/assets/images/woven-logo-small-expanded.png">
+                </template>
+                <template if="{{app.community != null}}">
+                  {{app.community.name}}
+                </template>
+              </span>
+            </core-toolbar>
+
+            <!--<core-toolbar id="toolbar-drawer" class="toolbar {{app.community == null ? has-logo : ''}}">-->
+              <!--<span id="community-title" data-page="0" data-url="/" on-tap="{{switchPage}}" >-->
+                <!--<img src="http://cdn.woven.co/assets/images/woven-logo-small-expanded.png">-->
+              <!--</span>-->
+            <!--</core-toolbar>-->
+
+          <core-menu selected="{{app.selectedPage}}" valueattr="data-page" class="menu" theme="core-light-theme">
+            <template if="{{app.community != null}}">
+              <core-item data-page="0" data-url="/{{app.community.alias}}" label="Everything" icon="list" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
+              <core-item data-page="2" data-url="/starred" label="Starred" icon="star" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+              <core-item data-page="3" data-url="/people" label="People" icon="account-circle" horizontal center layout class="item" on-click="{{switchPage}}"></core-item>
+            </template>
+            <template if="{{app.community == null}}">
+              <core-item data-page="0" data-url="/" label="Communities" icon="social:communities" horizontal center layout class="item" active on-click="{{switchPage}}"></core-item>
+            </template>
 
             <div id="button-area">
               <template if="{{app.user == null}}">
@@ -47,10 +68,6 @@
                 <p>Hello, {{app.user.username}}!</p>
                 <button class="signin-btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
               </template>
-
-              <!--<template if="{{app.router.route.pattern == '/starred'}}">-->
-              <!--<p>We are on Starred page!</p>-->
-              <!--</template>-->
             </div>
 
           </core-menu>
@@ -74,9 +91,14 @@
         <div class="content">
           <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
             <section>
-              <template if="{{app.selectedPage === 0 && app.community.alias != null}}">
+              <template if="{{app.selectedPage === 0 && app.community != null}}">
                 <div cross-fade="{{app.selectedPage === 0}}">
                   <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+                </div>
+              </template>
+              <template if="{{app.community == null}}">
+                <div cross-fade="{{app.selectedPage === 0}}">
+                  <community-list id="community-list" app="{{app}}"></community-list>
                 </div>
               </template>
             </section>

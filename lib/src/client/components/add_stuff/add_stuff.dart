@@ -61,7 +61,7 @@ class AddStuff extends PolymerElement {
     Future setItem(db.Firebase itemRef) {
       itemRef.set(encodedItem).then((e){
         var nameRef = id.name();
-        root.child('/communities/' + app.currentCommunity + '/items/' + nameRef)
+        root.child('/communities/' + app.community.alias + '/items/' + nameRef)
           ..set(encodedItem);
       });
     }

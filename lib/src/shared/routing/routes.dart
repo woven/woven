@@ -11,7 +11,7 @@ class Routes {
   static final currentUser = new UrlPattern(r'/currentuser');
   static final sayWelcome = new UrlPattern(r'/welcome');
   static final starred = new UrlPattern(r'/starred');
-  static final people = new UrlPattern(r'(.*)/people');
+  static final people = new UrlPattern(r'/people');
 }
 
 class NoMatchingRoute {}

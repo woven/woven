@@ -1,0 +1,40 @@
+<link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<polymer-element name="community-list">
+  <template>
+    <link rel="stylesheet" href="community_list.css">
+    <template repeat="{{community in communities}}">
+      <core-item class="item" on-click="{{selectCommunity}}" data-id="{{ community['id'] }}">
+        <div class="item-container" horizontal layout>
+          <div class="item-col1" vertical layout>
+            <core-icon icon="star-outline" id="icon-star" on-click="{{toggleStar}}"></core-icon>
+            <span class="item-count">5</span>
+          </div>
+          <div class="item-col2" flex>
+            <div class="item-subject">{{ community['alias'] }}</div>
+            <div class="item-body" flex>{{ community['name'] }}</div>
+          </div>
+          <div class="item-col3">
+            <div class="item-updated">
+              Active
+              <live-date-time value="{{community['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+            </div>
+          </div>
+        </div>
+      </core-item>
+    </template>
+    <core-item class="item cta" on-tap="{{handleCallToAction}}">
+      <div class="item-container cta-container" horizontal layout>
+        <div flex>
+          <p>Want to create a community? Learn more here.</p>
+        </div>
+        <div vertical>
+          <core-icon icon="chevron-right"></core-icon>
+        </div>
+      </div>
+    </core-item>
+  </template>
+  <script type="application/dart" src="community_list.dart"></script>
+</polymer-element>

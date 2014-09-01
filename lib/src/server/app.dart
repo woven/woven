@@ -89,28 +89,37 @@ class App {
 
             request.response.close();
           } else {
-            // If no matching route, let's also check if the alias exists.
-            if (Uri.parse(request.uri.path).pathSegments[0].length > 0) {
-              var alias;
-              alias = Uri.parse(request.uri.path).pathSegments[0];
-              // Wait for the aliasExists future to complete.
-              Future checkIfAliasExists = aliasExists(alias);
-              checkIfAliasExists.then((res) {
-                // If the alias exists, serve the app.
-                if (res == true) {
-                  virtualDirectory.serveFile(new File(config['server']['directory'] + '/index.html'), request);
-                } else {
-                  // No route, no alias, so let's see if there's a file to serve.
-                  serveFileBasedOnRequest(request);
+            // If no matching route, first let's try to serve a file.
+            new File(config['server']['directory'] + request.uri.path).exists().then((bool exists) {
+              if (!exists) {
+                // File doesn't exist, so check if it's a community alias/
+                if (Uri.parse(request.uri.path).pathSegments[0].length > 0) {
+                  var alias;
+                  alias = Uri.parse(request.uri.path).pathSegments[0];
+                  // Wait for the aliasExists future to complete.
+                  Future checkIfAliasExists = aliasExists(alias);
+                  checkIfAliasExists.then((res) {
+                    // If the alias exists, serve the app.
+                    if (res == true) {
+                      virtualDirectory.serveFile(new File(config['server']['directory'] + '/index.html'), request);
+                    } else {
+                      // No route, no alias, so pass off to request handler for standard 404 etc.
+                      virtualDirectory.serveRequest(request);
+                    }
+                  });
                 }
-              });
-            }
+              } else {
+                // File exists, so serve it.
+                serveFileBasedOnRequest(request);
+              }
+            });
           }
         }).catchError((Exception error) {
           print(error);
 
           // The controller failed. Instead of crashing, just nicely show the error.
           request.response.statusCode = 500;
+          request.response.headers.add(HttpHeaders.CONTENT_TYPE, "text/html");
           request.response.write('<h1>Internal server error</h1><p>${error.toString().replaceAll("\n", "<br />")}</p>');
           request.response.close();
         });
@@ -119,6 +128,8 @@ class App {
   }
 
   aliasExists(String alias) {
+    if (!new RegExp('^[a-zA-Z0-9_-]+\$').hasMatch(alias)) return new Future.value(false);
+
     return Firebase.get('/alias_index/$alias.json').then((res) {
       return (res == null ? false : true);
     });

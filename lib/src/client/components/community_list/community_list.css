@@ -119,3 +119,13 @@ core-icon {
   overflow: hidden;
   width: 100%;
 }
+
+.cta {
+  background-color: #FFFFD0;
+  color: #666;
+  border-radius: 3px;
+}
+
+.cta-container {
+  align-items: center;
+}

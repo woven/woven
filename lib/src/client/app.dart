@@ -14,7 +14,6 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 
 class App extends Observable {
-  @observable var currentCommunity = "thelab";
   @observable var selectedItem;
   @observable var selectedPage = 0;
   @observable String pageTitle = "";
@@ -25,7 +24,9 @@ class App extends Observable {
 
   App() {
     void home(String path) {
+      print("Handler: home");
       selectedPage = 0;
+      community = null;
     }
 
     void welcome(String path) {
@@ -38,15 +39,33 @@ class App extends Observable {
     }
 
     void people(String path) {
+      print("Handler: people");
       selectedPage = 3;
     }
 
     void notFound(String path) {
-      print('404!' + path);
+      var pathUri = Uri.parse(path);
+      if (community != null && pathUri.pathSegments[0] == community.alias) {
+        print("The current community is in the path.");
+        if (pathUri.pathSegments.length == 1) {
+          print("The path doesn't have a secondary page, so go to the inbox.");
+          selectedPage = 0;
+        } else {
+          // If we're at <community>/<something>, see if <something> is a valid page.
+          switch (pathUri.pathSegments[1]) {
+            case 'people':
+              selectedPage = 3;
+              break;
+            default:
+              print('404: ' + path);
+          }
+        }
+      } else {
+        print('404: ' + path);
+      }
     }
 
     void showItem(String path) {
-      print("Show item");
       selectedPage = 1;
     }
 
@@ -62,7 +81,7 @@ class App extends Observable {
     }
 
     router = new Router()
-      // Every route has to be registered... but if you don't need a handler, pass null.
+    // Every route has to be registered... but if you don't need a handler, pass null.
       ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
       ..routes[Routes.people] = people
@@ -83,23 +102,28 @@ class App extends Observable {
 
       f.onValue.first.then((e) {
         Map communityData = e.snapshot.val();
-        print(e.snapshot.val());
-        print(communityData);
 
         if (communityData != null) {
-          print("Got here");
           community = new CommunityModel()
             ..alias = communityData['alias']
             ..name = communityData['name']
             ..shortDescription = communityData['shortDescription'];
-
-          // For now, assume all aliases are community aliases.
-          currentCommunity = community.alias;
-          print("Community: $communityData");
-          print("1");
         }
 
       });
+    }
+  }
+
+  // Unused for now.
+  void resetCommunityTitle() {
+    if (community !=null) {
+      // Fade in the community title.
+      // TODO: Fix this hack. We use a timer, because the element may not exist yet.
+//      new Timer(new Duration(milliseconds: 750), () {
+        HtmlElement sidebarTitleElement = document.querySelector('html /deep/ #sidebar-title');
+        sidebarTitleElement.text = community.name;
+        sidebarTitleElement.style.opacity = '1';
+//      });
     }
   }
 

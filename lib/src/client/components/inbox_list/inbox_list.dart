@@ -22,69 +22,8 @@ class InboxList extends PolymerElement with Observable {
 
   //TODO: Move this out and pass in a List with a Polymer attribute?
 
-  getItemsNew() {
-    var f = new db.Firebase(firebaseLocation + '/communities/' + app.currentCommunity + '/item_index');
-
-    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
-    var lastItemsQuery = f.limit(20);
-    lastItemsQuery.onChildAdded.listen((e) {
-      var indexedItemId = e.snapshot.name();
-
-      var itemRef = new db.Firebase(firebaseLocation + '/items/' + indexedItemId);
-
-      itemRef.onValue.listen((e) {
-        var item = e.snapshot.val();
-
-        // If no updated date, use the created date.
-        if (item['updatedDate'] == null) {
-          item['updatedDate'] = item['createdDate'];
-        }
-
-        // The live-date-time element needs parsed dates.
-        item['updatedDate'] = DateTime.parse(item['updatedDate']);
-        item['createdDate'] = DateTime.parse(item['createdDate']);
-
-        // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-        // So we'll add that to our local item list.
-        item['id'] = e.snapshot.name();
-
-        // Insert each new item into the list.
-        items.add(item);
-
-        // Sort the list by the item's updatedDate, then reverse it.
-        items.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-        items = items.reversed.toList();
-      });
-    });
-
-    lastItemsQuery.onChildChanged.listen((e) {
-      var item = e.snapshot.val();
-
-      // If no updated date, use the created date.
-      if (item['updatedDate'] == null) {
-        item['updatedDate'] = item['createdDate'];
-      }
-
-      item['updatedDate'] = DateTime.parse(item['updatedDate']);
-
-      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-      // So we'll add that to our local item list.
-      item['id'] = e.snapshot.name();
-
-      // Insert each new item into the list.
-      items.removeWhere((oldItem) => oldItem['id'] == e.snapshot.name());
-      items.add(item);
-
-      // Sort the list by the item's updatedDate, then reverse it.
-      items.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-      items = items.reversed.toList();
-    });
-
-  }
-
-
   getItems() {
-    var f = new db.Firebase(firebaseLocation + '/communities/' + app.currentCommunity + '/items');
+    var f = new db.Firebase(firebaseLocation + '/communities/' + app.community.alias + '/items');
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     var lastItemsQuery = f.limit(20);
@@ -212,20 +151,14 @@ class InboxList extends PolymerElement with Observable {
 
   }
 
-ready() {
-  print("3");
-}
-
   attached() {
-    print("+Inbox");
-    print("2");
-    print("Community name: ${app.community.name}");
+    print("+InboxList");
     app.pageTitle = "Everything";
     getItems();
-//    CreateCommunityItemsScript();
+    //CreateCommunityItemsScript();
   }
 
   detached() {
-    //
+    print("-InboxList");
   }
 }

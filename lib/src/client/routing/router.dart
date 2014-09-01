@@ -30,6 +30,8 @@ class Router extends Observable {
   void resolve() {
     var matchingPattern = routes.keys.firstWhere((UrlPattern pattern) => pattern.matches(currentPath), orElse: () => null);
     if (matchingPattern == null) {
+      // For now, dispatch even if no matching pattern
+      // so we can handle aliases which aren't defined as route patterns.
       _onNotFoundController.add(currentPath);
       return;
     }

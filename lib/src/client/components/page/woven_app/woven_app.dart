@@ -23,17 +23,11 @@ import 'package:core_elements/core_overlay.dart';
 class WovenApp extends PolymerElement with Observable {
   @published App app = new App();
   @observable var responsiveWidth = "600px";
-  @observable String get communityName => app.community.name;
 
   WovenApp.created() : super.created();
 
   void switchPage(Event e, var detail, Element target) {
     togglePanel();
-//    new Timer(new Duration(milliseconds: 2750), () {
-//      app.selectedPage = int.parse(target.dataset['page']);
-//      app.pageTitle = target.attributes['label'];
-//    });
-
     app.router.dispatch(url: target.dataset['url']);
   }
 
@@ -121,6 +115,18 @@ class WovenApp extends PolymerElement with Observable {
         el.style.opacity = '1';
         el.text = app.pageTitle;
       });
+
+//      if (changedValue == "community") {
+//        HtmlElement sidebarTitleElement;
+//        sidebarTitleElement = this.shadowRoot.querySelector('#sidebar-title');
+//        if (app.community != null) {
+//          // Fade in the community title.
+////           sidebarTitleElement.style.opacity = '0';
+//           new Timer(new Duration(milliseconds: 750), () {
+//             sidebarTitleElement.style.opacity = '1';
+//           });
+//         }
+//      }
 
       // If brand new user, greet them.
       if (app.user != null && app.user.isNew == true) {

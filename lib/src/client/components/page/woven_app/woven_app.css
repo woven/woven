@@ -25,12 +25,32 @@
   background-blend-mode: inherit;
   color: #fff;
   text-align: center;
+  align-content: center;
   width: 100%;
 }
 
 .toolbar span {
   width: 100%;
   cursor: pointer;
+}
+
+.toolbar.has-logo {
+  background-color: #003549;
+  border-bottom: solid 1px #f1f1f1;
+}
+
+#page-title {
+  opacity: 0;
+  transition: .5s opacity;
+}
+
+#sidebar-title {
+  opacity: 1;
+  transition: .5s opacity;
+}
+
+#sidebar-title.has-logo {
+  opacity: 1;
 }
 
 /* drawer is always visible on a wide screen
@@ -55,7 +75,7 @@ core-drawer-panel:not([narrow]) #menu-button {
   background-color: #757575 !important;
 }
 
-#core_menu {
+.menu {
   font-size: 16px;
 }
 
@@ -143,11 +163,6 @@ core-menu core-item:hover {
 .page-wrapper {
   margin: 10px;
   /*background-color: #fff;*/
-}
-
-#page-title {
-  opacity: 0;
-  transition: .5s opacity;
 }
 
 .signin-btn {
