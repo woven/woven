@@ -33,7 +33,7 @@ class ItemPreview extends PolymerElement {
       var bytes = CryptoUtils.base64StringToBytes(base64);
       var decodedItem = UTF8.decode(bytes);
 
-      var f = new db.Firebase(config['datastore']['firebaseLocation'] + '/items/$decodedItem');
+      var f = new db.Firebase(config['datastore']['firebaseLocation'] + '/items/' + app.community.alias + '/' + decodedItem);
 
       f.onValue.first.then((e) {
         item = e.snapshot.val();

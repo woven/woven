@@ -23,7 +23,7 @@ class InboxList extends PolymerElement with Observable {
   //TODO: Move this out and pass in a List with a Polymer attribute?
 
   getItems() {
-    var f = new db.Firebase(firebaseLocation + '/communities/' + app.community.alias + '/items');
+    var f = new db.Firebase(firebaseLocation + '/items/' + app.community.alias);
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     var lastItemsQuery = f.limit(20);

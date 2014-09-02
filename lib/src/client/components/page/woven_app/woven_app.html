@@ -63,6 +63,10 @@ core-icons/iconsets/<iconset>.html
             <template if="{{app.community == null}}">
               <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
                          on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
+              <core-item label="People" icon="account-circle" horizontal center layout class="item"
+                         on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
+              <!--<core-item label="About Woven" icon="drive-ms-word" horizontal center layout class="item"-->
+                         <!--on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>-->
             </template>
 
             <div id="button-area">
@@ -87,12 +91,7 @@ core-icons/iconsets/<iconset>.html
         <core-toolbar id="toolbar-main">
           <core-icon-button class="btn primary flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
           <span id="page-title" flex></span>
-          <template if="{{app.user != null}}">
-            <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
-          </template>
-          <template if="{{app.user == null}}">
-            <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleSignIn}}"></core-icon-button>
-          </template>
+          <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
         </core-toolbar>
 
         <div class="content">
@@ -143,7 +142,7 @@ core-icons/iconsets/<iconset>.html
       </core-header-panel>
 
     </core-drawer-panel>
-    <template if="{{app.user != null}}">
+    <template if="{{app.user != null && app.community != null}}">
       <add-stuff app="{{app}}"></add-stuff>
     </template>
     <template if="{{app.user == null}}">

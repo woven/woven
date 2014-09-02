@@ -5,6 +5,7 @@ import 'package:core_elements/core_animation.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'dart:html';
 import 'dart:async';
+import 'dart:js' as js;
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/routing/router.dart';
@@ -70,12 +71,12 @@ class App extends Observable {
     void globalHandler(String path) {
       print("Global handler fired at: $path");
 
-      /* TODO: Things like G tracking could be handled here.
-      if (js.context['_gaq'] != null) {
-        js.context._gaq.push(js.array(['_trackPageview', path]));
-        js.context._gaq.push(js.array(['b._trackPageview', path]));
-      }
-      */
+      /* TODO: Things like G tracking could be handled here. */
+//      if (js.context['_gaq'] != null) {
+//        js.context._gaq.push(js.array(['_trackPageview', path]));
+//        js.context._gaq.push(js.array(['b._trackPageview', path]));
+//      }
+
     }
 
     router = new Router()
