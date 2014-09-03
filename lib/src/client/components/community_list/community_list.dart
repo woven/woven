@@ -127,7 +127,7 @@ class CommunityList extends PolymerElement with Observable {
   }
 
   void handleCallToAction() {
-    app.router.dispatch(url: "item/LUpWZVVQMl9rR0h5bDcwamdZX3k=");
+    app.router.dispatch(url: "item/LUpWdzZXaWd4dHdvRWM1ZGNhdXo=");
   }
 
   toggleStar(Event e, var detail, Element target) {

@@ -29,8 +29,8 @@ class PeopleList extends PolymerElement with Observable {
     var f = new db.Firebase(firebaseLocation + '/users');
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
-    var lastUsersQuery = f.limit(20);
-    lastUsersQuery.onChildAdded.listen((e) {
+//    var lastUsersQuery = f.limit(20);
+    f.onChildAdded.listen((e) {
       var user = e.snapshot.val();
 
 //      if (user['createdDate'] == null) {
