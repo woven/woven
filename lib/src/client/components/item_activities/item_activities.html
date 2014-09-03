@@ -12,11 +12,11 @@
       <template if="{{app.user != null}}">
         <div class="field-wrapper first">
           <core-input id="name" placeholder="Your name" autocomplete="off"
-                      value="{{(app.user != null) ? app.user.username : ''}}"
-                      disabled="{{(app.user != null) ? true : false}}"></core-input>
+                      value="{{app.user != null ? app.user.username : theData['name']}}"></core-input>
         </div>
         <div class="field-wrapper full-height">
-          <core-input class="expand" id="comment" multiline rows="3" required placeholder="Your comment..." autocomplete="off"></core-input>
+          <core-input class="expand" id="comment" multiline rows="3" required placeholder="Your comment..." autocomplete="off"
+              value="{{theData['comment']}}"></core-input>
         </div>
         <footer>
           <core-icon-button class="btn action" icon="send" on-tap="{{addComment}}"></core-icon-button>

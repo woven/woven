@@ -9,14 +9,18 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_input.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'package:woven/src/shared/model/activity_comment.dart';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
+  @observable ActivityCommentModel comment;
+  @observable Map theData = toObservable({
+    'name': '',
+    'comment': ''
+  });
 
-  CoreInput get name => $['name'];
-  CoreInput get comment => $['comment'];
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
   String formatItemDate(DateTime value) {
@@ -53,37 +57,55 @@ class ItemActivities extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    if (name.inputValue.trim().isEmpty) { window.alert("Your name is empty."); return false; }
-    if (comment.inputValue.trim().isEmpty) { window.alert("Your comment is empty."); return false; }
+    String name = theData['name'];
+    name = name.trim();
+    String comment = theData['comment'];
+    comment = comment.trim();
+
+    if (name.isEmpty) {
+      window.alert("Your name is empty.");
+      return false;
+    }
+    if (comment.isEmpty) {
+      window.alert("Your comment is empty.");
+      return false;
+
+    }
 
     var itemId = app.selectedItem['id'];
 
     DateTime now = new DateTime.now().toUtc();
 
-    // Add the comment.
-    final comments = new db.Firebase(firebaseLocation + '/items/' + itemId + '/activities/comments');
+    var root = new db.Firebase(config['datastore']['firebaseLocation']);
+    var id = root.child('/items/' + itemId + '/activities/comments').push();
+    var commentJson =  {'user': name, 'comment': comment, 'createdDate': '$now'};
 
-    Future set(db.Firebase comments) {
-      comments.push().set({
-          'user': name.inputValue,
-          'comment': comment.inputValue,
-          'createdDate': '$now'
-      }).then((e){});
+    // Set the item in multiple places because denormalization equals speed.
+    // We also want to be able to load the item when we don't know the community.
+    Future setComment(db.Firebase commentRef) {
+      commentRef.set(commentJson).then((e){
+        var nameRef = id.name();
+        root.child('/items/' + app.community.alias + '/' + itemId + '/activities/comments/' + nameRef)
+          ..set(commentJson);
+      });
     }
 
-    set(comments);
+    setComment(id);
 
     // Update some details on the parent item.
-    final item = new db.Firebase(firebaseLocation + '/items/' + itemId);
+    var parent = root.child('/items/' + itemId);
 
-    // TODO: About time to create a item model?
-    Future update(db.Firebase item) {
-      item.update({
+    Future updateParentItem(db.Firebase parentRef) {
+      parent.update({
         'updatedDate': '$now'
-      }).then((e){});
+      }).then((e) {
+        root.child('/items/' + app.community.alias + '/' + itemId).update({
+            'updatedDate': '$now'
+        });
+      });
     }
 
-    update(item);
+    updateParentItem(parent);
 
     // Reset the fields.
     comment.inputValue = "";

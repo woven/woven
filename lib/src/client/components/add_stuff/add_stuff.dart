@@ -61,10 +61,11 @@ class AddStuff extends PolymerElement {
     // We also want to be able to load the item when we don't know the community.
     Future setItem(db.Firebase itemRef) {
       itemRef.set(encodedItem).then((e){
-          // Unused for now, because we're only writing items to items/<community-name>
         var nameRef = id.name();
         root.child('/items/' + nameRef)
           ..set(encodedItem);
+        root.child('/items/' + nameRef + '/communities/' + app.community.alias)
+          ..set(true);
       });
     }
 
