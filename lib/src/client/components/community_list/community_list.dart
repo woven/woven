@@ -50,7 +50,7 @@ class CommunityList extends PolymerElement with Observable {
 
       // Sort the list by the item's updatedDate, then reverse it.
       communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-      communities = communities.reversed.toList();
+      communities = toObservable(communities.reversed.toList());
     });
 
 //    communityRef.onChildChanged.listen((e) {
@@ -76,6 +76,21 @@ class CommunityList extends PolymerElement with Observable {
 //      communities = community.reversed.toList();
 //    });
 
+  }
+
+  // This is triggered by an app.changes.listen.
+  void getUserStarredCommunities() {
+    // Determine if this user has starred the community.
+    communities.forEach((community) {
+      var starredCommunityRef = new db.Firebase(firebaseLocation + '/users/' + app.user.username + '/communities/' + community['id']);
+      starredCommunityRef.onValue.listen((e) {
+        if (e.snapshot.val() == null) {
+          community['userStarred'] = false;
+        } else {
+          community['userStarred'] = true;
+        }
+      });
+    });
   }
 
   void selectCommunity(Event e, var detail, Element target) {
@@ -118,14 +133,32 @@ class CommunityList extends PolymerElement with Observable {
   toggleStar(Event e, var detail, Element target) {
     // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
-    target
-      ..classes.toggle("selected");
 
-    if (target.attributes["icon"] == "star") {
-      target.attributes["icon"] = "star-outline";
-    } else {
-      target.attributes["icon"] = "star";
+    if (app.user == null) {
+      app.showMessage("Kindly sign in first.", "important");
+      return;
     }
+
+    bool isStarred = (target.classes.contains("selected"));
+    var communityMap = communities.firstWhere((i) => i['id'] == target.dataset['id']);
+    print(isStarred);
+
+    if (isStarred) {
+      // If it's starred, time to unstar it.
+      print("Unstar");
+      communityMap['userStarred'] = false;
+//      target.classes.remove("selected");
+//      communities.firstWhere((i) => )
+    } else {
+      print("Starring");
+      // If it's not starred, time to star it.
+//      target.classes.add("selected");
+      communityMap['userStarred'] = true;
+    }
+    print(communities);
+
+    var starredCommunityRef = new db.Firebase(firebaseLocation + '/users/' + app.user.username + '/communities/' + communityMap['id']);
+    starredCommunityRef.set(communityMap['userStarred']);
   }
 
   formatItemDate(DateTime value) {
@@ -136,6 +169,12 @@ class CommunityList extends PolymerElement with Observable {
     print("+CommunityList");
     app.pageTitle = "Communities";
     getCommunities();
+
+    app.changes.listen((List<ChangeRecord> records) {
+      if (app.user != null) {
+        getUserStarredCommunities();
+      }
+    });
   }
 
   detached() {

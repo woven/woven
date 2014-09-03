@@ -33,14 +33,14 @@ class PeopleList extends PolymerElement with Observable {
     lastUsersQuery.onChildAdded.listen((e) {
       var user = e.snapshot.val();
 
-      if (user['createdDate'] == null) {
-        // Some temporary code that stored a createdDate where this was none.
-        // It's safe to leave active as it only affects an empty createdDate.
-        DateTime newDate = new DateTime.utc(2014, DateTime.AUGUST, 21, 12);
-        var temp = new db.Firebase(firebaseLocation + "/users/${user['username']}");
-        temp.update({'createdDate': newDate});
-        user['createdDate'] = newDate;
-      }
+//      if (user['createdDate'] == null) {
+//        // Some temporary code that stored a createdDate where this was none.
+//        // It's safe to leave active as it only affects an empty createdDate.
+//        DateTime newDate = new DateTime.utc(2014, DateTime.AUGUST, 21, 12);
+//        var temp = new db.Firebase(firebaseLocation + "/users/${user['username']}");
+//        temp.update({'createdDate': newDate});
+//        user['createdDate'] = newDate;
+//      }
 
       // The live-date-time element needs parsed dates.
       user['createdDate'] = DateTime.parse(user['createdDate']);
@@ -50,10 +50,10 @@ class PeopleList extends PolymerElement with Observable {
 
       // Sort the list by the item's updatedDate, then reverse it.
       users.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
-      users = users.reversed.toList();
+      users = toObservable(users.reversed.toList());
     });
 
-//    lastPeopleQuery.onChildChanged.listen((e) {
+//    lastUsersQuery.onChildChanged.listen((e) {
 //      var item = e.snapshot.val();
 //
 //      // If no updated date, use the created date.
@@ -80,10 +80,8 @@ class PeopleList extends PolymerElement with Observable {
 
   void selectUser(Event e, var detail, Element target) {
     var selectedUser = target.dataset['user'];
-    // TODO: Revisit this? Odd way of doing this, see: http://goo.gl/LJcuzR
-    document.querySelector("woven-app").showToastMessage("More about $selectedUser coming soon!", "important");
-
-    // TODO: User pages, routes, etc.
+    app.showMessage("More about $selectedUser coming soon!", "important");
+    // TODO: User profiles, routes, etc.
   }
 
   formatItemDate(DateTime value) {
