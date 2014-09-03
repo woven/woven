@@ -128,7 +128,8 @@ class App extends Observable {
   }
 
   void showMessage(String message, [String severity]) {
-    PaperToast toastElement = document.querySelector('woven-app::shadow #toast-message');
+    PaperToast toastElement = document.querySelector('woven-app').shadowRoot.querySelector('#toast-message');
+//    PaperToast toastElement = document.querySelector('woven-app::shadow #toast-message');
     if (severity == "important") {
       toastElement.classes.add("important");
     }
