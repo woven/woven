@@ -58,12 +58,13 @@ class AddStuff extends PolymerElement {
     var id = root.child("/items/" + app.community.alias).push();
 
     // Set the item in multiple places because denormalization equals speed.
+    // We also want to be able to load the item when we don't know the community.
     Future setItem(db.Firebase itemRef) {
       itemRef.set(encodedItem).then((e){
           // Unused for now, because we're only writing items to items/<community-name>
-//        var nameRef = id.name();
-//        root.child('/communities/' + app.community.alias + '/items/' + nameRef)
-//          ..set(encodedItem);
+        var nameRef = id.name();
+        root.child('/items/' + nameRef)
+          ..set(encodedItem);
       });
     }
 
