@@ -1,4 +1,4 @@
-library firebase;
+library firebase_server;
 
 import 'dart:io';
 import 'dart:async';

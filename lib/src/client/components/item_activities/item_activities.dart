@@ -15,11 +15,11 @@ import 'package:woven/src/shared/model/activity_comment.dart';
 class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
-  @observable ActivityCommentModel comment;
-  @observable Map theData = toObservable({
-    'name': '',
-    'comment': ''
-  });
+  // We'll bind the form data to this.
+  @observable Map theData = toObservable({'comment': ''});
+
+  //TODO: Further explore this ViewModel stuff.
+  //@observable ActivityCommentModel activity = new ActivityCommentModel();
 
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
@@ -57,37 +57,28 @@ class ItemActivities extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    String name = theData['name'];
-    name = name.trim();
     String comment = theData['comment'];
     comment = comment.trim();
 
-    if (name.isEmpty) {
-      window.alert("Your name is empty.");
-      return false;
-    }
     if (comment.isEmpty) {
       window.alert("Your comment is empty.");
       return false;
-
     }
 
     var itemId = app.selectedItem['id'];
 
     DateTime now = new DateTime.now().toUtc();
 
+    // Save the comment
+
     var root = new db.Firebase(config['datastore']['firebaseLocation']);
     var id = root.child('/items/' + itemId + '/activities/comments').push();
-    var commentJson =  {'user': name, 'comment': comment, 'createdDate': '$now'};
+    var commentJson =  {'user': app.user.username, 'comment': comment, 'createdDate': '$now'};
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
     Future setComment(db.Firebase commentRef) {
-      commentRef.set(commentJson).then((e){
-        var nameRef = id.name();
-        root.child('/items/' + app.community.alias + '/' + itemId + '/activities/comments/' + nameRef)
-          ..set(commentJson);
-      });
+      commentRef.set(commentJson);
     }
 
     setComment(id);
@@ -99,8 +90,22 @@ class ItemActivities extends PolymerElement {
       parent.update({
         'updatedDate': '$now'
       }).then((e) {
-        root.child('/items/' + app.community.alias + '/' + itemId).update({
-            'updatedDate': '$now'
+        // Determine the communities this item is in,
+        // so we can be sure to update those copies too.
+        parent.child('/communities').onValue.listen((e) {
+          Map communitiesRef = e.snapshot.val();
+          if (communitiesRef != null) {
+            communitiesRef.keys.forEach((community) {
+              // Update the community's copy of the item.
+              root.child('/items/' + community + '/' + itemId).update({
+                  'updatedDate': '$now'
+              });
+              // Update the community itself.
+              root.child('/communities/' + community).update({
+                  'updatedDate': '$now'
+              });
+            });
+          }
         });
       });
     }
@@ -108,7 +113,9 @@ class ItemActivities extends PolymerElement {
     updateParentItem(parent);
 
     // Reset the fields.
-    comment.inputValue = "";
+    CoreInput commentElement = $['post-container'].querySelector('#comment');
+    commentElement.inputValue = "";
+
     // TODO: Focus the field: http://goo.gl/wDYQOx
   }
 
@@ -116,9 +123,20 @@ class ItemActivities extends PolymerElement {
     app.signInWithFacebook();
   }
 
+  fixItemCommunities() {
+    var root = new db.Firebase(config['datastore']['firebaseLocation']);
+      if (app.community != null) {
+          // Update the community's copy of the item.
+        root.child('/items/' + app.selectedItem['id'] + '/communities/' + app.community.alias)
+          ..set(true);
+        print("Updated.");
+      }
+  }
+
   attached() {
     print("+ItemActivities");
     getActivities();
+    fixItemCommunities();
   }
 
   detached() {
