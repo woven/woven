@@ -30,6 +30,16 @@ polyfill-next-selector { content: ':host core-toolbar'; }
   fill: #fff;
 }
 
+polyfill-next-selector { content: ':host core-icon-button.action'; }
+::content core-icon-button.action {
+  background-color: rgb(64, 136, 214);
+}
+
+polyfill-next-selector { content: ':host core-icon-button.action:hover'; }
+::content core-icon-button.action:hover {
+  background-color: rgb(45, 104, 214);
+}
+
 polyfill-next-selector { content: ':host h1'; }
 ::content h1 {
   margin: 20px 20px 20px 20px;

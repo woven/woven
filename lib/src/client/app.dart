@@ -32,7 +32,7 @@ class App extends Observable {
     }
 
     void welcome(String path) {
-      print('welcome!!');
+      selectedPage = 4;
     }
 
     void starred(String path) {

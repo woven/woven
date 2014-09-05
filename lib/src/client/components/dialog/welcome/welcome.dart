@@ -41,6 +41,12 @@ class WelcomeDialog extends PolymerElement {
       return false;
     }
 
+    //TODO: Regex this for all disallowed cases.
+    if (username.inputValue.trim().contains(" ")) {
+      window.alert("Your username may not contain spaces.");
+      return false;
+    }
+
     var firebaseLocation = config['datastore']['firebaseLocation'];
 
     DateTime now = new DateTime.now().toUtc();
