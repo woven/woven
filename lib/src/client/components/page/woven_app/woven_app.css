@@ -27,6 +27,7 @@
   text-align: center;
   align-content: center;
   width: 100%;
+  transition: background-color .8s;
 }
 
 .toolbar span {

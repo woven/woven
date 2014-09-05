@@ -32,6 +32,8 @@ class PeopleList extends PolymerElement with Observable {
 //    var lastUsersQuery = f.limit(20);
     f.onChildAdded.listen((e) {
       var user = e.snapshot.val();
+      print(user);
+      return;
 
 //      if (user['createdDate'] == null) {
 //        // Some temporary code that stored a createdDate where this was none.
@@ -43,6 +45,7 @@ class PeopleList extends PolymerElement with Observable {
 //      }
 
       // The live-date-time element needs parsed dates.
+      print("DATE: ${user['createdDate']}");
       user['createdDate'] = DateTime.parse(user['createdDate']);
 
       // Insert each new item into the list.

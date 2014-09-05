@@ -44,6 +44,15 @@ core-icon {
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+
 }
 
 .item:hover {
@@ -98,6 +107,7 @@ core-icon {
 .item-col1 span {
   font-size: 10px;
   color: #3F3F3F;
+  outline: none;
 }
 .item-col2 {
   /*border: solid peachpuff 1px;*/

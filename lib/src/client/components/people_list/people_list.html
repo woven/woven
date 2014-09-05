@@ -5,8 +5,8 @@
 <polymer-element name="people-list">
   <template>
     <link rel="stylesheet" href="people_list.css">
-    <template repeat="{{ user in users }}">
-      <core-item class="item" on-tap="{{ selectUser }}" data-user="{{ user['username'] }}">
+    <template repeat="{{user in users}}">
+      <core-item class="item" on-tap="{{selectUser}}" data-user="{{user['username']}}">
         <div class="item-container" horizontal layout>
           <div class="item-col1" vertical layout>
             <div class="user-photo"></div>
@@ -18,7 +18,7 @@
           <div class="item-col3">
             <div class="item-updated">
               Joined
-            <live-date-time value="{{ user['createdDate'] }}" formatter="{{ formatItemDate }}"></live-date-time>
+            <live-date-time value="{{user['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
             </div>
           </div>
         </div>

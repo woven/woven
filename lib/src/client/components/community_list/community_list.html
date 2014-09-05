@@ -9,9 +9,9 @@
       <core-item class="item" on-click="{{selectCommunity}}" data-id="{{ community['id'] }}">
         <div class="item-container" horizontal layout>
           <div class="item-col1" vertical layout>
-            <core-icon icon="{{community['userStarred'] == true ? 'star' : 'star-outline'}}"
+            <core-icon icon="{{app.user != null && community['userStarred'] == true ? 'star' : 'star-outline'}}"
                        id="icon-star" on-click="{{toggleStar}}"
-                       class="{{community['userStarred'] == true ? 'selected' : ''}}"
+                       class="{{app.user != null && community['userStarred'] == true ? 'selected' : ''}}"
                        data-id="{{ community['id'] }}"></core-icon>
             <span class="item-count">{{community['star_count']}}</span>
           </div>
