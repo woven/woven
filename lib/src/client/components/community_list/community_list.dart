@@ -22,10 +22,6 @@ class CommunityList extends PolymerElement with Observable {
 
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
-  communitiesChanged() {
-    print("Communities changed");
-  }
-
 
   getCommunities() {
     // Since we call this method a second time after user
@@ -44,26 +40,26 @@ class CommunityList extends PolymerElement with Observable {
       print(community['id']);
 
       // If the user is signed in, see if they've starred this community.
-      if (app.user != null) {
-        firebaseRoot.child('/users/' + app.user.username + '/communities/' + community['id']).onValue.listen((e) {
-          if (e.snapshot.val() == null) {
-            community['userStarred'] = false;
-            // TODO: Add community star_count?!
-
-          } else {
-            community['userStarred'] = true;
-          }
-          print("${community['userStarred']}, star count: ${community['star_count']}");
-
-          // Replace the community in the observed list w/ our updated copy.
-          communities
-            ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
-            ..add(community)
-            ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-
-          communities = toObservable(communities.reversed.toList());
-        });
-      }
+//      if (app.user != null) {
+//        firebaseRoot.child('/users/' + app.user.username + '/communities/' + community['id']).onValue.listen((e) {
+//          if (e.snapshot.val() == null) {
+//            community['userStarred'] = false;
+//            // TODO: Add community star_count?!
+//
+//          } else {
+//            community['userStarred'] = true;
+//          }
+//          print("${community['userStarred']}, star count: ${community['star_count']}");
+//
+//          // Replace the community in the observed list w/ our updated copy.
+//          communities
+//            ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//            ..add(community)
+//            ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
+//
+//          communities = toObservable(communities.reversed.toList());
+//        });
+//      }
 
       // If no updated date, use the created date.
       if (community['updatedDate'] == null) {
@@ -80,18 +76,18 @@ class CommunityList extends PolymerElement with Observable {
       community['createdDate'] = DateTime.parse(community['createdDate']);
 
       // Listen for realtime changes to the star count.
-      communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
-        int newCount = e.snapshot.val();
-        community['star_count'] = newCount;
-        // Replace the community in the observed list w/ our updated copy.
-        // TODO: Re-writing the list each time is ridiculous!
-        communities
-          ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
-          ..add(community)
-          ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-
-        communities = toObservable(communities.reversed.toList());
-      });
+//      communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
+//        int newCount = e.snapshot.val();
+//        community['star_count'] = newCount;
+//        // Replace the community in the observed list w/ our updated copy.
+//        // TODO: Re-writing the list each time is ridiculous!
+//        communities
+//          ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//          ..add(community)
+//          ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
+//
+//        communities = toObservable(communities.reversed.toList());
+//      });
 
 
 
@@ -172,20 +168,6 @@ class CommunityList extends PolymerElement with Observable {
     app.router.dispatch(url: "/" + app.community.alias);
   }
 
-  toggleLike(Event e, var detail, Element target) {
-    // Don't fire the core-item's on-click, just the icon's.
-    e.stopPropagation();
-
-    if (target.attributes["icon"] == "favorite") {
-      target.attributes["icon"] = "favorite-outline";
-    } else {
-      target.attributes["icon"] = "favorite";
-    }
-
-    target
-      ..classes.toggle("selected");
-  }
-
   void handleCallToAction() {
     // Reset the current selectedItem so item-preview grabs it from the URL
     app.selectedItem == null;
@@ -200,6 +182,8 @@ class CommunityList extends PolymerElement with Observable {
       app.showMessage("Kindly sign in first.", "important");
       return;
     }
+
+    app.showMessage("Stars aren't working well yet. :)", "important");
 
     bool isStarred = (target.classes.contains("selected"));
     var community = communities.firstWhere((i) => i['id'] == target.dataset['id']);
@@ -265,11 +249,11 @@ class CommunityList extends PolymerElement with Observable {
     app.pageTitle = "Communities";
     getCommunities();
 
-    app.changes.listen((List<ChangeRecord> records) {
-      if (app.user != null) {
-        getCommunities();
-      }
-    });
+//    app.changes.listen((List<ChangeRecord> records) {
+//      if (app.user != null) {
+//        getCommunities();
+//      }
+//    });
   }
 
   detached() {

@@ -22,7 +22,6 @@
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/slide-from-right.html">
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/cross-fade.html">
 <link rel="import" href="../../../../../../../packages/core_elements/social_icons.html">
-core-icons/iconsets/<iconset>.html
 
 <polymer-element name="woven-app">
   <template>
@@ -57,7 +56,7 @@ core-icons/iconsets/<iconset>.html
                          on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
                          on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
-              <core-item label="Home" icon="home" horizontal center layout class="item"
+              <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
                          on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
             </template>
             <template if="{{app.community == null}}">
