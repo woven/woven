@@ -43,7 +43,6 @@ class PeopleList extends PolymerElement with Observable {
 //      }
 
       // The live-date-time element needs parsed dates.
-      print("DATE: ${user['createdDate']}");
       user['createdDate'] = DateTime.parse(user['createdDate']);
 
       // Insert each new item into the list.
