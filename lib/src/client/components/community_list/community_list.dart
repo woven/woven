@@ -26,7 +26,7 @@ class CommunityList extends PolymerElement with Observable {
   getCommunities() {
     // Since we call this method a second time after user
     // signed in, clear the communities list before we recreate it.
-    if (communities.length > 0) { communities.clear(); }
+//    if (communities.length > 0) { communities.clear(); }
 
     var firebaseRoot = new db.Firebase(firebaseLocation);
     var communityRef = firebaseRoot.child('/communities');
@@ -37,7 +37,6 @@ class CommunityList extends PolymerElement with Observable {
       // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location",
       // so we'll add that to our local item list.
       community['id'] = e.snapshot.name();
-      print(community['id']);
 
       // If the user is signed in, see if they've starred this community.
 //      if (app.user != null) {
@@ -183,7 +182,7 @@ class CommunityList extends PolymerElement with Observable {
       return;
     }
 
-    app.showMessage("Stars aren't working well yet. :)", "important");
+    app.showMessage("Stars aren't working well yet. :)");
 
     bool isStarred = (target.classes.contains("selected"));
     var community = communities.firstWhere((i) => i['id'] == target.dataset['id']);
@@ -233,12 +232,10 @@ class CommunityList extends PolymerElement with Observable {
     }
 
     // Replace the community in the observed list w/ our updated copy.
-    communities.removeWhere((oldItem) => oldItem['alias'] == community['alias']);
-    communities.add(community);
-    communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-    communities = toObservable(communities.reversed.toList());
-
-    print(communities);
+//    communities.removeWhere((oldItem) => oldItem['alias'] == community['alias']);
+//    communities.add(community);
+//    communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
+//    communities = toObservable(communities.reversed.toList());
   }
 
   formatItemDate(DateTime value) {
@@ -246,6 +243,7 @@ class CommunityList extends PolymerElement with Observable {
   }
 
   attached() {
+    print("+CommunityList");
     app.pageTitle = "Communities";
     getCommunities();
 
@@ -257,6 +255,6 @@ class CommunityList extends PolymerElement with Observable {
   }
 
   detached() {
-    //
+    print("-CommunityList");
   }
 }

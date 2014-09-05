@@ -27,7 +27,7 @@ class App extends Observable {
   App() {
     void home(String path) {
       // Home goes to the community list for now.
-      selectedPage = 0;
+      selectedPage = 4;
       community = null;
     }
 

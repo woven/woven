@@ -93,7 +93,7 @@ class App {
             new File(config['server']['directory'] + request.uri.path).exists().then((bool exists) {
               if (!exists) {
                 // File doesn't exist, so check if it's a community alias/
-                if (Uri.parse(request.uri.path).pathSegments[0].length > 0) {
+                if (Uri.parse(request.uri.path).pathSegments.length > 0) {
                   var alias;
                   alias = Uri.parse(request.uri.path).pathSegments[0];
                   // Wait for the aliasExists future to complete.

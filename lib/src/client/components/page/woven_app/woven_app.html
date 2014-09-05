@@ -56,8 +56,8 @@
                          on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
                          on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
-              <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
-                         on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
+              <core-item label="Home" icon="home" horizontal center layout class="item" active
+                         on-click="{{switchPage}}" data-page="4" data-url="/" ></core-item>
             </template>
             <template if="{{app.community == null}}">
               <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
@@ -94,15 +94,12 @@
         </core-toolbar>
 
         <div class="content">
-          <core-animated-pages id="pages" transitions="cross-fade slide-from-right" selected="{{app.selectedPage}}">
+          <core-animated-pages id="pages" transitions="slide-from-right" selected="{{app.selectedPage}}">
             <section>
               <template if="{{app.selectedPage === 0}}">
                 <div cross-fade="{{app.selectedPage === 0}}">
                   <template if="{{app.community != null && app.selectedPage === 0}}">
                     <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
-                    </template>
-                  <template if="{{app.community == null && app.selectedPage === 0}}">
-                      <community-list id="community-list" app="{{app}}"></community-list>
                   </template>
                 </div>
 

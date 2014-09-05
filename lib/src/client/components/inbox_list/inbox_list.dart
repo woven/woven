@@ -97,6 +97,8 @@ class InboxList extends PolymerElement with Observable {
     // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
 
+    app.showMessage("Not quite working yet. :)");
+
     if (target.attributes["icon"] == "favorite") {
       target.attributes["icon"] = "favorite-outline";
     } else {
@@ -110,6 +112,9 @@ class InboxList extends PolymerElement with Observable {
   toggleStar(Event e, var detail, Element target) {
     // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
+
+    app.showMessage("Not quite working yet. :)");
+
     target
       ..classes.toggle("selected");
 
