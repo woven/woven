@@ -9,7 +9,6 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_input.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:woven/src/shared/model/activity_comment.dart';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
