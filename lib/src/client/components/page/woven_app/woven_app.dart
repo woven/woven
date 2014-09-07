@@ -37,6 +37,7 @@ class WovenApp extends PolymerElement with Observable {
 
   void signOut() {
     app.user = null;
+    app.mainViewModel.invalidateUserState();
   }
 
   // Greet the user upon sign in.
@@ -114,10 +115,11 @@ class WovenApp extends PolymerElement with Observable {
       var response = Response.decode(contents);
       if (response.success && response.data !=null) {
         app.user = UserModel.decode(response.data);
+
+        app.mainViewModel.invalidateUserState();
+
         // On sign in, greet the user.
-        if (app.user != null && app.user.isNew != true) {
-          greetUser();
-        }
+        if (app.user.isNew != true) greetUser();
       }
     });
 

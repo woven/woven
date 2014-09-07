@@ -5,7 +5,7 @@
 <polymer-element name="community-list">
   <template>
     <link rel="stylesheet" href="community_list.css">
-    <template repeat="{{community in communities}}">
+    <template repeat="{{community in viewModel.communities}}">
       <core-item class="item" on-click="{{selectCommunity}}" data-id="{{ community['id'] }}">
         <div class="item-container" horizontal layout>
           <div class="item-col1" vertical layout>

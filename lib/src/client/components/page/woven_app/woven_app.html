@@ -122,13 +122,13 @@
             </section>
             <section layout vertical>
               <template if="{{app.selectedPage === 3}}">
-                <people-list app="{{app}}"></people-list>
+                <people-list app="{{app}}" viewModel="{{app.mainViewModel}}"></people-list>
               </template>
             </section>
             <section layout vertical>
               <template if="{{app.community == null && app.selectedPage === 4}}">
                 <div>
-                  <community-list id="community-list" app="{{app}}"></community-list>
+                  <community-list id="community-list" app="{{app}}" viewModel="{{app.mainViewModel}}"></community-list>
                 </div>
               </template>
             </section>

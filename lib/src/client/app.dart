@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/components/page/woven_app/woven_app.dart';
+import 'package:woven/src/client/view_model/main.dart';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -23,8 +24,11 @@ class App extends Observable {
   @observable CommunityModel community;
 //  @observable bool isNewUser = false;
   Router router;
+  MainViewModel mainViewModel;
 
   App() {
+    mainViewModel = new MainViewModel(this);
+
     void home(String path) {
       // Home goes to the community list for now.
       selectedPage = 4;
@@ -148,5 +152,3 @@ class App extends Observable {
     window.location.assign(signInUrl);
   }
 }
-
-
