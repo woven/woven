@@ -26,10 +26,16 @@ class CommunityList extends PolymerElement with Observable {
   getCommunities() {
     // Since we call this method a second time after user
     // signed in, clear the communities list before we recreate it.
-//    if (communities.length > 0) { communities.clear(); }
+    if (communities.length > 0) { communities.clear(); }
+
+    // If the user is signed in, see if they've starred this community.
+    if (app.user != null) {
+      getUserStarredCommunities();
+    }
 
     var firebaseRoot = new db.Firebase(firebaseLocation);
     var communityRef = firebaseRoot.child('/communities');
+
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     communityRef.limit(20).onChildAdded.listen((e) {
       var community = e.snapshot.val();
@@ -38,28 +44,6 @@ class CommunityList extends PolymerElement with Observable {
       // so we'll add that to our local item list.
       community['id'] = e.snapshot.name();
 
-      // If the user is signed in, see if they've starred this community.
-//      if (app.user != null) {
-//        firebaseRoot.child('/users/' + app.user.username + '/communities/' + community['id']).onValue.listen((e) {
-//          if (e.snapshot.val() == null) {
-//            community['userStarred'] = false;
-//            // TODO: Add community star_count?!
-//
-//          } else {
-//            community['userStarred'] = true;
-//          }
-//          print("${community['userStarred']}, star count: ${community['star_count']}");
-//
-//          // Replace the community in the observed list w/ our updated copy.
-//          communities
-//            ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
-//            ..add(community)
-//            ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//
-//          communities = toObservable(communities.reversed.toList());
-//        });
-//      }
-
       // If no updated date, use the created date.
       if (community['updatedDate'] == null) {
         community['updatedDate'] = community['createdDate'];
@@ -67,86 +51,62 @@ class CommunityList extends PolymerElement with Observable {
 
       // Handle the case where no star count yet.
       if (community['star_count'] == null) {
-        community['star_count'] = 0;
+        toObservable(community['star_count'] = 0);
       }
 
       // The live-date-time element needs parsed dates.
       community['updatedDate'] = DateTime.parse(community['updatedDate']);
       community['createdDate'] = DateTime.parse(community['createdDate']);
 
-      // Listen for realtime changes to the star count.
-//      communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
-//        int newCount = e.snapshot.val();
-//        community['star_count'] = newCount;
-//        // Replace the community in the observed list w/ our updated copy.
-//        // TODO: Re-writing the list each time is ridiculous!
-//        communities
-//          ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
-//          ..add(community)
-//          ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//
-//        communities = toObservable(communities.reversed.toList());
-//      });
-
-
-
       // Insert each new community into the list.
-      communities.add(community);
+      communities.add(toObservable(community));
 
       // Sort the list by the item's updatedDate, then reverse it.
-      communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-      communities = toObservable(communities.reversed.toList());
-    });
-
-
-//    communityRef.onChildChanged.listen((e) {
-//      var community = e.snapshot.val();
-//
-//      // If no updated date, use the created date.
-//      if (community['updatedDate'] == null) {
-//        community['updatedDate'] = community['createdDate'];
-//      }
-//
-//      community['updatedDate'] = DateTime.parse(community['updatedDate']);
-//
-//      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-//      // So we'll add that to our local community list.
-//      community['id'] = e.snapshot.name();
-//
-//      // Insert each new community into the list.
-//      communities.removeWhere((oldItem) => oldItem['id'] == e.snapshot.name());
-//      communities.add(community);
-//
-//      // Sort the list by the item's updatedDate, then reverse it.
 //      communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//      communities = community.reversed.toList();
-//    });
+//      communities = toObservable(communities.reversed.toList());
 
+      // Listen for realtime changes to the star count.
+      communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
+        int newCount = e.snapshot.val();
+        toObservable(community['star_count'] = newCount);
+        // Replace the community in the observed list w/ our updated copy.
+        // TODO: Re-writing the list each time is ridiculous!
+
+        //TODO: This is the culprit!
+//        communities
+//          ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//          ..add(toObservable(community));
+
+//          ..where((oldItem) => oldItem['alias'] == community['alias'])
+//          ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]))
+//          ..reversed.toList();
+      });
+    });
   }
 
   // This is triggered by an app.changes.listen.
-//  void getUserStarredCommunities() {
-//    // Determine if this user has starred the community.
-//    communities.forEach((community) {
-//      var starredCommunityRef = new db.Firebase(firebaseLocation + '/users/' + app.user.username + '/communities/' + community['id']);
-//      starredCommunityRef.onValue.listen((e) {
-//        if (e.snapshot.val() == null) {
-//          community['userStarred'] = false;
-//        } else {
-//          community['userStarred'] = true;
-//        }
-//
-//      // Replace the community in the observed list w/ our updated copy.
-//      communities
-//        ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
-//        ..add(community)
-//        ..sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//
-//      communities = toObservable(communities.reversed.toList());
-//
-//      });
-//    });
-//  }
+  void getUserStarredCommunities() {
+    // Determine if this user has starred the community.
+    communities.forEach((community) {
+      var starredCommunityRef = new db.Firebase(firebaseLocation + '/users/' + app.user.username + '/communities/' + community['id']);
+      starredCommunityRef.onValue.listen((e) {
+        if (e.snapshot.val() == null) {
+          community['starred'] = false;
+          // Replace the community in the observed list w/ our updated copy.
+//          communities
+//            ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//            ..add(toObservable(community));
+        } else {
+          community['starred'] = true;
+          // Replace the community in the observed list w/ our updated copy.
+//          communities
+//            ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//            ..add(toObservable(community));
+        }
+      });
+    });
+
+  }
 
   void selectCommunity(Event e, var detail, Element target) {
     // Look in the communities list for the item that matches the
@@ -159,10 +119,8 @@ class CommunityList extends PolymerElement with Observable {
       ..createdDate = communityMap['createdDate']
       ..updatedDate = communityMap['updatedDate'];
 
-    // TODO: app.selectCommunity() method, or just instantiate the community object here.
     app.selectedPage = 0;
     app.community = community;
-//    app.resetCommunityTitle();
 
     app.router.dispatch(url: "/" + app.community.alias);
   }
@@ -193,7 +151,7 @@ class CommunityList extends PolymerElement with Observable {
 
     if (isStarred) {
       // If it's starred, time to unstar it.
-      community['userStarred'] = false;
+      community['starred'] = false;
       starredCommunityRef.remove();
 
       // Update the star count.
@@ -210,9 +168,13 @@ class CommunityList extends PolymerElement with Observable {
       // Update the list of users who starred.
       communityRef.child('/star_users/' + app.user.username).remove();
 
+//      communities
+//        ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//        ..add(toObservable(community));
+
     } else {
       // If it's not starred, time to star it.
-      community['userStarred'] = true;
+      community['starred'] = true;
       starredCommunityRef.set(true);
 
       // Update the star count.
@@ -229,13 +191,17 @@ class CommunityList extends PolymerElement with Observable {
       // Update the list of users who starred.
       communityRef.child('/star_users/' + app.user.username).set(true);
 
-    }
+//      communities
+//        ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//        ..add(toObservable(community));
 
+    }
     // Replace the community in the observed list w/ our updated copy.
-//    communities.removeWhere((oldItem) => oldItem['alias'] == community['alias']);
-//    communities.add(community);
+//    communities
+//      ..removeWhere((oldItem) => oldItem['alias'] == community['alias'])
+//      ..add(toObservable(community));
 //    communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//    communities = toObservable(communities.reversed.toList());
+//    communities.reversed.toList();
   }
 
   formatItemDate(DateTime value) {
@@ -247,11 +213,11 @@ class CommunityList extends PolymerElement with Observable {
     app.pageTitle = "Communities";
     getCommunities();
 
-//    app.changes.listen((List<ChangeRecord> records) {
-//      if (app.user != null) {
-//        getCommunities();
-//      }
-//    });
+    app.changes.listen((List<ChangeRecord> records) {
+      if (app.user != null) {
+        getUserStarredCommunities();
+      }
+    });
   }
 
   detached() {
