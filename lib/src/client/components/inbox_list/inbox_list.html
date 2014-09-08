@@ -5,7 +5,7 @@
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
-    <template repeat="{{item in items}}">
+    <template repeat="{{item in viewModel.items}}">
       <core-item class="item" on-click="{{selectItem}}" data-id="{{ item['id'] }}">
         <div class="item-container" horizontal layout>
           <div class="item-col1" vertical layout>

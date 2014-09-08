@@ -99,7 +99,7 @@
               <template if="{{app.selectedPage === 0}}">
                 <div cross-fade="{{app.selectedPage === 0}}">
                   <template if="{{app.community != null && app.selectedPage === 0}}">
-                    <inbox-list id="inbox-list" app="{{app}}"></inbox-list>
+                    <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.inboxViewModel}}"></inbox-list>
                   </template>
                 </div>
 
