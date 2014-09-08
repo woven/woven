@@ -128,7 +128,6 @@ class ItemActivities extends PolymerElement {
           // Update the community's copy of the item.
         root.child('/items/' + app.selectedItem['id'] + '/communities/' + app.community.alias)
           ..set(true);
-        print("Updated.");
       }
   }
 

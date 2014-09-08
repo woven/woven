@@ -50,7 +50,6 @@ class MainViewModel extends Observable {
 
       // Listen for realtime changes to the star count.
       communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
-        print('DEBUG: Community ${community["alias"]} star count changed to ${e.snapshot.val()}');
         community['star_count'] = e.snapshot.val();
       });
     });
@@ -59,12 +58,12 @@ class MainViewModel extends Observable {
   void toggleCommunityStar(id) {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
-    app.showMessage("Stars aren't working well yet. :)");
+    //    app.showMessage("Stars aren't working well yet. :)");
 
     var community = communities.firstWhere((i) => i['id'] == id);
 
     var firebaseRoot = new db.Firebase(firebaseLocation);
-    var starredCommunityRef = firebaseRoot.child('/users/' + app.user.username + '/communities/' + community['id']);
+    var starredCommunityRef = firebaseRoot.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
     var communityRef = firebaseRoot.child('/communities/' + community['id']);
 
     if (community['starred']) {
@@ -84,7 +83,7 @@ class MainViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      communityRef.child('/star_users/' + app.user.username).remove();
+      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).remove();
     } else {
       // If it's not starred, time to star it.
       community['starred'] = true;
@@ -102,7 +101,7 @@ class MainViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      communityRef.child('/star_users/' + app.user.username).set(true);
+      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).set(true);
     }
   }
 
@@ -164,10 +163,9 @@ class MainViewModel extends Observable {
   void loadUserStarredCommunityInformation() {
     communities.forEach((community) {
       if (app.user != null) {
-        var starredCommunityRef = new db.Firebase(firebaseLocation + '/users/' + app.user.username + '/communities/' + community['id']);
+        var starredCommunityRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/communities/' + community['id']);
         starredCommunityRef.onValue.listen((e) {
           community['starred'] = e.snapshot.val() != null;
-          print('DEBUG: Community ${community["alias"]} was starred by ${app.user.username}: ${community["starred"]}');
         });
       } else {
         community['starred'] = false;

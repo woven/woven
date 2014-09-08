@@ -44,8 +44,6 @@ class SignInController {
       request.session['id'] = facebookId;
 
       return facebookIdExists(facebookId).then((bool facebookIdExists) {
-        print('Facebook ID already exists: $facebookIdExists');
-
         if (!facebookIdExists) {
           //Store the Facebook ID in an index that references the associated username.
           Firebase.put('/facebook_index/$facebookId.json', {'username': '$username'});

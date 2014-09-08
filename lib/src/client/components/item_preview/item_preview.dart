@@ -26,7 +26,6 @@ class ItemPreview extends PolymerElement {
   void getItem() {
     // If there's no app.selectedItem, we probably
     // came here directly, so let's get it.
-    print(app.selectedItem);
     if (app.selectedItem == null) {
       // Decode the base64 URL and determine the item.
       var base64 = Uri.parse(window.location.toString()).pathSegments[1];

@@ -145,8 +145,6 @@ class InboxList extends PolymerElement with Observable {
       set(db.Firebase dbRef) {
         dbRef.set({
             'itemid': item['id']
-        }).then((e){
-          print("Updated ${item['subject']}");
         });
       }
 

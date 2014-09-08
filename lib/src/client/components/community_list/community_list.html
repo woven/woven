@@ -13,7 +13,7 @@
                        id="icon-star" on-click="{{toggleStar}}"
                        class="{{app.user != null && community['starred'] == true ? 'selected' : ''}}"
                        data-id="{{ community['id'] }}"></core-icon>
-            <span class="item-count">{{community['star_count']}} / {{community['starred']}} / {{community['id']}} </span>
+            <span class="item-count">{{community['star_count']}}</span>
           </div>
           <div class="item-col2" flex>
             <div class="item-subject">{{community['alias']}}</div>

@@ -26,7 +26,7 @@ class Firebase {
         return message['name'];
       }
 
-      print("We POSTed something:\n$message");
+//      print("We POSTed something:\n$message");
     });
   }
 
@@ -44,7 +44,7 @@ class Firebase {
         throw 'Firebase returned an error.\nPath: $path\nData: $data\nResponse: ${message["error"]}';
       }
 
-      print("We PUT something:\n$message");
+//      print("We PUT something:\n$message");
     });
   }
 

@@ -35,14 +35,11 @@ class MainController {
   static showCommunity(App app, HttpRequest request, String community) {
     if (Uri.parse(community).pathSegments[0].length > 0) {
       community = Uri.parse(community).pathSegments[0];
-      print(community);
       Firebase.get('/alias_index/$community.json').then((indexData) {
         if (indexData == null) {
-          print("Alias wasn't found.");
           return;
         } else {
           var type = indexData['type'];
-          print(type);
         }
       });
     }
