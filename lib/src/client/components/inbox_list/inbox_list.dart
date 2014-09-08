@@ -5,7 +5,7 @@ import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/client/view_model/inbox.dart';
+import 'package:woven/src/client/view_model/main.dart';
 
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
@@ -16,7 +16,7 @@ import 'package:crypto/crypto.dart';
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
   @published App app;
-  @published InboxViewModel viewModel;
+  @published MainViewModel viewModel;
 
   InboxList.created() : super.created();
 
@@ -25,7 +25,7 @@ class InboxList extends PolymerElement with Observable {
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
     // id passed in the data-id attribute on the element.
-    var item = viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
+    var item = viewModel.inboxViewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.selectedItem = item;
     app.selectedPage = 1;
@@ -38,35 +38,15 @@ class InboxList extends PolymerElement with Observable {
   }
 
   toggleLike(Event e, var detail, Element target) {
-    // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
 
-    app.showMessage("Not quite working yet. :)");
-
-    if (target.attributes["icon"] == "favorite") {
-      target.attributes["icon"] = "favorite-outline";
-    } else {
-      target.attributes["icon"] = "favorite";
-    }
-
-    target
-      ..classes.toggle("selected");
+    viewModel.inboxViewModel.toggleItemLike(target.dataset['id']);
   }
 
   toggleStar(Event e, var detail, Element target) {
-    // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
 
-    target
-      ..classes.toggle("selected");
-
-    if (target.attributes["icon"] == "star") {
-      target.attributes["icon"] = "star-outline";
-    } else {
-      target.attributes["icon"] = "star";
-    }
-
-    viewModel.toggleItemStar(target.dataset['id']);
+    viewModel.inboxViewModel.toggleItemStar(target.dataset['id']);
   }
 
   formatItemDate(DateTime value) {
@@ -77,31 +57,30 @@ class InboxList extends PolymerElement with Observable {
 
   //Temporary script, about as good a place as any to put it.
 
-  CreateCommunityItemsScript() {
-    var f = new db.Firebase(firebaseLocation + '/items');
-    f.onChildAdded.listen((e) {
-      var item = e.snapshot.val();
-      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-      // So we'll add that to our local item list.
-      item['id'] = e.snapshot.name();
-
-      final dbRef = new db.Firebase("$firebaseLocation/communities/thelab/item_index/${item['id']}");
-      set(db.Firebase dbRef) {
-        dbRef.set({
-            'itemid': item['id']
-        });
-      }
-
-      set(dbRef);
-
-    });
-
-  }
+//  CreateCommunityItemsScript() {
+//    var f = new db.Firebase(firebaseLocation + '/items');
+//    f.onChildAdded.listen((e) {
+//      var item = e.snapshot.val();
+//      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+//      // So we'll add that to our local item list.
+//      item['id'] = e.snapshot.name();
+//
+//      final dbRef = new db.Firebase("$firebaseLocation/communities/thelab/item_index/${item['id']}");
+//      set(db.Firebase dbRef) {
+//        dbRef.set({
+//            'itemid': item['id']
+//        });
+//      }
+//
+//      set(dbRef);
+//
+//    });
+//
+//  }
 
   attached() {
     print("+InboxList");
     app.pageTitle = "Everything";
-    getItems();
     //CreateCommunityItemsScript();
   }
 

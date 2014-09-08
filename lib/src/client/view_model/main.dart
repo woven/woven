@@ -34,7 +34,8 @@ class MainViewModel extends Observable {
 //  }
 
   @observable InboxViewModel get inboxViewModel { // Get the current inbox view model.
-    var id = app.community.id;
+    if (app.community == null) return null;
+    var id = app.community.alias;
     if (id == null) return null; // No item, no view model to use.
     if (!inboxViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
@@ -77,8 +78,17 @@ class MainViewModel extends Observable {
 
       // Listen for realtime changes to the star count.
       communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
-        community['star_count'] = e.snapshot.val();
+        community['star_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
       });
+
+      if (app.user != null) {
+        var starredCommunitiesRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+        starredCommunitiesRef.onValue.listen((e) {
+          community['starred'] = e.snapshot.val() != null;
+        });
+      } else {
+        community['starred'] = false;
+      }
     });
   }
 
@@ -110,7 +120,7 @@ class MainViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).remove();
+      firebaseRoot.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).remove();
     } else {
       // If it's not starred, time to star it.
       community['starred'] = true;
@@ -128,64 +138,9 @@ class MainViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).set(true);
+      firebaseRoot.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).set(true);
     }
   }
-
-  // TODO: In progress. Need to move item loading to ViewModel.
-  void toggleItemStar(id) {
-    if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
-
-    //    app.showMessage("Stars aren't working well yet. :)");
-
-    var community = communities.firstWhere((i) => i['id'] == id);
-
-    var firebaseRoot = new db.Firebase(firebaseLocation);
-    var starredCommunityRef = firebaseRoot.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
-    var communityRef = firebaseRoot.child('/communities/' + community['id']);
-
-    if (community['starred']) {
-      // If it's starred, time to unstar it.
-      community['starred'] = false;
-      starredCommunityRef.remove();
-
-      // Update the star count.
-      communityRef.child('/star_count').transaction((currentCount) {
-        if (currentCount == null || currentCount == 0) {
-          community['star_count'] = 0;
-          return 0;
-        } else {
-          community['star_count'] = currentCount - 1;
-          return community['star_count'];
-        }
-      });
-
-      // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).remove();
-    } else {
-      // If it's not starred, time to star it.
-      community['starred'] = true;
-      starredCommunityRef.set(true);
-
-      // Update the star count.
-      communityRef.child('/star_count').transaction((currentCount) {
-        if (currentCount == null || currentCount == 0) {
-          community['star_count'] = 1;
-          return 1;
-        } else {
-          community['star_count'] = currentCount + 1;
-          return community['star_count'];
-        }
-      });
-
-      // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).set(true);
-    }
-  }
-
-
-
-
 
   loadUsers() {
     var f = new db.Firebase(firebaseLocation + '/users');
@@ -239,6 +194,10 @@ class MainViewModel extends Observable {
    */
   void invalidateUserState() {
     loadUserStarredCommunityInformation();
+    if (app.community != null) {
+      inboxViewModel.loadUserStarredItemInformation();
+      inboxViewModel.loadUserLikedItemInformation();
+    }
     // Add more cases later as you need...
   }
 

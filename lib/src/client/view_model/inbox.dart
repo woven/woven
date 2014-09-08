@@ -13,6 +13,7 @@ class InboxViewModel extends Observable {
 
   InboxViewModel(this.app) {
     loadItemsForCommunity();
+    print("Loaded InboxViewModel");
   }
 
   /**
@@ -40,69 +41,167 @@ class InboxViewModel extends Observable {
       item['id'] = e.snapshot.name();
 
       // Insert each new item into the list.
-      items.add(item);
+      items.add(toObservable(item));
 
-      // Sort the list by the item's updatedDate, then reverse it.
-      items.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-      items.reversed.toList();
+      // Sort the list by the item's updatedDate.
+      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
       // Listen for realtime changes to the star count.
-      itemsByCommunityRef.child('/star_count').onValue.listen((e) {
-        item['star_count'] = e.snapshot.val();
+      f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
+        item['star_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
       });
+
+      // Listen for realtime changes to the like count.
+      f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
+        item['like_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
+      });
+
+      if (app.user != null) {
+        var starredItemsRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/items/' + item['id']);
+        var likedItemsRef = new db.Firebase(firebaseLocation + '/liked_by_user/' + app.user.username + '/items/' + item['id']);
+        starredItemsRef.onValue.listen((e) {
+          item['starred'] = e.snapshot.val() != null;
+        });
+        likedItemsRef.onValue.listen((e) {
+          item['liked'] = e.snapshot.val() != null;
+        });
+      } else {
+        item['starred'] = false;
+        item['liked'] = false;
+      }
+
     });
+
+//    loadUserStarredItemInformation();
+//    loadUserLikedItemInformation();
+
+
   }
 
   void toggleItemStar(id) {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
+    //    app.showMessage("Stars aren't working well yet. :)");
+
     var item = items.firstWhere((i) => i['id'] == id);
 
-    print(item);
+    var firebaseRoot = new db.Firebase(firebaseLocation);
+    var starredItemRef = firebaseRoot.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+    var itemRef = firebaseRoot.child('/items/' + item['id']);
 
-//    var f = new db.Firebase(firebaseLocation);
-//    var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
-//    var itemRef = f.child('/items/' + item['id']);
-//    var itemRefByCommunity = f.child('/items_by_community/' + app.community.alias);
-//
-//    if (community['starred']) {
-//      // If it's starred, time to unstar it.
-//      community['starred'] = false;
-//      starredCommunityRef.remove();
-//
-//      // Update the star count.
-//      communityRef.child('/star_count').transaction((currentCount) {
-//        if (currentCount == null || currentCount == 0) {
-//          community['star_count'] = 0;
-//          return 0;
-//        } else {
-//          community['star_count'] = currentCount - 1;
-//          return community['star_count'];
-//        }
-//      });
-//
-//      // Update the list of users who starred.
-//      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).remove();
-//    } else {
-//      // If it's not starred, time to star it.
-//      community['starred'] = true;
-//      starredCommunityRef.set(true);
-//
-//      // Update the star count.
-//      communityRef.child('/star_count').transaction((currentCount) {
-//        if (currentCount == null || currentCount == 0) {
-//          community['star_count'] = 1;
-//          return 1;
-//        } else {
-//          community['star_count'] = currentCount + 1;
-//          return community['star_count'];
-//        }
-//      });
-//
-//      // Update the list of users who starred.
-//      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).set(true);
-//    }
+    if (item['starred']) {
+      // If it's starred, time to unstar it.
+      item['starred'] = false;
+      starredItemRef.remove();
+
+      // Update the star count.
+      itemRef.child('/star_count').transaction((currentCount) {
+        if (currentCount == null || currentCount == 0) {
+          item['star_count'] = 0;
+          return 0;
+        } else {
+          item['star_count'] = currentCount - 1;
+          return item['star_count'];
+        }
+      });
+
+      // Update the list of users who starred.
+      firebaseRoot.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).remove();
+    } else {
+      // If it's not starred, time to star it.
+      item['starred'] = true;
+      starredItemRef.set(true);
+
+      // Update the star count.
+      itemRef.child('/star_count').transaction((currentCount) {
+        if (currentCount == null || currentCount == 0) {
+          item['star_count'] = 1;
+          return 1;
+        } else {
+          item['star_count'] = currentCount + 1;
+          return item['star_count'];
+        }
+      });
+
+      // Update the list of users who starred.
+      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).set(true);
+    }
   }
 
+  void toggleItemLike(id) {
+    if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
+    var item = items.firstWhere((i) => i['id'] == id);
+
+    var firebaseRoot = new db.Firebase(firebaseLocation);
+    var starredItemRef = firebaseRoot.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+    var itemRef = firebaseRoot.child('/items/' + item['id']);
+
+    if (item['liked']) {
+      // If it's starred, time to unstar it.
+      item['liked'] = false;
+      starredItemRef.remove();
+
+      // Update the star count.
+      itemRef.child('/like_count').transaction((currentCount) {
+        if (currentCount == null || currentCount == 0) {
+          item['like_count'] = 0;
+          return 0;
+        } else {
+          item['like_count'] = currentCount - 1;
+          return item['like_count'];
+        }
+      });
+
+      // Update the list of users who starred.
+      firebaseRoot.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).remove();
+    } else {
+      // If it's not starred, time to star it.
+      item['liked'] = true;
+      starredItemRef.set(true);
+
+      // Update the star count.
+      itemRef.child('/like_count').transaction((currentCount) {
+        if (currentCount == null || currentCount == 0) {
+          item['like_count'] = 1;
+          return 1;
+        } else {
+          item['like_count'] = currentCount + 1;
+          return item['like_count'];
+        }
+      });
+
+      // Update the list of users who starred.
+      firebaseRoot.child('/users_who_liked/community/' + app.community.alias + '/' + app.user.username).set(true);
+    }
+  }
+
+  void loadUserStarredItemInformation() {
+    print("Called loadUserStarredItemInformation");
+    items.forEach((item) {
+      if (app.user != null) {
+        var starredItemsRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/items/' + item['id']);
+        starredItemsRef.onValue.listen((e) {
+          item['starred'] = e.snapshot.val() != null;
+        });
+      } else {
+        item['starred'] = false;
+      }
+
+    });
+  }
+
+  void loadUserLikedItemInformation() {
+    print("Called loadUserLikedItemInformation");
+    items.forEach((item) {
+      if (app.user != null) {
+        var starredItemsRef = new db.Firebase(firebaseLocation + '/liked_by_user/' + app.user.username + '/items/' + item['id']);
+        starredItemsRef.onValue.listen((e) {
+          item['liked'] = e.snapshot.val() != null;
+        });
+      } else {
+        item['liked'] = false;
+      }
+    });
+  }
 }

@@ -55,15 +55,16 @@ class AddStuff extends PolymerElement {
     var encodedItem = item.encode();
 
     var root = new db.Firebase(config['datastore']['firebaseLocation']);
-    var id = root.child("/items/" + app.community.alias).push();
+    var id = root.child('/items').push();
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
     Future setItem(db.Firebase itemRef) {
       itemRef.set(encodedItem).then((e){
         var nameRef = id.name();
-        root.child('/items/' + nameRef)
+        root.child('/items_by_community/' + app.community.alias + '/' + nameRef)
           ..set(encodedItem);
+        // Only in the main /items location, store a simple list of its parent communities.
         root.child('/items/' + nameRef + '/communities/' + app.community.alias)
           ..set(true);
       });
