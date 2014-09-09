@@ -7,16 +7,30 @@
         <div class="item-card">
           <div class="content">
             <div>
-              <h1>{{app.selectedItem['subject']}}</h1>
+              <h1>{{item['subject']}}</h1>
             </div>
             <div>
               <template if="{{app.selectedItem != null}}">
-              <live-date-time value="{{app.selectedItem['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-              by {{app.selectedItem['user']}}
+              <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+              by {{item['user']}}
               </template>
             </div>
             <div>
               <p id="body">Loading...</p>
+            </div>
+          </div>
+          <div id="action-footer">
+            <div class="item-col1" horizontal layout>
+              <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+                         id="icon-fav" on-click="{{toggleLike}}"
+                         class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                         data-id="{{item['id']}}"></core-icon>
+              <span class="item-count">{{item['like_count']}}</span>
+              <core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"
+                         id="icon-star" on-click="{{toggleStar}}"
+                         class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"
+                         data-id="{{ item['id'] }}"></core-icon>
+              <span class="item-count">{{item['star_count']}}</span>
             </div>
           </div>
         </div>

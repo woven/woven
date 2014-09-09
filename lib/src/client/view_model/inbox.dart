@@ -13,7 +13,6 @@ class InboxViewModel extends Observable {
 
   InboxViewModel(this.app) {
     loadItemsForCommunity();
-    print("Loaded InboxViewModel");
   }
 
   /**
@@ -48,12 +47,12 @@ class InboxViewModel extends Observable {
 
       // Listen for realtime changes to the star count.
       f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-        item['star_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
+        item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
       });
 
       // Listen for realtime changes to the like count.
       f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
-        item['like_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
+        item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
       });
 
       if (app.user != null) {
@@ -80,8 +79,6 @@ class InboxViewModel extends Observable {
 
   void toggleItemStar(id) {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
-
-    //    app.showMessage("Stars aren't working well yet. :)");
 
     var item = items.firstWhere((i) => i['id'] == id);
 
@@ -124,7 +121,7 @@ class InboxViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/community/' + app.community.alias + '/' + app.user.username).set(true);
+      firebaseRoot.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).set(true);
     }
   }
 
@@ -153,7 +150,7 @@ class InboxViewModel extends Observable {
         }
       });
 
-      // Update the list of users who starred.
+      // Update the list of users who liked.
       firebaseRoot.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).remove();
     } else {
       // If it's not starred, time to star it.
@@ -171,13 +168,12 @@ class InboxViewModel extends Observable {
         }
       });
 
-      // Update the list of users who starred.
-      firebaseRoot.child('/users_who_liked/community/' + app.community.alias + '/' + app.user.username).set(true);
+      // Update the list of users who liked.
+      firebaseRoot.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
     }
   }
 
   void loadUserStarredItemInformation() {
-    print("Called loadUserStarredItemInformation");
     items.forEach((item) {
       if (app.user != null) {
         var starredItemsRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/items/' + item['id']);
@@ -192,7 +188,6 @@ class InboxViewModel extends Observable {
   }
 
   void loadUserLikedItemInformation() {
-    print("Called loadUserLikedItemInformation");
     items.forEach((item) {
       if (app.user != null) {
         var starredItemsRef = new db.Firebase(firebaseLocation + '/liked_by_user/' + app.user.username + '/items/' + item['id']);
