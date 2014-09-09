@@ -5,33 +5,32 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-//import 'item.dart';
 import 'inbox.dart';
+import 'item.dart';
 
 class MainViewModel extends Observable {
   final App app;
   final List communities = toObservable([]);
   final List users = toObservable([]);
   final String firebaseLocation = config['datastore']['firebaseLocation'];
-//  final Map itemViewModels = {};
   final Map inboxViewModels = {};
+  final Map itemViewModels = {};
 
   MainViewModel(this.app) {
     loadCommunities();
     loadUsers();
   }
 
-  // TODO: In progress, unused.
-//  @observable ItemViewModel get itemViewModel {
-//    var id = app.selectedItem;
-//    if (id == null) return null; // No item, no view model to use.
-//    if (!itemViewModels.containsKey(id)) {
-//      // Item not stored yet, let's create it and store it.
-//      var vm = new ItemViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
-//      itemViewModels[id] = vm; // Store it.
-//    }
-//    return itemViewModels[id];
-//  }
+  @observable ItemViewModel get itemViewModel {
+    var id = app.selectedItem['id'];
+    if (id == null) return null; // No item, no view model to use.
+    if (!itemViewModels.containsKey(id)) {
+      // Item not stored yet, let's create it and store it.
+      var vm = new ItemViewModel(app);
+      itemViewModels[id] = vm; // Store it.
+    }
+    return itemViewModels[id];
+  }
 
   @observable InboxViewModel get inboxViewModel { // Get the current inbox view model.
     if (app.community == null) return null;
@@ -45,7 +44,7 @@ class MainViewModel extends Observable {
     return inboxViewModels[id];
   }
 
-/**
+  /**
    * Loads the communities.
    */
   void loadCommunities() {
@@ -194,6 +193,7 @@ class MainViewModel extends Observable {
    */
   void invalidateUserState() {
     loadUserStarredCommunityInformation();
+    itemViewModel.loadItemUserStarredLikedInformation();
     if (app.community != null) {
       inboxViewModel.loadUserStarredItemInformation();
       inboxViewModel.loadUserLikedItemInformation();

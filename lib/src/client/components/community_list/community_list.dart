@@ -42,7 +42,7 @@ class CommunityList extends PolymerElement with Observable {
   }
 
   void handleCallToAction() {
-    // Reset the current selectedItem so item-preview grabs it from the URL
+    // Reset the current selectedItem so item-view grabs it from the URL
     app.selectedItem == null;
     app.router.dispatch(url: "item/LUpWdzZXaWd4dHdvRWM1ZGNhdXo=");
   }

@@ -11,7 +11,7 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/add_stuff/add_stuff.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/welcome/welcome.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/sign_in/sign_in.html">
-<link rel="import" href="../../../../../../../packages/woven/src/client/components/item_preview/item_preview.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/item_view/item_view.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/people_list/people_list.html">
@@ -108,7 +108,7 @@
             <section layout vertical>
               <template if="{{app.selectedPage === 1}}">
                 <div class="page-wrapper">
-                  <item-preview id="item-preview" app="{{app}}"></item-preview>
+                  <item-view id="item-view" app="{{app}}" viewModel="{{app.mainViewModel}}"></item-view>
                   <item-activities app="{{app}}"></item-activities>
                 </div>
               </template>
