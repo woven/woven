@@ -15,7 +15,7 @@ class ItemView extends PolymerElement {
   @published App app;
   @published MainViewModel viewModel;
 
-//  @observable Map get item => viewModel.itemViewModel.item;
+  @observable Map get item => toObservable(viewModel.itemViewModel.item);
 
   ItemView.created() : super.created();
 

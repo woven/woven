@@ -11,7 +11,7 @@ import 'dart:convert';
 
 class ItemViewModel extends Observable {
   final App app;
-  @observable Map item;
+  @observable Map item = toObservable({});
   final String firebaseLocation = config['datastore']['firebaseLocation'];
 
   ItemViewModel(this.app) {
@@ -24,6 +24,7 @@ class ItemViewModel extends Observable {
   }
 
   void getItem() {
+    print("getItem()");
     if (app.selectedItem != null) {
       item = app.selectedItem;
 
@@ -39,8 +40,10 @@ class ItemViewModel extends Observable {
       var f = new db.Firebase(config['datastore']['firebaseLocation']);
 
       f.child('/items/' + decodedItem).onValue.first.then((e) {
+        // TODO: This completes later, and item changes aren't being observed!
+
         item = toObservable(e.snapshot.val());
-        print(item);
+        print(item['subject']);
 
         // The live-date-time element needs parsed dates.
         item['createdDate'] = DateTime.parse(item['createdDate']);
@@ -66,15 +69,15 @@ class ItemViewModel extends Observable {
         app.selectedItem = item;
 
       }).then((e) {
-        HtmlElement body = $['body'];
-        body.innerHtml = formattedBody;
+//        HtmlElement body = $['body'];
+//        body.innerHtml = formattedBody;
       });
     }
 
     if (app.selectedItem != null) {
       // Trick to respect line breaks.
-      HtmlElement body = $['body'];
-      body.innerHtml = formattedBody;
+//      HtmlElement body = $['body'];
+//      body.innerHtml = formattedBody;
     }
   }
 

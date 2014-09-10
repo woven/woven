@@ -8,6 +8,9 @@ import 'package:woven/src/client/app.dart';
 import 'inbox.dart';
 import 'item.dart';
 
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
+
 class MainViewModel extends Observable {
   final App app;
   final List communities = toObservable([]);
@@ -22,13 +25,29 @@ class MainViewModel extends Observable {
   }
 
   @observable ItemViewModel get itemViewModel {
-    var id = app.selectedItem['id'];
+    var id;
+    if (app.selectedItem != null) {
+      id = app.selectedItem['id'];
+    } else {
+      // If there's no app.selectedItem, we probably
+      // came here directly, so let's get it.
+
+      // Decode the base64 URL and determine the item.
+      var base64 = Uri.parse(window.location.toString()).pathSegments[1];
+      var bytes = CryptoUtils.base64StringToBytes(base64);
+      var decodedItem = UTF8.decode(bytes);
+      id = decodedItem;
+    }
+    print(id);
+
     if (id == null) return null; // No item, no view model to use.
+
     if (!itemViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
       var vm = new ItemViewModel(app);
       itemViewModels[id] = vm; // Store it.
     }
+    print(itemViewModels[id]);
     return itemViewModels[id];
   }
 
