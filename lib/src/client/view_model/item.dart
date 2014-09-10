@@ -13,6 +13,7 @@ class ItemViewModel extends Observable {
   final App app;
   @observable Map item = toObservable({});
   final String firebaseLocation = config['datastore']['firebaseLocation'];
+  var _old = null;
 
   ItemViewModel(this.app) {
     getItem();

@@ -18,10 +18,14 @@ class MainViewModel extends Observable {
   final String firebaseLocation = config['datastore']['firebaseLocation'];
   final Map inboxViewModels = {};
   final Map itemViewModels = {};
+  var _old = null;
 
   MainViewModel(this.app) {
     loadCommunities();
     loadUsers();
+
+    onPropertyChange(itemViewModel, #item,
+        () => _old = notifyPropertyChange(#item, _old, itemViewModel.item));
   }
 
   @observable ItemViewModel get itemViewModel {
@@ -47,7 +51,8 @@ class MainViewModel extends Observable {
       var vm = new ItemViewModel(app);
       itemViewModels[id] = vm; // Store it.
     }
-    print(itemViewModels[id]);
+    var theVm = itemViewModels[id];
+    print(theVm.item['subject']);
     return itemViewModels[id];
   }
 

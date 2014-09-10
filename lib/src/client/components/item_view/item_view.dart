@@ -15,9 +15,13 @@ class ItemView extends PolymerElement {
   @published App app;
   @published MainViewModel viewModel;
 
-  @observable Map get item => toObservable(viewModel.itemViewModel.item);
+  Map get item => viewModel.itemViewModel.item;
 
-  ItemView.created() : super.created();
+  ItemView.created() : super.created() {
+    new PathObserver(viewModel, [#itemViewModel, #item])
+    .open((oldValue, newValue) => notifyPropertyChange(#item2, oldValue, newValue));
+  }
+
 
   String formatItemDate(DateTime value) {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
