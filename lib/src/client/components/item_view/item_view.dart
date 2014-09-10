@@ -15,11 +15,13 @@ class ItemView extends PolymerElement {
   @published App app;
   @published MainViewModel viewModel;
 
+  // Even if I change this to e.g. item2 (and update template too),
+  // so it doesn't conflict with the #item in the PathObserver, still no go.
   Map get item => viewModel.itemViewModel.item;
 
   ItemView.created() : super.created() {
     new PathObserver(viewModel, [#itemViewModel, #item])
-    .open((oldValue, newValue) => notifyPropertyChange(#item2, oldValue, newValue));
+    .open((oldValue, newValue) => notifyPropertyChange(#item, oldValue, newValue));
   }
 
 
