@@ -21,7 +21,10 @@ class ItemView extends PolymerElement {
 
   ItemView.created() : super.created() {
     new PathObserver(viewModel, [#itemViewModel, #item])
-    .open((oldValue, newValue) => notifyPropertyChange(#item, oldValue, newValue));
+    .open((oldValue, newValue) {
+      print("Updated: $oldValue to $newValue");
+      return notifyPropertyChange(#item, oldValue, newValue);
+    });
   }
 
 

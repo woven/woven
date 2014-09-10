@@ -23,9 +23,6 @@ class MainViewModel extends Observable {
   MainViewModel(this.app) {
     loadCommunities();
     loadUsers();
-
-    onPropertyChange(itemViewModel, #item,
-        () => _old = notifyPropertyChange(#item, _old, itemViewModel.item));
   }
 
   @observable ItemViewModel get itemViewModel {
