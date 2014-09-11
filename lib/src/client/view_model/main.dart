@@ -7,6 +7,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'inbox.dart';
 import 'item.dart';
+import 'list.dart';
 
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -18,7 +19,7 @@ class MainViewModel extends Observable {
   final String firebaseLocation = config['datastore']['firebaseLocation'];
   final Map inboxViewModels = {};
   final Map itemViewModels = {};
-  var _old = null;
+  StarredViewModel starredViewModelForUser = null;
 
   MainViewModel(this.app) {
     loadCommunities();
@@ -65,6 +66,18 @@ class MainViewModel extends Observable {
       inboxViewModels[id] = vm; // Store it.
     }
     return inboxViewModels[id];
+  }
+
+  @observable StarredViewModel get starredViewModel { // Get the starred view model for the user.
+    if (app.user == null) return null; // No user, no starred view model.
+    if (starredViewModelForUser == null) {
+      print("1");
+      // Item not stored yet, let's create it and store it.
+      var vm = new StarredViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
+      starredViewModelForUser = vm; // Store it.
+    }
+    print("2: $starredViewModelForUser");
+    return starredViewModelForUser;
   }
 
   /**

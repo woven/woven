@@ -16,6 +16,7 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/people_list/people_list.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/community_list/community_list.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/item_list/item_list.html">
 <link rel="import" href="../../../../../../../packages/paper_elements/paper_toast.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_transition_css.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">
@@ -120,9 +121,7 @@
             </section>
             <section layout vertical>
               <template if="{{app.selectedPage === 2}}">
-                <div class="page-wrapper">
-                  <h1>Starred page is coming soon.</h1>
-                </div>
+                <item-list app="{{app}}" viewModel="{{app.mainViewModel}}"></item-list>
               </template>
             </section>
             <section layout vertical>
