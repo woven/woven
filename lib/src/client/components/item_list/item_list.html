@@ -1,0 +1,39 @@
+<link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<polymer-element name="item-list">
+  <template>
+    <link rel="stylesheet" href="item_list.css">
+    <template repeat="{{item in viewModel.starredViewModel.items}}">
+      <core-item class="item" on-click="{{selectItem}}" data-id="{{item['id']}}">
+        <div class="item-container" horizontal layout>
+          <div class="item-col1" vertical layout>
+            <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+                       id="icon-fav" on-click="{{toggleLike}}"
+                       class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                       data-id="{{item['id']}}"></core-icon>
+            <span class="item-count">{{item['like_count']}}</span>
+            <core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"
+                       id="icon-star" on-click="{{toggleStar}}"
+                       class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"
+                       data-id="{{ item['id'] }}"></core-icon>
+            <span class="item-count">{{item['star_count']}}</span>
+          </div>
+          <div class="item-col2" flex>
+            <div class="item-type">{{ (item['type'] != null) ? item['type'] : 'other'}}</div>
+            <div class="item-subject">{{ item['subject'] }}</div>
+            <div class="item-body" flex>{{ item['body'] }}</div>
+          </div>
+          <div class="item-col3">
+            <div class="item-users">{{ item['user'] }}</div>
+            <div class="item-updated">
+            <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+            </div>
+          </div>
+        </div>
+      </core-item>
+    </template>
+  </template>
+  <script type="application/dart" src="item_list.dart"></script>
+</polymer-element>
