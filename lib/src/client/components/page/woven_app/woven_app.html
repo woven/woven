@@ -88,7 +88,12 @@
       <core-header-panel id="main-panel" main mode="seamed">
 
         <core-toolbar id="toolbar-main">
-          <core-icon-button class="btn primary flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
+          <template if="{{app.selectedPage != 1 || app.userCameFromInbox != true}}">
+            <core-icon-button class="btn primary flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
+          </template>
+          <template if="{{app.selectedPage === 1 && app.userCameFromInbox}}">
+            <core-icon-button class="btn primary flashing-fix" id="back-button" icon="arrow-back" on-tap="{{goBack}}"></core-icon-button>
+          </template>
           <span id="page-title" flex></span>
           <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
         </core-toolbar>

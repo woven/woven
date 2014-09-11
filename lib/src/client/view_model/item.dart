@@ -18,11 +18,17 @@ class ItemViewModel extends Observable {
     getItem();
   }
 
+  /**
+   * Format the body for line breaks.
+   */
   get formattedBody {
     if (app.selectedItem == null) return '';
     return "${InputFormatter.nl2br(app.selectedItem['body'])}";
   }
 
+  /**
+   * Get the item.
+   */
   void getItem() {
     if (app.selectedItem != null) {
       item = app.selectedItem;
@@ -30,13 +36,12 @@ class ItemViewModel extends Observable {
     } else {
       // If there's no app.selectedItem, we probably
       // came here directly, so let's get it.
-
       // Decode the base64 URL and determine the item.
       var base64 = Uri.parse(window.location.toString()).pathSegments[1];
       var bytes = CryptoUtils.base64StringToBytes(base64);
       var decodedItem = UTF8.decode(bytes);
 
-      var f = new db.Firebase(config['datastore']['firebaseLocation']);
+      var f = new db.Firebase(firebaseLocation);
 
       f.child('/items/' + decodedItem).onValue.first.then((e) {
         item = toObservable(e.snapshot.val());
@@ -58,11 +63,10 @@ class ItemViewModel extends Observable {
           item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
         });
 
-        loadItemUserStarredLikedInformation();
-
         app.selectedItem = item;
 
       }).then((e) {
+        print("Load item stars/likes...");
         loadItemUserStarredLikedInformation();
       });
     }
@@ -70,8 +74,8 @@ class ItemViewModel extends Observable {
 
   void loadItemUserStarredLikedInformation() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
-
-    if (app.user != null) {
+    print("Item is: $item");
+    if (app.user != null && !item.isEmpty) {
       var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
       var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
       starredItemsRef.onValue.listen((e) {

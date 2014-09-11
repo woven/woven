@@ -31,6 +31,11 @@ class WovenApp extends PolymerElement with Observable {
     app.router.dispatch(url: target.dataset['url']);
   }
 
+  void goBack(Event e, var detail, Element target) {
+    app.router.dispatch(url: (app.community != null ? '/${app.community.alias}' : '/'));
+    app.community != null ? app.selectedPage = 0 : app.selectedPage = 4;
+  }
+
   signInWithFacebook() {
     app.signInWithFacebook();
   }
@@ -107,6 +112,7 @@ class WovenApp extends PolymerElement with Observable {
       if (response.success && response.data !=null) {
         app.user = UserModel.decode(response.data);
 
+        print("Load the user...");
         app.mainViewModel.invalidateUserState();
 
         // On sign in, greet the user.

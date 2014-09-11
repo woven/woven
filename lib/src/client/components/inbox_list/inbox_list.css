@@ -29,6 +29,17 @@ core-icon {
 #icon-fav.selected {
   fill: red;
 }
+#icon-fav.clicked {
+  -webkit-animation: pulsate 1s ease-out;
+  -webkit-animation-iteration-count: 1;
+  opacity: 0.0;
+}
+
+@-webkit-keyframes pulsate {
+  0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
+  50% {opacity: 1.0;}
+  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0;}
+}
 
 #icon-star.selected {
   fill: #f99b15;
@@ -67,11 +78,13 @@ core-icon {
   font-size: 1.1em;
   padding: 5px 0 0 0;
 }
+
 .item-body {
   color: #5c5c5c;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
+
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
@@ -102,6 +115,7 @@ core-icon {
   text-align: center;
   padding-top: 3px;
 }
+
 .item-col1 span {
   font-size: 10px;
   color: #3F3F3F;

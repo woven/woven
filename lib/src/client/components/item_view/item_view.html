@@ -7,13 +7,17 @@
       <!--<template if="{{app.selectedItem != null}}">-->
         <div class="item-card">
           <div class="content">
+            <div class="item-type">{{ (item['type'] != null) ? item['type'] : 'other'}}</div>
             <div>
               <h1>{{item['subject']}}</h1>
             </div>
             <div>
               <template if="{{app.selectedItem != null}}">
-              <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-              by {{item['user']}}
+                <div class="item-updated">
+                  <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                  by
+                </div>
+                <div class="item-users">{{ item['user'] }}</div>
               </template>
             </div>
             <div>

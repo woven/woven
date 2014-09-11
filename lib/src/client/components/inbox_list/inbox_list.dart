@@ -29,6 +29,7 @@ class InboxList extends PolymerElement with Observable {
 
     app.selectedItem = item;
     app.selectedPage = 1;
+    app.userCameFromInbox = true;
 
     var str = target.dataset['id'];
     var bytes = UTF8.encode(str);
@@ -39,6 +40,12 @@ class InboxList extends PolymerElement with Observable {
 
   toggleLike(Event e, var detail, Element target) {
     e.stopPropagation();
+
+    if (target.classes.contains("selected")) {
+      target.classes.remove("clicked");
+    } else {
+      target.classes.add("clicked");
+    }
 
     viewModel.inboxViewModel.toggleItemLike(target.dataset['id']);
   }

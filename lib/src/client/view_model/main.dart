@@ -215,6 +215,10 @@ class MainViewModel extends Observable {
   void invalidateUserState() {
     loadUserStarredCommunityInformation();
 
+    if (itemViewModel != null) {
+      itemViewModel.loadItemUserStarredLikedInformation();
+    }
+
     if (app.community != null) {
       inboxViewModel.loadUserStarredItemInformation();
       inboxViewModel.loadUserLikedItemInformation();

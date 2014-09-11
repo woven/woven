@@ -5,8 +5,9 @@ h1 {
 .item-card {
   width: 100%;
   background-color: #fff;
-  /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
+  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;
   margin-bottom: 10px;
+  border-radius: 2px 2px 0 0;
 }
 
 .item-card .content {
@@ -14,8 +15,19 @@ h1 {
 }
 
 #action-footer {
-  padding: 5px;
+  padding: 5px 5px 5px 8px;
   border-top: solid 1px #eee;
+
+  /* Disable iOS highlighting the element on tap. */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 core-item core-icon {
@@ -55,4 +67,29 @@ core-icon {
   color: #3F3F3F;
   margin-right: 10px;
   align-self: center;
+}
+
+.item-updated {
+  color: rgb(102, 102, 102);
+  overflow: hidden;
+  font-size: 90%;
+  display: inline;
+}
+
+.item-users {
+  /*color: #3A89BE;*/
+  color: #333;
+  font-size: 90%;
+  display: inline;
+  margin-right: 2px;
+  font-weight: bold;
+}
+
+.item-type {
+  color: #5CA556;
+  text-transform: uppercase;
+  margin-right: 3px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  font-size: 12px;
 }

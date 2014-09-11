@@ -20,11 +20,11 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.1"
+    version: "0.2.3"
   collection:
     description: collection
     source: hosted
-    version: "0.9.4"
+    version: "1.0.0"
   core_elements:
     description: core_elements
     source: hosted
@@ -76,7 +76,7 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.12.0"
+    version: "0.12.1+1"
   paper_elements:
     description: paper_elements
     source: hosted
@@ -88,7 +88,7 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.13.0"
+    version: "0.13.1"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -156,4 +156,4 @@ packages:
   yaml:
     description: yaml
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1+1"

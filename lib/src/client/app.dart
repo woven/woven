@@ -19,6 +19,7 @@ import 'package:woven/src/client/view_model/main.dart';
 class App extends Observable {
   @observable var selectedItem;
   @observable var selectedPage = 0;
+  @observable bool userCameFromInbox = false;
   @observable String pageTitle = "";
   @observable UserModel user;
   @observable CommunityModel community;
