@@ -10,9 +10,9 @@ import 'package:woven/src/client/view_model/main.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
-// *
-// The InboxList class is for the list of inbox items, which is pulled from Firebase.
-// *
+/**
+ * The InboxList class is for the list of inbox items, which is pulled from Firebase.
+ */
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
   @published App app;

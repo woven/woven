@@ -15,10 +15,11 @@ class ItemView extends PolymerElement {
   @published App app;
   @published MainViewModel viewModel;
 
+  // TODO: Revisit all this. It seems ridiculous.
+  // See http://stackoverflow.com/a/25772893/1286442.
   @ComputedProperty('viewModel.itemViewModel.item')
-//  @observable Map get item => toObservable(viewModel.itemViewModel.item);
   @observable Map get item {
-    if (viewModel == null) return null;
+    if (viewModel == null || viewModel.itemViewModel == null) return null;
     return viewModel.itemViewModel.item;
   }
 
@@ -35,7 +36,7 @@ class ItemView extends PolymerElement {
 
 
   ItemView.created() : super.created() {
-    // Some magic to ensure we're notified of changes to
+    // The old magic to ensure we're notified of changes to
     // the item in the itemViewModel. See http://stackoverflow.com/a/25772893/1286442.
 //    new PathObserver(this, [#viewModel, #itemViewModel, #item])
 //    .open((newValue, oldValue) {
