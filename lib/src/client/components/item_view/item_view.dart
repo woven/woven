@@ -19,8 +19,16 @@ class ItemView extends PolymerElement {
   @observable Map get item => toObservable(viewModel.itemViewModel.item);
 
   get formattedBody {
-    if (item == null) return '';
+    if (item.isEmpty) return 'Woooooot';
     return "${InputFormatter.nl2br(item['body'])}";
+  }
+
+  itemChanged() {
+    if (viewModel != null) {
+      // Trick to respect line breaks.
+      HtmlElement body = $['body'];
+      body.innerHtml = formattedBody;
+    }
   }
 
 
@@ -31,13 +39,11 @@ class ItemView extends PolymerElement {
 //    .open((newValue, oldValue) {
 //      notifyPropertyChange(#item, oldValue, newValue);
 //
-//      // Trick to respect line breaks.
+      // Trick to respect line breaks.
 //      HtmlElement body = $['body'];
 //      body.innerHtml = formattedBody;
 //    });
   }
-
-
 
   String formatItemDate(DateTime value) {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);

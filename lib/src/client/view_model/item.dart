@@ -21,10 +21,10 @@ class ItemViewModel extends Observable {
   /**
    * Format the body for line breaks.
    */
-  get formattedBody {
-    if (app.selectedItem == null) return '';
-    return "${InputFormatter.nl2br(app.selectedItem['body'])}";
-  }
+//  get formattedBody {
+//    if (app.selectedItem == null) return '';
+//    return "${InputFormatter.nl2br(app.selectedItem['body'])}";
+//  }
 
   /**
    * Get the item.
@@ -66,8 +66,9 @@ class ItemViewModel extends Observable {
         app.selectedItem = item;
 
       }).then((e) {
-        print("Load item stars/likes...");
         loadItemUserStarredLikedInformation();
+        // Convert new lines to <br> for the body.
+//        item['body'] = InputFormatter.nl2br(item['body']);
       });
     }
   }
