@@ -26,30 +26,30 @@ class MainViewModel extends Observable {
   }
 
   @observable ItemViewModel get itemViewModel {
-    var id;
-    if (app.selectedItem != null) {
-      id = app.selectedItem['id'];
-    } else {
-      // If there's no app.selectedItem, we probably
-      // came here directly, so let's get it.
+    var id = null;
 
+    // Always find the item ID from the URL, for now.
+    // TODO: If we've already loaded item data into the inboxViewModel, use that?
+    String path = window.location.toString();
+
+    if (Uri.parse(path).pathSegments.length == 0 || Uri.parse(path).pathSegments[0] != "item") return null;
+
+    if (Uri.parse(path).pathSegments.length > 1) {
       // Decode the base64 URL and determine the item.
       var base64 = Uri.parse(window.location.toString()).pathSegments[1];
       var bytes = CryptoUtils.base64StringToBytes(base64);
       var decodedItem = UTF8.decode(bytes);
       id = decodedItem;
     }
-    print(id);
 
-    if (id == null) return null; // No item, no view model to use.
+    if (id == null) return null; // No item.
 
     if (!itemViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
       var vm = new ItemViewModel(app);
       itemViewModels[id] = vm; // Store it.
     }
-    var theVm = itemViewModels[id];
-    print(theVm.item['subject']);
+
     return itemViewModels[id];
   }
 
@@ -214,7 +214,7 @@ class MainViewModel extends Observable {
    */
   void invalidateUserState() {
     loadUserStarredCommunityInformation();
-    itemViewModel.loadItemUserStarredLikedInformation();
+
     if (app.community != null) {
       inboxViewModel.loadUserStarredItemInformation();
       inboxViewModel.loadUserLikedItemInformation();

@@ -15,17 +15,27 @@ class ItemView extends PolymerElement {
   @published App app;
   @published MainViewModel viewModel;
 
-  // Even if I change this to e.g. item2 (and update template too),
-  // so it doesn't conflict with the #item in the PathObserver, still no go.
   Map get item => viewModel.itemViewModel.item;
 
+  get formattedBody {
+    if (item == null) return '';
+    return "${InputFormatter.nl2br(item['body'])}";
+  }
+
+
   ItemView.created() : super.created() {
-    new PathObserver(viewModel, [#itemViewModel, #item])
-    .open((oldValue, newValue) {
-      print("Updated: $oldValue to $newValue");
-      return notifyPropertyChange(#item, oldValue, newValue);
+    // Some magic to ensure we're notified of changes to
+    // the item in the itemViewModel. See http://stackoverflow.com/a/25772893/1286442.
+    new PathObserver(this, [#viewModel, #itemViewModel, #item])
+    .open((newValue, oldValue) {
+      notifyPropertyChange(#item, oldValue, newValue);
+
+      // Trick to respect line breaks.
+      HtmlElement body = $['body'];
+      body.innerHtml = formattedBody;
     });
   }
+
 
 
   String formatItemDate(DateTime value) {

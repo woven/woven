@@ -64,6 +64,9 @@ class App extends Observable {
           }
         }
       } else {
+        // TODO: Right now, we can't handle going back to community after
+        // loading app directly e.g. on an item.
+        // Let's read the URL and determine if it's a community?
         print('404: ' + path);
       }
     }

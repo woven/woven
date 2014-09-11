@@ -12,3 +12,47 @@ h1 {
 .item-card .content {
   padding: 10px;
 }
+
+#action-footer {
+  padding: 5px;
+  border-top: solid 1px #eee;
+}
+
+core-item core-icon {
+  margin: 0 !important;
+}
+
+core-icon {
+  fill: #666;
+  color: #666;
+  cursor: pointer;
+  /*margin-right: 2px;*/
+}
+
+#icons {
+  margin-right: 4px;
+}
+
+#icon-fav svg {
+  height: 24px !important;
+  width: 21px !important;
+}
+
+#icon-fav.selected {
+  fill: red;
+}
+
+#icon-star.selected {
+  fill: #f99b15;
+}
+
+.item-col1 {
+  /*border: solid red 1px;*/
+  text-align: center;
+}
+.item-col1 span {
+  font-size: 10px;
+  color: #3F3F3F;
+  margin-right: 10px;
+  align-self: center;
+}

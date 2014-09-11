@@ -24,7 +24,6 @@ class ItemViewModel extends Observable {
   }
 
   void getItem() {
-    print("getItem()");
     if (app.selectedItem != null) {
       item = app.selectedItem;
 
@@ -40,10 +39,7 @@ class ItemViewModel extends Observable {
       var f = new db.Firebase(config['datastore']['firebaseLocation']);
 
       f.child('/items/' + decodedItem).onValue.first.then((e) {
-        // TODO: This completes later, and item changes aren't being observed!
-
         item = toObservable(e.snapshot.val());
-        print(item['subject']);
 
         // The live-date-time element needs parsed dates.
         item['createdDate'] = DateTime.parse(item['createdDate']);
@@ -54,13 +50,11 @@ class ItemViewModel extends Observable {
 
         // Listen for realtime changes to the star count.
         f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-          print("Star count changed ${e.snapshot.val()}");
           item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
         });
 
         // Listen for realtime changes to the like count.
         f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
-          print("Like count changed ${e.snapshot.val()}");
           item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
         });
 
@@ -69,15 +63,8 @@ class ItemViewModel extends Observable {
         app.selectedItem = item;
 
       }).then((e) {
-//        HtmlElement body = $['body'];
-//        body.innerHtml = formattedBody;
+        loadItemUserStarredLikedInformation();
       });
-    }
-
-    if (app.selectedItem != null) {
-      // Trick to respect line breaks.
-//      HtmlElement body = $['body'];
-//      body.innerHtml = formattedBody;
     }
   }
 
