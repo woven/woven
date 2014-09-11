@@ -111,7 +111,7 @@
               </template>
             </section>
             <section layout vertical>
-              <template if="{{app.selectedPage === 1 && app.mainViewModel.itemViewModel.item != null}}">
+              <template if="{{app.selectedPage === 1}}">
                 <div class="page-wrapper">
                   <item-view id="item-view" app="{{app}}" viewModel="{{app.mainViewModel}}"></item-view>
                   <item-activities app="{{app}}"></item-activities>

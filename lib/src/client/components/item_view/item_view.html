@@ -4,7 +4,7 @@
 <polymer-element name="item-view">
   <template>
     <link rel="stylesheet" href="item_view.css">
-      <!--<template if="{{app.selectedItem != null}}">-->
+      <template if="{{item != null}}">
         <div class="item-card">
           <div class="content">
             <div class="item-type">{{ (item['type'] != null) ? item['type'] : 'other'}}</div>
@@ -39,7 +39,7 @@
             </div>
           </div>
         </div>
-      <!--</template>-->
+      </template>
   </template>
   <script type="application/dart" src="item_view.dart"></script>
 </polymer-element>

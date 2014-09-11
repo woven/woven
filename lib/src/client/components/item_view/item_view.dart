@@ -16,19 +16,21 @@ class ItemView extends PolymerElement {
   @published MainViewModel viewModel;
 
   @ComputedProperty('viewModel.itemViewModel.item')
-  @observable Map get item => toObservable(viewModel.itemViewModel.item);
+//  @observable Map get item => toObservable(viewModel.itemViewModel.item);
+  @observable Map get item {
+    if (viewModel == null) return null;
+    return viewModel.itemViewModel.item;
+  }
 
   get formattedBody {
-    if (item.isEmpty) return 'Woooooot';
+    if (item.isEmpty) return 'Loading...';
     return "${InputFormatter.nl2br(item['body'])}";
   }
 
   itemChanged() {
-    if (viewModel != null) {
-      // Trick to respect line breaks.
-      HtmlElement body = $['body'];
-      body.innerHtml = formattedBody;
-    }
+    // Trick to respect line breaks.
+    HtmlElement body = $['body'];
+    body.innerHtml = formattedBody;
   }
 
 
@@ -64,6 +66,12 @@ class ItemView extends PolymerElement {
   attached() {
     print("+Item");
     app.pageTitle = "";
+
+    if (item != null) {
+      // Trick to respect line breaks.
+      HtmlElement body = $['body'];
+      body.innerHtml = formattedBody;
+    }
   }
 
   detached() {
