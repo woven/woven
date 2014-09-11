@@ -50,6 +50,8 @@ class MainViewModel extends Observable {
       itemViewModels[id] = vm; // Store it.
     }
 
+    // TODO: More checks?
+
     return itemViewModels[id];
   }
 

@@ -15,7 +15,8 @@ class ItemView extends PolymerElement {
   @published App app;
   @published MainViewModel viewModel;
 
-  Map get item => viewModel.itemViewModel.item;
+  @ComputedProperty('viewModel.itemViewModel.item')
+  @observable Map get item => toObservable(viewModel.itemViewModel.item);
 
   get formattedBody {
     if (item == null) return '';
@@ -26,14 +27,14 @@ class ItemView extends PolymerElement {
   ItemView.created() : super.created() {
     // Some magic to ensure we're notified of changes to
     // the item in the itemViewModel. See http://stackoverflow.com/a/25772893/1286442.
-    new PathObserver(this, [#viewModel, #itemViewModel, #item])
-    .open((newValue, oldValue) {
-      notifyPropertyChange(#item, oldValue, newValue);
-
-      // Trick to respect line breaks.
-      HtmlElement body = $['body'];
-      body.innerHtml = formattedBody;
-    });
+//    new PathObserver(this, [#viewModel, #itemViewModel, #item])
+//    .open((newValue, oldValue) {
+//      notifyPropertyChange(#item, oldValue, newValue);
+//
+//      // Trick to respect line breaks.
+//      HtmlElement body = $['body'];
+//      body.innerHtml = formattedBody;
+//    });
   }
 
 
