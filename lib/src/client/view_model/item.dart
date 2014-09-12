@@ -67,8 +67,6 @@ class ItemViewModel extends Observable {
 
       }).then((e) {
         loadItemUserStarredLikedInformation();
-        // Convert new lines to <br> for the body.
-//        item['body'] = InputFormatter.nl2br(item['body']);
       });
     }
   }

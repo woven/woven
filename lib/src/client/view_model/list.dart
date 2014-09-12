@@ -12,13 +12,8 @@ class StarredViewModel extends Observable {
   final String firebaseLocation = config['datastore']['firebaseLocation'];
 
   StarredViewModel(this.app) {
-//    switch (list) {
-//      case "starred":
-        loadStarredItemsForUser();
-//        break;
-//      default:
-//        loadStarredItemsForUser();
-//    }
+    // TODO: Add more cases for various list types here later.
+    loadStarredItemsForUser();
   }
 
   /**
@@ -30,28 +25,26 @@ class StarredViewModel extends Observable {
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     starredItemsByUserRef.limit(20).onChildAdded.listen((e) {
+
       bool itemExists = false;
-      if (items.isEmpty) {
+      if (items.isEmpty || items == null) {
         itemExists = false;
       } else {
-        itemExists = (items.firstWhere((i) => i['id'] == e.snapshot.name()) != null) ? true : false;
-        if (itemExists) return;
+        itemExists = (items.any((i) => i['id'] == e.snapshot.name())) ? true : false;
       }
-      print("First step.");
+
+      if (itemExists) return;
 
       f.child('/items/' + e.snapshot.name()).onValue.listen((e) {
 
         bool itemExists = false;
-        if (items.isEmpty) {
+        if (items.isEmpty || items == null) {
           itemExists = false;
         } else {
-          itemExists = (items.firstWhere((i) => i['id'] == e.snapshot.name()) != null) ? true : false;
-          if (itemExists) return;
+          itemExists = (items.any((i) => i['id'] == e.snapshot.name())) ? true : false;
         }
 
-
-        print("Got here...");
-        print(itemExists);
+        if (itemExists) return;
 
         var item = toObservable(e.snapshot.val());
 
@@ -64,8 +57,6 @@ class StarredViewModel extends Observable {
         item['updatedDate'] = DateTime.parse(item['updatedDate']);
         item['createdDate'] = DateTime.parse(item['createdDate']);
 
-        // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-        // So we'll add that to our local item list.
         item['id'] = e.snapshot.name();
 
         // Insert each new item into the list.
@@ -98,12 +89,15 @@ class StarredViewModel extends Observable {
           item['liked'] = false;
         }
       });
+
+      starredItemsByUserRef.onChildRemoved.listen((e) {
+        // TODO: Agh,why is this getting called 18 times?!
+        print("Removed ${e.snapshot.name()}");
+        items.removeWhere((i) => i['id'] == e.snapshot.name());
+//        print(items);
+      });
+
     });
-
-//    loadUserStarredItemInformation();
-//    loadUserLikedItemInformation();
-
-
   }
 
   void toggleItemStar(id) {
@@ -200,32 +194,5 @@ class StarredViewModel extends Observable {
       // Update the list of users who liked.
       firebaseRoot.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
     }
-  }
-
-  void loadUserStarredItemInformation() {
-    items.forEach((item) {
-      if (app.user != null) {
-        var starredItemsRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/items/' + item['id']);
-        starredItemsRef.onValue.listen((e) {
-          item['starred'] = e.snapshot.val() != null;
-        });
-      } else {
-        item['starred'] = false;
-      }
-
-    });
-  }
-
-  void loadUserLikedItemInformation() {
-    items.forEach((item) {
-      if (app.user != null) {
-        var starredItemsRef = new db.Firebase(firebaseLocation + '/liked_by_user/' + app.user.username + '/items/' + item['id']);
-        starredItemsRef.onValue.listen((e) {
-          item['liked'] = e.snapshot.val() != null;
-        });
-      } else {
-        item['liked'] = false;
-      }
-    });
   }
 }

@@ -25,7 +25,7 @@ class ItemList extends PolymerElement with Observable {
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
     // id passed in the data-id attribute on the element.
-    var item = viewModel.inboxViewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
+    var item = viewModel.starredViewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.selectedItem = item;
     app.selectedPage = 1;
@@ -47,13 +47,13 @@ class ItemList extends PolymerElement with Observable {
       target.classes.add("clicked");
     }
 
-    viewModel.inboxViewModel.toggleItemLike(target.dataset['id']);
+    viewModel.starredViewModel.toggleItemLike(target.dataset['id']);
   }
 
   toggleStar(Event e, var detail, Element target) {
     e.stopPropagation();
 
-    viewModel.inboxViewModel.toggleItemStar(target.dataset['id']);
+    viewModel.starredViewModel.toggleItemStar(target.dataset['id']);
   }
 
   formatItemDate(DateTime value) {
@@ -88,6 +88,13 @@ class ItemList extends PolymerElement with Observable {
   attached() {
     print("+Starred");
     app.pageTitle = "Starred";
+
+    // We only attach this when we have a user,
+    // so this should always run.
+    if (app.user != null) {
+      viewModel.starredViewModel.loadStarredItemsForUser();
+    }
+
     //CreateCommunityItemsScript();
   }
 

@@ -19,7 +19,7 @@ class MainViewModel extends Observable {
   final String firebaseLocation = config['datastore']['firebaseLocation'];
   final Map inboxViewModels = {};
   final Map itemViewModels = {};
-  StarredViewModel starredViewModelForUser = null;
+  var starredViewModelForUser = null;
 
   MainViewModel(this.app) {
     loadCommunities();
@@ -71,12 +71,12 @@ class MainViewModel extends Observable {
   @observable StarredViewModel get starredViewModel { // Get the starred view model for the user.
     if (app.user == null) return null; // No user, no starred view model.
     if (starredViewModelForUser == null) {
-      print("1");
+      print("Creating starred viewModel...");
       // Item not stored yet, let's create it and store it.
       var vm = new StarredViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
       starredViewModelForUser = vm; // Store it.
     }
-    print("2: $starredViewModelForUser");
+    print("Returning $starredViewModelForUser...");
     return starredViewModelForUser;
   }
 
@@ -228,6 +228,7 @@ class MainViewModel extends Observable {
    * Whenever user signs in / out, we should call this to trigger any necessary updates.
    */
   void invalidateUserState() {
+    print("Called invalidateUserState");
     loadUserStarredCommunityInformation();
 
     if (itemViewModel != null) {
@@ -238,6 +239,11 @@ class MainViewModel extends Observable {
       inboxViewModel.loadUserStarredItemInformation();
       inboxViewModel.loadUserLikedItemInformation();
     }
+
+//    if (app.user != null) {
+//      print("load starred!");
+//      starredViewModel.loadStarredItemsForUser();
+//    }
     // Add more cases later as you need...
   }
 
