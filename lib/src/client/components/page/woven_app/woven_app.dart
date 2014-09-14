@@ -124,7 +124,7 @@ class WovenApp extends PolymerElement with Observable {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
       String changedValue = MirrorSystem.getName(record.name);
 
-//      print("$changedValue changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
+      print("$changedValue changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
       HtmlElement el;

@@ -67,6 +67,7 @@ core-icon {
   color: #3F3F3F;
   margin-right: 10px;
   align-self: center;
+  -webkit-align-self: center;
 }
 
 .item-updated {

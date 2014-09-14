@@ -71,12 +71,10 @@ class MainViewModel extends Observable {
   @observable StarredViewModel get starredViewModel { // Get the starred view model for the user.
     if (app.user == null) return null; // No user, no starred view model.
     if (starredViewModelForUser == null) {
-      print("Creating starred viewModel...");
       // Item not stored yet, let's create it and store it.
       var vm = new StarredViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
       starredViewModelForUser = vm; // Store it.
     }
-    print("Returning $starredViewModelForUser...");
     return starredViewModelForUser;
   }
 
