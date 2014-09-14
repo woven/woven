@@ -122,7 +122,7 @@ class InboxList extends PolymerElement with Observable {
   attached() {
     print("+InboxList");
     app.pageTitle = "Everything";
-    MoveCommunityItemsScript();
+//    MoveCommunityItemsScript();
     //CreateCommunityItemsScript();
   }
 
