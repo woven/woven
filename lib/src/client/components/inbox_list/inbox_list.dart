@@ -85,9 +85,44 @@ class InboxList extends PolymerElement with Observable {
 //
 //  }
 
+    MoveCommunityItemsScript() {
+      var f = new db.Firebase(config['datastore']['firebaseLocation']);
+      f.child('/items').onChildAdded.listen((e) {
+        var item = e.snapshot.val();
+        // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+        // So we'll add that to our local item list.
+        var itemName = e.snapshot.name();
+
+        f.child('items/' + itemName + '/communities').onChildAdded.listen((e) {
+          f.child('/items_by_community/' + e.snapshot.name() + '/' + itemName).set(item);
+
+//          print("${e.snapshot.name()}: ${e.snapshot.val()}");
+
+        });
+
+//        if (item['communities'] != null) {
+//          if item['communities'][
+//        }
+//        print(item['communities']['thelab']);
+
+//        final dbRef = f.child('/communities/thelab/item_index/${item['id']}");
+//        set(db.Firebase dbRef) {
+//          dbRef.set({
+//              'itemid': item['id']
+//          });
+//        }
+//
+//        set(dbRef);
+
+      });
+    }
+
+
+
   attached() {
     print("+InboxList");
     app.pageTitle = "Everything";
+    MoveCommunityItemsScript();
     //CreateCommunityItemsScript();
   }
 
