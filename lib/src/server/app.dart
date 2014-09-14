@@ -24,6 +24,7 @@ class App {
     // Start the server.
     HttpServer.bind(config['server']['address'], config['server']['port']).then(onServerEstablished, onError: printError);
 
+
     // Define what routes we have.
     router = new Router(this)
       ..routes[Routes.home] = MainController.serveApp
@@ -43,6 +44,9 @@ class App {
   }
 
   void onServerEstablished(HttpServer server) {
+    int thirtyDays = 30*24*60*60*1000;
+    server.sessionTimeout = thirtyDays;
+
     print("Server started.");
 
     server.listen((HttpRequest request) {

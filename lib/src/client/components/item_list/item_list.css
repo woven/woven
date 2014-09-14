@@ -146,14 +146,11 @@ core-icon {
   margin: 7px;
 }
 
-.item-message {
+.item-message, .item-message:hover {
   color: #777;
   padding-top: 7px;
   background-color: #FFFEEA;
   border: none;
-}
-
-.item-message:hover {
-  background-color: #fff;
+  white-space: normal;
   cursor: default;
 }

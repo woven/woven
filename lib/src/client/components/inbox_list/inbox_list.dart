@@ -41,11 +41,11 @@ class InboxList extends PolymerElement with Observable {
   toggleLike(Event e, var detail, Element target) {
     e.stopPropagation();
 
-    if (target.classes.contains("selected")) {
-      target.classes.remove("clicked");
-    } else {
-      target.classes.add("clicked");
-    }
+//    if (target.classes.contains("selected")) {
+//      target.classes.remove("clicked");
+//    } else {
+//      target.classes.add("clicked");
+//    }
 
     viewModel.inboxViewModel.toggleItemLike(target.dataset['id']);
   }
