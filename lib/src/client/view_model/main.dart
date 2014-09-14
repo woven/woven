@@ -196,7 +196,7 @@ class MainViewModel extends Observable {
 
       // Insert each new item into the list.
       users.add(user);
-      users.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+      users.sort((m1, m2) => m2["createdDate"].compareTo(m1["createdDate"]));
     });
 
 //    lastUsersQuery.onChildChanged.listen((e) {
