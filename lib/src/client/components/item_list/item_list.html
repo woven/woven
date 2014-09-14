@@ -2,11 +2,13 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../widgets/sign_in/sign_in.html">
 <polymer-element name="item-list">
   <template>
     <link rel="stylesheet" href="item_list.css">
     <template if="{{app.user != null}}">
       <template repeat="{{item in viewModel.starredViewModel.items}}">
+
         <core-item class="item" on-click="{{selectItem}}" data-id="{{item['id']}}">
           <div class="item-container" horizontal layout>
             <div class="item-col1" vertical layout>
@@ -35,9 +37,16 @@
           </div>
         </core-item>
       </template>
+      <template if="{{viewModel.starredViewModel.items.length === 0}}">
+        <core-item class="item item-message">
+              You don't have any starred items. Star to save things and get notifications about them.
+        </core-item>
+      </template>
     </template>
     <template if="{{app.user == null}}">
-      <p>Please sign in to see your starred items.</p>
+      <div class="page-container">
+        <sign-in app="{{app}}" message="Please sign in to see your starred items."></sign-in>
+      </div>
     </template>
   </template>
   <script type="application/dart" src="item_list.dart"></script>

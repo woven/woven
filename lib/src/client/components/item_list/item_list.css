@@ -141,3 +141,19 @@ core-icon {
   overflow: hidden;
   width: 100%;
 }
+
+.page-container {
+  margin: 7px;
+}
+
+.item-message {
+  color: #777;
+  padding-top: 7px;
+  background-color: #FFFEEA;
+  border: none;
+}
+
+.item-message:hover {
+  background-color: #fff;
+  cursor: default;
+}

@@ -73,7 +73,6 @@ class ItemViewModel extends Observable {
 
   void loadItemUserStarredLikedInformation() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
-    print("Item is: $item");
     if (app.user != null && !item.isEmpty) {
       var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
       var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);

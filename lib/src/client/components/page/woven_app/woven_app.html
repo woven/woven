@@ -10,7 +10,7 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/inbox_list/inbox_list.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/add_stuff/add_stuff.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/welcome/welcome.html">
-<link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/sign_in/sign_in.html">
+<!--<link rel="import" href="../../../../../../../packages/woven/src/client/components/dialog/sign_in/sign_in.html">-->
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_view/item_view.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/my_element/my_element.html">
@@ -49,16 +49,16 @@
               <!--</span>-->
             <!--</core-toolbar>-->
 
-          <core-menu valueattr="data-page" class="menu" theme="core-light-theme">
+          <core-menu valueattr="label" selected="{{app.pageTitle}}" class="menu" theme="core-dark-theme">
             <template if="{{app.community != null}}">
               <core-item label="Everything" icon="list" horizontal center layout class="item"
                          on-click="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
-              <core-item label="Starred" icon="star" horizontal center layout class="item"
-                         on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
                          on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
-              <core-item label="Home" icon="home" horizontal center layout class="item" active
-                         on-click="{{switchPage}}" data-page="4" data-url="/" ></core-item>
+              <core-item label="Starred" icon="star" horizontal center layout class="item"
+                         on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
+              <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
+                         on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
             </template>
             <template if="{{app.community == null}}">
               <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
@@ -148,11 +148,11 @@
       <add-stuff app="{{app}}"></add-stuff>
     </template>
     <template if="{{app.user == null}}">
-      <!--<sign-in app="{{app}}"></sign-in>-->
-      <core-overlay id="sign-in-overlay" class="sign-in-overlay" layered backdrop opened="false" transition="core-transition-center">
-        <span id="message">Please sign in to comment.</span>
-        <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
-      </core-overlay>
+      <sign-in app="{{app}}"></sign-in>
+      <!--<core-overlay id="sign-in-overlay" class="sign-in-overlay" layered backdrop opened="false" transition="core-transition-center">-->
+        <!--<span id="message">Please sign in to comment.</span>-->
+        <!--<button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>-->
+      <!--</core-overlay>-->
     </template>
     <paper-toast id="toast-message" duration="4000"></paper-toast>
     <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">

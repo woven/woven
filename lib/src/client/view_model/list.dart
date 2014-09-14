@@ -25,7 +25,6 @@ class StarredViewModel extends Observable {
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     starredItemsByUserRef.limit(20).onChildAdded.listen((e) {
-      print("Listener for onChildAdded fired...");
 
       bool itemExists = false;
       if (items.isEmpty || items == null) {
@@ -35,14 +34,10 @@ class StarredViewModel extends Observable {
       }
 
       if (itemExists) {
-        print("Item already exists...");
         return;
       }
 
       f.child('/items/' + e.snapshot.name()).onValue.first.then((e) {
-        print("Listener for onValue for the item fired...");
-        print("BEGIN onValue: $items");
-
         bool itemExists = false;
         if (items.isEmpty || items == null) {
           itemExists = false;
@@ -94,17 +89,11 @@ class StarredViewModel extends Observable {
           item['starred'] = false;
           item['liked'] = false;
         }
-
-        print("END onValue: $items");
       });
     });
 
     starredItemsByUserRef.onChildRemoved.listen((e) {
-      // TODO: Agh,why is this getting called 18 times?!
-      print("Removed ${e.snapshot.name()}");
-      print("BEFORE: $items");
       items.removeWhere((i) => i['id'] == e.snapshot.name());
-      print("AFTER: $items");
     });
 
   }

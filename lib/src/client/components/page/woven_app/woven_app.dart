@@ -112,7 +112,6 @@ class WovenApp extends PolymerElement with Observable {
       if (response.success && response.data !=null) {
         app.user = UserModel.decode(response.data);
 
-        print("Load the user...");
         app.mainViewModel.invalidateUserState();
 
         // On sign in, greet the user.

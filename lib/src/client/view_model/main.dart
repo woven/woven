@@ -228,7 +228,6 @@ class MainViewModel extends Observable {
    * Whenever user signs in / out, we should call this to trigger any necessary updates.
    */
   void invalidateUserState() {
-    print("Called invalidateUserState");
     loadUserStarredCommunityInformation();
 
     if (itemViewModel != null) {
@@ -240,10 +239,9 @@ class MainViewModel extends Observable {
       inboxViewModel.loadUserLikedItemInformation();
     }
 
-//    if (app.user != null) {
-//      print("load starred!");
-//      starredViewModel.loadStarredItemsForUser();
-//    }
+    if (app.user != null) {
+      starredViewModel.loadStarredItemsForUser();
+    }
     // Add more cases later as you need...
   }
 

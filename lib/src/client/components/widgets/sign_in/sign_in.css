@@ -1,0 +1,49 @@
+.signin-btn {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+}
+
+#facebook-signin {
+  color: #fff;
+  background: #3e5a9b;
+  width: 200px;
+}
+
+#facebook-signin:active {
+  background: #223E8D;
+}
+
+#message {
+  opacity: 1;
+  transition: opacity 2s;
+  font-size: 13px;
+  display: inline;
+  margin-bottom: 8px;
+}
+
+#signin-container {
+  padding: 10px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;
+  background: #fff;
+  max-width: 500px;
+  margin-bottom: 10px;
+}
