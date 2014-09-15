@@ -1,9 +1,11 @@
-CommunityBase
+dart-communities
 ==========
 
-CommunityBase demonstrates a fairly fleshed out client and server Dart application. It's a tool that lets people share across various communities.
+This demonstrates a fairly fleshed out client and server Dart application. It's a tool that lets people share across various communities.
 
-It's free and open source. We hope it helps others as they navigate the world of Dart and Polymer, as well as us as others scrutinize our code and help us improve.
+It's free and open source. We hope it helps others as they navigate the world of Dart and Polymer, and we hope it helps us as others scrutinize our approach and help us improve.
+
+### Components
 
 - Polymer (encapsulated and interoperable custom elements)
 - Polymer core-elements (a great core set of custom elements)
