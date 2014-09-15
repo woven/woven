@@ -26,6 +26,7 @@ class MainViewModel extends Observable {
     loadUsers();
   }
 
+  // Get the view model for the item.
   @observable ItemViewModel get itemViewModel {
     var id = null;
 
@@ -56,7 +57,8 @@ class MainViewModel extends Observable {
     return itemViewModels[id];
   }
 
-  @observable InboxViewModel get inboxViewModel { // Get the current inbox view model.
+// Get the view model for the current inbox.
+  @observable InboxViewModel get inboxViewModel {
     if (app.community == null) return null;
     var id = app.community.alias;
     if (id == null) return null; // No item, no view model to use.
@@ -68,30 +70,31 @@ class MainViewModel extends Observable {
     return inboxViewModels[id];
   }
 
-  @observable StarredViewModel get starredViewModel { // Get the starred view model for the user.
+  // Get the view model for the user's starred items.
+  @observable StarredViewModel get starredViewModel {
     if (app.user == null) return null; // No user, no starred view model.
     if (starredViewModelForUser == null) {
       // Item not stored yet, let's create it and store it.
-      var vm = new StarredViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
+      var vm = new StarredViewModel(app);
       starredViewModelForUser = vm; // Store it.
     }
     return starredViewModelForUser;
   }
 
   /**
-   * Loads the communities.
+   * Load the communities and listen for changes.
    */
   void loadCommunities() {
-    var fb = new db.Firebase(firebaseLocation);
-    var communityRef = fb.child('/communities');
+    var f = new db.Firebase(firebaseLocation);
+    // TODO: Remove the limit.
+    var communitiesRef = f.child('/communities').limit(20);
 
-    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
-    communityRef.limit(20).onChildAdded.listen((e) {
+     // Get the list of communities, and listen for new ones.
+    communitiesRef.onChildAdded.listen((e) {
       // Make it observable right from the start.
       var community = toObservable(e.snapshot.val());
 
-      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location",
-      // so we'll add that to our local item list.
+      // Use the ID from Firebase as our ID.
       community['id'] = e.snapshot.name();
 
       // Set some defaults.
@@ -107,11 +110,6 @@ class MainViewModel extends Observable {
 
       // Sort the list by the item's updatedDate.
       communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-
-      // Listen for realtime changes to the star count.
-      communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
-        community['star_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
-      });
 
       if (app.user != null) {
         var starredCommunitiesRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/communities/' + community['id']);
@@ -122,43 +120,20 @@ class MainViewModel extends Observable {
         community['starred'] = false;
       }
     });
-    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
-    communityRef.limit(20).onChildChanged.listen((e) {
-      // Make it observable right from the start.
-      var community = toObservable(e.snapshot.val());
 
-      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location",
-      // so we'll add that to our local item list.
-      community['id'] = e.snapshot.name();
+    // When a community changes, let's update it.
+    communitiesRef.onChildChanged.listen((e) {
+      Map currentData = communities.firstWhere((i) => i['id'] == e.snapshot.name());
+      Map newData = e.snapshot.val();
 
-      // Set some defaults.
-      if (community['updatedDate'] == null) community['updatedDate'] = community['createdDate'];
-      if (community['star_count'] == null)  community['star_count'] = 0;
+      newData.forEach((k, v) {
+        if (k == "createdDate" || k == "updatedDate") v = DateTime.parse(v);
+        if (k == "star_count") v = (v != null) ? v : 0;
 
-      // The live-date-time element needs parsed dates.
-      community['updatedDate'] = DateTime.parse(community['updatedDate']);
-      community['createdDate'] = DateTime.parse(community['createdDate']);
-
-      // Insert each new community into the list.
-      communities.removeWhere((i) => i['id'] == e.snapshot.name());
-      communities.add(community);
-
-      // Sort the list by the item's updatedDate.
-      communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-
-      // Listen for realtime changes to the star count.
-      communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
-        community['star_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
+        currentData[k] = v;
       });
 
-      if (app.user != null) {
-        var starredCommunitiesRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/communities/' + community['id']);
-        starredCommunitiesRef.onValue.listen((e) {
-          community['starred'] = e.snapshot.val() != null;
-        });
-      } else {
-        community['starred'] = false;
-      }
+      communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
     });
   }
 
@@ -212,10 +187,13 @@ class MainViewModel extends Observable {
     }
   }
 
+  /**
+   * Get all the users.
+   * TODO: As the list of users grow, we need to limit and paginate.
+   */
   loadUsers() {
     var f = new db.Firebase(firebaseLocation + '/users');
 
-    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
     f.onChildAdded.listen((e) {
       var user = e.snapshot.val();
 
@@ -235,33 +213,10 @@ class MainViewModel extends Observable {
       users.add(user);
       users.sort((m1, m2) => m2["createdDate"].compareTo(m1["createdDate"]));
     });
-
-//    lastUsersQuery.onChildChanged.listen((e) {
-//      var item = e.snapshot.val();
-//
-//      // If no updated date, use the created date.
-//      if (person['updatedDate'] == null) {
-//        item['updatedDate'] = item['createdDate'];
-//      }
-//
-//      item['updatedDate'] = DateTime.parse(item['updatedDate']);
-//
-//      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-//      // So we'll add that to our local item list.
-//      item['id'] = e.snapshot.name();
-//
-//      // Insert each new item into the list.
-//      items.removeWhere((oldItem) => oldItem['id'] == e.snapshot.name());
-//      items.add(item);
-//
-//      // Sort the list by the item's updatedDate, then reverse it.
-//      items.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//      items = items.reversed.toList();
-//    });
   }
 
   /**
-   * Whenever user signs in / out, we should call this to trigger any necessary updates.
+   * Whenever user signs in/out, we should call this to trigger any necessary updates.
    */
   void invalidateUserState() {
     loadUserStarredCommunityInformation();
@@ -278,7 +233,7 @@ class MainViewModel extends Observable {
     if (app.user != null) {
       starredViewModel.loadStarredItemsForUser();
     }
-    // Add more cases later as you need...
+    // Add more cases later as we need.
   }
 
   void loadUserStarredCommunityInformation() {

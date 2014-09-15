@@ -16,14 +16,15 @@ class InboxViewModel extends Observable {
   }
 
   /**
-   * Loads the communities.
+   * Load the items and listen for changes.
    */
   void loadItemsForCommunity() {
     var f = new db.Firebase(firebaseLocation);
-    var itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias);
+    // TODO: Remove the limit.
+    var itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias).limit(20);
 
-    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
-    itemsByCommunityRef.limit(20).onChildAdded.listen((e) {
+    // Get the list of communities, and listen for new ones.
+    itemsByCommunityRef.onChildAdded.listen((e) {
       var item = toObservable(e.snapshot.val());
 
       // If no updated date, use the created date.
@@ -35,8 +36,8 @@ class InboxViewModel extends Observable {
       item['updatedDate'] = DateTime.parse(item['updatedDate']);
       item['createdDate'] = DateTime.parse(item['createdDate']);
 
-      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-      // So we'll add that to our local item list.
+      // Use the ID from Firebase as our ID.
+      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location".
       item['id'] = e.snapshot.name();
 
       // Insert each new item into the list.
@@ -71,56 +72,21 @@ class InboxViewModel extends Observable {
 
     });
 
-    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
-    itemsByCommunityRef.limit(20).onChildChanged.listen((e) {
-      var item = toObservable(e.snapshot.val());
+    // When an item changes, let's update it.
+    itemsByCommunityRef.onChildChanged.listen((e) {
+      Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name());
+      Map newData = e.snapshot.val();
 
-      // If no updated date, use the created date.
-      if (item['updatedDate'] == null) {
-        item['updatedDate'] = item['createdDate'];
-      }
+      newData.forEach((k, v) {
+        if (k == "createdDate" || k == "updatedDate") v = DateTime.parse(v);
+        if (k == "star_count") v = (v != null) ? v : 0;
+        if (k == "like_count") v = (v != null) ? v : 0;
 
-      // The live-date-time element needs parsed dates.
-      item['updatedDate'] = DateTime.parse(item['updatedDate']);
-      item['createdDate'] = DateTime.parse(item['createdDate']);
+        currentData[k] = v;
+      });
 
-      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-      // So we'll add that to our local item list.
-      item['id'] = e.snapshot.name();
-
-      // Insert each new item into the list.
-      items.removeWhere((i) => i['id'] == e.snapshot.name());
-      items.add(toObservable(item));
-
-      // Sort the list by the item's updatedDate.
       items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-
-      // Listen for realtime changes to the star count.
-      f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-        item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-      });
-
-      // Listen for realtime changes to the like count.
-      f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
-        item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-      });
-
-      if (app.user != null) {
-        var starredItemsRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/items/' + item['id']);
-        var likedItemsRef = new db.Firebase(firebaseLocation + '/liked_by_user/' + app.user.username + '/items/' + item['id']);
-        starredItemsRef.onValue.listen((e) {
-          item['starred'] = e.snapshot.val() != null;
-        });
-        likedItemsRef.onValue.listen((e) {
-          item['liked'] = e.snapshot.val() != null;
-        });
-      } else {
-        item['starred'] = false;
-        item['liked'] = false;
-      }
-
     });
-
 
 //    loadUserStarredItemInformation();
 //    loadUserLikedItemInformation();
