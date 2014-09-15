@@ -44,3 +44,8 @@ http://mycommunity.org/item/LUpVR2ktVnlsWU9TQmRDbnZxbGs=
 ### Updates
 
 http://mycommunity.org/item/LUpWTzJSdWdqOEpNeUp1NXpCWGQ=
+
+### Credits
+
+Contributions by [Kai Sellgren](http://github.com/kaisellgren).
+Lots of help from the Dart team and community on Stack Overflow and elsewhere.
