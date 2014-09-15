@@ -1,9 +1,9 @@
 CommunityBase
 ==========
 
-CommunityBase demonstrates a fairly fleshed out client and server Dart application. It's a tool that lets people share across various communities. It's free and open source. We hope it helps others as they navigate the world of Dart and Polymer, and we hope it helps us as others scrutinize our code and help us improve.
+CommunityBase demonstrates a fairly fleshed out client and server Dart application. It's a tool that lets people share across various communities.
 
-The gist:
+It's free and open source. We hope it helps others as they navigate the world of Dart and Polymer, as well as us as others scrutinize our code and help us improve.
 
 - Polymer (encapsulated and interoperable custom elements)
 - Polymer core-elements (a great core set of custom elements)
@@ -12,7 +12,7 @@ The gist:
 
 It shows an approach to client/server routing and communication, Facebook sign in some other fun stuff.
 
-This is serving as the base for our latest work with [Woven](http://woven.co], and a live version can be found at [http://mycommunity.org](http://mycommunity.org) for now.
+This is serving as the base for our latest work with [Woven](http://woven.co), and a live version can be found at [http://mycommunity.org](http://mycommunity.org) for now.
 
 ### Caveats
 
@@ -27,6 +27,7 @@ This is serving as the base for our latest work with [Woven](http://woven.co], a
 - Create your own `config.dart` in `lib/config` by copying the example found there.
  - You may wish to set your own hostname there, and map that hostname to 127.0.0.1 in your hosts file.
 - Get your own [Firebase](https://www.firebase.com/) URL – sign up, create a Firebase app and replace my URL with yours.
+ - Actually, for now you have to manually create the communities in the database. So it doesn't hurt to use my development Firebase URL in the meantime.
 - Start the server with `sudo dart start.dart` and then visit the URL that's set in your configuration in Dartium.
  - You can also `pub build` (dart2js) the app to run it elsewhere. Set the directory in your configuration to `build/web` first.
 
