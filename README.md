@@ -48,6 +48,7 @@ http://mycommunity.org/item/LUpWTzJSdWdqOEpNeUp1NXpCWGQ=
 ### Credits
 
 Author: [David Notik](http://github.com/davenotik)
+
 Contributors: [Kai Sellgren](http://github.com/kaisellgren)
 
 Lots of help from the Dart team and community on Stack Overflow and elsewhere.
