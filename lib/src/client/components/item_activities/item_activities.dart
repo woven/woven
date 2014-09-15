@@ -96,7 +96,7 @@ class ItemActivities extends PolymerElement {
           if (communitiesRef != null) {
             communitiesRef.keys.forEach((community) {
               // Update the community's copy of the item.
-              root.child('/items/' + community + '/' + itemId).update({
+              root.child('/items_by_community/' + community + '/' + itemId).update({
                   'updatedDate': '$now'
               });
               // Update the community itself.
