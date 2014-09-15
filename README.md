@@ -5,6 +5,8 @@ This demonstrates a fairly fleshed out client and server Dart application. It's 
 
 It's free and open source. We hope it helps others as they navigate the world of Dart and Polymer, and we hope it helps us as others scrutinize our approach and help us improve.
 
+This is serving as the base for our latest work with [Woven](http://woven.co). A live version can be found at [http://mycommunity.org](http://mycommunity.org) for now. Please sign up!
+
 ### Components
 
 - Polymer (encapsulated and interoperable custom elements)
@@ -12,14 +14,12 @@ It's free and open source. We hope it helps others as they navigate the world of
 - Polymer paper-elements (some elements based on Material Design from Google)
 - Firebase (store and sync data in realtime)
 
-It shows an approach to client/server routing and communication, Facebook sign in some other fun stuff.
-
-This is serving as the base for our latest work with [Woven](http://woven.co), and a live version can be found at [http://mycommunity.org](http://mycommunity.org) for now.
+The app demonstrates an approach to client/server routing and communication, Facebook sign in and more.
 
 ### Caveats
-
-- Don't mind the mess. I'm playing and learning, and I welcome your input and contributions. 
+ 
 - Please note that at some point we'll likely fork continued work on our product to a private repo.
+- Please excuse the mess. I'm playing and learning, and I welcome your input and contributions.
 
 ### Setup
 
