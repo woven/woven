@@ -105,9 +105,46 @@ class MainViewModel extends Observable {
       // Insert each new community into the list.
       communities.add(community);
 
-      // Sort the list by the item's updatedDate, then reverse it.
-//      communities.sort((m1, m2) => m1["updatedDate"].compareTo(m2["updatedDate"]));
-//      communities = toObservable(communities.reversed.toList());
+      // Sort the list by the item's updatedDate.
+      communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+
+      // Listen for realtime changes to the star count.
+      communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
+        community['star_count'] = (e.snapshot.val()) != null ? e.snapshot.val() : 0;
+      });
+
+      if (app.user != null) {
+        var starredCommunitiesRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+        starredCommunitiesRef.onValue.listen((e) {
+          community['starred'] = e.snapshot.val() != null;
+        });
+      } else {
+        community['starred'] = false;
+      }
+    });
+    // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
+    communityRef.limit(20).onChildChanged.listen((e) {
+      // Make it observable right from the start.
+      var community = toObservable(e.snapshot.val());
+
+      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location",
+      // so we'll add that to our local item list.
+      community['id'] = e.snapshot.name();
+
+      // Set some defaults.
+      if (community['updatedDate'] == null) community['updatedDate'] = community['createdDate'];
+      if (community['star_count'] == null)  community['star_count'] = 0;
+
+      // The live-date-time element needs parsed dates.
+      community['updatedDate'] = DateTime.parse(community['updatedDate']);
+      community['createdDate'] = DateTime.parse(community['createdDate']);
+
+      // Insert each new community into the list.
+      communities.removeWhere((i) => i['id'] == e.snapshot.name());
+      communities.add(community);
+
+      // Sort the list by the item's updatedDate.
+      communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
       // Listen for realtime changes to the star count.
       communityRef.child(community['alias'] + '/star_count').onValue.listen((e) {
