@@ -31,7 +31,7 @@ The app demonstrates an approach to client/server routing and communication, Fac
 - Get your own [Firebase](https://www.firebase.com/) URL – sign up, create a Firebase app and replace my URL with yours.
  - Actually, for now you have to manually create the communities in the database. So it doesn't hurt to use my development Firebase URL in the meantime.
 - Start the server with `sudo dart start.dart` and then visit the URL that's set in your configuration in Dartium.
- - You can also `pub build` (dart2js) the app to run it elsewhere. Set the directory in your configuration to `build/web` first.
+ - You can also `pub build` (dart2js) the app to run it in any modern browser. Set the directory in your configuration to `build/web` first.
 
 ### Get in touch
 
