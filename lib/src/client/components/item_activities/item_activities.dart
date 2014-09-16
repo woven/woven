@@ -62,7 +62,7 @@ class ItemActivities extends PolymerElement {
     String comment = theData['comment'];
     comment = comment.trim();
 
-    if (comment.isEmpty) {
+    if (comment == "") {
       window.alert("Your comment is empty.");
       return false;
     }
