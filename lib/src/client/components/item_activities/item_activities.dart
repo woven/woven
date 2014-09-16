@@ -15,7 +15,7 @@ class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
   // We'll bind the form data to this.
-  @observable Map theData = toObservable({'comment': ''});
+  @observable Map theData = toObservable({});
 
   //TODO: Further explore this ViewModel stuff.
   //@observable ActivityCommentModel activity = new ActivityCommentModel();
