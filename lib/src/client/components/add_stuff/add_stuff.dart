@@ -18,17 +18,17 @@ class AddStuff extends PolymerElement {
 
   CoreOverlay get overlay => $['overlay'];
 
-  // *
-  // Toggle the overlay.
-  // *
+  /**
+   * Toggle the overlay.
+   */
   toggleOverlay() {
     overlay.toggle();
 //    name.focus(); //Doesn't work
   }
 
-  // *
-  // Add an item.
-  // *
+  /**
+   * Add an item.
+   */
   addItem(Event e) {
     e.preventDefault();
 
@@ -55,21 +55,28 @@ class AddStuff extends PolymerElement {
     var encodedItem = item.encode();
 
     var root = new db.Firebase(config['datastore']['firebaseLocation']);
+
+    // Save the item, and we'll have a reference to it.
     var id = root.child('/items').push();
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
     Future setItem(db.Firebase itemRef) {
       itemRef.set(encodedItem).then((e){
-        var nameRef = id.name();
-        root.child('/items_by_community/' + app.community.alias + '/' + nameRef)
+        var item = id.name();
+        root.child('/items_by_community/' + app.community.alias + '/' + item)
           ..set(encodedItem);
         // Only in the main /items location, store a simple list of its parent communities.
-        root.child('/items/' + nameRef + '/communities/' + app.community.alias)
+        root.child('/items/' + item + '/communities/' + app.community.alias)
           ..set(true);
+        // Update the community itself.
+        root.child('/communities/' + app.community.alias).update({
+            'updatedDate': '$now'
+        });
       });
     }
 
+    // Run the above Future using the reference from the initial save above.
     setItem(id);
 
     overlay.toggle();

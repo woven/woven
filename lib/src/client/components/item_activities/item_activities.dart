@@ -26,6 +26,9 @@ class ItemActivities extends PolymerElement {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
   }
 
+  /**
+   * Get the activities for this item.
+   */
   getActivities() {
     var itemId;
     // If there's no app.selectedItem, we probably
@@ -50,9 +53,9 @@ class ItemActivities extends PolymerElement {
     });
   }
 
-  //
-  // Add a comment to /activities/comments for this item.
-  //
+  /**
+   * Add the activity, in this case a comment.
+   */
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
@@ -69,7 +72,6 @@ class ItemActivities extends PolymerElement {
     DateTime now = new DateTime.now().toUtc();
 
     // Save the comment
-
     var root = new db.Firebase(config['datastore']['firebaseLocation']);
     var id = root.child('/items/' + itemId + '/activities/comments').push();
     var commentJson =  {'user': app.user.username, 'comment': comment, 'createdDate': '$now'};
@@ -84,7 +86,6 @@ class ItemActivities extends PolymerElement {
 
     // Update some details on the parent item.
     var parent = root.child('/items/' + itemId);
-
     Future updateParentItem(db.Firebase parentRef) {
       parent.update({
         'updatedDate': '$now'
@@ -112,10 +113,8 @@ class ItemActivities extends PolymerElement {
     updateParentItem(parent);
 
     // Reset the fields.
-    CoreInput commentElement = $['post-container'].querySelector('#comment');
-    commentElement.inputValue = "";
-
     // TODO: Focus the field: http://goo.gl/wDYQOx
+    theData['comment'] = "";
   }
 
   signInWithFacebook() {
