@@ -113,8 +113,14 @@ class ItemActivities extends PolymerElement {
     updateParentItem(parent);
 
     // Reset the fields.
-    // TODO: Focus the field: http://goo.gl/wDYQOx
     theData['comment'] = "";
+
+    // TODO: Focus the field: http://goo.gl/wDYQOx
+//    var inp = querySelector('#comment') as CoreInput;
+//    print(querySelector('#comment'));
+//    inp.inputValue = '';
+//    inp.querySelector('* /deep/ #input') // not yet supported with polyfills
+//      ..focus();
   }
 
   signInWithFacebook() {

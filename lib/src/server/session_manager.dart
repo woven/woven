@@ -18,7 +18,12 @@ class SessionManager {
       domain = request.headers['host'].first;
     } catch (e) {}
 
-    var cookie = new Cookie('session', session.id);
+    var cookie = new Cookie('session', session['id']);
+    // Set the expire date to a year from now.
+    DateTime now = new DateTime.now();
+    DateTime expireDate =  now.add(new Duration(days: 365));
+
+    cookie.expires = expireDate;
     cookie.path = '/';
     cookie.domain = '.${domain.replaceFirst('www.', '')}';
     request.response.cookies.add(cookie);

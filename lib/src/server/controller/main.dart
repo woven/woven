@@ -11,24 +11,6 @@ import '../../../config/config.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
-//    if (Uri.parse(request.uri.path).pathSegments.length > 1) {
-//      // Check if the alias exists.
-//      if (Uri.parse(request.uri.path).pathSegments[0].length > 0) {
-//        var alias;
-//        alias = Uri.parse(request.uri.path).pathSegments[0];
-//        // Wait for the aliasExists future to complete.
-//        print(alias);
-//        Future checkIfAliasExists = aliasExists(alias);
-//        checkIfAliasExists.then((res) {
-//          // If the alias exists, serve the app.
-//          if (res == true) {
-//            // If you return an instance of File, it will be served.
-//            return new File(config['server']['directory'] + '/index.html');
-//          }
-//        });
-//      }
-//    }
-
     return new File(config['server']['directory'] + '/index.html');
   }
 
@@ -50,12 +32,12 @@ class MainController {
 
   static showItem(App app, HttpRequest request, String item) {
     // Serve the app as usual, and client router will handle showing the item.
-    // TODO: Apparently everything hear is infinite looping.
     return new File(config['server']['directory'] + '/index.html');
   }
 
   static getCurrentUser(App app, HttpRequest request) {
-    var id = request.session['id'];
+    var id = request.cookies.firstWhere((cookie) => cookie.name == 'session').value;
+
     if (id == null) return new Response(false);
 
     // Find the username associated with the Facebook ID

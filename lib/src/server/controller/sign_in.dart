@@ -42,6 +42,9 @@ class SignInController {
 
       // Save the user to the session.
       request.session['id'] = facebookId;
+      // Save the session to a cookie, sent to the browser with the request.
+      var sessionManager = new SessionManager();
+      sessionManager.addSessionCookieToRequest(request, request.session);
 
       return facebookIdExists(facebookId).then((bool facebookIdExists) {
         if (!facebookIdExists) {
