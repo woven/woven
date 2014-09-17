@@ -46,7 +46,7 @@ class MainController {
     return Firebase.get('/facebook_index/$id.json').then((indexData) {
       var username = indexData['username'];
       return Firebase.get('/users/$username.json').then((userData) {
-        Future send = sendEmail(app, userData, request);
+//        Future send = sendEmail(app, userData, request);
         return new Response()
           ..data = userData;
       });
