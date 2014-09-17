@@ -8,6 +8,7 @@ import '../firebase.dart';
 import '../../shared/response.dart';
 import '../../shared/model/user.dart';
 import '../../../config/config.dart';
+import 'package:mailer/mailer.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -45,10 +46,33 @@ class MainController {
     return Firebase.get('/facebook_index/$id.json').then((indexData) {
       var username = indexData['username'];
       return Firebase.get('/users/$username.json').then((userData) {
+        Future send = sendEmail(app, userData, request);
         return new Response()
           ..data = userData;
       });
     });
+  }
+
+  static sendEmail(App app, Map user, HttpRequest request) {;
+    // Test emailing.
+    var envelope = new Envelope()
+      ..from = 'support@woven.org'
+      ..fromName = 'Woven'
+      ..recipients.addAll(['davenotik@gmail.com'])
+      ..subject = '${user['email']} just signed in!'
+      ..text = '''
+Username:   ${user['username']}
+Name:       ${user['firstName']} ${user['lastName']}
+Email:      ${user['email']}
+Location:   ${user['location']}
+Timestamp:  ${new DateTime.now()}
+
+More:
+${request.headers}
+''';
+
+    app.mailer.send(envelope);
+    // End test emailing.
   }
 
   static aliasExists(String alias) {

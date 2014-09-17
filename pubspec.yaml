@@ -13,6 +13,7 @@ dependencies:
   query_string: any
   route: any
   crypto: ">=0.9.0 <0.10.0"
+  mailer: any
 transformers:
 - polymer:
     entry_points:

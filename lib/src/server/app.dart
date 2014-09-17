@@ -16,14 +16,17 @@ import 'routing/router.dart';
 
 import 'firebase.dart';
 
+import 'package:mailer/mailer.dart';
+
+
 class App {
   Router router;
   VirtualDirectory virtualDirectory;
+  SmtpTransport mailer;
 
   App() {
     // Start the server.
     HttpServer.bind(config['server']['address'], config['server']['port']).then(onServerEstablished, onError: printError);
-
 
     // Define what routes we have.
     router = new Router(this)
@@ -41,6 +44,18 @@ class App {
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
       ..allowDirectoryListing = false
       ..jailRoot = false;
+
+    // Set up emailing.
+    var options = new SmtpOptions()
+      ..hostName = config['email']['hostName']
+      ..port = config['email']['port']
+      ..requiresAuthentication = config['email']['requiresAuthentication']
+      ..secured = config['email']['secured']
+      ..password = config['email']['password']
+      ..username = config['email']['username'];
+
+    mailer = new SmtpTransport(options);
+
   }
 
   void onServerEstablished(HttpServer server) {
