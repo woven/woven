@@ -153,5 +153,8 @@ class WovenApp extends PolymerElement with Observable {
         app.user.isNew = false;
       }
     });
+
+    // A temporary place for some scripts I'm running.
+
   }
 }

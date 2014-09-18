@@ -197,14 +197,14 @@ class MainViewModel extends Observable {
     f.onChildAdded.listen((e) {
       var user = e.snapshot.val();
 
-      if (user['createdDate'] == null) {
-        // Some temporary code that stored a createdDate where this was none.
-        // It's safe to leave active as it only affects an empty createdDate.
-        DateTime newDate = new DateTime.utc(2014, DateTime.AUGUST, 21, 12);
-        var temp = new db.Firebase(firebaseLocation + "/users/${user['username']}");
-        temp.update({'createdDate': newDate});
-        user['createdDate'] = newDate;
-      }
+//      if (user['createdDate'] == null) {
+//        // Some temporary code that stored a createdDate where this was none.
+//        // It should be safe to leave active as it only affects an empty createdDate.
+//        DateTime newDate = new DateTime.utc(2014, DateTime.AUGUST, 21, 12);
+//        var temp = new db.Firebase(firebaseLocation + "/users/${user['username']}");
+//        temp.update({'createdDate': newDate});
+//        user['createdDate'] = newDate;
+//      }
 
       // The live-date-time element needs parsed dates.
       user['createdDate'] = user['createdDate'] != null ? DateTime.parse(user['createdDate']) : new DateTime.now();

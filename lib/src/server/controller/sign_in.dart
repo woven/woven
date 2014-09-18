@@ -73,7 +73,6 @@ class SignInController {
       return (res == null ? false : true);
     });
   }
-
 }
 
 

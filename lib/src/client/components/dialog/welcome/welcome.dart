@@ -10,6 +10,9 @@ import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
 import '../../../../shared/model/user.dart';
 
+import 'package:woven/src/shared/routing/routes.dart';
+
+
 @CustomTag('welcome-dialog')
 class WelcomeDialog extends PolymerElement {
   WelcomeDialog.created() : super.created();
@@ -94,6 +97,9 @@ class WelcomeDialog extends PolymerElement {
     overlay.toggle();
 
     app.user.isNew = true;
+
+    // When the user completes the welcome dialog, send them a welcome email.
+    HttpRequest.request(Routes.sendWelcome.toString());
   }
 
   attached() {

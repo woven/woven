@@ -16,13 +16,13 @@ import 'routing/router.dart';
 
 import 'firebase.dart';
 
-import 'package:mailer/mailer.dart';
+import 'package:woven/src/server/mailer/mailer.dart';
 
 
 class App {
   Router router;
   VirtualDirectory virtualDirectory;
-  SmtpTransport mailer;
+  Mailgun mailer;
 
   App() {
     // Start the server.
@@ -38,7 +38,8 @@ class App {
       ..routes[Routes.signInFacebook] = SignInController.facebook
       ..routes[Routes.currentUser] = MainController.getCurrentUser
       ..routes[Routes.starred] = MainController.serveApp
-      ..routes[Routes.people] = MainController.serveApp;
+      ..routes[Routes.people] = MainController.serveApp
+      ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
@@ -46,22 +47,11 @@ class App {
       ..jailRoot = false;
 
     // Set up emailing.
-    var options = new SmtpOptions()
-      ..hostName = config['email']['hostName']
-      ..port = config['email']['port']
-      ..requiresAuthentication = config['email']['requiresAuthentication']
-      ..secured = config['email']['secured']
-      ..password = config['email']['password']
-      ..username = config['email']['username'];
-
-    mailer = new SmtpTransport(options);
+    mailer = new Mailgun();
 
   }
 
   void onServerEstablished(HttpServer server) {
-    int thirtyDays = 30*24*60*60*1000;
-    server.sessionTimeout = thirtyDays;
-
     print("Server started.");
 
     server.listen((HttpRequest request) {
