@@ -80,13 +80,15 @@ class MainController {
           ..text = '''
 Hey ${userData['firstName']},
 
-Thank you for creating an account on the new Woven. I really appreciate you becoming an early adopter.
+Thank you for creating an account on the new Woven.
 
-Beyond social networking, this is collaborative networking. Woven is designed from the ground up to help us coordinate our actions on behalf of the communities and causes we care about.
+Beyond social networking, this is collaborative networking. Woven is being designed from the ground up to help us coordinate our actions to improve the world.
 
-Please take a moment to respond to me with your first impressions, good or bad. Feel free to post on the Early Adopters community on Woven as well.
+The new Woven is starting simple and getting better every day.
 
-And you can always call or text me on my mobile, at 206-351-3948, at any time.
+Please take a moment to respond to me with your first impressions, good or bad. Please share all your feedback on the Early Adopters community on Woven as well.
+
+And you can always call or text me on my mobile at 206-351-3948 – at any time.
 
 Thank you for your early support!
 
@@ -96,9 +98,9 @@ Thank you for your early support!
 Woven
 http://mycommunity.org
 ''';
-        app.mailer.send(envelope);
-
-        return new Response();
+        return app.mailer.send(envelope).then((success) {
+          return new Response(success);
+        });
       });
     });
   }
