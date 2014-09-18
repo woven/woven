@@ -75,11 +75,26 @@ class MainController {
         var envelope = new Envelope()
           ..from = "Woven <support@woven.org>"
           ..to = "${userData['firstName']} ${userData['lastName']} <${userData['email']}>"
+          ..bcc = "David Notik <davenotik@gmail.com>"
           ..subject = 'Welcome, ${userData['firstName']}!'
           ..text = '''
-Hey ${userData['firstName']} ${userData['lastName']}!
+Hey ${userData['firstName']},
 
-Timestamp:  ${new DateTime.now()}
+Thank you for creating an account on the new Woven. I really appreciate you becoming an early adopter.
+
+Beyond social networking, this is collaborative networking. Woven is designed from the ground up to help us coordinate our actions on behalf of the communities and causes we care about.
+
+Please take a moment to respond to me with your first impressions, good or bad. Feel free to post on the Early Adopters community on Woven as well.
+
+And you can always call or text me on my mobile, at 206-351-3948, at any time.
+
+Thank you for your early support!
+
+--David Notik
+
+--
+Woven
+http://mycommunity.org
 ''';
         app.mailer.send(envelope);
 

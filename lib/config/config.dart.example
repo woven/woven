@@ -23,7 +23,13 @@ var config = {
       'requiresAuthentication': true,
       'secured': true,
       'username': 'postmaster@woven.org',
-      'password': 'xxx', // Get your own MailGun or other account.
+      'password': 'xxx', // Get your own.
       'localEmail': 'dave@woven.co'
+    },
+     'mailgun': {
+         'user': 'api',
+         'key': 'xxx', // Get your own.
+         'localEmail': 'support@woven.co',
+         'path': 'https://api:xxx@api.mailgun.net/v2/mydomain.com' // Adapt.
     }
 };
