@@ -94,12 +94,15 @@ class MainViewModel extends Observable {
       // Make it observable right from the start.
       var community = toObservable(e.snapshot.val());
 
+      if (community['disabled'] == true) return;
+
       // Use the ID from Firebase as our ID.
       community['id'] = e.snapshot.name();
 
       // Set some defaults.
       if (community['updatedDate'] == null) community['updatedDate'] = community['createdDate'];
       if (community['star_count'] == null)  community['star_count'] = 0;
+
 
       // The live-date-time element needs parsed dates.
       community['updatedDate'] = DateTime.parse(community['updatedDate']);
