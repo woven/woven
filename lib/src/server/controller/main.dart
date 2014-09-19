@@ -136,7 +136,10 @@ http://mycommunity.org
         notificationData['commentAuthorLastName'] = userData['lastName'];
       });
     }).then((_) {
-      // Send the welcome email.
+      // Don't send notifications when the item author comments on their own post.
+      if (notificationData['itemAuthor'] == notificationData['commentAuthor']) return false;
+
+      // Send notification.
       var envelope = new Envelope()
         ..from = "Woven <support@woven.co>"
         ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
