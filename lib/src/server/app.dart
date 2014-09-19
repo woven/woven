@@ -39,7 +39,8 @@ class App {
       ..routes[Routes.currentUser] = MainController.getCurrentUser
       ..routes[Routes.starred] = MainController.serveApp
       ..routes[Routes.people] = MainController.serveApp
-      ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail;
+      ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail
+      ..routes[Routes.sendNotifications] = MainController.sendNotifications;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])

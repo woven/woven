@@ -13,6 +13,7 @@ class Routes {
   static final starred = new UrlPattern(r'/starred');
   static final people = new UrlPattern(r'/people');
   static final sendWelcome = new UrlPattern(r'/sendwelcome');
+  static final sendNotifications = new UrlPattern(r'/x/sendnotifications');
 }
 
 class NoMatchingRoute {}

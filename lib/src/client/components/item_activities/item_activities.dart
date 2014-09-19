@@ -9,6 +9,7 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_input.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'package:woven/src/shared/routing/routes.dart';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
@@ -111,6 +112,10 @@ class ItemActivities extends PolymerElement {
     }
 
     updateParentItem(parent);
+
+    var commentId = id.name();
+    // Send a notification email to the item's author.
+    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$commentId");
 
     // Reset the fields.
     theData['comment'] = "";

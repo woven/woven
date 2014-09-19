@@ -9,6 +9,7 @@ import '../../shared/response.dart';
 import '../../shared/model/user.dart';
 import '../../../config/config.dart';
 import '../mailer/mailer.dart';
+import 'package:crypto/crypto.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -101,6 +102,62 @@ http://mycommunity.org
         return app.mailer.send(envelope).then((success) {
           return new Response(success);
         });
+      });
+    });
+  }
+
+  /**
+   * Send email notifications as appropriate.
+   */
+  static sendNotifications(App app, HttpRequest request) {
+    var item = request.requestedUri.queryParameters['itemid'];
+    var comment = request.requestedUri.queryParameters['commentid'];
+    Map notificationData = {};
+
+    return Firebase.get('/items/$item.json').then((itemData) {
+      notificationData['itemSubject'] = itemData['subject'];
+      notificationData['itemAuthor'] = itemData['user'];
+      var encodedItem = CryptoUtils.bytesToBase64(UTF8.encode(item));
+      notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
+    }).then((_) {
+      return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
+        notificationData['itemAuthorEmail'] = userData['email'];
+        notificationData['itemAuthorFirstName'] = userData['firstName'];
+        notificationData['itemAuthorLastName'] = userData['lastName'];
+      });
+    }).then((_) {
+      return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
+        notificationData['commentText'] = commentData['comment'];
+        notificationData['commentAuthor'] = commentData['user'];
+      });
+    }).then((_) {
+      return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
+        notificationData['commentAuthorFirstName'] = userData['firstName'];
+        notificationData['commentAuthorLastName'] = userData['lastName'];
+      });
+    }).then((_) {
+      // Send the welcome email.
+      var envelope = new Envelope()
+        ..from = "Woven <support@woven.co>"
+        ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
+        ..bcc = "David Notik <davenotik@gmail.com>"
+        ..subject = '${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} commented on your post'
+        ..text = '''
+Hey ${notificationData['itemAuthorFirstName']},
+
+${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} just commented on your post:
+
+${notificationData['itemSubject']}
+${notificationData['itemLink']}
+
+${notificationData['commentText']}
+
+--
+Woven
+http://mycommunity.org
+''';
+      return app.mailer.send(envelope).then((success) {
+        return new Response(success);
       });
     });
   }
