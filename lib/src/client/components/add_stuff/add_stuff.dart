@@ -13,14 +13,17 @@ import 'package:woven/src/shared/model/item.dart';
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
   AddStuff.created() : super.created();
+
   @published App app;
   @published bool opened = false;
+  @observable var selectedType;
 
   CoreOverlay get overlay => $['overlay'];
 
   /**
    * Toggle the overlay.
    */
+
   toggleOverlay() {
     overlay.toggle();
 //    name.focus(); //Doesn't work
@@ -29,6 +32,7 @@ class AddStuff extends PolymerElement {
   /**
    * Add an item.
    */
+
   addItem(Event e) {
     e.preventDefault();
 
@@ -61,8 +65,9 @@ class AddStuff extends PolymerElement {
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
+
     Future setItem(db.Firebase itemRef) {
-      itemRef.set(encodedItem).then((e){
+      itemRef.set(encodedItem).then((e) {
         var item = id.name();
         root.child('/items_by_community/' + app.community.alias + '/' + item)
           ..set(encodedItem);
@@ -87,7 +92,9 @@ class AddStuff extends PolymerElement {
   }
 
   attached() {
-    //
+    CoreSelector type = $['content-type'];
+    type.addEventListener('core-select', (e) {
+      selectedType = type.selected;
+    });
   }
 }
-
