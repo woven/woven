@@ -210,5 +210,5 @@ polyfill-next-selector { content: ':host .expand'; }
   flex-grow: 1;
   height: 100%;
   position: relative;
-  min-height: 100px;
+  min-height: 117px;
 }

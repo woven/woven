@@ -21,9 +21,8 @@
       </core-toolbar>
       <div id="container">
         <div id="content-container">
-          <p>Stay tuned, this is just a rough start. :)</p>
-
-          <core-selector id="content-type" target="{{$['types']}}" itemsSelector="li" valueattr="value" selected="other"></core-selector>
+          <core-selector id="content-type" target="{{$['types']}}" itemsSelector="li" valueattr="value"
+                         selected="other"></core-selector>
           <ul id="types" class="list">
             <li value="announcement">Announcement</li>
             <li value="ask">Ask</li>
@@ -41,10 +40,22 @@
                           disabled="{{(app.user != null) ? true : false}}"></core-input>
           </div>
           <div class="field-wrapper">
-            <core-input id="subject" placeholder="Subject" autocomplete="off"></core-input>
+            <core-input id="subject" placeholder="Subject" autocomplete="off"
+                        inputValue="{{theData['subject']}}"></core-input>
           </div>
+          <template if="{{selectedType == 'event'}}">
+            <div class="field-wrapper">
+              <core-input id="event-start-date" placeholder="When is the event?" autocomplete="off"
+                          inputValue="{{theData['event-start-date']}}" on-tap="{{updateInput}}"></core-input>
+            </div>
+            <div class="field-wrapper">
+              <core-input id="event-start-time" placeholder="What time does it start?" autocomplete="off"
+                          inputValue="{{theData['event-start-time']}}" on-tap="{{updateInput}}"></core-input>
+            </div>
+          </template>
           <div class="field-wrapper full-height">
-            <core-input class="expand" id="body" multiline rows="fit" required placeholder="Sharing is caring..." autocomplete="off"></core-input>
+            <core-input class="expand" id="body" multiline rows="fit" required placeholder="Sharing is caring..." autocomplete="off"
+                        inputValue="{{theData['body']}}"></core-input>
           </div>
         </div>
       </div>

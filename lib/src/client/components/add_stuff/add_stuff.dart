@@ -9,6 +9,8 @@ import 'package:woven/config/config.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
 import 'package:woven/src/shared/model/item.dart';
+import 'package:intl/intl.dart';
+import 'package:woven/src/shared/util.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
@@ -17,13 +19,13 @@ class AddStuff extends PolymerElement {
   @published App app;
   @published bool opened = false;
   @observable var selectedType;
+  @observable Map theData = toObservable({});
 
   CoreOverlay get overlay => $['overlay'];
 
   /**
    * Toggle the overlay.
    */
-
   toggleOverlay() {
     overlay.toggle();
 //    name.focus(); //Doesn't work
@@ -32,29 +34,46 @@ class AddStuff extends PolymerElement {
   /**
    * Add an item.
    */
-
   addItem(Event e) {
     e.preventDefault();
 
-    CoreSelector type = $['content-type'];
-    CoreInput name = $['name'];
-    CoreInput subject = $['subject'];
-    CoreInput body = $['body'];
+    String subject = theData['subject'];
+    String body = theData['body'];
 
-    if (subject.value.trim().isEmpty) {
+    if (subject.trim().isEmpty || body.trim().isEmpty) {
       window.alert("Your message is empty.");
       return false;
+    }
+
+    if (selectedType == "event") {
+      if (parseDate(theData['event-start-date']) == null) {
+
+        window.alert("That's not a valid start date. Ex: " + new DateFormat("M/dd/yyyy").format(new DateTime.now()));
+        return false;
+      }
+      if (parseTime(theData['event-start-time']) == null) {
+
+        window.alert("That's not a valid start time. Ex: " + new DateFormat("h:mm a").format(new DateTime.now()) + ', ' + new DateFormat("h a").format(new DateTime.now()));
+        return false;
+      }
+      print(parseDate(theData['event-start-date']));
+      print(parseTime(theData['event-start-time']));
     }
 
     DateTime now = new DateTime.now().toUtc();
 
     var item = new ItemModel()
-      ..user = name.inputValue
-      ..subject = subject.inputValue
-      ..type = type.selected
-      ..body = body.inputValue
+      ..user = app.user.username
+      ..subject = theData['subject']
+      ..type = selectedType
+      ..body = theData['body']
       ..createdDate = now.toString()
       ..updatedDate = now.toString();
+
+    if (selectedType == "event") {
+
+    }
+
 
     var encodedItem = item.encode();
 
@@ -65,7 +84,6 @@ class AddStuff extends PolymerElement {
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
-
     Future setItem(db.Firebase itemRef) {
       itemRef.set(encodedItem).then((e) {
         var item = id.name();
@@ -85,10 +103,22 @@ class AddStuff extends PolymerElement {
     setItem(id);
 
     overlay.toggle();
-    body.value = "";
-    subject.value = "";
+    theData['subject'] = "";
+    theData['body'] ="";
+    // TODO: Reset the selected type too? May be useful not to.
 
     app.selectedPage = 0;
+  }
+
+  updateInput(Event e, var detail, CoreInput sender) {
+    if (sender.id == "event-start-date" && sender.inputValue == "") {
+//      sender.type = "date";
+      sender.inputValue = new DateFormat("M/dd/yyyy").format(new DateTime.now());
+    }
+    if (sender.id == "event-start-time" && sender.inputValue == "") {
+//      sender.type = "time";
+      sender.inputValue = new DateFormat("h:mm a").format(new DateTime.now());
+    }
   }
 
   attached() {
