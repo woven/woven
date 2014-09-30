@@ -61,35 +61,25 @@ class AddStuff extends PolymerElement {
 
     var now = new DateTime.now().toUtc();
 
-    var encodedItem;
+    ItemModel item;
+    if (selectedType == 'event') item = new EventModel();
+    else item = new ItemModel();
 
-    // TODO: Seems a little redundant, no?
-    switch (selectedType) {
-      case 'event':
-        var item = new EventModel()
-          ..user = app.user.username
-          ..subject = theData['subject']
-          ..type = selectedType
-          ..body = theData['body']
-          ..createdDate = now
-          ..updatedDate = now
-          ..startDate = parseDate(theData['event-start-date'])
-          ..startTime = parseTime(theData['event-start-time']);
-        encodedItem = item.encode();
-        print(encodedItem);
-        break;
+    item
+      ..user = app.user.username
+      ..subject = theData['subject']
+      ..type = selectedType
+      ..body = theData['body']
+      ..createdDate = now
+      ..updatedDate = now;
 
-      default:
-        var item = new ItemModel()
-          ..user = app.user.username
-          ..subject = theData['subject']
-          ..type = selectedType
-          ..body = theData['body']
-          ..createdDate = now
-          ..updatedDate = now;
-        encodedItem = item.encode();
-        break;
+    if (item is EventModel) {
+      (item as EventModel)
+        ..startDate = parseDate(theData['event-start-date'])
+        ..startTime = parseTime(theData['event-start-time']);
     }
+
+    var encodedItem = item.encode();
 
     var root = new db.Firebase(config['datastore']['firebaseLocation']);
 
