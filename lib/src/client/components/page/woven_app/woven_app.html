@@ -35,7 +35,7 @@
               <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
                     data-page="0" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
                 <template if="{{app.community == null}}">
-                  <img src="http://cdn.woven.co/assets/images/woven-logo-small-expanded.png">
+                  <img src="/static/images/woven-logo-small.png">
                 </template>
                 <template if="{{app.community != null}}">
                   {{app.community.name}}

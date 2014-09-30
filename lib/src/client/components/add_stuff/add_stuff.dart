@@ -9,6 +9,7 @@ import 'package:woven/config/config.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
 import 'package:woven/src/shared/model/item.dart';
+import 'package:woven/src/shared/model/event.dart';
 import 'package:intl/intl.dart';
 import 'package:woven/src/shared/util.dart';
 
@@ -56,26 +57,39 @@ class AddStuff extends PolymerElement {
         window.alert("That's not a valid start time. Ex: " + new DateFormat("h:mm a").format(new DateTime.now()) + ', ' + new DateFormat("h a").format(new DateTime.now()));
         return false;
       }
-      print(parseDate(theData['event-start-date']));
-      print(parseTime(theData['event-start-time']));
     }
 
-    DateTime now = new DateTime.now().toUtc();
+    var now = new DateTime.now().toUtc();
 
-    var item = new ItemModel()
-      ..user = app.user.username
-      ..subject = theData['subject']
-      ..type = selectedType
-      ..body = theData['body']
-      ..createdDate = now.toString()
-      ..updatedDate = now.toString();
+    var encodedItem;
 
-    if (selectedType == "event") {
+    // TODO: Seems a little redundant, no?
+    switch (selectedType) {
+      case 'event':
+        var item = new EventModel()
+          ..user = app.user.username
+          ..subject = theData['subject']
+          ..type = selectedType
+          ..body = theData['body']
+          ..createdDate = now
+          ..updatedDate = now
+          ..startDate = parseDate(theData['event-start-date'])
+          ..startTime = parseTime(theData['event-start-time']);
+        encodedItem = item.encode();
+        print(encodedItem);
+        break;
 
+      default:
+        var item = new ItemModel()
+          ..user = app.user.username
+          ..subject = theData['subject']
+          ..type = selectedType
+          ..body = theData['body']
+          ..createdDate = now
+          ..updatedDate = now;
+        encodedItem = item.encode();
+        break;
     }
-
-
-    var encodedItem = item.encode();
 
     var root = new db.Firebase(config['datastore']['firebaseLocation']);
 

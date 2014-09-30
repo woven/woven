@@ -141,3 +141,8 @@ core-icon {
   overflow: hidden;
   width: 100%;
 }
+
+.event-date {
+  display: inline;
+  color: #008000;
+}

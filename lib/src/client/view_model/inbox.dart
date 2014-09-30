@@ -5,6 +5,7 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:intl/intl.dart';
 
 class InboxViewModel extends Observable {
   final App app;
@@ -23,7 +24,7 @@ class InboxViewModel extends Observable {
     // TODO: Remove the limit.
     var itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias).limit(20);
 
-    // Get the list of communities, and listen for new ones.
+    // Get the list of items, and listen for new ones.
     itemsByCommunityRef.onChildAdded.listen((e) {
       var item = toObservable(e.snapshot.val());
 
@@ -35,6 +36,13 @@ class InboxViewModel extends Observable {
       // The live-date-time element needs parsed dates.
       item['updatedDate'] = DateTime.parse(item['updatedDate']);
       item['createdDate'] = DateTime.parse(item['createdDate']);
+
+      switch (item['type']) {
+        case 'event':
+          if (item['startDate'] != null) item['startDate'] = DateTime.parse(item['startDate']);
+          break;
+        default:
+      }
 
       // Use the ID from Firebase as our ID.
       // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location".
@@ -90,7 +98,6 @@ class InboxViewModel extends Observable {
 
 //    loadUserStarredItemInformation();
 //    loadUserLikedItemInformation();
-
 
   }
 

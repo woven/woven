@@ -17,16 +17,16 @@
             <core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"
                        id="icon-star" on-click="{{toggleStar}}"
                        class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"
-                       data-id="{{ item['id'] }}"></core-icon>
+                       data-id="{{item['id']}}"></core-icon>
             <span class="item-count">{{item['star_count']}}</span>
           </div>
           <div class="item-col2" flex>
-            <div class="item-type">{{ (item['type'] != null) ? item['type'] : 'other'}}</div>
-            <div class="item-subject">{{ item['subject'] }}</div>
-            <div class="item-body" flex>{{ item['body'] }}</div>
+            <div class="item-type">{{(item['type'] != null) ? item['type'] : 'other'}}</div>
+            <div class="item-subject">{{item['subject']}}</div>
+            <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDate']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
           </div>
           <div class="item-col3">
-            <div class="item-users">{{ item['user'] }}</div>
+            <div class="item-users">{{item['user']}}</div>
             <div class="item-updated">
             <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
             </div>

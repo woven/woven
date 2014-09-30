@@ -25,7 +25,7 @@ class ItemView extends PolymerElement {
 
   get formattedBody {
     if (item.isEmpty) return 'Loading...';
-    return "${InputFormatter.nl2br(item['body'])}";
+    return "${InputFormatter.nl2br(InputFormatter.linkify(item['body']))}";
   }
 
   itemChanged() {

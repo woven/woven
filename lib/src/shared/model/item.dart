@@ -6,8 +6,8 @@ class ItemModel {
   String subject;
   String type;
   String body;
-  String createdDate;
-  String updatedDate;
+  DateTime createdDate;
+  DateTime updatedDate;
 
   Map encode() {
     return {
@@ -15,8 +15,8 @@ class ItemModel {
         "subject": subject,
         "type": type,
         "body": body,
-        "createdDate": createdDate,
-        "updatedDate": updatedDate
+        "createdDate": createdDate.toString(),
+        "updatedDate": updatedDate.toString()
     };
   }
 

@@ -60,7 +60,10 @@ class InboxList extends PolymerElement with Observable {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
   }
 
-
+  formatEventDate(DateTime startDate) {
+    // TODO: Bring back endDate, currently null.
+    return InputFormatter.formatDate(startDate, showHappenedPrefix: true, trimPast: true);
+  }
 
   //Temporary script, about as good a place as any to put it.
 
