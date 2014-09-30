@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../widgets/safe_html/safe_html.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <polymer-element name="item-view">
   <template>
@@ -21,7 +22,7 @@
               </template>
             </div>
             <div>
-              <p id="body">{{item['body']}}</p>
+              <p id="body"><safe-html model="{{formattedBody}}"></safe-html></p>
             </div>
           </div>
           <div id="action-footer">

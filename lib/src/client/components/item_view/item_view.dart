@@ -25,15 +25,15 @@ class ItemView extends PolymerElement {
 
   get formattedBody {
     if (item.isEmpty) return 'Loading...';
+    print("${InputFormatter.nl2br(InputFormatter.linkify(item['body']))}");
     return "${InputFormatter.nl2br(InputFormatter.linkify(item['body']))}";
   }
 
-  itemChanged() {
-    // Trick to respect line breaks.
-    HtmlElement body = $['body'];
-    body.innerHtml = formattedBody;
-  }
-
+//  itemChanged() {
+//    // Trick to respect line breaks.
+//    HtmlElement body = $['body'];
+//    body.innerHtml = formattedBody;
+//  }
 
   ItemView.created() : super.created() {
     // The old magic to ensure we're notified of changes to
