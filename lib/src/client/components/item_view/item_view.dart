@@ -9,11 +9,15 @@ import 'package:woven/config/config.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:woven/src/client/view_model/main.dart';
+import 'package:woven/src/client/uri_policy.dart';
 
 @CustomTag('item-view')
 class ItemView extends PolymerElement {
   @published App app;
   @published MainViewModel viewModel;
+
+  NodeValidator get nodeValidator => new NodeValidatorBuilder()
+    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
   // TODO: Revisit all this. It seems ridiculous.
   // See http://stackoverflow.com/a/25772893/1286442.
@@ -25,15 +29,15 @@ class ItemView extends PolymerElement {
 
   get formattedBody {
     if (item.isEmpty) return 'Loading...';
-    print("${InputFormatter.nl2br(InputFormatter.linkify(item['body']))}");
     return "${InputFormatter.nl2br(InputFormatter.linkify(item['body']))}";
   }
 
-//  itemChanged() {
-//    // Trick to respect line breaks.
-//    HtmlElement body = $['body'];
-//    body.innerHtml = formattedBody;
-//  }
+  itemChanged() {
+    // Trick to respect line breaks.
+    HtmlElement body = $['body'];
+    body.setInnerHtml('$formattedBody',
+    validator: nodeValidator);
+  }
 
   ItemView.created() : super.created() {
     // The old magic to ensure we're notified of changes to

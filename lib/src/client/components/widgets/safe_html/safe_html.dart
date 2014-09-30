@@ -5,6 +5,8 @@ import "dart:html";
 
 import "package:polymer/polymer.dart";
 
+import 'package:woven/src/client/uri_policy.dart';
+
 @CustomTag("safe-html")
 class SafeHtml extends PolymerElement  {
   @published String model;
@@ -15,7 +17,7 @@ class SafeHtml extends PolymerElement  {
 
   SafeHtml.created() : super.created() {
     nodeValidator = new NodeValidatorBuilder()
-      ..allowHtml5();
+      ..allowCustomElement('A', attributes: ['href']);
   }
 
   void modelChanged(old) {

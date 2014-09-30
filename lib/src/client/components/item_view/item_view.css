@@ -94,3 +94,16 @@ core-icon {
   border-radius: 3px;
   font-size: 12px;
 }
+
+a {
+  text-decoration: none;
+  color: rgb(34, 110, 223);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: rgb(106, 56, 223);
+}
