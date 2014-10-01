@@ -3,13 +3,11 @@ library event_model;
 import 'item.dart';
 
 class EventModel extends ItemModel {
-  DateTime startDate;
-  DateTime startTime;
+  DateTime startDateTime;
 
   Map encode() {
     var data = super.encode();
-    data['startDate'] = startDate.toString();
-    data['startTime'] = startTime.toString();
+    data['startDateTime'] = startDateTime.toString();
     return data;
   }
 
@@ -23,8 +21,6 @@ class EventModel extends ItemModel {
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate']
 
-      ..startDate = data['startDate']
-      ..startTime = data['startTime'];
-    ;
+      ..startDateTime = data['startDateTime'];
   }
 }

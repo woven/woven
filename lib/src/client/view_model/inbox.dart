@@ -39,7 +39,7 @@ class InboxViewModel extends Observable {
 
       switch (item['type']) {
         case 'event':
-          if (item['startDate'] != null) item['startDate'] = DateTime.parse(item['startDate']);
+          if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
           break;
         default:
       }

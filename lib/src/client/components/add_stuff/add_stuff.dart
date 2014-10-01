@@ -74,9 +74,12 @@ class AddStuff extends PolymerElement {
       ..updatedDate = now;
 
     if (item is EventModel) {
+      // Combine the separate date and time fields into one DateTime object.
+      DateTime date = parseDate(theData['event-start-date']);
+      DateTime time = parseTime(theData['event-start-time']);
+      DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute);
       (item as EventModel)
-        ..startDate = parseDate(theData['event-start-date'])
-        ..startTime = parseTime(theData['event-start-time']);
+        ..startDateTime = startDateTime;
     }
 
     var encodedItem = item.encode();
