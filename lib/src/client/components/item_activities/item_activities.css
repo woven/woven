@@ -145,3 +145,16 @@ cursor: pointer;
   flex-flow: column;
   -webkit-flex-flow: column;
 }
+
+safe-html::shadow a {
+  text-decoration: none;
+  color: rgb(34, 110, 223);
+}
+
+safe-html::shadow a:hover {
+  text-decoration: underline;
+}
+
+safe-html::shadow a:visited {
+  color: rgb(106, 56, 223);
+}

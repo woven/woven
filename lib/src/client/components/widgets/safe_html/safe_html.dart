@@ -5,12 +5,10 @@ import "dart:html";
 
 import "package:polymer/polymer.dart";
 
-import 'package:woven/src/client/uri_policy.dart';
-
 @CustomTag("safe-html")
 class SafeHtml extends PolymerElement  {
   @published NodeValidator validator = new NodeValidatorBuilder()
-    ..allowHtml5(uriPolicy: new ItemUrlPolicy()); // TODO: How to make the policy generic?
+    ..allowHtml5(uriPolicy: new DefaultUriPolicy());
 
   SafeHtml.created() : super.created();
 
@@ -24,5 +22,16 @@ class SafeHtml extends PolymerElement  {
 
   attached() {
     addFragment();
+  }
+}
+
+class DefaultUriPolicy implements UriPolicy {
+  DefaultUriPolicy();
+
+  // Allow all external, absolute URLs.
+  RegExp regex = new RegExp(r'(?:http://|https://|//)?.*');
+
+  bool allowsUri(String uri) {
+    return regex.hasMatch(uri);
   }
 }
