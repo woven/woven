@@ -10,20 +10,16 @@ import 'package:woven/src/client/uri_policy.dart';
 @CustomTag("safe-html")
 class SafeHtml extends PolymerElement  {
   @published NodeValidator validator = new NodeValidatorBuilder()
-    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
+    ..allowHtml5(uriPolicy: new ItemUrlPolicy()); // TODO: How to make the policy generic?
 
   SafeHtml.created() : super.created();
 
   addFragment() {
-    ContentElement content = shadowRoot.querySelector('content');
-    var contentNodes = content.getDistributedNodes();
-    String html = '';
-    contentNodes.forEach((node) {
-      html = (html.isEmpty) ? "$node" : "$html$node";
-    });
-    this.text = '';
-    content.setInnerHtml(html,
-    validator: validator);
+    DivElement container = $['container'];
+    String fragment =  this.text;
+    container.setInnerHtml(fragment, // Set the fragment in a safe way.
+      validator: validator);
+    this.text = ""; // Clear the original fragment passed to the element.
   }
 
   attached() {
