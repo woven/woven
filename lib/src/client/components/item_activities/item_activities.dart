@@ -22,8 +22,8 @@ class ItemActivities extends PolymerElement {
   //TODO: Further explore this ViewModel stuff.
   //@observable ActivityCommentModel activity = new ActivityCommentModel();
 
-//  NodeValidator get nodeValidator => new NodeValidatorBuilder()
-//    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
+    NodeValidator get nodeValidator => new NodeValidatorBuilder()
+    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
@@ -60,7 +60,8 @@ class ItemActivities extends PolymerElement {
 
   formatText(String text) {
     if (text.trim().isEmpty) return 'Loading...';
-    return InputFormatter.nl2br(InputFormatter.linkify(text.trim()));
+    String formattedText = InputFormatter.nl2br(InputFormatter.linkify(text.trim()));
+    return formattedText;
   }
 
   /**

@@ -36,7 +36,7 @@
         <div class="activity-card">
           <div id="content">
             <div class="user">{{comment['user']}}</div>
-            <p><safe-html>{{formatText(comment['comment'])}}</safe-html></p>
+            <p><safe-html validator="{{nodeValidator}}">{{formatText(comment['comment'])}}</safe-html></p>
             <div class="date-time">
               <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
             </div>

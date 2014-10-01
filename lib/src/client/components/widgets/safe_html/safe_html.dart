@@ -9,23 +9,21 @@ import 'package:woven/src/client/uri_policy.dart';
 
 @CustomTag("safe-html")
 class SafeHtml extends PolymerElement  {
+  @published NodeValidator validator = new NodeValidatorBuilder()
+    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
   SafeHtml.created() : super.created();
-
-  NodeValidator get nodeValidator => new NodeValidatorBuilder()
-    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
   addFragment() {
     ContentElement content = shadowRoot.querySelector('content');
     var contentNodes = content.getDistributedNodes();
-    var html = "";
+    String html = '';
     contentNodes.forEach((node) {
-      html = "$html$node";
+      html = (html.isEmpty) ? "$node" : "$html$node";
     });
-
-    this.children.clear();
+    this.text = '';
     content.setInnerHtml(html,
-    validator: nodeValidator);
+    validator: validator);
   }
 
   attached() {
