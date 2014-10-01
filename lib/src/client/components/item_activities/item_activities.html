@@ -3,10 +3,10 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../widgets/safe_html/safe_html.html">
 <polymer-element name="item-activities">
   <template>
     <link rel="stylesheet" href="item_activities.css">
-
 
     <div id="post-container">
       <template if="{{app.user != null}}">
@@ -36,7 +36,7 @@
         <div class="activity-card">
           <div id="content">
             <div class="user">{{comment['user']}}</div>
-            <p>{{comment['comment']}}</p>
+            <p><safe-html>{{formatText(comment['comment'])}}</safe-html></p>
             <div class="date-time">
               <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
             </div>

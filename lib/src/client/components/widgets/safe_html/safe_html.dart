@@ -9,37 +9,26 @@ import 'package:woven/src/client/uri_policy.dart';
 
 @CustomTag("safe-html")
 class SafeHtml extends PolymerElement  {
-  @published String model;
 
-  NodeValidator nodeValidator;
-  bool get applyAuthorStyles => true;
-  bool isInitialized = false;
+  SafeHtml.created() : super.created();
 
-  SafeHtml.created() : super.created() {
-    nodeValidator = new NodeValidatorBuilder()
-      ..allowCustomElement('A', attributes: ['href']);
-  }
+  NodeValidator get nodeValidator => new NodeValidatorBuilder()
+    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
-  void modelChanged(old) {
-    if(isInitialized) {
-      _addFragment();
-    }
-  }
-
-  void _addFragment() {
-    var fragment = new DocumentFragment.html(model, validator: nodeValidator);
-    $["container"].nodes
-      ..clear()
-      ..add(fragment);
-
-  }
-
-  @override
-  void attached() {
-    super.attached();
-    Timer.run(() {
-      _addFragment();
-      isInitialized = true;
+  addFragment() {
+    ContentElement content = shadowRoot.querySelector('content');
+    var contentNodes = content.getDistributedNodes();
+    var html = "";
+    contentNodes.forEach((node) {
+      html = "$html$node";
     });
+
+    this.children.clear();
+    content.setInnerHtml(html,
+    validator: nodeValidator);
+  }
+
+  attached() {
+    addFragment();
   }
 }

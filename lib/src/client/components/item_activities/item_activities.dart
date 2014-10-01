@@ -10,6 +10,7 @@ import 'package:core_elements/core_input.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:woven/src/shared/routing/routes.dart';
+import 'package:woven/src/client/uri_policy.dart';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
@@ -20,6 +21,9 @@ class ItemActivities extends PolymerElement {
 
   //TODO: Further explore this ViewModel stuff.
   //@observable ActivityCommentModel activity = new ActivityCommentModel();
+
+//  NodeValidator get nodeValidator => new NodeValidatorBuilder()
+//    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
@@ -52,6 +56,11 @@ class ItemActivities extends PolymerElement {
       // Insert each new item at top of list so the list is ascending.
       comments.insert(0, comment);
     });
+  }
+
+  formatText(String text) {
+    if (text.trim().isEmpty) return 'Loading...';
+    return InputFormatter.nl2br(InputFormatter.linkify(text.trim()));
   }
 
   /**
