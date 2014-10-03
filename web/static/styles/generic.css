@@ -3,6 +3,9 @@ body {
   transition: opacity ease-in 0.2s;
   font-size: 85%;
   /*margin: auto;*/
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
 }
 
 /* This somehow fixes the disappearing dialog. */
