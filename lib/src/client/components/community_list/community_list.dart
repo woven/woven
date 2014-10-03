@@ -7,6 +7,8 @@ import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/view_model/main.dart';
+import 'dart:math';
+import 'dart:async' show Timer;
 
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
@@ -39,12 +41,6 @@ class CommunityList extends PolymerElement with Observable {
     app.community = community;
 
     app.router.dispatch(url: "/" + app.community.alias);
-  }
-
-  void handleCallToAction() {
-    // Reset the current selectedItem so item-view grabs it from the URL
-    app.selectedItem == null;
-    app.router.dispatch(url: "item/LUpWdzZXaWd4dHdvRWM1ZGNhdXo=");
   }
 
   void toggleStar(Event e, var detail, Element target) {

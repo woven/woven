@@ -7,15 +7,9 @@
   height: 100%;
 }
 
-core-item core-icon {
-  margin: 0 !important;
-}
-
-core-icon {
-  fill: #666;
-  color: #666;
-  /*margin-right: 2px;*/
-}
+/*core-item core-icon-button {*/
+  /*margin: 0 !important;*/
+/*}*/
 
 #icons {
   margin-right: 4px;
@@ -28,10 +22,6 @@ core-icon {
 
 #icon-fav.selected {
   fill: red;
-}
-
-#icon-star.selected {
-  fill: #f99b15;
 }
 
 .item {
@@ -51,8 +41,6 @@ core-icon {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
-
 }
 
 .item:hover {
@@ -61,12 +49,13 @@ core-icon {
   background-color: rgb(244, 244, 244);
 }
 
-.item-subject {
+.community-alias {
   /*overflow: hidden;*/
+  color: mediumblue;
+  font-size: 18px;
   white-space: nowrap;
   margin-right: 5px;
   font-weight: bold;
-  font-size: 1.1em;
   padding: 5px 0 0 0;
 }
 .item-body {
@@ -77,7 +66,7 @@ core-icon {
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
-  font-size: 90%;
+  font-size: 13px;
   display: inline;
 }
 
@@ -99,24 +88,51 @@ core-icon {
   font-size: 12px;
 }
 
-.item-col1 {
-  /*border: solid red 1px;*/
-  text-align: center;
-  padding-top: 3px;
+.join-button {
+  fill: #eee;
+  color: #eee;
+  box-shadow: none;
+  border: 1px solid #e6e6e6;
+  display: inline-block;
+  cursor: pointer;
+  color: #2e2e2e;
+  font-family: arial;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 3px 5px;
+  text-decoration: none;
+  width: 90px;
 }
-.item-col1 span {
-  font-size: 10px;
+.join-button:hover {
+  /*background-color:#fff;*/
+}
+.join-button:active {
+  /*position:relative;*/
+  /*top:2px;*/
+}
+
+.join-button:hover {
+  box-shadow: none;
+}
+
+.join-button.selected:not([disabled]) {
+  box-shadow: none;
+  background-color:#ffffff;
+  fill: #f99b15;
+  color: #f99b15;
+}
+
+span.item-count {
+  font-size: 13px;
   color: #3F3F3F;
   outline: none;
+  margin-left: 12px;
 }
 .item-col2 {
-  /*border: solid peachpuff 1px;*/
-  margin-left: 10px;
   margin-right: 5px;
 }
 
 .item-col3 {
-  /*border: solid burlywood 1px;*/
   padding-top: 5px;
 }
 
@@ -127,14 +143,4 @@ core-icon {
 .item-container {
   overflow: hidden;
   width: 100%;
-}
-
-.cta {
-  background-color: #FFFFD0;
-  color: #666;
-  border-radius: 3px;
-}
-
-.cta-container {
-  align-items: center;
 }
