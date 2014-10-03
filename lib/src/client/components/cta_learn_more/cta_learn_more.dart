@@ -18,10 +18,11 @@ class LearnMoreCta extends PolymerElement {
   togglePage() {
   }
 
-  void handleCallToAction() {
+  void handleCallToAction(Event e) {
+    e.stopPropagation();
     // Reset the current selectedItem so item-view grabs it from the URL
     app.selectedItem == null;
-    app.router.dispatch(url: "item/LUpWdzZXaWd4dHdvRWM1ZGNhdXo=");
+    app.router.dispatch(url: "item/LUpZTWEtZWZOejRFRklYVTYxWmY="); //-JYMa-efNz4EFIXU61Zf
   }
 
   animateRandomWords() {

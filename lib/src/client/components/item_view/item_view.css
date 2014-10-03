@@ -107,3 +107,8 @@ a:hover {
 a:visited {
   color: rgb(106, 56, 223);
 }
+
+#body.special {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 17px;
+}
