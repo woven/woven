@@ -208,7 +208,7 @@ polyfill-next-selector { content: ':host .full-height'; }
 polyfill-next-selector { content: ':host .expand'; }
 ::content .expand {
   flex-grow: 1;
-  height: 100%;
+  height: 1px;
   position: relative;
   min-height: 117px;
 }
