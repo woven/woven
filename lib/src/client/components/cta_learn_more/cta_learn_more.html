@@ -1,0 +1,22 @@
+<link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
+
+
+<polymer-element name="cta-learn-more">
+  <template>
+    <link rel="stylesheet" href="cta_learn_more.css">
+    <core-item class="item cta-welcome" on-tap="{{handleCallToAction}}">
+      <div class="cta-container" vertical layout>
+        <div class="cta-col1">
+          <p>Woven is for <span id="random-word">{{randomWord}}.</span></p>
+        </div>
+        <div class="cta-col2">
+          <template if="{{app.user == null}}"><core-icon-button on-tap="{{signIn}}" class="cta-button" icon="chevron-right">Sign in</core-icon-button></template>
+          <core-icon-button class="cta-button" icon="chevron-right">Learn more</core-icon-button>
+        </div>
+      </div>
+    </core-item>
+  </template>
+  <script type="application/dart" src="cta_learn_more.dart"></script>
+</polymer-element>
