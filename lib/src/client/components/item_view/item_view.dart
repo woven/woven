@@ -37,7 +37,6 @@ class ItemView extends PolymerElement {
     // Pass the item body to the safe-html element.
     HtmlElement body = $['body'];
     HtmlElement safeHtml = body.childNodes[0];
-    print("DEBUG: $item");
     if (item.isNotEmpty) safeHtml.shadowRoot.innerHtml = formatText(item['body']);
   }
 
