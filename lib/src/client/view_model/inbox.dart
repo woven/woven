@@ -22,7 +22,13 @@ class InboxViewModel extends Observable {
   void loadItemsForCommunity() {
     var f = new db.Firebase(firebaseLocation);
     // TODO: Remove the limit.
-    var itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias).limit(20);
+    // Special case for no limit on III Points community. TODO: Remove later.
+    var itemsByCommunityRef;
+    if (app.community.alias == "iiipoints") {
+      itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias);
+    } else {
+      itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias).limit(20);
+    }
 
     // Get the list of items, and listen for new ones.
     itemsByCommunityRef.onChildAdded.listen((e) {
