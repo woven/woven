@@ -72,6 +72,9 @@ class ItemView extends PolymerElement {
   attached() {
     print("+Item");
     app.pageTitle = "";
+    if (item != null) {
+      itemChanged();
+    }
   }
 
   detached() {
