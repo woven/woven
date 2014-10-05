@@ -27,16 +27,17 @@ class ItemView extends PolymerElement {
     return viewModel.itemViewModel.item;
   }
 
-  get formattedBody {
-    if (item.isEmpty) return 'Loading...';
-    return "${InputFormatter.nl2br(InputFormatter.linkify(item['body']))}";
+  formatText(String text) {
+    if (text.trim().isEmpty) return 'Loading...';
+    String formattedText = InputFormatter.nl2br(InputFormatter.linkify(text.trim()));
+    return formattedText;
   }
 
   itemChanged() {
-    // Trick to respect line breaks.
+    // Pass the item body to the safe-html element.
     HtmlElement body = $['body'];
-    body.setInnerHtml('$formattedBody',
-    validator: nodeValidator);
+    HtmlElement safeHtml = body.childNodes[0];
+    safeHtml.shadowRoot.innerHtml = formatText(item['body']);
   }
 
   ItemView.created() : super.created() {
@@ -71,12 +72,6 @@ class ItemView extends PolymerElement {
   attached() {
     print("+Item");
     app.pageTitle = "";
-
-    if (item != null) {
-      // Trick to respect line breaks.
-      HtmlElement body = $['body'];
-      body.innerHtml = formattedBody;
-    }
   }
 
   detached() {

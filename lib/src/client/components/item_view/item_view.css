@@ -95,16 +95,16 @@ core-icon {
   font-size: 12px;
 }
 
-a {
+safe-html::shadow a {
   text-decoration: none;
   color: rgb(34, 110, 223);
 }
 
-a:hover {
+safe-html::shadow a:hover {
   text-decoration: underline;
 }
 
-a:visited {
+safe-html::shadow a:visited {
   color: rgb(106, 56, 223);
 }
 

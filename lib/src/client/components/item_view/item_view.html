@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../widgets/safe_html/safe_html.html">
 <polymer-element name="item-view">
   <template>
     <link rel="stylesheet" href="item_view.css">
@@ -21,7 +22,7 @@
               </template>
             </div>
             <div>
-              <p id="body" class="{{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}">Loading...</p>
+              <p id="body" class="{{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>{{formatText(item['body'])}}</safe-html></p>
             </div>
           </div>
           <div id="action-footer">
