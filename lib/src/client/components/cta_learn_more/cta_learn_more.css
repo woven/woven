@@ -67,8 +67,11 @@ core-icon-button.cta-button:hover {
   white-space: nowrap;
 }
 
-@media all and (max-width: 600px)  {
+@media all and (max-width: 350px)  {
   core-icon-button.cta-button {
     background: rgba(155, 155, 155, 0.6);
+  }
+  #random-word {
+    display: block;
   }
 }
