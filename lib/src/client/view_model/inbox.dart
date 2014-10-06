@@ -57,8 +57,13 @@ class InboxViewModel extends Observable {
       // Insert each new item into the list.
       items.add(toObservable(item));
 
-      // Sort the list by the item's updatedDate.
-      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+      if (app.community.alias == "iiipoints") {
+        // Sort the list by the item's updatedDate.
+        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+      } else {
+        // Sort the list by the item's updatedDate.
+        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+      }
 
       // Listen for realtime changes to the star count.
       f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
