@@ -158,3 +158,9 @@ core-icon {
   background-color: #333;
   cursor: auto;
 }
+
+.cta img {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
