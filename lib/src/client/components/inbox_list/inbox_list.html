@@ -5,6 +5,15 @@
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
+    <template if="{{app.community.alias == 'iiipoints'}}">
+      <core-item class="item cta" on-tap="{{handleCallToAction}}">
+        <div class="cta-container" vertical layout>
+          <div class="cta-col1">
+            <img src="/static/images/iiipoints_header.png">
+          </div>
+        </div>
+      </core-item>
+    </template>
     <template repeat="{{item in viewModel.inboxViewModel.items}}">
       <core-item class="item" on-click="{{selectItem}}" data-id="{{item['id']}}">
         <div class="item-container" horizontal layout>
