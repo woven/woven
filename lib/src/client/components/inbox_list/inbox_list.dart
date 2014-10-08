@@ -1,13 +1,16 @@
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'dart:html';
+import 'dart:async';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/client/view_model/main.dart';
+import 'package:woven/src/client/view_model/inbox.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:woven/src/client/infinite_scroll.dart';
+import 'package:core_elements/core_header_panel.dart';
 
 /**
  * The InboxList class is for the list of inbox items, which is pulled from Firebase.
@@ -15,7 +18,9 @@ import 'package:crypto/crypto.dart';
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
   @published App app;
-  @published MainViewModel viewModel;
+  @published InboxViewModel viewModel;
+
+  List<StreamSubscription> subscriptions;
 
   InboxList.created() : super.created();
 
@@ -24,7 +29,7 @@ class InboxList extends PolymerElement with Observable {
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
     // id passed in the data-id attribute on the element.
-    var item = viewModel.inboxViewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
+    var item = viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.selectedItem = item;
     app.selectedPage = 1;
@@ -46,13 +51,13 @@ class InboxList extends PolymerElement with Observable {
 //      target.classes.add("clicked");
 //    }
 
-    viewModel.inboxViewModel.toggleItemLike(target.dataset['id']);
+    viewModel.toggleItemLike(target.dataset['id']);
   }
 
   toggleStar(Event e, var detail, Element target) {
     e.stopPropagation();
 
-    viewModel.inboxViewModel.toggleItemStar(target.dataset['id']);
+    viewModel.toggleItemStar(target.dataset['id']);
   }
 
   formatItemDate(DateTime value) {
@@ -126,6 +131,19 @@ class InboxList extends PolymerElement with Observable {
     app.pageTitle = "Everything";
 //    MoveCommunityItemsScript();
     //CreateCommunityItemsScript();
+
+    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
+    HtmlElement scroller = el.scroller;
+
+    HtmlElement element = $['content-container'];
+
+    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller);
+
+    subscriptions = [];
+
+    subscriptions.add(scroll.onScroll.listen((_) {
+//      if (viewModel.reloadingContent == false) viewModel.paginate();
+    }));
   }
 
   detached() {

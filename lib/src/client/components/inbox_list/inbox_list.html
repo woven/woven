@@ -5,6 +5,7 @@
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
+    <div id="content-container">
     <template if="{{app.community.alias == 'iiipoints'}}">
       <core-item class="item cta">
         <div class="cta-container" vertical layout>
@@ -43,6 +44,7 @@
         </div>
       </core-item>
     </template>
+    </div>
   </template>
   <script type="application/dart" src="inbox_list.dart"></script>
 </polymer-element>
