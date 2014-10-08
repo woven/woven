@@ -56,6 +56,18 @@ class App {
     print("Server started.");
 
     server.listen((HttpRequest request) {
+
+      // Some redirects if coming from related domains.
+      if (request.uri.host == "mycommunity.org") {
+        request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: request.uri.path));
+        return;
+      }
+
+      if (request.uri.host == "miamitech.org") {
+        request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: '/miamitech'));
+        return;
+      }
+
       // Rewrite URLs from relative to absolute so URLs
       // like /item/whatever properly load the app.
       // See http://goo.gl/Y5ERIY
