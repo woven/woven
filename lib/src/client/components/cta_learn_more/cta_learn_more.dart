@@ -26,7 +26,7 @@ class LearnMoreCta extends PolymerElement {
   }
 
   animateRandomWords() {
-    List words = ['changemakers', 'community organizers', 'lovers', 'doers', 'movers and shakers',
+    List words = ['changemakers', 'community organizers', 'movers and shakers',
     'collaborators', 'the crazy ones', 'makers', 'builders', 'world changers', 'we vs. me', 'repairing the world',
     'collective action', 'collaborative networking'];
     words.shuffle(new Random());
