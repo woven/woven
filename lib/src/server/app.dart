@@ -56,14 +56,13 @@ class App {
     print("Server started.");
 
     server.listen((HttpRequest request) {
-      print(request.uri.host);
       // Some redirects if coming from related domains.
-      if (request.uri.host == "mycommunity.org") {
+      if (request.headers.host == "mycommunity.org") {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: request.uri.path));
         return;
       }
 
-      if (request.uri.host == "miamitech.org") {
+      if (request.headers.host == "miamitech.org") {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: '/miamitech'));
         return;
       }
