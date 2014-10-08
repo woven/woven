@@ -56,7 +56,7 @@ class App {
     print("Server started.");
 
     server.listen((HttpRequest request) {
-
+      print(request.uri.host);
       // Some redirects if coming from related domains.
       if (request.uri.host == "mycommunity.org") {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: request.uri.path));
