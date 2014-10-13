@@ -13,7 +13,7 @@ import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:core_elements/core_header_panel.dart';
 
 /**
- * The InboxList class is for the list of inbox items, which is pulled from Firebase.
+ * A list of items.
  */
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
@@ -142,7 +142,7 @@ class InboxList extends PolymerElement with Observable {
     subscriptions = [];
 
     subscriptions.add(scroll.onScroll.listen((_) {
-//      if (viewModel.reloadingContent == false) viewModel.paginate();
+      if (viewModel.reloadingContent == false) viewModel.paginate();
     }));
   }
 

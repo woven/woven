@@ -6,11 +6,13 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
 
 class InboxViewModel extends Observable {
   final App app;
   final List items = toObservable([]);
   final String firebaseLocation = config['datastore']['firebaseLocation'];
+  var reloadingContent = false;
 
   InboxViewModel(this.app) {
     loadItemsForCommunity();
@@ -232,6 +234,14 @@ class InboxViewModel extends Observable {
       } else {
         item['liked'] = false;
       }
+    });
+  }
+
+  void paginate() {
+    reloadingContent = true;
+    print("Scroll, baby.");
+    new Timer(new Duration(seconds: 1), () {
+      reloadingContent = false;
     });
   }
 }

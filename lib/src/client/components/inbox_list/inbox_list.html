@@ -15,7 +15,7 @@
         </div>
       </core-item>
     </template>
-    <template repeat="{{item in viewModel.inboxViewModel.items}}">
+    <template repeat="{{item in viewModel.items}}">
       <core-item class="item" on-click="{{selectItem}}" data-id="{{item['id']}}">
         <div class="item-container" horizontal layout>
           <div class="item-col1" vertical layout>
