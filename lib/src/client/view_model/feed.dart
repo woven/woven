@@ -11,8 +11,9 @@ class FeedViewModel extends Observable {
   final App app;
   final List items = toObservable([]);
   final f = new db.Firebase(config['datastore']['firebaseLocation']);
-  int limit = 30;
+  int limit = 10;
   bool reloadingContent = false;
+  String lastItem = "";
 
   FeedViewModel(this.app) {
     getItems();
@@ -24,7 +25,10 @@ class FeedViewModel extends Observable {
   void getItems() {
     var itemsRef = f.child('/items_by_community/' + app.community.alias);
 
-    itemsRef = itemsRef.limit(limit);
+    print(lastItem);
+    itemsRef = itemsRef
+      ..startAt(name: "-JYlP6GWF3fqiNaYZW3A")
+      ..limit(limit);
 
     // Get the list of items, and listen for new ones.
     itemsRef.onChildAdded.listen((e) {
@@ -48,6 +52,7 @@ class FeedViewModel extends Observable {
 
       // Use the Firebase snapshot ID as our ID.
       item['id'] = e.snapshot.name();
+      lastItem = e.snapshot.name();
 
       // Insert each new item into the list.
       items.add(toObservable(item));
@@ -219,10 +224,11 @@ class FeedViewModel extends Observable {
   }
 
   void paginate() {
+    print(lastItem);
     reloadingContent = true;
     print("Scroll, baby!");
-    new Timer(new Duration(seconds: 1), () {
-      reloadingContent = false;
-    });
+    limit += 10;
+    getItems();
+    reloadingContent = false;
   }
 }
