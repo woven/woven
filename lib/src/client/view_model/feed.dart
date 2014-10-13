@@ -1,39 +1,33 @@
-library inbox_view_model;
+library feed_view_model;
 
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:intl/intl.dart';
 import 'dart:async';
 
-class InboxViewModel extends Observable {
+class FeedViewModel extends Observable {
   final App app;
   final List items = toObservable([]);
-  final String firebaseLocation = config['datastore']['firebaseLocation'];
-  var reloadingContent = false;
+  final f = new db.Firebase(config['datastore']['firebaseLocation']);
+  int limit = 30;
+  bool reloadingContent = false;
 
-  InboxViewModel(this.app) {
-    loadItemsForCommunity();
+  FeedViewModel(this.app) {
+    getItems();
   }
 
   /**
-   * Load the items and listen for changes.
+   * Load the items.
    */
-  void loadItemsForCommunity() {
-    var f = new db.Firebase(firebaseLocation);
-    // TODO: Remove the limit.
-    // Special case for no limit on III Points community. TODO: Remove later.
-    var itemsByCommunityRef;
-    if (app.community.alias == "iiipoints") {
-      itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias);
-    } else {
-      itemsByCommunityRef = f.child('/items_by_community/' + app.community.alias).limit(20);
-    }
+  void getItems() {
+    var itemsRef = f.child('/items_by_community/' + app.community.alias);
+
+    itemsRef = itemsRef.limit(limit);
 
     // Get the list of items, and listen for new ones.
-    itemsByCommunityRef.onChildAdded.listen((e) {
+    itemsRef.onChildAdded.listen((e) {
       var item = toObservable(e.snapshot.val());
 
       // If no updated date, use the created date.
@@ -52,20 +46,14 @@ class InboxViewModel extends Observable {
         default:
       }
 
-      // Use the ID from Firebase as our ID.
-      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location".
+      // Use the Firebase snapshot ID as our ID.
       item['id'] = e.snapshot.name();
 
       // Insert each new item into the list.
       items.add(toObservable(item));
 
-      if (app.community.alias == "iiipoints") {
-        // Sort the list by the item's updatedDate.
-        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
-      } else {
-        // Sort the list by the item's updatedDate.
-        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-      }
+      // Sort the list by the item's updatedDate.
+      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
       // Listen for realtime changes to the star count.
       f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
@@ -78,8 +66,8 @@ class InboxViewModel extends Observable {
       });
 
       if (app.user != null) {
-        var starredItemsRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/items/' + item['id']);
-        var likedItemsRef = new db.Firebase(firebaseLocation + '/liked_by_user/' + app.user.username + '/items/' + item['id']);
+        var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+        var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
         starredItemsRef.onValue.listen((e) {
           item['starred'] = e.snapshot.val() != null;
         });
@@ -90,11 +78,10 @@ class InboxViewModel extends Observable {
         item['starred'] = false;
         item['liked'] = false;
       }
-
     });
 
     // When an item changes, let's update it.
-    itemsByCommunityRef.onChildChanged.listen((e) {
+    itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name());
       Map newData = e.snapshot.val();
 
@@ -108,10 +95,6 @@ class InboxViewModel extends Observable {
 
       items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
     });
-
-//    loadUserStarredItemInformation();
-//    loadUserLikedItemInformation();
-
   }
 
   void toggleItemStar(id) {
@@ -119,9 +102,8 @@ class InboxViewModel extends Observable {
 
     var item = items.firstWhere((i) => i['id'] == id);
 
-    var firebaseRoot = new db.Firebase(firebaseLocation);
-    var starredItemRef = firebaseRoot.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
-    var itemRef = firebaseRoot.child('/items/' + item['id']);
+    var starredItemRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+    var itemRef = f.child('/items/' + item['id']);
 
     if (item['starred']) {
       // If it's starred, time to unstar it.
@@ -140,7 +122,7 @@ class InboxViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).remove();
     } else {
       // If it's not starred, time to star it.
       item['starred'] = true;
@@ -158,7 +140,7 @@ class InboxViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).set(true);
     }
   }
 
@@ -167,9 +149,8 @@ class InboxViewModel extends Observable {
 
     var item = items.firstWhere((i) => i['id'] == id);
 
-    var firebaseRoot = new db.Firebase(firebaseLocation);
-    var starredItemRef = firebaseRoot.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
-    var itemRef = firebaseRoot.child('/items/' + item['id']);
+    var starredItemRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+    var itemRef = f.child('/items/' + item['id']);
 
     if (item['liked']) {
       // If it's starred, time to unstar it.
@@ -188,7 +169,7 @@ class InboxViewModel extends Observable {
       });
 
       // Update the list of users who liked.
-      firebaseRoot.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).remove();
     } else {
       // If it's not starred, time to star it.
       item['liked'] = true;
@@ -206,14 +187,14 @@ class InboxViewModel extends Observable {
       });
 
       // Update the list of users who liked.
-      firebaseRoot.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
     }
   }
 
   void loadUserStarredItemInformation() {
     items.forEach((item) {
       if (app.user != null) {
-        var starredItemsRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/items/' + item['id']);
+        var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
         starredItemsRef.onValue.listen((e) {
           item['starred'] = e.snapshot.val() != null;
         });
@@ -227,7 +208,7 @@ class InboxViewModel extends Observable {
   void loadUserLikedItemInformation() {
     items.forEach((item) {
       if (app.user != null) {
-        var starredItemsRef = new db.Firebase(firebaseLocation + '/liked_by_user/' + app.user.username + '/items/' + item['id']);
+        var starredItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
         starredItemsRef.onValue.listen((e) {
           item['liked'] = e.snapshot.val() != null;
         });
@@ -239,7 +220,7 @@ class InboxViewModel extends Observable {
 
   void paginate() {
     reloadingContent = true;
-    print("Scroll, baby.");
+    print("Scroll, baby!");
     new Timer(new Duration(seconds: 1), () {
       reloadingContent = false;
     });

@@ -6,7 +6,7 @@ import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/client/view_model/inbox.dart';
+import 'package:woven/src/client/view_model/feed.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
@@ -18,7 +18,7 @@ import 'package:core_elements/core_header_panel.dart';
 @CustomTag('inbox-list')
 class InboxList extends PolymerElement with Observable {
   @published App app;
-  @published InboxViewModel viewModel;
+  @published FeedViewModel viewModel;
 
   List<StreamSubscription> subscriptions;
 

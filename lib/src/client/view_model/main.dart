@@ -5,7 +5,7 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-import 'inbox.dart';
+import 'feed.dart';
 import 'item.dart';
 import 'list.dart';
 
@@ -17,7 +17,7 @@ class MainViewModel extends Observable {
   final List communities = toObservable([]);
   final List users = toObservable([]);
   final String firebaseLocation = config['datastore']['firebaseLocation'];
-  final Map inboxViewModels = {};
+  final Map feedViewModels = {};
   final Map itemViewModels = {};
   var starredViewModelForUser = null;
 
@@ -58,16 +58,16 @@ class MainViewModel extends Observable {
   }
 
 // Get the view model for the current inbox.
-  @observable InboxViewModel get inboxViewModel {
+  @observable FeedViewModel get feedViewModel {
     if (app.community == null) return null;
     var id = app.community.alias;
     if (id == null) return null; // No item, no view model to use.
-    if (!inboxViewModels.containsKey(id)) {
+    if (!feedViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
-      var vm = new InboxViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
-      inboxViewModels[id] = vm; // Store it.
+      var vm = new FeedViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
+      feedViewModels[id] = vm; // Store it.
     }
-    return inboxViewModels[id];
+    return feedViewModels[id];
   }
 
   // Get the view model for the user's starred items.
@@ -229,8 +229,8 @@ class MainViewModel extends Observable {
     }
 
     if (app.community != null) {
-      inboxViewModel.loadUserStarredItemInformation();
-      inboxViewModel.loadUserLikedItemInformation();
+      feedViewModel.loadUserStarredItemInformation();
+      feedViewModel.loadUserLikedItemInformation();
     }
 
     if (app.user != null) {

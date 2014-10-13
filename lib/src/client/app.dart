@@ -15,7 +15,7 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/components/page/woven_app/woven_app.dart';
 import 'package:woven/src/client/view_model/main.dart';
-import 'package:woven/src/client/view_model/inbox.dart';
+import 'package:woven/src/client/view_model/feed.dart';
 
 class App extends Observable {
   @observable var selectedItem;
