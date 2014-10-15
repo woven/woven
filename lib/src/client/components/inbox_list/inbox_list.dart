@@ -92,20 +92,20 @@ class InboxList extends PolymerElement with Observable {
 //
 //  }
 
-    MoveCommunityItemsScript() {
-      var f = new db.Firebase(config['datastore']['firebaseLocation']);
-      f.child('/items').onChildAdded.listen((e) {
-        var item = e.snapshot.val();
-        // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-        // So we'll add that to our local item list.
-        var itemName = e.snapshot.name();
+  MoveCommunityItemsScript() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    f.child('/items').onChildAdded.listen((e) {
+      var item = e.snapshot.val();
+      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+      // So we'll add that to our local item list.
+      var itemName = e.snapshot.name();
 
-        f.child('items/' + itemName + '/communities').onChildAdded.listen((e) {
-          f.child('/items_by_community/' + e.snapshot.name() + '/' + itemName).set(item);
+      f.child('items/' + itemName + '/communities').onChildAdded.listen((e) {
+        f.child('/items_by_community/' + e.snapshot.name() + '/' + itemName).set(item);
 
 //          print("${e.snapshot.name()}: ${e.snapshot.val()}");
 
-        });
+      });
 
 //        if (item['communities'] != null) {
 //          if item['communities'][
@@ -121,16 +121,30 @@ class InboxList extends PolymerElement with Observable {
 //
 //        set(dbRef);
 
-      });
-    }
+    });
+  }
 
+  scriptTryPriority() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+//    List list = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
+//    list.forEach((e) {
+//      var ref = f.child('/priority_test').push();
+//      ref.setWithPriority({'test':'should be second'}, 1);
+//    });
 
+    f.child('/priority_test').startAt(priority: '', name: '-JZEktuV-UJ46vdj7qAr').limit(10).onChildAdded.listen((e) {
+      print(e.snapshot.val());
+      print(e.snapshot.name());
+    });
+  }
 
   attached() {
     print("+InboxList");
     app.pageTitle = "Everything";
 //    MoveCommunityItemsScript();
     //CreateCommunityItemsScript();
+
+//    scriptTryPriority();
 
     CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
     HtmlElement scroller = el.scroller;
@@ -142,7 +156,7 @@ class InboxList extends PolymerElement with Observable {
     subscriptions = [];
 
     subscriptions.add(scroll.onScroll.listen((_) {
-      if (viewModel.reloadingContent == false) viewModel.paginate();
+      if (!viewModel.reloadingContent) viewModel.paginate();
     }));
   }
 

@@ -23,12 +23,15 @@ class FeedViewModel extends Observable {
    * Load the items.
    */
   void getItems() {
-    var itemsRef = f.child('/items_by_community/' + app.community.alias);
+    print("getItems");
+    // TODO: Remove this hack. Clears list to replace with larger result set per paginate().
+    items.clear();
 
-    print(lastItem);
-    itemsRef = itemsRef
-      ..startAt(name: "-JYlP6GWF3fqiNaYZW3A")
-      ..limit(limit);
+    var itemsRef = f.child('/items_by_community/' + app.community.alias).limit(limit);
+
+//    print(lastItem);
+//    itemsRef = itemsRef
+//      ..limit(limit);
 
     // Get the list of items, and listen for new ones.
     itemsRef.onChildAdded.listen((e) {
@@ -99,6 +102,13 @@ class FeedViewModel extends Observable {
       });
 
       items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+    }, onDone: getItemsIsDone());
+  }
+
+  void getItemsIsDone() {
+    new Timer(new Duration(seconds: 1), () {
+      print("Done");
+      reloadingContent = false;
     });
   }
 
@@ -224,11 +234,8 @@ class FeedViewModel extends Observable {
   }
 
   void paginate() {
-    print(lastItem);
     reloadingContent = true;
-    print("Scroll, baby!");
     limit += 10;
     getItems();
-    reloadingContent = false;
   }
 }

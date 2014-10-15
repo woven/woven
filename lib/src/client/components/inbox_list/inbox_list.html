@@ -1,20 +1,44 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_list_dart.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
     <div id="content-container">
-    <template if="{{app.community.alias == 'iiipoints'}}">
-      <core-item class="item cta">
-        <div class="cta-container" vertical layout>
-          <div class="cta-col1">
-            <img src="/static/images/iiipoints_header.png">
-          </div>
-        </div>
-      </core-item>
-    </template>
+      <!--<core-list-dart id="list" data="{{data}}" height="80">-->
+        <!--<template>-->
+          <!--<core-item class="item" on-click="{{selectItem}}" data-id="{{id}}">-->
+            <!--<div class="item-container" horizontal layout>-->
+              <!--<div class="item-col1" vertical layout>-->
+                <!--<core-icon icon="{{app.user != null && liked == true ? 'favorite' : 'favorite-outline'}}"-->
+                           <!--id="icon-fav" on-click="{{toggleLike}}"-->
+                           <!--class="{{app.user != null && liked == true ? 'selected' : ''}}"-->
+                           <!--data-id="{{id}}"></core-icon>-->
+                <!--<span class="item-count">{{like_count}}</span>-->
+                <!--<core-icon icon="{{app.user != null && starred == true ? 'star' : 'star-outline'}}"-->
+                           <!--id="icon-star" on-click="{{toggleStar}}"-->
+                           <!--class="{{app.user != null && starred == true ? 'selected' : ''}}"-->
+                           <!--data-id="{{id}}"></core-icon>-->
+                <!--<span class="item-count">{{star_count]}}</span>-->
+              <!--</div>-->
+              <!--<div class="item-col2" flex>-->
+                <!--<div class="item-type">{{(type != null) ? type : 'other'}}</div>-->
+                <!--<div class="item-subject">{{subject}}</div>-->
+                <!--<div class="item-body" flex><div class="event-date"><live-date-time value="{{startDateTime}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>-->
+              <!--</div>-->
+              <!--<div class="item-col3">-->
+                <!--<div class="item-users">{{user}}</div>-->
+                <!--<div class="item-updated">-->
+                  <!--<live-date-time value="{{updatedDate}}" formatter="{{formatItemDate}}"></live-date-time>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</core-item>-->
+        <!--</template>-->
+      <!--</core-list-dart>-->
+
     <template repeat="{{item in viewModel.items}}">
       <core-item class="item" on-click="{{selectItem}}" data-id="{{item['id']}}">
         <div class="item-container" horizontal layout>
