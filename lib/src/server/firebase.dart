@@ -7,9 +7,8 @@ import 'package:http/http.dart' as http;
 import '../../config/config.dart';
 
 class Firebase {
-
-  //
   /**
+   *
    * POST a new object to the location.
    *
    * Equivalent to a .push() in the Firebase client API.
@@ -25,12 +24,11 @@ class Firebase {
       if (message['name'] != null) {
         return message['name'];
       }
-
-//      print("We POSTed something:\n$message");
     });
   }
 
   /**
+   *
    * PUT and replace the object at the location.
    *
    * Equivalent to a .set() in the Firebase client API.
@@ -43,11 +41,15 @@ class Firebase {
       if (message['error'] != null) {
         throw 'Firebase returned an error.\nPath: $path\nData: $data\nResponse: ${message["error"]}';
       }
-
-//      print("We PUT something:\n$message");
     });
   }
 
+  /**
+   *
+   * PUT and replace the object at the location.
+   *
+   * Equivalent to a .set() in the Firebase client API.
+   */
   static Future<Map> get(String path) {
     return http.get('${config['datastore']['firebaseLocation']}$path').then((response) {
       if (response.body != 'null') {

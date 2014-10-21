@@ -62,6 +62,10 @@ core-icon {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+  /*height: 200px;*/
+  /*width: 250px;*/
+  /*margin:auto;*/
 }
 
 .item:hover {
@@ -163,4 +167,14 @@ core-icon {
   max-width: 100%;
   height: auto;
   width: auto;
+}
+
+#loading-indicator {
+  text-align: center;
+  width: 100%;
+  font-size: 24px;
+  font-family: inherit;
+  color: #999;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

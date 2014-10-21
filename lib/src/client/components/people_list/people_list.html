@@ -5,25 +5,29 @@
 <polymer-element name="people-list">
   <template>
     <link rel="stylesheet" href="people_list.css">
-    <template repeat="{{user in viewModel.users}}">
-      <core-item class="item" on-tap="{{selectUser}}" data-user="{{user['username']}}">
-        <div class="item-container" horizontal layout>
-          <div class="item-col1" vertical layout>
-            <div class="user-photo"></div>
-          </div>
-          <div class="item-col2" flex>
-            <div class="user-username">{{ user['username'] }}</div>
-            <div class="user-name" flex>{{ user['firstName'] }} {{ user['lastName'] }}</div>
-          </div>
-          <div class="item-col3">
-            <div class="item-updated">
-              Joined
-            <live-date-time value="{{user['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+    <div id="content-container">
+      <template repeat="{{user in viewModel.users}}">
+        <core-item class="item" on-tap="{{selectUser}}" data-user="{{user['username']}}">
+          <div class="item-container" horizontal layout>
+            <div class="item-col1" vertical layout>
+              <div class="user-photo"></div>
+            </div>
+            <div class="item-col2" flex>
+              <div class="user-username">{{ user['username'] }}</div>
+              <div class="user-name" flex>{{ user['firstName'] }} {{ user['lastName'] }}</div>
+            </div>
+            <div class="item-col3">
+              <div class="item-updated">
+                Joined
+              <live-date-time value="{{user['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+              </div>
             </div>
           </div>
-        </div>
-      </core-item>
-    </template>
+        </core-item>
+      </template>
+      <!--<template if="{{viewModel.reachedEnd == false}}"><div id="loading-indicator">Fetching...</div></template>-->
+      <!--<template if="{{viewModel.reachedEnd == true}}"><div id="loading-indicator">You've reached the end of this universe.</div></template>-->
+    </div>
   </template>
   <script type="application/dart" src="people_list.dart"></script>
 </polymer-element>

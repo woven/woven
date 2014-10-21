@@ -21,6 +21,10 @@ class MainViewModel extends Observable {
   final Map itemViewModels = {};
   var starredViewModelForUser = null;
 
+  int limit =20;
+  @observable bool reloadingContent = false;
+  @observable bool reachedEnd = false;
+
   MainViewModel(this.app) {
     loadCommunities();
     loadUsers();
@@ -195,7 +199,10 @@ class MainViewModel extends Observable {
    * TODO: As the list of users grow, we need to limit and paginate.
    */
   loadUsers() {
-    var f = new db.Firebase(firebaseLocation + '/users');
+    // TODO: Remove this hack. Clears list to replace with larger result set per paginate().
+    users.clear();
+
+    var f = new db.Firebase(firebaseLocation + '/users').limit(limit);
 
     f.onChildAdded.listen((e) {
       var user = e.snapshot.val();
@@ -215,7 +222,11 @@ class MainViewModel extends Observable {
       // Insert each new item into the list.
       users.add(user);
       users.sort((m1, m2) => m2["createdDate"].compareTo(m1["createdDate"]));
-    });
+    }, onDone: loadingDone());
+  }
+
+  void loadingDone() {
+    reloadingContent = false;
   }
 
   /**
@@ -250,5 +261,16 @@ class MainViewModel extends Observable {
         community['starred'] = false;
       }
     });
+  }
+
+  void paginateUsers() {
+    if (users.length < limit) {
+      reachedEnd = true;
+      return;
+    }
+
+    limit += 20;
+    reloadingContent = true;
+    loadUsers();
   }
 }

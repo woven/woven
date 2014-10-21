@@ -11,9 +11,9 @@ class FeedViewModel extends Observable {
   final App app;
   final List items = toObservable([]);
   final f = new db.Firebase(config['datastore']['firebaseLocation']);
-  int limit = 10;
-  bool reloadingContent = false;
-  String lastItem = "";
+  int limit = 20;
+  @observable bool reloadingContent = false;
+  @observable bool reachedEnd = false;
 
   FeedViewModel(this.app) {
     getItems();
@@ -23,7 +23,6 @@ class FeedViewModel extends Observable {
    * Load the items.
    */
   void getItems() {
-    print("getItems");
     // TODO: Remove this hack. Clears list to replace with larger result set per paginate().
     items.clear();
 
@@ -36,6 +35,10 @@ class FeedViewModel extends Observable {
     // Get the list of items, and listen for new ones.
     itemsRef.onChildAdded.listen((e) {
       var item = toObservable(e.snapshot.val());
+
+      print('PRIORITY: ' + e.snapshot.getPriority());
+
+
 
       // If no updated date, use the created date.
       if (item['updatedDate'] == null) {
@@ -55,7 +58,6 @@ class FeedViewModel extends Observable {
 
       // Use the Firebase snapshot ID as our ID.
       item['id'] = e.snapshot.name();
-      lastItem = e.snapshot.name();
 
       // Insert each new item into the list.
       items.add(toObservable(item));
@@ -86,6 +88,10 @@ class FeedViewModel extends Observable {
         item['starred'] = false;
         item['liked'] = false;
       }
+
+      print(items.length);
+      print(limit);
+      print("=======");
     });
 
     // When an item changes, let's update it.
@@ -102,14 +108,14 @@ class FeedViewModel extends Observable {
       });
 
       items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-    }, onDone: getItemsIsDone());
+
+    });
   }
 
-  void getItemsIsDone() {
-    new Timer(new Duration(seconds: 1), () {
-      print("Done");
-      reloadingContent = false;
-    });
+  void loadingDone() {
+//    if (items.length < limit) reachedEnd = true;
+
+    reloadingContent = false;
   }
 
   void toggleItemStar(id) {
@@ -234,8 +240,13 @@ class FeedViewModel extends Observable {
   }
 
   void paginate() {
+    if (items.length < limit) {
+      reachedEnd = true;
+      return;
+    }
+
+    limit += 20;
     reloadingContent = true;
-    limit += 10;
     getItems();
   }
 }

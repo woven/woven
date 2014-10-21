@@ -144,5 +144,14 @@ core-icon {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
 
+#loading-indicator {
+  text-align: center;
+  width: 100%;
+  font-size: 24px;
+  font-family: inherit;
+  color: #999;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

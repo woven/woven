@@ -126,38 +126,62 @@ class InboxList extends PolymerElement with Observable {
 
   scriptTryPriority() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
-//    List list = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
-//    list.forEach((e) {
-//      var ref = f.child('/priority_test').push();
-//      ref.setWithPriority({'test':'should be second'}, 1);
-//    });
+//    for (int i = 0; i < 30; i++) {
+//      var ref = f.child('/priority_test2').push();
+//      var now = new DateTime.now().toUtc();
+//      ref.setWithPriority({'createdDate': '$now'}, now.toString());
+//    }
 
-    f.child('/priority_test').startAt(priority: '', name: '-JZEktuV-UJ46vdj7qAr').limit(10).onChildAdded.listen((e) {
+    var priority = '2014-10-17 23:54:32.146Z';
+    f.child('/priority_test2').startAt(priority: priority).limit(10).onChildAdded.listen((e) {
       print(e.snapshot.val());
       print(e.snapshot.name());
+      print(e.snapshot.getPriority());
+      priority = e.snapshot.getPriority();
     });
+  }
+
+  scriptAddPriority() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+
+    var itemsRef = f.child('/items_by_community/' + app.community.alias);
+    var item;
+
+    itemsRef.onChildAdded.listen((e) {
+      item = e.snapshot.val();
+      // If no updated date, use the created date.
+      if (item['updatedDate'] == null) {
+        item['updatedDate'] = item['createdDate'];
+      }
+      f.child('/items_by_community/' + app.community.alias + '/' + e.snapshot.name())
+        .setPriority('${item['updatedDate']}');
+    });
+  }
+
+  /**
+   * Initializes the infinite scrolling ability.
+   */
+  initializeInfiniteScrolling() {
+    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
+    HtmlElement scroller = el.scroller;
+    HtmlElement element = $['content-container'];
+    var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
+
+    subscriptions = [];
+    subscriptions.add(scroll.onScroll.listen((_) {
+      if (!viewModel.reloadingContent) viewModel.paginate();
+    }));
   }
 
   attached() {
     print("+InboxList");
     app.pageTitle = "Everything";
+
+    initializeInfiniteScrolling();
+
 //    MoveCommunityItemsScript();
-    //CreateCommunityItemsScript();
-
-//    scriptTryPriority();
-
-    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
-    HtmlElement scroller = el.scroller;
-
-    HtmlElement element = $['content-container'];
-
-    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller);
-
-    subscriptions = [];
-
-    subscriptions.add(scroll.onScroll.listen((_) {
-      if (!viewModel.reloadingContent) viewModel.paginate();
-    }));
+//    CreateCommunityItemsScript();
+//    scriptAddPriority();
   }
 
   detached() {

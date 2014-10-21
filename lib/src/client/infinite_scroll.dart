@@ -27,7 +27,7 @@ class InfiniteScroll {
     onScroll = _controllerScroll.stream.asBroadcastStream();
 
     if (scroller == null) {
-      scroller = window.document.querySelector('.content-area');
+      Element scroller = window.document.querySelector('.content-area');
     }
 
     _scrollSubscription = scroller.onScroll.listen((Event e) => checkState());
