@@ -51,7 +51,7 @@ class ItemActivities extends PolymerElement {
     f.onChildAdded.listen((e) {
       var comment = e.snapshot.val();
       comment['createdDate'] = DateTime.parse(comment['createdDate']);
-      comment['id'] = e.snapshot.name();
+      comment['id'] = e.snapshot.name;
 
       // Insert each new item at top of list so the list is ascending.
       comments.insert(0, comment);
@@ -101,29 +101,49 @@ class ItemActivities extends PolymerElement {
       parent.update({
         'updatedDate': '$now'
       }).then((e) {
-        // Determine the communities this item is in,
-        // so we can be sure to update those copies too.
-        parent.child('/communities').onValue.listen((e) {
-          Map communitiesRef = e.snapshot.val();
-          if (communitiesRef != null) {
-            communitiesRef.keys.forEach((community) {
-              // Update the community's copy of the item.
-              root.child('/items_by_community/' + community + '/' + itemId).update({
-                  'updatedDate': '$now'
+        var type = '';
+
+        // Get the item's type.
+        parent.child('/type').once('value').then((snapshot) {
+          type = snapshot.val();
+        }).then((e) {
+          // Determine the communities this item is in,
+          // so we can be sure to update those copies too.
+          parent.child('/communities').onValue.listen((e) {
+            Map communitiesRef = e.snapshot.val();
+            if (communitiesRef != null) {
+              communitiesRef.keys.forEach((community) {
+                // Update the community's copy of the item.
+                root.child('/items_by_community/' + community + '/' + itemId).update({
+                    'updatedDate': '$now'
+                });
+                root.child('/items_by_community_by_type/' + community + '/$type/' + itemId).update({
+                    'updatedDate': '$now'
+                }).then((e) {
+                  print("Done.");
+                });
+
+                // Update the priority sorting of the item to reflect updated date.
+                DateTime time = DateTime.parse("$now");
+                var epochTime = time.millisecondsSinceEpoch;
+                root.child('/items_by_community/' + community + '/' + itemId).setPriority(-epochTime);
+                root.child('/items_by_community_by_type/' + community + '/$type/' + itemId).setPriority(-epochTime);
+                root.child('/items/' + itemId).setPriority(-epochTime);
+
+                // Update the community itself.
+                root.child('/communities/' + community).update({
+                    'updatedDate': '$now'
+                });
               });
-              // Update the community itself.
-              root.child('/communities/' + community).update({
-                  'updatedDate': '$now'
-              });
-            });
-          }
+            }
+          });
         });
       });
     }
 
     updateParentItem(parent);
 
-    var commentId = id.name();
+    var commentId = id.name;
     // Send a notification email to the item's author.
     HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$commentId");
 

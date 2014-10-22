@@ -98,10 +98,10 @@ class InboxList extends PolymerElement with Observable {
       var item = e.snapshot.val();
       // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
       // So we'll add that to our local item list.
-      var itemName = e.snapshot.name();
+      var itemName = e.snapshot.name;
 
       f.child('items/' + itemName + '/communities').onChildAdded.listen((e) {
-        f.child('/items_by_community/' + e.snapshot.name() + '/' + itemName).set(item);
+        f.child('/items_by_community/' + e.snapshot.name + '/' + itemName).set(item);
 
 //          print("${e.snapshot.name()}: ${e.snapshot.val()}");
 
@@ -135,15 +135,14 @@ class InboxList extends PolymerElement with Observable {
     var priority = '2014-10-17 23:54:32.146Z';
     f.child('/priority_test2').startAt(priority: priority).limit(10).onChildAdded.listen((e) {
       print(e.snapshot.val());
-      print(e.snapshot.name());
+      print(e.snapshot.name);
       print(e.snapshot.getPriority());
       priority = e.snapshot.getPriority();
     });
   }
 
-  scriptAddPriority() {
+  scriptAddPriorityOnItemsByCommunity() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
-
     var itemsRef = f.child('/items_by_community/' + app.community.alias);
     var item;
 
@@ -153,8 +152,54 @@ class InboxList extends PolymerElement with Observable {
       if (item['updatedDate'] == null) {
         item['updatedDate'] = item['createdDate'];
       }
-      f.child('/items_by_community/' + app.community.alias + '/' + e.snapshot.name())
-        .setPriority('${item['updatedDate']}');
+
+      DateTime time = DateTime.parse(item['updatedDate']);
+      var epochTime = time.millisecondsSinceEpoch;
+      f.child('/items_by_community/' + app.community.alias + '/' + e.snapshot.name)
+        .setPriority(-epochTime);
+
+      print(e.snapshot.name);
+    });
+  }
+
+  scriptAddPriorityOnItems() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    var itemsRef = f.child('/items');
+    var item;
+
+    itemsRef.onChildAdded.listen((e) {
+      item = e.snapshot.val();
+      // If no updated date, use the created date.
+      if (item['updatedDate'] == null) {
+        item['updatedDate'] = item['createdDate'];
+      }
+
+      DateTime time = DateTime.parse(item['updatedDate']);
+      var epochTime = time.millisecondsSinceEpoch;
+      f.child('/items/' + e.snapshot.name)
+      .setPriority(-epochTime);
+    });
+  }
+
+  scriptMakeItemsByCommunityByType() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    var itemsRef = f.child('/items_by_community/' + app.community.alias);
+    var item;
+
+    itemsRef.onChildAdded.listen((e) {
+      item = e.snapshot.val();
+
+      // If no updated date, use the created date.
+      if (item['updatedDate'] == null) {
+        item['updatedDate'] = item['createdDate'];
+      }
+
+      DateTime time = DateTime.parse(item['updatedDate']);
+      var epochTime = time.millisecondsSinceEpoch;
+      var type = item['type'];
+
+      f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.name)
+      .setWithPriority(item, -epochTime);
     });
   }
 
@@ -181,7 +226,9 @@ class InboxList extends PolymerElement with Observable {
 
 //    MoveCommunityItemsScript();
 //    CreateCommunityItemsScript();
-//    scriptAddPriority();
+//    scriptAddPriorityOnItems();
+//    scriptAddPriorityOnItemsByCommunity();
+//    scriptMakeItemsByCommunityByType();
   }
 
   detached() {

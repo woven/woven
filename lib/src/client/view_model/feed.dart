@@ -14,6 +14,7 @@ class FeedViewModel extends Observable {
   int limit = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
+  var snapshotPriority = null;
 
   FeedViewModel(this.app) {
     getItems();
@@ -22,23 +23,13 @@ class FeedViewModel extends Observable {
   /**
    * Load the items.
    */
-  void getItems() {
-    // TODO: Remove this hack. Clears list to replace with larger result set per paginate().
-    items.clear();
-
-    var itemsRef = f.child('/items_by_community/' + app.community.alias).limit(limit);
-
-//    print(lastItem);
-//    itemsRef = itemsRef
-//      ..limit(limit);
+  getItems() {
+    print("getItems() is executing... Priority: $snapshotPriority");
+    var itemsRef = f.child('/items_by_community/' + app.community.alias).startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(limit);
 
     // Get the list of items, and listen for new ones.
     itemsRef.onChildAdded.listen((e) {
       var item = toObservable(e.snapshot.val());
-
-      print('PRIORITY: ' + e.snapshot.getPriority());
-
-
 
       // If no updated date, use the created date.
       if (item['updatedDate'] == null) {
@@ -57,13 +48,13 @@ class FeedViewModel extends Observable {
       }
 
       // Use the Firebase snapshot ID as our ID.
-      item['id'] = e.snapshot.name();
+      item['id'] = e.snapshot.name;
 
       // Insert each new item into the list.
       items.add(toObservable(item));
 
       // Sort the list by the item's updatedDate.
-      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+//      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
       // Listen for realtime changes to the star count.
       f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
@@ -89,14 +80,13 @@ class FeedViewModel extends Observable {
         item['liked'] = false;
       }
 
-      print(items.length);
-      print(limit);
-      print("=======");
+      // Track the snapshot's priority so we can paginate from the last one.
+      snapshotPriority = e.snapshot.getPriority();
     });
 
     // When an item changes, let's update it.
     itemsRef.onChildChanged.listen((e) {
-      Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name());
+      Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
 
       newData.forEach((k, v) {
@@ -240,13 +230,14 @@ class FeedViewModel extends Observable {
   }
 
   void paginate() {
-    if (items.length < limit) {
-      reachedEnd = true;
-      return;
-    }
+//    if (items.length < limit) {
+//      reachedEnd = true;
+//      return;
+//    }
 
-    limit += 20;
-    reloadingContent = true;
+//    reloadingContent = true;
     getItems();
+
+//    limit += 20;
   }
 }

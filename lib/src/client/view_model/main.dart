@@ -101,7 +101,7 @@ class MainViewModel extends Observable {
       if (community['disabled'] == true) return;
 
       // Use the ID from Firebase as our ID.
-      community['id'] = e.snapshot.name();
+      community['id'] = e.snapshot.name;
 
       // Set some defaults.
       if (community['updatedDate'] == null) community['updatedDate'] = community['createdDate'];
@@ -130,7 +130,7 @@ class MainViewModel extends Observable {
 
     // When a community changes, let's update it.
     communitiesRef.onChildChanged.listen((e) {
-      Map currentData = communities.firstWhere((i) => i['id'] == e.snapshot.name());
+      Map currentData = communities.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
 
       newData.forEach((k, v) {

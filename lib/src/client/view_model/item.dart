@@ -51,7 +51,7 @@ class ItemViewModel extends Observable {
 
         // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
         // So we'll add that to our local item list.
-        item['id'] = e.snapshot.name();
+        item['id'] = e.snapshot.name;
 
         // Listen for realtime changes to the star count.
         f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {

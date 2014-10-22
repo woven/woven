@@ -92,10 +92,16 @@ class AddStuff extends PolymerElement {
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
     Future setItem(db.Firebase itemRef) {
-      itemRef.set(encodedItem).then((e) {
-        var item = id.name();
+      // Use a priority so Firebase sorts. Use a negative so latest is at top.
+      // TODO: Beef this up in case items have same exact timestamp.
+      DateTime time = DateTime.parse("$now");
+      var priority = time.millisecondsSinceEpoch;
+
+      // Update the main item, then...
+      itemRef.setWithPriority(encodedItem, -priority).then((e) {
+        var item = id.name;
         root.child('/items_by_community/' + app.community.alias + '/' + item)
-          ..set(encodedItem);
+          ..setWithPriority(encodedItem, -priority);
         // Only in the main /items location, store a simple list of its parent communities.
         root.child('/items/' + item + '/communities/' + app.community.alias)
           ..set(true);
@@ -103,6 +109,10 @@ class AddStuff extends PolymerElement {
         root.child('/communities/' + app.community.alias).update({
             'updatedDate': '$now'
         });
+        // Store it by community, then by type, and sort it based on date.
+        root.child('/items_by_community_by_type/' + app.community.alias + '/$selectedType/' + e.snapshot.name)
+        .setWithPriority(item, -priority);
+
       });
     }
 
