@@ -15,6 +15,7 @@ class FeedViewModel extends Observable {
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
+  bool isFirstRun = true;
 
   FeedViewModel(this.app) {
     loadItemsByPage();
@@ -26,7 +27,9 @@ class FeedViewModel extends Observable {
   loadItemsByPage() {
     reloadingContent = true;
 
-    var itemsRef = f.child('/items_by_community/' + app.community.alias).startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
+    var itemsRef = f.child('/items_by_community/' + app.community.alias)
+      .startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
+
     int count = 0;
 
     // Get the list of items, and listen for new ones.
@@ -37,18 +40,27 @@ class FeedViewModel extends Observable {
         if (count > pageSize) return;
 
         // Insert each new item into the list.
+        // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
         items.add(toObservable(processItem(itemSnapshot)));
-
 
         // Track the snapshot's priority so we can paginate from the last one.
         snapshotPriority = itemSnapshot.getPriority();
+
+        // If this is the first item loaded, start listening for new items.
+        // By using the item's priority, we can listen only to newer items.
+        if (isFirstRun == true) {
+          listenForNewItems(snapshotPriority);
+          isFirstRun = false;
+        }
       });
 
+      // If we received less than we tried to load, we've reached the end.
       if (count < pageSize) reachedEnd = true;
       reloadingContent = false;
     });
 
-     // When an item changes, let's update it.
+    // When an item changes, let's update it.
+    // TODO: Does pagination mean we have multiple listeners for each page? Revisit.
     itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
@@ -60,6 +72,17 @@ class FeedViewModel extends Observable {
 
         currentData[k] = v;
       });
+    });
+  }
+
+  listenForNewItems(endAtPriority) {
+    // If this is the first item loaded, start listening for new items.
+    var itemsRef = f.child('/items_by_community/' + app.community.alias).endAt(priority: endAtPriority);
+    itemsRef.onChildAdded.listen((e) {
+      if (e.snapshot.getPriority() != endAtPriority) {
+        // Insert new items at the top of the list.
+        items.insert(0, toObservable(processItem(e.snapshot)));
+      }
     });
   }
 
