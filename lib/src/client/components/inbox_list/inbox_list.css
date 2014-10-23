@@ -47,8 +47,8 @@ core-icon {
 
 .item {
   padding: 6px 13px 6px 13px;
-  margin: 5px;
-  border-bottom-width: 1px;
+  margin: 10px;
+  border-bottom-width: 0px;
   border-bottom-style: solid;
   border-bottom-color: rgb(244, 244, 244);
   background-color: white;
@@ -63,9 +63,30 @@ core-icon {
   -ms-user-select: none;
   user-select: none;
 
-  /*height: 200px;*/
-  /*width: 250px;*/
-  /*margin:auto;*/
+  min-height: 100px;
+
+  /*margin: 10px auto 5px auto;*/
+  border-left: solid 6px #5c5c5c;
+}
+
+.item.event {
+  border-left-color: #03a9f4;
+}
+
+.item.idea {
+  border-left-color: #e040fb;
+}
+
+.item.offer {
+  border-left-color: #009688;
+}
+
+.item.ask {
+  border-left-color: #ffc107;
+}
+
+.item.announcement {
+  border-left-color: #ff6e40;
 }
 
 .item:hover {
@@ -79,12 +100,13 @@ core-icon {
   white-space: nowrap;
   margin-right: 5px;
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 1.3em;
   padding: 5px 0 0 0;
 }
 
 .item-body {
   color: #5c5c5c;
+  font-size: 1.1em;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
@@ -106,12 +128,33 @@ core-icon {
 }
 
 .item-type {
-  color: #5CA556;
+  color: #212121;
   text-transform: uppercase;
   margin-right: 3px;
   margin-bottom: 5px;
   border-radius: 3px;
-  font-size: 12px;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.item-type.event {
+  color: #03a9f4;
+}
+
+.item-type.idea {
+  color: #e040fb;
+}
+
+.item-type.offer {
+  color: #009688;
+}
+
+.item-type.ask {
+  color: #ffc107;
+}
+
+.item-type.announcement {
+  color: #ff6e40;
 }
 
 .item-col1 {
@@ -144,6 +187,7 @@ core-icon {
 .item-container {
   overflow: hidden;
   width: 100%;
+  min-height: 100px;
 }
 
 .event-date {

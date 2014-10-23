@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_overlay.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_header_panel.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_scroll_header_panel.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_drawer_panel.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_menu.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_item.html">
@@ -88,7 +89,7 @@
 
       </div>
 
-      <core-header-panel id="main-panel" main mode="seamed">
+      <core-scroll-header-panel id="main-panel" main mode="seamed">
 
         <core-toolbar id="toolbar-main">
           <template if="{{app.selectedPage != 1 || app.userCameFromInbox != true}}">
