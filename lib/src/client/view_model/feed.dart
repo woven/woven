@@ -2,7 +2,7 @@ library feed_view_model;
 
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart' as db;
+import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'dart:async';
@@ -10,81 +10,45 @@ import 'dart:async';
 class FeedViewModel extends Observable {
   final App app;
   final List items = toObservable([]);
-  final f = new db.Firebase(config['datastore']['firebaseLocation']);
-  int limit = 20;
+  final f = new Firebase(config['datastore']['firebaseLocation']);
+  int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
 
   FeedViewModel(this.app) {
-    getItems();
+    loadItemsByPage();
   }
 
   /**
-   * Load the items.
+   * Load more items pageSize at a time.
    */
-  getItems() {
-    print("getItems() is executing... Priority: $snapshotPriority");
-    var itemsRef = f.child('/items_by_community/' + app.community.alias).startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(limit);
+  loadItemsByPage() {
+    reloadingContent = true;
+
+    var itemsRef = f.child('/items_by_community/' + app.community.alias).startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
+    int count = 0;
 
     // Get the list of items, and listen for new ones.
-    itemsRef.onChildAdded.listen((e) {
-      var item = toObservable(e.snapshot.val());
+    itemsRef.once('value').then((snapshot) {
+      snapshot.forEach((itemSnapshot) {
+        count++;
+        // Don't process the extra item we tacked onto pageSize in the limit() above.
+        if (count > pageSize) return;
 
-      // If no updated date, use the created date.
-      if (item['updatedDate'] == null) {
-        item['updatedDate'] = item['createdDate'];
-      }
+        // Insert each new item into the list.
+        items.add(toObservable(processItem(itemSnapshot)));
 
-      // The live-date-time element needs parsed dates.
-      item['updatedDate'] = DateTime.parse(item['updatedDate']);
-      item['createdDate'] = DateTime.parse(item['createdDate']);
 
-      switch (item['type']) {
-        case 'event':
-          if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
-          break;
-        default:
-      }
-
-      // Use the Firebase snapshot ID as our ID.
-      item['id'] = e.snapshot.name;
-
-      // Insert each new item into the list.
-      items.add(toObservable(item));
-
-      // Sort the list by the item's updatedDate.
-//      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-
-      // Listen for realtime changes to the star count.
-      f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-        item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+        // Track the snapshot's priority so we can paginate from the last one.
+        snapshotPriority = itemSnapshot.getPriority();
       });
 
-      // Listen for realtime changes to the like count.
-      f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
-        item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-      });
-
-      if (app.user != null) {
-        var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
-        var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
-        starredItemsRef.onValue.listen((e) {
-          item['starred'] = e.snapshot.val() != null;
-        });
-        likedItemsRef.onValue.listen((e) {
-          item['liked'] = e.snapshot.val() != null;
-        });
-      } else {
-        item['starred'] = false;
-        item['liked'] = false;
-      }
-
-      // Track the snapshot's priority so we can paginate from the last one.
-      snapshotPriority = e.snapshot.getPriority();
+      if (count < pageSize) reachedEnd = true;
+      reloadingContent = false;
     });
 
-    // When an item changes, let's update it.
+     // When an item changes, let's update it.
     itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
@@ -96,16 +60,59 @@ class FeedViewModel extends Observable {
 
         currentData[k] = v;
       });
-
-      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-
     });
   }
 
-  void loadingDone() {
-//    if (items.length < limit) reachedEnd = true;
+  processItem(DataSnapshot snapshot) {
+    var item = toObservable(snapshot.val());
 
-    reloadingContent = false;
+    // If no updated date, use the created date.
+    if (item['updatedDate'] == null) {
+      item['updatedDate'] = item['createdDate'];
+    }
+
+    // The live-date-time element needs parsed dates.
+    item['updatedDate'] = DateTime.parse(item['updatedDate']);
+    item['createdDate'] = DateTime.parse(item['createdDate']);
+
+    switch (item['type']) {
+      case 'event':
+        if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
+        break;
+      default:
+    }
+
+    // Use the Firebase snapshot ID as our ID.
+    item['id'] = snapshot.name;
+
+    // Sort the list by the item's updatedDate.
+//      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+
+    // Listen for realtime changes to the star count.
+    f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
+      item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+    });
+
+    // Listen for realtime changes to the like count.
+    f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
+      item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+    });
+
+    if (app.user != null) {
+      var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+      var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+      starredItemsRef.onValue.listen((e) {
+        item['starred'] = e.snapshot.val() != null;
+      });
+      likedItemsRef.onValue.listen((e) {
+        item['liked'] = e.snapshot.val() != null;
+      });
+    } else {
+      item['starred'] = false;
+      item['liked'] = false;
+    }
+
+    return item;
   }
 
   void toggleItemStar(id) {
@@ -230,14 +237,6 @@ class FeedViewModel extends Observable {
   }
 
   void paginate() {
-//    if (items.length < limit) {
-//      reachedEnd = true;
-//      return;
-//    }
-
-//    reloadingContent = true;
-    getItems();
-
-//    limit += 20;
+    if (reloadingContent == false && reachedEnd == false) loadItemsByPage();
   }
 }
