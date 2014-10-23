@@ -2,7 +2,7 @@ library main_view_model;
 
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart' as db;
+import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'feed.dart';
@@ -16,18 +16,18 @@ class MainViewModel extends Observable {
   final App app;
   final List communities = toObservable([]);
   final List users = toObservable([]);
-  final String firebaseLocation = config['datastore']['firebaseLocation'];
+  final f = new Firebase(config['datastore']['firebaseLocation']);
   final Map feedViewModels = {};
   final Map itemViewModels = {};
   var starredViewModelForUser = null;
-
-  int limit =20;
+  int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
+  var snapshotPriority = null;
 
   MainViewModel(this.app) {
     loadCommunities();
-    loadUsers();
+    loadUsersByPage();
   }
 
   // Get the view model for the item.
@@ -89,7 +89,6 @@ class MainViewModel extends Observable {
    * Load the communities and listen for changes.
    */
   void loadCommunities() {
-    var f = new db.Firebase(firebaseLocation);
     // TODO: Remove the limit.
     var communitiesRef = f.child('/communities').limit(20);
 
@@ -119,7 +118,7 @@ class MainViewModel extends Observable {
       communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
       if (app.user != null) {
-        var starredCommunitiesRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+        var starredCommunitiesRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
         starredCommunitiesRef.onValue.listen((e) {
           community['starred'] = e.snapshot.val() != null;
         });
@@ -151,9 +150,9 @@ class MainViewModel extends Observable {
 
     var community = communities.firstWhere((i) => i['id'] == id);
 
-    var firebaseRoot = new db.Firebase(firebaseLocation);
-    var starredCommunityRef = firebaseRoot.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
-    var communityRef = firebaseRoot.child('/communities/' + community['id']);
+
+    var starredCommunityRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+    var communityRef = f.child('/communities/' + community['id']);
 
     if (community['starred']) {
       // If it's starred, time to unstar it.
@@ -172,7 +171,7 @@ class MainViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).remove();
     } else {
       // If it's not starred, time to star it.
       community['starred'] = true;
@@ -190,43 +189,41 @@ class MainViewModel extends Observable {
       });
 
       // Update the list of users who starred.
-      firebaseRoot.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).set(true);
     }
   }
 
   /**
    * Get all the users.
-   * TODO: As the list of users grow, we need to limit and paginate.
    */
-  loadUsers() {
-    // TODO: Remove this hack. Clears list to replace with larger result set per paginate().
-    users.clear();
+  loadUsersByPage() {
+    reloadingContent = true;
 
-    var f = new db.Firebase(firebaseLocation + '/users').limit(limit);
+    var itemsRef = f.child('/users').startAt(priority: snapshotPriority).limit(pageSize + 1);
+    int count = 0;
 
-    f.onChildAdded.listen((e) {
-      var user = e.snapshot.val();
+    // Get the list of items, and listen for new ones.
+    itemsRef.once('value').then((snapshot) {
+      snapshot.forEach((itemSnapshot) {
+        count++;
+        // Don't process the extra item we tacked onto pageSize in the limit() above.
+        if (count > pageSize) return;
 
-//      if (user['createdDate'] == null) {
-//        // Some temporary code that stored a createdDate where this was none.
-//        // It should be safe to leave active as it only affects an empty createdDate.
-//        DateTime newDate = new DateTime.utc(2014, DateTime.AUGUST, 21, 12);
-//        var temp = new db.Firebase(firebaseLocation + "/users/${user['username']}");
-//        temp.update({'createdDate': newDate});
-//        user['createdDate'] = newDate;
-//      }
+        var user = itemSnapshot.val();
 
-      // The live-date-time element needs parsed dates.
-      user['createdDate'] = user['createdDate'] != null ? DateTime.parse(user['createdDate']) : new DateTime.now();
+        // The live-date-time element needs parsed dates.
+        user['createdDate'] = user['createdDate'] != null ? DateTime.parse(user['createdDate']) : new DateTime.now();
 
-      // Insert each new item into the list.
-      users.add(user);
-      users.sort((m1, m2) => m2["createdDate"].compareTo(m1["createdDate"]));
-    }, onDone: loadingDone());
-  }
+        // Insert each new item into the list.
+        users.add(user);
 
-  void loadingDone() {
-    reloadingContent = false;
+        // Track the snapshot's priority so we can paginate from the last one.
+        snapshotPriority = itemSnapshot.getPriority();
+      });
+
+      if (count < pageSize) reachedEnd = true;
+      reloadingContent = false;
+    });
   }
 
   /**
@@ -253,7 +250,7 @@ class MainViewModel extends Observable {
   void loadUserStarredCommunityInformation() {
     communities.forEach((community) {
       if (app.user != null) {
-        var starredCommunityRef = new db.Firebase(firebaseLocation + '/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+        var starredCommunityRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
         starredCommunityRef.onValue.listen((e) {
           community['starred'] = e.snapshot.val() != null;
         });
@@ -264,13 +261,6 @@ class MainViewModel extends Observable {
   }
 
   void paginateUsers() {
-    if (users.length < limit) {
-      reachedEnd = true;
-      return;
-    }
-
-    limit += 20;
-    reloadingContent = true;
-    loadUsers();
+    if (reloadingContent == false && reachedEnd == false) loadUsersByPage();
   }
 }
