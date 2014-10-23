@@ -20,16 +20,16 @@ class WelcomeDialog extends PolymerElement {
 
   CoreOverlay get overlay => $['welcome-overlay'];
 
-  // *
-  // Toggle the overlay.
-  // *
+  /**
+   * Toggle the welcome overlay.
+   */
   toggleOverlay() {
     overlay.toggle();
   }
 
-  // *
-  // Add an item.
-  // *
+  /**
+   * Create a new user by updating the temporary one.
+   */
   updateUser(Event e) {
     e.preventDefault();
 
@@ -67,11 +67,15 @@ class WelcomeDialog extends PolymerElement {
 
     final userData = new db.Firebase("$firebaseLocation/users/${username.inputValue}");
 
+    var epochTime = DateTime.parse(now.toString()).millisecondsSinceEpoch;
+
     // If username is changing, update the Facebook index
     // and remove the old user record.
     if (username.inputValue != app.user.username) {
       final indexRef = new db.Firebase("$firebaseLocation/facebook_index/${app.user.facebookId}");
       final oldUserRef = new db.Firebase("$firebaseLocation/users/${app.user.username}");
+
+
 
       Future set(db.Firebase indexRef) {
         indexRef.set({'username': '${username.inputValue}'});
@@ -90,7 +94,7 @@ class WelcomeDialog extends PolymerElement {
     }
 
     Future set(db.Firebase userData) {
-      userData.set(user.encode());
+      userData.setWithPriority(user.encode(), -epochTime);
     }
 
     set(userData);

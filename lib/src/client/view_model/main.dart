@@ -214,6 +214,8 @@ class MainViewModel extends Observable {
         // The live-date-time element needs parsed dates.
         user['createdDate'] = user['createdDate'] != null ? DateTime.parse(user['createdDate']) : new DateTime.now();
 
+        if (user['disabled'] == true) return;
+
         // Insert each new item into the list.
         users.add(user);
 

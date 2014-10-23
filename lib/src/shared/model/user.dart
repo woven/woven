@@ -10,6 +10,7 @@ class UserModel {
   String email;
   String createdDate;
   bool isNew = false;
+  bool disabled = false;
 
   Map encode() {
     return {
@@ -19,7 +20,8 @@ class UserModel {
       "email": email,
       "facebookId": facebookId,
       "location": location,
-      "createdDate": createdDate
+      "createdDate": createdDate,
+      "disabled": disabled
     };
   }
 
@@ -31,6 +33,7 @@ class UserModel {
       ..email = data['email']
       ..facebookId = data['facebookId']
       ..location = data['location']
-      ..createdDate = data['createdDate'];
+      ..createdDate = data['createdDate']
+      ..disabled = data['disabled'];
   }
 }

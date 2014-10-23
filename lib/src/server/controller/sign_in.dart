@@ -38,7 +38,8 @@ class SignInController {
         ..firstName = userData['first_name']
         ..lastName = userData['last_name']
         ..email = userData['email']
-        ..location = userData['location'] != null ? userData['location']['name'] : null;
+        ..location = userData['location'] != null ? userData['location']['name'] : null
+        ..disabled = true;
 
       // Save the user to the session.
       request.session['id'] = facebookId;
