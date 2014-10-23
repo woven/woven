@@ -74,13 +74,13 @@ core-drawer-panel:not([narrow]) #menu-button {
 
 .btn.primary {
   fill: #f1f1f1 !important;
-  background-color: #333 !important;
+  background-color: rgb(64, 136, 214) !important;
 }
 
 .btn.primary:hover {
   fill: #fff !important;
   color: #fff;
-  background-color: #000 !important;
+  background-color: rgb(45, 104, 214) !important;
 }
 
 .menu {
