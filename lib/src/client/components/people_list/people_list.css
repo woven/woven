@@ -36,23 +36,23 @@ core-icon {
 }
 
 .item {
-  padding: 6px 13px 9px 10px;
-  margin: 5px;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
+  padding: 10px 13px 13px 13px;
+  margin: 0;
+  border-bottom-width: 0px;
+  /* border-bottom-style: solid; */
   border-bottom-color: rgb(244, 244, 244);
   background-color: white;
-
-  /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
-
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  /* margin: 10px auto 5px auto; */
+  /* border-left: solid 6px #5c5c5c; */
+  border-bottom: solid 1px #f2f2f2;;
 }
 
 .item:hover {
@@ -62,11 +62,10 @@ core-icon {
 }
 
 .user-username {
-  /*overflow: hidden;*/
   white-space: nowrap;
   margin-right: 5px;
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 1.2em;
   padding: 2px 0 0 0;
 }
 .user-name {
@@ -149,7 +148,7 @@ core-icon {
 #loading-indicator {
   text-align: center;
   width: 100%;
-  font-size: 24px;
+  font-size: 13px;
   font-family: inherit;
   color: #999;
   margin-top: 20px;

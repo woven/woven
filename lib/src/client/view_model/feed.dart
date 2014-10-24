@@ -29,7 +29,6 @@ class FeedViewModel extends Observable {
 
     var itemsRef = f.child('/items_by_community/' + app.community.alias)
       .startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
-
     int count = 0;
 
     // Get the list of items, and listen for new ones.
@@ -37,14 +36,16 @@ class FeedViewModel extends Observable {
       snapshot.forEach((itemSnapshot) {
         count++;
         // Don't process the extra item we tacked onto pageSize in the limit() above.
+        print("count: $count, pageSize: $pageSize");
+
+        // Track the snapshot's priority so we can paginate from the last one.
+        snapshotPriority = itemSnapshot.getPriority();
+
         if (count > pageSize) return;
 
         // Insert each new item into the list.
         // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
         items.add(toObservable(processItem(itemSnapshot)));
-
-        // Track the snapshot's priority so we can paginate from the last one.
-        snapshotPriority = itemSnapshot.getPriority();
 
         // If this is the first item loaded, start listening for new items.
         // By using the item's priority, we can listen only to newer items.
@@ -55,7 +56,7 @@ class FeedViewModel extends Observable {
       });
 
       // If we received less than we tried to load, we've reached the end.
-      if (count < pageSize) reachedEnd = true;
+      if (count <= pageSize) reachedEnd = true;
       reloadingContent = false;
     });
 

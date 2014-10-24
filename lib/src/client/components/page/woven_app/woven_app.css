@@ -1,7 +1,3 @@
-core-drawer-panel {
-  border-top: solid 4px #2baf2b;
-}
-
 #core_header_panel {
   width: 300px;
   height: 400px;
@@ -20,6 +16,7 @@ core-drawer-panel {
   /*background: green;*/
   /*fill: #f1f1f1;*/
 /*}*/
+
 .toolbar {
   padding: 0px 0px 0px 8px;
   /*background-image: url(/static/images/patt_1.png);*/
@@ -190,7 +187,7 @@ core-menu core-item:hover {
 }
 
 .page-wrapper {
-  margin: 10px;
+  margin: 18px;
   /*background-color: #fff;*/
 }
 
@@ -289,4 +286,12 @@ paper-toast.important {
   -moz-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
+}
+
+@media all and (max-width: 600px)  {
+  .page-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0px;
+  }
 }

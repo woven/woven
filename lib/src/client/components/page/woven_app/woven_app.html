@@ -23,6 +23,8 @@
 <link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/slide-from-right.html">
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/cross-fade.html">
+<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/hero-transition.html">
+<link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/scale-up.html">
 <link rel="import" href="../../../../../../../packages/core_elements/social_icons.html">
 
 <polymer-element name="woven-app">
@@ -53,34 +55,34 @@
           <core-menu valueattr="label" selected="{{app.pageTitle}}" class="menu" theme="core-dark-theme">
             <template if="{{app.community != null}}">
               <core-item label="Everything" icon="list" horizontal center layout class="item"
-                         on-click="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
+                         on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
-                         on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
-              <core-item label="Starred" icon="star" horizontal center layout class="item"
-                         on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
+                         on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>
+              <core-item label="Saved" icon="star" horizontal center layout class="item"
+                         on-tap="{{switchPage}}" data-page="2" data-url="/saved" ></core-item>
               <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
-                         on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
+                         on-tap="{{switchPage}}" data-page="0" data-url="/" ></core-item>
             </template>
             <template if="{{app.community == null}}">
               <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
-                         on-click="{{switchPage}}" data-page="0" data-url="/" ></core-item>
+                         on-tap="{{switchPage}}" data-page="0" data-url="/" ></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
-                         on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>
-              <core-item label="Starred" icon="star" horizontal center layout class="item"
-                         on-click="{{switchPage}}" data-page="2" data-url="/starred" ></core-item>
+                         on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>
+              <core-item label="Saved" icon="star" horizontal center layout class="item"
+                         on-tap="{{switchPage}}" data-page="2" data-url="/saved" ></core-item>
               <!--<core-item label="About Woven" icon="drive-ms-word" horizontal center layout class="item"-->
-                         <!--on-click="{{switchPage}}" data-page="3" data-url="/people"></core-item>-->
+                         <!--on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>-->
             </template>
 
             <div id="button-area">
               <template if="{{app.user == null}}">
                 <p id="message"></p>
-                <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+                <button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>
               </template>
 
               <template if="{{app.user != null}}">
                 <p>Hello, {{app.user.username}}!</p>
-                <button class="signin-btn" id="facebook-signin" on-click="{{signOut}}">Sign out</button>
+                <button class="signin-btn" id="facebook-signin" on-tap="{{signOut}}">Sign out</button>
               </template>
             </div>
 
@@ -93,17 +95,17 @@
 
         <core-toolbar id="toolbar-main">
           <template if="{{app.selectedPage != 1 || app.userCameFromInbox != true}}">
-            <core-icon-button class="btn primary flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
+            <core-icon-button class="btn flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
           </template>
           <template if="{{app.selectedPage === 1 && app.userCameFromInbox}}">
-            <core-icon-button class="btn primary flashing-fix" id="back-button" icon="arrow-back" on-tap="{{goBack}}"></core-icon-button>
+            <core-icon-button class="btn flashing-fix" id="back-button" icon="arrow-back" on-tap="{{goBack}}"></core-icon-button>
           </template>
           <span id="page-title" flex></span>
           <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
         </core-toolbar>
 
         <div class="content">
-          <core-animated-pages id="pages" transitions="slide-from-right" selected="{{app.selectedPage}}">
+          <core-animated-pages id="pages" selected="{{app.selectedPage}}">
             <section>
               <template if="{{app.selectedPage === 0}}">
                 <div cross-fade="{{app.selectedPage === 0}}">
@@ -141,7 +143,7 @@
           </core-animated-pages>
         </div>
 
-      </core-header-panel>
+      </core-scroll-header-panel>
 
     </core-drawer-panel>
     <template if="{{app.user != null && app.community != null}}">
@@ -151,7 +153,7 @@
       <sign-in app="{{app}}"></sign-in>
       <!--<core-overlay id="sign-in-overlay" class="sign-in-overlay" layered backdrop opened="false" transition="core-transition-center">-->
         <!--<span id="message">Please sign in to comment.</span>-->
-        <!--<button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>-->
+        <!--<button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>-->
       <!--</core-overlay>-->
     </template>
     <paper-toast id="toast-message" duration="4000"></paper-toast>

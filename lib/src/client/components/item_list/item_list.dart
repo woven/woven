@@ -60,34 +60,14 @@ class ItemList extends PolymerElement with Observable {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
   }
 
-
-
-  //Temporary script, about as good a place as any to put it.
-
-//  CreateCommunityItemsScript() {
-//    var f = new db.Firebase(firebaseLocation + '/items');
-//    f.onChildAdded.listen((e) {
-//      var item = e.snapshot.val();
-//      // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-//      // So we'll add that to our local item list.
-//      item['id'] = e.snapshot.name();
-//
-//      final dbRef = new db.Firebase("$firebaseLocation/communities/thelab/item_index/${item['id']}");
-//      set(db.Firebase dbRef) {
-//        dbRef.set({
-//            'itemid': item['id']
-//        });
-//      }
-//
-//      set(dbRef);
-//
-//    });
-//
-//  }
+  formatEventDate(DateTime startDate) {
+    // TODO: Bring back endDate, currently null.
+    return InputFormatter.formatDate(startDate, showHappenedPrefix: true, trimPast: true);
+  }
 
   attached() {
     print("+Starred");
-    app.pageTitle = "Starred";
+    app.pageTitle = "Saved";
 
     // We only attach this when we have a user,
     // so this should always run.

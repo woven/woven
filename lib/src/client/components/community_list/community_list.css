@@ -25,22 +25,23 @@
 }
 
 .item {
-  padding: 6px 13px 6px 13px;
-  margin: 5px;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
+  padding: 10px 13px 13px 18px;
+  margin: 0;
+  border-bottom-width: 0px;
+  /* border-bottom-style: solid; */
   border-bottom-color: rgb(244, 244, 244);
   background-color: white;
-  /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
-
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  /* margin: 10px auto 5px auto; */
+  /* border-left: solid 6px #5c5c5c; */
+  border-bottom: solid 1px #f2f2f2;;
 }
 
 .item:hover {
@@ -66,7 +67,7 @@
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
-  font-size: 13px;
+  font-size: 0.95em;
   display: inline;
 }
 

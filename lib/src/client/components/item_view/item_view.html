@@ -8,7 +8,7 @@
       <template if="{{item != null}}">
         <div class="item-card">
           <div class="content">
-            <div class="item-type">{{ (item['type'] != null) ? item['type'] : 'other'}}</div>
+            <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}"">{{ (item['type'] != null) ? item['type'] : 'other'}}</div>
             <div>
               <h1>{{item['subject']}}</h1>
             </div>

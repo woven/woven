@@ -11,22 +11,17 @@ core-field input {
 }
 
 .activity-card {
-  max-width: 500px;
   background-color: #fff;
   /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
-  margin-bottom: 10px;
+  max-width: 800px;
+  margin: 0 auto 10px auto;
+  border-radius: 2px;
 }
 
 .activity-card #content {
   padding: 10px;
   white-space: inherit;
   word-wrap: break-word;
-}
-
-@media all and (max-width: 600px)  {
-  .activity-card {
-    width: 100%;
-  }
 }
 
 .user {
@@ -63,16 +58,11 @@ core-input {
   display: flex;
   flex-flow: column;
   -webkit-flex-flow: column;
-  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;
+  /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
   background: #fff;
-  max-width: 500px;
-  margin-bottom: 10px;
-}
-
-@media all and (max-width: 600px)  {
-  #post-container {
-    width: 100%;
-  }
+  max-width: 800px;
+  margin: 10px auto 10px auto;
+  border-radius: 2px;
 }
 
 footer {
@@ -157,4 +147,18 @@ safe-html::shadow a:hover {
 
 safe-html::shadow a:visited {
   color: rgb(106, 56, 223);
+}
+
+@media all and (max-width: 600px)  {
+  #post-container {
+    margin: 10px;
+  }
+  #activity-wrapper {
+    margin: 10px;
+  }
+
+  .activity-card {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }

@@ -57,7 +57,7 @@ class App {
 
     server.listen((HttpRequest request) {
       // Some redirects if coming from related domains.
-      if (request.headers.host == "mycommunity.org") {
+      if (request.headers.host == "mycommunity.org" || request.headers.host == "woven.org") {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: request.uri.path));
         return;
       }

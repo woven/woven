@@ -46,27 +46,23 @@ core-icon {
 }
 
 .item {
-  padding: 6px 13px 6px 13px;
-  margin: 10px;
+  padding: 10px 20px 13px 13px;
+  margin: 0;
   border-bottom-width: 0px;
-  border-bottom-style: solid;
+  /* border-bottom-style: solid; */
   border-bottom-color: rgb(244, 244, 244);
   background-color: white;
-  /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
-
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
-  min-height: 100px;
-
-  /*margin: 10px auto 5px auto;*/
-  border-left: solid 6px #5c5c5c;
+  /* margin: 10px auto 5px auto; */
+  /* border-left: solid 6px #5c5c5c; */
+  border-bottom: solid 1px #f2f2f2;;
 }
 
 .item.event {
@@ -96,7 +92,7 @@ core-icon {
 }
 
 .item-subject {
-  /*overflow: hidden;*/
+  overflow: hidden;
   white-space: nowrap;
   margin-right: 5px;
   font-weight: bold;
@@ -106,7 +102,7 @@ core-icon {
 
 .item-body {
   color: #5c5c5c;
-  font-size: 1.1em;
+  font-size: 1em;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
@@ -115,25 +111,32 @@ core-icon {
   color: rgb(102, 102, 102);
   overflow: hidden;
   font-size: 90%;
-  display: inline;
+  display: block;
 }
+
+.item-star {
+  margin: 9px 0;
+  float: right;
+}
+
+
 
 .item-users {
   /*color: #3A89BE;*/
-  color: #333;
-  font-size: 90%;
+  color: #212121;
   display: inline;
   margin-right: 2px;
-  font-weight: bold;
+  text-transform: none;
+  font-weight: normal;
 }
 
 .item-type {
-  color: #212121;
-  text-transform: uppercase;
+  /*color: #212121;*/
+  text-transform: capitalize;
   margin-right: 3px;
   margin-bottom: 5px;
   border-radius: 3px;
-  font-size: 1em;
+  font-size: 0.98em;
   font-weight: bold;
 }
 
@@ -160,12 +163,13 @@ core-icon {
 .item-col1 {
   /*border: solid red 1px;*/
   text-align: center;
-  padding-top: 3px;
+  margin: 31px 1px 5px 0px
 }
 
 .item-col1 span {
-  font-size: 10px;
+  font-size: 12px;
   color: #3F3F3F;
+  font-weight: bold;
 }
 
 .item-col2 {
@@ -177,7 +181,7 @@ core-icon {
 
 .item-col3 {
   /*border: solid burlywood 1px;*/
-  padding-top: 5px;
+  padding-top: 7px;
 }
 
 .item-col2 > * {
@@ -187,7 +191,6 @@ core-icon {
 .item-container {
   overflow: hidden;
   width: 100%;
-  min-height: 100px;
 }
 
 .event-date {
@@ -216,7 +219,7 @@ core-icon {
 #loading-indicator {
   text-align: center;
   width: 100%;
-  font-size: 24px;
+  font-size: 1.3em;
   font-family: inherit;
   color: #999;
   margin-top: 20px;

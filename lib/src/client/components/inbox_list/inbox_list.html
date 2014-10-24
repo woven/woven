@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <polymer-element name="inbox-list">
   <template>
@@ -39,29 +40,36 @@
       <!--</core-list-dart>-->
 
     <template repeat="{{item in viewModel.items}}">
-      <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-click="{{selectItem}}" data-id="{{item['id']}}">
+      <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-tap="{{selectItem}}" data-id="{{item['id']}}">
         <div class="item-container" horizontal layout>
-          <div class="item-col1" vertical layout>
+          <div class="item-col1" vertical center layout>
             <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                       id="icon-fav" on-click="{{toggleLike}}"
+                       id="icon-fav" on-tap="{{toggleLike}}"
                        class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
                        data-id="{{item['id']}}"></core-icon>
             <span class="item-count">{{item['like_count']}}</span>
-            <core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"
-                       id="icon-star" on-click="{{toggleStar}}"
-                       class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"
-                       data-id="{{item['id']}}"></core-icon>
-            <span class="item-count">{{item['star_count']}}</span>
           </div>
           <div class="item-col2" flex>
-            <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</div>
+            <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
             <div class="item-subject">{{item['subject']}}</div>
             <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
           </div>
           <div class="item-col3">
-            <div class="item-users">{{item['user']}}</div>
             <div class="item-updated">
             <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+              <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
+                         <!--id="icon-star" on-click="{{toggleStar}}"-->
+                         <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
+                         <!--data-id="{{item['id']}}"></core-icon>-->
+              <!--<span class="item-count">{{item['star_count']}}</span>-->
+            </div>
+            <div class="item-star">
+              <core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">
+                <core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"
+                           id="icon-star" on-tap="{{toggleStar}}"
+                           class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"
+                           data-id="{{item['id']}}"></core-icon>
+              </core-tooltip>
             </div>
           </div>
         </div>

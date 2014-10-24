@@ -3,11 +3,13 @@ h1 {
 }
 
 .item-card {
-  width: 100%;
+  /* min-width: 400px; */
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;
+  /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
   margin-bottom: 10px;
-  border-radius: 2px 2px 0 0;
+  border-radius: 2px 2px 2px 2px;
+  margin: 0px auto 10px auto;
+  max-width: 800px;
 }
 
 .item-card .content {
@@ -87,12 +89,33 @@ core-icon {
 }
 
 .item-type {
-  color: #5CA556;
-  text-transform: uppercase;
+  color: #212121;
+  text-transform: capitalize;
   margin-right: 3px;
   margin-bottom: 5px;
   border-radius: 3px;
-  font-size: 12px;
+  font-size: 0.98em;
+  font-weight: bold;
+}
+
+.item-type.event {
+  color: #03a9f4;
+}
+
+.item-type.idea {
+  color: #e040fb;
+}
+
+.item-type.offer {
+  color: #009688;
+}
+
+.item-type.ask {
+  color: #ffc107;
+}
+
+.item-type.announcement {
+  color: #ff6e40;
 }
 
 safe-html::shadow a {
@@ -115,4 +138,14 @@ safe-html::shadow a:visited {
 
 #body {
   word-wrap: break-word;
+}
+
+@media all and (max-width: 600px)  {
+  .item-card {
+    width: 100%;
+    margin: 0;
+  }
+  .item-card .content {
+    padding: 20px;
+  }
 }
