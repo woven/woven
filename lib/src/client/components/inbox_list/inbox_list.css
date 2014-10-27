@@ -92,7 +92,6 @@ core-icon {
 }
 
 .item-subject {
-  overflow: hidden;
   white-space: nowrap;
   margin-right: 5px;
   font-weight: bold;
@@ -117,9 +116,8 @@ core-icon {
 .item-star {
   margin: 9px 0;
   float: right;
+  outline: none;
 }
-
-
 
 .item-users {
   /*color: #3A89BE;*/
@@ -128,6 +126,12 @@ core-icon {
   margin-right: 2px;
   text-transform: none;
   font-weight: normal;
+}
+
+.item-actions {
+  margin-top: 14px;
+  font-size: 0.95em;
+  color: rgb(67, 132, 214);
 }
 
 .item-type {

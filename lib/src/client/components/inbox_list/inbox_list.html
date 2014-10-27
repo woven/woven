@@ -53,6 +53,7 @@
             <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
             <div class="item-subject">{{item['subject']}}</div>
             <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
+            <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">18 comments</div>
           </div>
           <div class="item-col3">
             <div class="item-updated">
@@ -63,14 +64,14 @@
                          <!--data-id="{{item['id']}}"></core-icon>-->
               <!--<span class="item-count">{{item['star_count']}}</span>-->
             </div>
-            <div class="item-star">
-              <core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">
-                <core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"
-                           id="icon-star" on-tap="{{toggleStar}}"
-                           class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"
-                           data-id="{{item['id']}}"></core-icon>
-              </core-tooltip>
-            </div>
+            <!--<div class="item-star">-->
+              <!--&lt;!&ndash;<core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">&ndash;&gt;-->
+                <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
+                           <!--id="icon-star" on-tap="{{toggleStar}}"-->
+                           <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
+                           <!--data-id="{{item['id']}}"></core-icon>-->
+              <!--&lt;!&ndash;</core-tooltip>&ndash;&gt;-->
+            <!--</div>-->
           </div>
         </div>
       </core-item>

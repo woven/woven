@@ -75,7 +75,7 @@ core-icon {
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
-  font-size: 90%;
+  font-size: 0.98em;
   display: inline;
 }
 

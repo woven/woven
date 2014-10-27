@@ -61,7 +61,7 @@ class MainViewModel extends Observable {
     return itemViewModels[id];
   }
 
-// Get the view model for the current inbox.
+  // Get the view model for the current inbox.
   @observable FeedViewModel get feedViewModel {
     if (app.community == null) return null;
     var id = app.community.alias;

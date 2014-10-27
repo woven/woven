@@ -1,11 +1,9 @@
 library feed_view_model;
 
-import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-import 'dart:async';
 
 class FeedViewModel extends Observable {
   final App app;
@@ -25,22 +23,21 @@ class FeedViewModel extends Observable {
    * Load more items pageSize at a time.
    */
   loadItemsByPage() {
-    reloadingContent = true;
-
     var itemsRef = f.child('/items_by_community/' + app.community.alias)
       .startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
+
+    reloadingContent = true;
     int count = 0;
 
     // Get the list of items, and listen for new ones.
     itemsRef.once('value').then((snapshot) {
       snapshot.forEach((itemSnapshot) {
         count++;
-        // Don't process the extra item we tacked onto pageSize in the limit() above.
-        print("count: $count, pageSize: $pageSize");
 
         // Track the snapshot's priority so we can paginate from the last one.
         snapshotPriority = itemSnapshot.getPriority();
 
+        // Don't process the extra item we tacked onto pageSize in the limit() above.
         if (count > pageSize) return;
 
         // Insert each new item into the list.
@@ -73,6 +70,11 @@ class FeedViewModel extends Observable {
 
         currentData[k] = v;
       });
+    });
+
+    // When an item is removed, let's remove it from the list.
+    itemsRef.onChildRemoved.listen((e) {
+      items.removeWhere((i) => i['id'] == e.snapshot.name);
     });
   }
 
