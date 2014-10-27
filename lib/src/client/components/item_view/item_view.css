@@ -88,6 +88,11 @@ core-icon {
   font-weight: bold;
 }
 
+.event-date {
+  color: #008000;
+  margin-top: 10px;
+}
+
 .item-type {
   color: #212121;
   text-transform: capitalize;

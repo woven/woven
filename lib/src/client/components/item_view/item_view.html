@@ -8,7 +8,7 @@
       <template if="{{item != null}}">
         <div class="item-card">
           <div class="content">
-            <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}"">{{ (item['type'] != null) ? item['type'] : 'other'}}</div>
+            <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</div>
             <div>
               <h1>{{item['subject']}}</h1>
             </div>
@@ -18,7 +18,8 @@
                   <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                   by
                 </div>
-                <div class="item-users">{{ item['user'] }}</div>
+                <div class="item-users">{{item['user']}}</div>
+                <div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div>
               </template>
             </div>
             <div>

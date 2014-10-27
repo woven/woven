@@ -49,6 +49,13 @@ class ItemViewModel extends Observable {
         // The live-date-time element needs parsed dates.
         item['createdDate'] = DateTime.parse(item['createdDate']);
 
+        switch (item['type']) {
+          case 'event':
+            if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
+            break;
+          default:
+        }
+
         // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
         // So we'll add that to our local item list.
         item['id'] = e.snapshot.name;
