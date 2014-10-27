@@ -24,7 +24,6 @@ class App extends Observable {
   @observable String pageTitle = "";
   @observable UserModel user;
   @observable CommunityModel community;
-  @observable String typeFilter = "everything";
 //  @observable bool isNewUser = false;
   Router router;
   MainViewModel mainViewModel;
@@ -60,7 +59,6 @@ class App extends Observable {
       } else {
         selectedPage = 0;
 //        print(pathUri.pathSegments[1]);
-//        print(typeFilter);
         // If we're at <community>/<something>, see if <something> is a valid page.
         switch (pathUri.pathSegments[1]) {
           case 'people':
@@ -68,13 +66,11 @@ class App extends Observable {
             break;
           case 'events':
             pageTitle = "Events";
-            typeFilter = 'event';
-            mainViewModel.feedViewModel;
+            selectedPage = 5;
             break;
           default:
             print('404: ' + path);
         }
-        print(typeFilter);
       }
     }
 

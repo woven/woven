@@ -15,8 +15,9 @@ class FeedViewModel extends Observable {
   var snapshotPriority = null;
   bool isFirstRun = true;
   String dataLocation = '';
+  String typeFilter;
 
-  FeedViewModel(this.app) {
+  FeedViewModel({this.app, this.typeFilter}) {
     loadItemsByPage();
   }
 
@@ -24,12 +25,11 @@ class FeedViewModel extends Observable {
    * Load more items pageSize at a time.
    */
   loadItemsByPage() {
-    if (app.typeFilter == "event") {
-      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + app.typeFilter;
-    } else {
+    if (typeFilter != "event") {
       dataLocation = '/items_by_community/' + app.community.alias;
+    } else {
+      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
     }
-    print("Debug");
     print(dataLocation);
     var itemsRef = f.child(dataLocation)
       .startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
@@ -93,8 +93,8 @@ class FeedViewModel extends Observable {
   }
 
   listenForNewItems(endAtPriority) {
-    if (app.typeFilter == "event") {
-      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + app.typeFilter;
+    if (typeFilter == "event") {
+      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
     } else {
       dataLocation = '/items_by_community/' + app.community.alias;
     }

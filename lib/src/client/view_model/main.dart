@@ -64,16 +64,29 @@ class MainViewModel extends Observable {
   // Get the view model for the current inbox.
   @observable FeedViewModel get feedViewModel {
     if (app.community == null) return null;
+
     var id = app.community.alias;
-    // If we're filtering the feed by a certain type, store the view model w/ an appropriate ID.
-    if (app.typeFilter != "everything") id = "${app.community.alias}_${app.typeFilter}";
-    print("DEBUG: ${app.typeFilter}");
+
     if (id == null) return null; // No item, no view model to use.
 
     if (!feedViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
-      var vm = new FeedViewModel(app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
+      var vm = new FeedViewModel(app: app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
       feedViewModels[id] = vm; // Store it.
+    }
+    return feedViewModels[id];
+  }
+
+  @observable FeedViewModel get eventViewModel {
+    if (app.community == null) return null;
+
+    var id = app.community.alias + '_events';
+
+    if (id == null) return null;
+
+    if (!feedViewModels.containsKey(id)) {
+      var vm = new FeedViewModel(app: app, typeFilter: 'event');
+      feedViewModels[id] = vm;
     }
     return feedViewModels[id];
   }

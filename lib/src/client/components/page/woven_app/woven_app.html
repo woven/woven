@@ -57,7 +57,7 @@
               <core-item label="Everything" icon="list" horizontal center layout class="item"
                          on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
               <core-item label="Events" icon="event" horizontal center layout class="item"
-                         on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}/events"></core-item>
+                         on-tap="{{switchPage}}" data-page="5" data-url="/{{app.community.alias}}/events"></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
                          on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>
               <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->
@@ -139,6 +139,15 @@
               <template if="{{app.community == null && app.selectedPage === 4}}">
                 <div>
                   <community-list id="community-list" app="{{app}}" viewModel="{{app.mainViewModel}}"></community-list>
+                </div>
+              </template>
+            </section>
+            <section>
+              <template if="{{app.selectedPage === 5}}">
+                <div cross-fade="{{app.selectedPage === 5}}">
+                  <template if="{{app.community != null && app.selectedPage === 5}}">
+                    <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></inbox-list>
+                  </template>
                 </div>
               </template>
             </section>
