@@ -53,7 +53,11 @@
             <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
             <div class="item-subject">{{item['subject']}}</div>
             <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
-            <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">{{item['comment_count']}} comments</div>
+            <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">
+              <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
+              <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
+              <!--<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}">Add a comment</template>-->
+            </div>
           </div>
           <div class="item-col3">
             <div class="item-updated">

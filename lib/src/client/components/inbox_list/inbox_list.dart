@@ -129,6 +129,36 @@ class InboxList extends PolymerElement with Observable {
     });
   }
 
+  scriptAddPriorityOnItemsEverywhere() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    var itemsRef = f.child('/items');
+    var item;
+
+    itemsRef.onChildAdded.listen((e) {
+      var item = e.snapshot.val();
+
+      // If no updated date, use the created date.
+      if (item['updatedDate'] == null) {
+        item['updatedDate'] = item['createdDate'];
+      }
+
+      DateTime time = DateTime.parse(item['updatedDate']);
+      var epochTime = time.millisecondsSinceEpoch;
+      f.child('/items/' + e.snapshot.name)
+      .setPriority(-epochTime);
+
+      itemsRef.child(e.snapshot.name + '/communities').onValue.listen((e2) {
+        Map communitiesRef = e2.snapshot.val();
+        if (communitiesRef != null) {
+          communitiesRef.keys.forEach((community) {
+            f.child('/items_by_community/' + community + '/' + e.snapshot.name).setPriority(-epochTime);
+            f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name).setPriority(-epochTime);
+          });
+        }
+      });
+    });
+  }
+
   scriptMakeItemsByCommunityByType() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items_by_community/' + app.community.alias);
@@ -198,11 +228,13 @@ class InboxList extends PolymerElement with Observable {
 
     initializeInfiniteScrolling();
 
-//    scriptUpdateCommentCounts();
+//    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
+//    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
+//    scriptUpdateCommentCounts(); // Run 3rd.
 
-//    scriptAddPriorityOnItems();
-//    scriptAddPriorityOnItemsByCommunity();
-//    scriptMakeItemsByCommunityByType();
+//    scriptAddPriorityOnItemsByCommunity(); // Deprecated.
+//    scriptAddPriorityOnItems(); // Deprecated.
+
   }
 
   detached() {
