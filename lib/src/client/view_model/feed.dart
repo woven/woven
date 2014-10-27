@@ -55,7 +55,7 @@ class FeedViewModel extends Observable {
         // If this is the first item loaded, start listening for new items.
         // By using the item's priority, we can listen only to newer items.
         if (isFirstRun == true) {
-//          listenForNewItems(snapshotPriority);
+          listenForNewItems(snapshotPriority);
           isFirstRun = false;
         }
       });
