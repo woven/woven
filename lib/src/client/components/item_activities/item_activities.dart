@@ -1,12 +1,10 @@
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
-import 'dart:math';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
-import 'package:core_elements/core_input.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:woven/src/shared/routing/routes.dart';
@@ -101,6 +99,15 @@ class ItemActivities extends PolymerElement {
       parent.update({
         'updatedDate': '$now'
       }).then((e) {
+        // Update the comment count on the parent.
+        parent.child('comment_count').transaction((currentCount) {
+          if (currentCount == null || currentCount == 0) {
+            return 0;
+          } else {
+            return currentCount + 1;
+          }
+        });
+
         var type = '';
 
         // Get the item's type.
@@ -113,14 +120,30 @@ class ItemActivities extends PolymerElement {
             Map communitiesRef = e.snapshot.val();
             if (communitiesRef != null) {
               communitiesRef.keys.forEach((community) {
-                // Update the community's copy of the item.
+                // Because denormalization means speed, we update the copy of the item in multiple places.
+
+                // Uodate the updated date.
                 root.child('/items_by_community/' + community + '/' + itemId).update({
                     'updatedDate': '$now'
                 });
                 root.child('/items_by_community_by_type/' + community + '/$type/' + itemId).update({
                     'updatedDate': '$now'
-                }).then((e) {
-                  print("Done.");
+                });
+
+                // Uodate the comment count.
+                root.child('/items_by_community/' + community + '/' + itemId + '/comment_count').transaction((currentCount) {
+                  if (currentCount == null || currentCount == 0) {
+                    return 0;
+                  } else {
+                    return currentCount + 1;
+                  }
+                });
+                root.child('/items_by_community_by_type/' + community + '/$type/' + itemId + '/comment_count').transaction((currentCount) {
+                  if (currentCount == null || currentCount == 0) {
+                    return 0;
+                  } else {
+                    return currentCount + 1;
+                  }
                 });
 
                 // Update the priority sorting of the item to reflect updated date.

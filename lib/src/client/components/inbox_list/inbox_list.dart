@@ -151,6 +151,33 @@ class InboxList extends PolymerElement with Observable {
     });
   }
 
+  scriptUpdateCommentCounts() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    var itemsRef = f.child('/items');
+    var item;
+
+    itemsRef.onChildAdded.listen((e) {
+      var countRef = f.child('/items/' + e.snapshot.name + '/activities/comments');
+      var count = 0;
+      var item = e.snapshot.val();
+      countRef.once('value').then((snapshot) {
+        print(snapshot.val());
+        print(snapshot.numChildren);
+        itemsRef.child(e.snapshot.name + '/comment_count').set(snapshot.numChildren); // TODO: In Progress.
+
+        itemsRef.child(e.snapshot.name + '/communities').onValue.listen((e2) {
+          Map communitiesRef = e2.snapshot.val();
+          if (communitiesRef != null) {
+            communitiesRef.keys.forEach((community) {
+              f.child('/items_by_community/' + community + '/' + e.snapshot.name + '/comment_count').set(snapshot.numChildren);
+              f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name + '/comment_count').set(snapshot.numChildren);
+            });
+          }
+        });
+      });
+    });
+  }
+
   /**
    * Initializes the infinite scrolling ability.
    */
@@ -170,6 +197,8 @@ class InboxList extends PolymerElement with Observable {
     print("+InboxList");
 
     initializeInfiniteScrolling();
+
+//    scriptUpdateCommentCounts();
 
 //    scriptAddPriorityOnItems();
 //    scriptAddPriorityOnItemsByCommunity();
