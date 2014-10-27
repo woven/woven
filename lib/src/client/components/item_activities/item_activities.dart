@@ -102,7 +102,7 @@ class ItemActivities extends PolymerElement {
         // Update the comment count on the parent.
         parent.child('comment_count').transaction((currentCount) {
           if (currentCount == null || currentCount == 0) {
-            return 0;
+            return 1;
           } else {
             return currentCount + 1;
           }
@@ -133,14 +133,14 @@ class ItemActivities extends PolymerElement {
                 // Uodate the comment count.
                 root.child('/items_by_community/' + community + '/' + itemId + '/comment_count').transaction((currentCount) {
                   if (currentCount == null || currentCount == 0) {
-                    return 0;
+                    return 1;
                   } else {
                     return currentCount + 1;
                   }
                 });
                 root.child('/items_by_community_by_type/' + community + '/$type/' + itemId + '/comment_count').transaction((currentCount) {
                   if (currentCount == null || currentCount == 0) {
-                    return 0;
+                    return 1;
                   } else {
                     return currentCount + 1;
                   }
