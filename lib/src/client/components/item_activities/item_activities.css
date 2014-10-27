@@ -149,7 +149,7 @@ safe-html::shadow a:visited {
   color: rgb(106, 56, 223);
 }
 
-@media all and (max-width: 600px)  {
+@media all and (max-width: 800px)  {
   #post-container {
     margin: 10px;
   }

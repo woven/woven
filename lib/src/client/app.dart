@@ -24,6 +24,7 @@ class App extends Observable {
   @observable String pageTitle = "";
   @observable UserModel user;
   @observable CommunityModel community;
+  @observable String typeFilter = "everything";
 //  @observable bool isNewUser = false;
   Router router;
   MainViewModel mainViewModel;
@@ -50,26 +51,30 @@ class App extends Observable {
       selectedPage = 3;
     }
 
+    // We're using this as a kind of placeholder for variable routes.
     void notFound(String path) {
+      pageTitle = "Everything";
       var pathUri = Uri.parse(path);
-      if (community != null && pathUri.pathSegments[0] == community.alias) {
-        if (pathUri.pathSegments.length == 1) {
-          selectedPage = 0;
-        } else {
-          // If we're at <community>/<something>, see if <something> is a valid page.
-          switch (pathUri.pathSegments[1]) {
-            case 'people':
-              selectedPage = 3;
-              break;
-            default:
-              print('404: ' + path);
-          }
-        }
+      if (pathUri.pathSegments.length == 1) {
+        selectedPage = 0;
       } else {
-        // TODO: Right now, we can't handle going back to community after
-        // loading app directly e.g. on an item.
-        // Let's read the URL and determine if it's a community?
-        print('404: ' + path);
+        selectedPage = 0;
+//        print(pathUri.pathSegments[1]);
+//        print(typeFilter);
+        // If we're at <community>/<something>, see if <something> is a valid page.
+        switch (pathUri.pathSegments[1]) {
+          case 'people':
+            selectedPage = 3;
+            break;
+          case 'events':
+            pageTitle = "Events";
+            typeFilter = 'event';
+            mainViewModel.feedViewModel;
+            break;
+          default:
+            print('404: ' + path);
+        }
+        print(typeFilter);
       }
     }
 

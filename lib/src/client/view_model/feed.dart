@@ -14,6 +14,7 @@ class FeedViewModel extends Observable {
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
   bool isFirstRun = true;
+  String dataLocation = '';
 
   FeedViewModel(this.app) {
     loadItemsByPage();
@@ -23,7 +24,14 @@ class FeedViewModel extends Observable {
    * Load more items pageSize at a time.
    */
   loadItemsByPage() {
-    var itemsRef = f.child('/items_by_community/' + app.community.alias)
+    if (app.typeFilter == "event") {
+      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + app.typeFilter;
+    } else {
+      dataLocation = '/items_by_community/' + app.community.alias;
+    }
+    print("Debug");
+    print(dataLocation);
+    var itemsRef = f.child(dataLocation)
       .startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
 
     reloadingContent = true;
@@ -47,7 +55,7 @@ class FeedViewModel extends Observable {
         // If this is the first item loaded, start listening for new items.
         // By using the item's priority, we can listen only to newer items.
         if (isFirstRun == true) {
-          listenForNewItems(snapshotPriority);
+//          listenForNewItems(snapshotPriority);
           isFirstRun = false;
         }
       });
@@ -64,7 +72,7 @@ class FeedViewModel extends Observable {
       Map newData = e.snapshot.val();
 
       newData.forEach((k, v) {
-        if (k == "createdDate" || k == "updatedDate") v = DateTime.parse(v);
+        if (k == "createdDate" || k == "updatedDate" || k == "startDateTime") v = DateTime.parse(v);
         if (k == "star_count") v = (v != null) ? v : 0;
         if (k == "like_count") v = (v != null) ? v : 0;
 
@@ -76,11 +84,22 @@ class FeedViewModel extends Observable {
     itemsRef.onChildRemoved.listen((e) {
       items.removeWhere((i) => i['id'] == e.snapshot.name);
     });
+
+    itemsRef.onChildMoved.listen((e) {
+      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+    });
+
+    // TODO: Add a listener for onChildMoved for when items are updated and bumped to top of list.
   }
 
   listenForNewItems(endAtPriority) {
+    if (app.typeFilter == "event") {
+      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + app.typeFilter;
+    } else {
+      dataLocation = '/items_by_community/' + app.community.alias;
+    }
     // If this is the first item loaded, start listening for new items.
-    var itemsRef = f.child('/items_by_community/' + app.community.alias).endAt(priority: endAtPriority);
+    var itemsRef = f.child(dataLocation).endAt(priority: endAtPriority);
     itemsRef.onChildAdded.listen((e) {
       if (e.snapshot.getPriority() != endAtPriority) {
         // Insert new items at the top of the list.

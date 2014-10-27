@@ -19,6 +19,7 @@ import 'package:core_elements/core_header_panel.dart';
 class InboxList extends PolymerElement with Observable {
   @published App app;
   @published FeedViewModel viewModel;
+  @published String filter;
 
   List<StreamSubscription> subscriptions;
 
@@ -167,7 +168,6 @@ class InboxList extends PolymerElement with Observable {
 
   attached() {
     print("+InboxList");
-    app.pageTitle = "Everything";
 
     initializeInfiniteScrolling();
 

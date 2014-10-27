@@ -56,6 +56,8 @@
             <template if="{{app.community != null}}">
               <core-item label="Everything" icon="list" horizontal center layout class="item"
                          on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
+              <core-item label="Events" icon="event" horizontal center layout class="item"
+                         on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}/events"></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item"
                          on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>
               <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->

@@ -110,9 +110,8 @@ class AddStuff extends PolymerElement {
             'updatedDate': '$now'
         });
         // Store it by community, then by type, and sort it based on date.
-        root.child('/items_by_community_by_type/' + app.community.alias + '/$selectedType/' + e.snapshot.name)
-        .setWithPriority(item, -priority);
-
+        root.child('/items_by_community_by_type/' + app.community.alias + '/$selectedType/' + item)
+        .setWithPriority(encodedItem, -priority);
       });
     }
 
@@ -121,7 +120,7 @@ class AddStuff extends PolymerElement {
 
     overlay.toggle();
     theData['subject'] = "";
-    theData['body'] ="";
+    theData['body'] = "";
     // TODO: Reset the selected type too? May be useful not to.
 
     app.selectedPage = 0;
