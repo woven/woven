@@ -61,8 +61,7 @@ core-icon {
   -ms-user-select: none;
   user-select: none;
   /* margin: 10px auto 5px auto; */
-  /* border-left: solid 6px #5c5c5c; */
-  border-bottom: solid 1px #f2f2f2;;
+   border-left: solid 6px #5c5c5c;
 }
 
 .item.event {
@@ -195,6 +194,10 @@ core-icon {
 .item-container {
   overflow: hidden;
   width: 100%;
+}
+
+.item-wrapper {
+  border-bottom: solid 1px #f2f2f2;
 }
 
 .event-date {

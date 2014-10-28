@@ -25,7 +25,7 @@
 }
 
 .item {
-  padding: 10px 13px 13px 18px;
+  padding: 10px 20px 13px 20px;
   margin: 0;
   border-bottom-width: 0px;
   /* border-bottom-style: solid; */
@@ -52,7 +52,7 @@
 
 .community-alias {
   /*overflow: hidden;*/
-  color: mediumblue;
+  color: #0061BB;
   font-size: 18px;
   white-space: nowrap;
   margin-right: 5px;

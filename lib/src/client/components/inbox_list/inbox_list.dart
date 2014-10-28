@@ -129,6 +129,25 @@ class InboxList extends PolymerElement with Observable {
     });
   }
 
+  scriptAddPriorityOnPeople() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    var itemsRef = f.child('/users');
+    var item;
+
+    itemsRef.onChildAdded.listen((e) {
+      var item = e.snapshot.val();
+
+      // If no updated date, use the created date.
+
+      DateTime time = DateTime.parse(item['createdDate']);
+      var epochTime = time.millisecondsSinceEpoch;
+      f.child('/users/' + item['username'])
+      .setPriority(-epochTime);
+
+    });
+  }
+
+
   scriptAddPriorityOnItemsEverywhere() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items');
@@ -231,6 +250,7 @@ class InboxList extends PolymerElement with Observable {
 //    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
 //    scriptUpdateCommentCounts(); // Run 3rd.
+      scriptAddPriorityOnPeople(); // 4.
 
 //    scriptAddPriorityOnItemsByCommunity(); // Deprecated.
 //    scriptAddPriorityOnItems(); // Deprecated.

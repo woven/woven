@@ -43,15 +43,17 @@
 #page-title {
   opacity: 0;
   transition: .5s opacity;
+  font-family: 'RobotoDraft', sans-serif;
   font-weight: bold;
-  font-size: 1.05em;
+  font-size: 1em;
 }
 
 #sidebar-title {
   opacity: 1;
   transition: .5s opacity;
+  font-family: 'RobotoDraft', sans-serif;
   font-weight: bold;
-  font-size: 1.05em;
+  font-size: 1em;
 }
 
 #sidebar-title.has-logo {

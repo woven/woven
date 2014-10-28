@@ -40,6 +40,7 @@
       <!--</core-list-dart>-->
 
     <template repeat="{{item in viewModel.items}}">
+      <div class="item-wrapper">
       <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-tap="{{selectItem}}" data-id="{{item['id']}}">
         <div class="item-container" horizontal layout>
           <div class="item-col1" vertical center layout>
@@ -79,6 +80,7 @@
           </div>
         </div>
       </core-item>
+      </div>
     </template>
     <template if="{{viewModel.reachedEnd == false}}"><div id="loading-indicator">Fetching...</div></template>
     <template if="{{viewModel.reachedEnd == true}}"><div id="loading-indicator">You've reached the end of this universe.</div></template>
