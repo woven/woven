@@ -19,7 +19,7 @@ import 'package:woven/src/client/view_model/feed.dart';
 
 class App extends Observable {
   @observable var selectedItem;
-  @observable var selectedPage = 0;
+  @observable var selectedPage;
   @observable bool userCameFromInbox = false;
   @observable String pageTitle = "";
   @observable UserModel user;
@@ -57,7 +57,6 @@ class App extends Observable {
       if (pathUri.pathSegments.length == 1) {
         selectedPage = 0;
       } else {
-        selectedPage = 0;
 //        print(pathUri.pathSegments[1]);
         // If we're at <community>/<something>, see if <something> is a valid page.
         switch (pathUri.pathSegments[1]) {
@@ -69,6 +68,7 @@ class App extends Observable {
             selectedPage = 5;
             break;
           default:
+//            selectedPage = 0;
             print('404: ' + path);
         }
       }
