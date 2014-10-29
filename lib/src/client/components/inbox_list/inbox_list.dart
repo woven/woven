@@ -314,10 +314,12 @@ class InboxList extends PolymerElement with Observable {
 
   detached() {
     print("-InboxList");
-    viewModel.childAddedSubscriber.cancel();
-    viewModel.childChangedSubscriber.cancel();
-    viewModel.childMovedSubscriber.cancel();
-    viewModel.childRemovedSubscriber.cancel();
+
+    // TODO: If we cancel, how to resume? pause/resume instead?
+//    viewModel.childAddedSubscriber.cancel();
+//    viewModel.childChangedSubscriber.cancel();
+//    viewModel.childMovedSubscriber.cancel();
+//    viewModel.childRemovedSubscriber.cancel();
 
     subscriptions.forEach((subscription) {
       subscription.cancel();

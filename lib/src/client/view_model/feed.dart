@@ -180,7 +180,6 @@ class FeedViewModel extends Observable {
     // by today, tomorrow, this week, etc.
     if (typeFilter == "event") {
       item['dateGroup'] = DateGroup.getDateGroupName(item['startDateTime']);
-      print(item['dateGroup']);
     }
 
     // Use the Firebase snapshot ID as our ID.
