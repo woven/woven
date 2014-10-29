@@ -28,7 +28,7 @@
                 <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
               </div>
               <div class="item-star">
-                <core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">
+                <!--<core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">-->
                   <core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"
                              id="icon-star" on-tap="{{toggleStar}}"
                              class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"
