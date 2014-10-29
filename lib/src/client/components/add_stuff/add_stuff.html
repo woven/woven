@@ -46,11 +46,11 @@
           <template if="{{selectedType == 'event'}}">
             <div class="field-wrapper">
               <core-input id="event-start-date" placeholder="When is the event?" autocomplete="off"
-                          inputValue="{{theData['event-start-date']}}" on-tap="{{updateInput}}"></core-input>
+                          inputValue="{{theData['event-start-date']}}" on-focus="{{updateInput}}"></core-input>
             </div>
             <div class="field-wrapper">
               <core-input id="event-start-time" placeholder="What time does it start?" autocomplete="off"
-                          inputValue="{{theData['event-start-time']}}" on-tap="{{updateInput}}"></core-input>
+                          inputValue="{{theData['event-start-time']}}" on-focus="{{updateInput}}"></core-input>
             </div>
           </template>
           <div class="field-wrapper full-height">

@@ -100,18 +100,36 @@ class AddStuff extends PolymerElement {
       // Update the main item, then...
       itemRef.setWithPriority(encodedItem, -priority).then((e) {
         var item = id.name;
+
         root.child('/items_by_community/' + app.community.alias + '/' + item)
           ..setWithPriority(encodedItem, -priority);
+
         // Only in the main /items location, store a simple list of its parent communities.
         root.child('/items/' + item + '/communities/' + app.community.alias)
           ..set(true);
+
         // Update the community itself.
         root.child('/communities/' + app.community.alias).update({
             'updatedDate': '$now'
+
         });
-        // Store it by community, then by type, and sort it based on date.
-        root.child('/items_by_community_by_type/' + app.community.alias + '/$selectedType/' + item)
-        .setWithPriority(encodedItem, -priority);
+
+        var itemsByTypeRef = root.child('/items_by_community_by_type/' + app.community.alias + '/$selectedType/' + item);
+
+        // Use a priority based on the start date/time when storing the event in items_by_community_by_type.
+        if (selectedType == 'event') {
+          // Combine the separate date and time fields into one DateTime object.
+          DateTime date = parseDate(theData['event-start-date']);
+          DateTime time = parseTime(theData['event-start-time']);
+          DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute);
+
+          var eventPriority = startDateTime.millisecondsSinceEpoch;
+
+          itemsByTypeRef.setWithPriority(encodedItem, eventPriority);
+
+        } else {
+          itemsByTypeRef.setWithPriority(encodedItem, -priority);
+        }
       });
     }
 
@@ -124,6 +142,7 @@ class AddStuff extends PolymerElement {
     // TODO: Reset the selected type too? May be useful not to.
 
     app.selectedPage = 0;
+    app.router.dispatch(url: '/${app.community.alias}');
   }
 
   updateInput(Event e, var detail, CoreInput sender) {
