@@ -4,6 +4,8 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:woven/src/shared/date_group.dart';
+import 'dart:async';
 
 class FeedViewModel extends Observable {
   final App app;
@@ -12,12 +14,23 @@ class FeedViewModel extends Observable {
   int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
-  var snapshotPriority = null;
+  var lastPriority = null;
+  var topPriority = null;
+  var lastPriorityForListener = null;
   bool isFirstRun = true;
   String dataLocation = '';
   String typeFilter;
+  StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
   FeedViewModel({this.app, this.typeFilter}) {
+    if (typeFilter == 'event') {
+      var now = new DateTime.now();
+      DateTime startOfToday = new DateTime(now.year, now.month, now.day);
+      topPriority = lastPriority = startOfToday.millisecondsSinceEpoch;
+    } else {
+      topPriority == null;
+    }
+
     loadItemsByPage();
   }
 
@@ -25,17 +38,18 @@ class FeedViewModel extends Observable {
    * Load more items pageSize at a time.
    */
   loadItemsByPage() {
-    if (typeFilter != "event") {
-      dataLocation = '/items_by_community/' + app.community.alias;
-    } else {
-      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
-    }
-    print(dataLocation);
-    var itemsRef = f.child(dataLocation)
-      .startAt(priority: (snapshotPriority == null) ? null : snapshotPriority).limit(pageSize+1);
-
     reloadingContent = true;
     int count = 0;
+
+    if (typeFilter == "event") {
+      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
+    } else {
+      dataLocation = '/items_by_community/' + app.community.alias;
+    }
+
+    var itemsRef = f.child(dataLocation)
+      .startAt(priority: lastPriority)
+      .limit(pageSize + 1);
 
     // Get the list of items, and listen for new ones.
     itemsRef.once('value').then((snapshot) {
@@ -43,7 +57,7 @@ class FeedViewModel extends Observable {
         count++;
 
         // Track the snapshot's priority so we can paginate from the last one.
-        snapshotPriority = itemSnapshot.getPriority();
+        lastPriority = itemSnapshot.getPriority();
 
         // Don't process the extra item we tacked onto pageSize in the limit() above.
         if (count > pageSize) return;
@@ -51,23 +65,69 @@ class FeedViewModel extends Observable {
         // Insert each new item into the list.
         // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
         items.add(toObservable(processItem(itemSnapshot)));
-
-        // If this is the first item loaded, start listening for new items.
-        // By using the item's priority, we can listen only to newer items.
-        if (isFirstRun == true) {
-          listenForNewItems(snapshotPriority);
-          isFirstRun = false;
-        }
       });
+
+      // TODO: Ensure this listener ignores the extra item tacked onto pageSize above.
+      relistenForItems();
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
       reloadingContent = false;
     });
+  }
 
-    // When an item changes, let's update it.
-    // TODO: Does pagination mean we have multiple listeners for each page? Revisit.
-    itemsRef.onChildChanged.listen((e) {
+  /**
+   * Listen for new stuff within the items we're currently showing.
+   */
+  void relistenForItems() {
+    if (childAddedSubscriber != null) {
+      childAddedSubscriber.cancel();
+      childAddedSubscriber = null;
+    }
+    if (childChangedSubscriber != null) {
+      childChangedSubscriber.cancel();
+      childChangedSubscriber = null;
+    }
+    if (childMovedSubscriber != null) {
+      childMovedSubscriber.cancel();
+      childMovedSubscriber = null;
+    }
+    if (childRemovedSubscriber != null) {
+      childRemovedSubscriber.cancel();
+      childRemovedSubscriber = null;
+    }
+
+    listenForNewItems(startAt: topPriority, endAt: lastPriority);
+  }
+
+  listenForNewItems({startAt, endAt}) {
+    if (typeFilter == "event") {
+      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
+    } else {
+      dataLocation = '/items_by_community/' + app.community.alias;
+    }
+
+    // If this is the first item loaded, start listening for new items.
+    var itemsRef = f.child(dataLocation)
+      .startAt(priority: startAt)
+      .endAt(priority: endAt);
+
+    // Listen for new items.
+    childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
+      items.removeWhere((i) => i['id'] == e.snapshot.name);
+      items.add(toObservable(processItem(e.snapshot)));
+
+      if (typeFilter == 'event') {
+        // Sort the list by the event's startDateTime.
+        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+      } else {
+        // Sort the list by the item's updatedDate.
+        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+      }
+    });
+
+    // Listen for changed items.
+    childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
 
@@ -80,31 +140,20 @@ class FeedViewModel extends Observable {
       });
     });
 
-    // When an item is removed, let's remove it from the list.
-    itemsRef.onChildRemoved.listen((e) {
-      items.removeWhere((i) => i['id'] == e.snapshot.name);
-    });
-
-    itemsRef.onChildMoved.listen((e) {
-      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-    });
-
-    // TODO: Add a listener for onChildMoved for when items are updated and bumped to top of list.
-  }
-
-  listenForNewItems(endAtPriority) {
-    if (typeFilter == "event") {
-      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
-    } else {
-      dataLocation = '/items_by_community/' + app.community.alias;
-    }
-    // If this is the first item loaded, start listening for new items.
-    var itemsRef = f.child(dataLocation).endAt(priority: endAtPriority);
-    itemsRef.onChildAdded.listen((e) {
-      if (e.snapshot.getPriority() != endAtPriority) {
-        // Insert new items at the top of the list.
-        items.insert(0, toObservable(processItem(e.snapshot)));
+    // Listen for moved (priority order has changed) items.
+    childMovedSubscriber = itemsRef.onChildMoved.listen((e) {
+      if (typeFilter == 'event') {
+        // Sort the list by the event's startDateTime.
+        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+      } else {
+        // Sort the list by the item's updatedDate.
+        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
       }
+    });
+
+    // Listen for removed items.
+    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
+      items.removeWhere((i) => i['id'] == e.snapshot.name);
     });
   }
 
@@ -125,6 +174,13 @@ class FeedViewModel extends Observable {
         if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
         break;
       default:
+    }
+
+    // If we're filtering for just events, let's also get a date group so we can group events
+    // by today, tomorrow, this week, etc.
+    if (typeFilter == "event") {
+      item['dateGroup'] = DateGroup.getDateGroupName(item['startDateTime']);
+      print(item['dateGroup']);
     }
 
     // Use the Firebase snapshot ID as our ID.
@@ -282,6 +338,7 @@ class FeedViewModel extends Observable {
   }
 
   void paginate() {
+    print("Paginating...");
     if (reloadingContent == false && reachedEnd == false) loadItemsByPage();
   }
 }

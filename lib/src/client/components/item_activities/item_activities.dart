@@ -150,7 +150,11 @@ class ItemActivities extends PolymerElement {
                 DateTime time = DateTime.parse("$now");
                 var epochTime = time.millisecondsSinceEpoch;
                 root.child('/items_by_community/' + community + '/' + itemId).setPriority(-epochTime);
-                root.child('/items_by_community_by_type/' + community + '/$type/' + itemId).setPriority(-epochTime);
+                // We don't want to mess with the priority sort for events in items_by_community_by_type.
+                if (type != 'event') {
+                  root.child('/items_by_community_by_type/' + community + '/$type/' + itemId).setPriority(-epochTime);
+                }
+
                 root.child('/items/' + itemId).setPriority(-epochTime);
 
                 // Update the community itself.

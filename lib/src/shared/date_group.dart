@@ -1,9 +1,7 @@
 library date_group;
 
-import 'dart:async';
 import 'dart:math';
 import 'input_formatter.dart';
-import 'package:polymer/polymer.dart' show toObservable;
 
 /**
  * A utility class for grouping dates.
@@ -11,84 +9,6 @@ import 'package:polymer/polymer.dart' show toObservable;
  * This is used for e.g. grouping news and event lists (today, yesterday, last week, earlier).
  */
 class DateGroup {
-  static Map groupByJustDate(List objects) {
-    var results = {};
-
-    objects.forEach((object) {
-      DateTime date;
-      if (object.toString().startsWith('Event')) {
-        date = object.startDate;
-        if (object.endDate != null && object.endDate.difference(date).inHours.abs() > 24) {
-          if (date.compareTo(new DateTime.now()) == -1 && object.endDate.compareTo(new DateTime.now()) == 1) {
-            date = new DateTime.now();
-          }
-        }
-      }
-
-      if (['NewsArticle', 'Discussion', 'Question'].contains(object.dbType)) {
-        date = object.publicationDate;
-      }
-
-      if (date == null) date = new DateTime(1970, 1, 1);
-
-      var group = new DateTime(date.year, date.month, date.day);
-
-      if (results.containsKey(group) == false) results[group] = toObservable([]);
-
-      results[group].add(object);
-    });
-
-    return results;
-  }
-
-  static Future<Map<String, List<Object>>> groupByDate(List objects, String datePropertyName, {bool forward: true, bool oneLevel: false}) {
-    var results = {};
-
-    objects.forEach((object) {
-      var groupName, subGroupName;
-
-      if (['NewsArticle', 'Discussion', 'Question'].contains(object.dbType)) {
-        groupName = getDateGroupName(object.publicationDate);
-        subGroupName = getDateSubGroupName(object.publicationDate, groupName);
-      }
-
-      if (object.toString().startsWith('Event')) {
-        groupName = getDateGroupName(object.startDate, forward: forward, endDate: object.endDate);
-        subGroupName = getDateSubGroupName(object.startDate, groupName, endDate: object.endDate);
-      }
-
-      if (object.toString().startsWith('Group')) {
-        groupName = getDateGroupName(object.createdAt);
-        subGroupName = getDateSubGroupName(object.createdAt, groupName);
-      }
-
-      if (groupName == null) {
-        groupName = 'Unknown';
-        subGroupName = 'Unknown';
-      }
-
-      if (oneLevel) {
-        if (results.containsKey(groupName) == false) {
-          results[groupName] = toObservable([]);
-        }
-
-        results[groupName].add(object);
-      } else {
-        if (results.containsKey(groupName) == false) {
-          results[groupName] = toObservable({});
-        }
-
-        if (results[groupName].containsKey(subGroupName) == false) {
-          results[groupName][subGroupName] = toObservable([]);
-        }
-
-        results[groupName][subGroupName].add(object);
-      }
-    });
-
-    return new Future.value(results);
-  }
-
   static getDateGroupName(DateTime date, {bool forward: false, DateTime endDate}) {
     if (date == null) return 'Not Specified';
 

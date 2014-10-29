@@ -34,6 +34,7 @@ class WovenApp extends PolymerElement with Observable {
 
   void goBack(Event e, var detail, Element target) {
     app.router.dispatch(url: (app.community != null ? '/${app.community.alias}' : '/'));
+    // TODO: Update so goes back to view you came from.
     app.community != null ? app.selectedPage = 0 : app.selectedPage = 4;
   }
 
@@ -113,6 +114,7 @@ class WovenApp extends PolymerElement with Observable {
       if (response.success && response.data !=null) {
         app.user = UserModel.decode(response.data);
 
+        //TODO: Aha! This triggers a feedViewModel load.
         app.mainViewModel.invalidateUserState();
 
         // On sign in, greet the user.

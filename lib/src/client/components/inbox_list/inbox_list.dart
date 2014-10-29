@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:core_elements/core_header_panel.dart';
+import 'package:woven/src/shared/util.dart';
 
 /**
  * A list of items.
@@ -19,7 +20,6 @@ import 'package:core_elements/core_header_panel.dart';
 class InboxList extends PolymerElement with Observable {
   @published App app;
   @published FeedViewModel viewModel;
-  @published String filter;
 
   List<StreamSubscription> subscriptions;
 
@@ -171,12 +171,41 @@ class InboxList extends PolymerElement with Observable {
         if (communitiesRef != null) {
           communitiesRef.keys.forEach((community) {
             f.child('/items_by_community/' + community + '/' + e.snapshot.name).setPriority(-epochTime);
-            f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name).setPriority(-epochTime);
+
+
+            var itemsByTypeRef = f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name);
+
+            if (item['type'] == 'event') {
+                // Leave events for scriptMakeItemsByCommunityType().
+//              var eventPriority;
+//              if (item['startDateTime'] != null) {
+//                DateTime datetime = DateTime.parse(item['startDateTime']);
+//                print('$datetime / ${item['subject']}');
+//
+//                eventPriority = datetime.millisecondsSinceEpoch;
+//              } else {
+//                // No startdate.
+//                var now = new DateTime.now();
+//                DateTime datetime = new DateTime(2012, DateTime.DECEMBER, 12, now.hour, now.second, now.millisecond);
+//                print('$datetime / ${item['subject']} / NULL');
+//
+//                eventPriority = datetime.millisecondsSinceEpoch;
+//              }
+//              itemsByTypeRef.setPriority(eventPriority);
+            } else {
+              itemsByTypeRef.setPriority(-epochTime);
+            }
           });
         }
       });
     });
   }
+
+  scriptFixStartDateTimeOnItems() {
+    // Run this per community.
+
+  }
+
 
   scriptMakeItemsByCommunityByType() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
@@ -195,8 +224,34 @@ class InboxList extends PolymerElement with Observable {
       var epochTime = time.millisecondsSinceEpoch;
       var type = item['type'];
 
-      f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.name)
-      .setWithPriority(item, -epochTime);
+      var itemsByTypeRef = f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.name);
+
+      if (item['type'] == 'event') {
+
+        var eventPriority;
+        if (item['startDateTime'] != null) {
+          DateTime datetime = DateTime.parse(item['startDateTime']);
+          print('$datetime / ${item['subject']}');
+
+          eventPriority = datetime.millisecondsSinceEpoch;
+        } else {
+          // No startdate.
+          var now = new DateTime.now();
+          DateTime datetime = new DateTime(2012, DateTime.DECEMBER, 12, now.hour, now.second, now.millisecond);
+          print('$datetime / ${item['subject']} / NULL');
+
+          eventPriority = datetime.millisecondsSinceEpoch;
+        }
+        itemsByTypeRef.setWithPriority(item, eventPriority);
+      } else {
+        itemsByTypeRef.setWithPriority(item, -epochTime);
+      }
+
+
+
+
+
+
     });
   }
 
@@ -250,7 +305,7 @@ class InboxList extends PolymerElement with Observable {
 //    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
 //    scriptUpdateCommentCounts(); // Run 3rd.
-      scriptAddPriorityOnPeople(); // 4.
+//      scriptAddPriorityOnPeople(); // 4.
 
 //    scriptAddPriorityOnItemsByCommunity(); // Deprecated.
 //    scriptAddPriorityOnItems(); // Deprecated.

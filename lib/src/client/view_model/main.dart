@@ -71,9 +71,11 @@ class MainViewModel extends Observable {
 
     if (!feedViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
+      print("New FeedViewModel...");
       var vm = new FeedViewModel(app: app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
       feedViewModels[id] = vm; // Store it.
     }
+    print("Called model! $id");
     return feedViewModels[id];
   }
 
@@ -85,9 +87,11 @@ class MainViewModel extends Observable {
     if (id == null) return null;
 
     if (!feedViewModels.containsKey(id)) {
+      print("New FeedViewModel w/ typeFilter: event");
       var vm = new FeedViewModel(app: app, typeFilter: 'event');
       feedViewModels[id] = vm;
     }
+    print("Called model! $id");
     return feedViewModels[id];
   }
 
@@ -254,11 +258,14 @@ class MainViewModel extends Observable {
     if (itemViewModel != null) {
       itemViewModel.loadItemUserStarredLikedInformation();
     }
-
-    if (app.community != null) {
+    // TODO: This is causing feedViewModel to load even if we loaded an eventViewModel.
+    // TODO: It's also causing it to call the model twice.
+    return;
+    if (app.community != null && feedViewModel != null) {
       feedViewModel.loadUserStarredItemInformation();
       feedViewModel.loadUserLikedItemInformation();
     }
+
 
     if (app.user != null) {
       starredViewModel.loadStarredItemsForUser();
