@@ -314,5 +314,13 @@ class InboxList extends PolymerElement with Observable {
 
   detached() {
     print("-InboxList");
+    viewModel.childAddedSubscriber.cancel();
+    viewModel.childChangedSubscriber.cancel();
+    viewModel.childMovedSubscriber.cancel();
+    viewModel.childRemovedSubscriber.cancel();
+
+    subscriptions.forEach((subscription) {
+      subscription.cancel();
+    });
   }
 }
