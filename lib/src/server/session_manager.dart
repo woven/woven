@@ -14,6 +14,10 @@ class SessionManager {
    */
   addSessionCookieToRequest(HttpRequest request, HttpSession session) {
     var domain = config['server']['domain'];
+    var port = config['server']['port'];
+    if (port != '80') {
+      domain = '$domain:$port';
+    }
     try {
       domain = request.headers['host'].first;
     } catch (e) {}
