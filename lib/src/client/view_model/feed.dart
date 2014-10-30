@@ -81,7 +81,7 @@ class FeedViewModel extends Observable {
     });
   }
 
-  // TODO: Improve.
+  // Group items by date group (Today, Tomorrow, etc.) and store in a separate list.
   updateEventView() {
     if (typeFilter == 'event') {
       groupedItems.clear();
