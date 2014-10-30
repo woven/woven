@@ -205,6 +205,15 @@ core-icon {
   color: #008000;
 }
 
+.date-group-header {
+  padding: 13px 23px;
+  background-color: #0091F1;
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'RobotoDraft', sans-serif;
+}
+
 .cta {
   background: #333;
   border-radius: 2px;

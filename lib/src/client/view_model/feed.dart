@@ -10,16 +10,20 @@ import 'dart:async';
 class FeedViewModel extends Observable {
   final App app;
   final List items = toObservable([]);
+  final Map groupedItems = toObservable({});
+  final List groupDates = toObservable([]);
+
   final f = new Firebase(config['datastore']['firebaseLocation']);
+  String dataLocation = '';
+  @observable String typeFilter;
+
   int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var lastPriority = null;
   var topPriority = null;
-  var lastPriorityForListener = null;
   bool isFirstRun = true;
-  String dataLocation = '';
-  String typeFilter;
+
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
   FeedViewModel({this.app, this.typeFilter}) {
@@ -67,6 +71,8 @@ class FeedViewModel extends Observable {
         items.add(toObservable(processItem(itemSnapshot)));
       });
 
+      updateEventView();
+
       // TODO: Ensure this listener ignores the extra item tacked onto pageSize above.
       relistenForItems();
 
@@ -74,6 +80,26 @@ class FeedViewModel extends Observable {
       if (count <= pageSize) reachedEnd = true;
       reloadingContent = false;
     });
+  }
+
+  // TODO: Improve.
+  updateEventView() {
+    if (typeFilter == 'event') {
+      groupDates.clear();
+      groupedItems.clear();
+      items.forEach((item) {
+        var key = item['dateGroup'];
+        if (groupedItems[key] == null) {
+          groupedItems[key] = [];
+        }
+        groupedItems[key].add(item);
+      });
+      groupedItems.keys.forEach((k) {
+        groupDates.add(k);
+      });
+      print(groupDates);
+      print(groupedItems["Today"]);
+    }
   }
 
   /**
@@ -118,6 +144,7 @@ class FeedViewModel extends Observable {
       items.add(toObservable(processItem(e.snapshot)));
 
       if (typeFilter == 'event') {
+        updateEventView();
         // Sort the list by the event's startDateTime.
         items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
       } else {
@@ -143,6 +170,7 @@ class FeedViewModel extends Observable {
     // Listen for moved (priority order has changed) items.
     childMovedSubscriber = itemsRef.onChildMoved.listen((e) {
       if (typeFilter == 'event') {
+        updateEventView();
         // Sort the list by the event's startDateTime.
         items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
       } else {
@@ -153,6 +181,7 @@ class FeedViewModel extends Observable {
 
     // Listen for removed items.
     childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
+      updateEventView();
       items.removeWhere((i) => i['id'] == e.snapshot.name);
     });
   }
@@ -180,6 +209,13 @@ class FeedViewModel extends Observable {
     // by today, tomorrow, this week, etc.
     if (typeFilter == "event") {
       item['dateGroup'] = DateGroup.getDateGroupName(item['startDateTime']);
+
+//      if (!itemsByGroupDate.contains(item['dateGroup'])) {
+//        print("Does NOT");
+//        itemsByGroupDate.add(dateGroup);
+//      } else {
+//        print("DOES");
+//      }
     }
 
     // Use the Firebase snapshot ID as our ID.
