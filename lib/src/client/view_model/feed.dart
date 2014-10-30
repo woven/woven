@@ -11,7 +11,6 @@ class FeedViewModel extends Observable {
   final App app;
   final List items = toObservable([]);
   final Map groupedItems = toObservable({});
-  final List groupDates = toObservable([]);
 
   final f = new Firebase(config['datastore']['firebaseLocation']);
   String dataLocation = '';
@@ -85,7 +84,6 @@ class FeedViewModel extends Observable {
   // TODO: Improve.
   updateEventView() {
     if (typeFilter == 'event') {
-      groupDates.clear();
       groupedItems.clear();
       items.forEach((item) {
         var key = item['dateGroup'];
@@ -94,11 +92,6 @@ class FeedViewModel extends Observable {
         }
         groupedItems[key].add(item);
       });
-      groupedItems.keys.forEach((k) {
-        groupDates.add(k);
-      });
-      print(groupDates);
-      print(groupedItems["Today"]);
     }
   }
 

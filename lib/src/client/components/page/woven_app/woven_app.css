@@ -38,11 +38,12 @@
 
 .toolbar.has-logo {
   transition: background-color .8s;
+  background-color: #000;
 }
 
 #page-title {
   opacity: 0;
-  transition: .5s opacity;
+  transition: .2s opacity;
   font-family: 'RobotoDraft', sans-serif;
   font-weight: bold;
   font-size: 1em;
@@ -50,7 +51,7 @@
 
 #sidebar-title {
   opacity: 1;
-  transition: .5s opacity;
+  transition: .2s opacity;
   font-family: 'RobotoDraft', sans-serif;
   font-weight: bold;
   font-size: 1em;

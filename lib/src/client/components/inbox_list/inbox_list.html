@@ -39,7 +39,7 @@
         <!--</template>-->
       <!--</core-list-dart>-->
       <template if="{{viewModel.typeFilter == 'event'}}">
-        <template repeat="{{groupDate in viewModel.groupDates}}">
+        <template repeat="{{groupDate in viewModel.groupedItems.keys}}">
         <div class="date-group-header">{{groupDate}}</div>
         <template repeat="{{item in viewModel.groupedItems[groupDate]}}">
           <div class="item-wrapper">

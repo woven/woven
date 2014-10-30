@@ -143,6 +143,7 @@ safe-html::shadow a:visited {
 
 #body {
   word-wrap: break-word;
+  font-size: 15px;
 }
 
 @media all and (max-width: 800px)  {
