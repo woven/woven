@@ -137,9 +137,10 @@ class FeedViewModel extends Observable {
       items.add(toObservable(processItem(e.snapshot)));
 
       if (typeFilter == 'event') {
-        updateEventView();
         // Sort the list by the event's startDateTime.
         items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+
+        updateEventView();
       } else {
         // Sort the list by the item's updatedDate.
         items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
