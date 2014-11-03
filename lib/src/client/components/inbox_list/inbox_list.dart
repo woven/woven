@@ -227,31 +227,27 @@ class InboxList extends PolymerElement with Observable {
       var itemsByTypeRef = f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.name);
 
       if (item['type'] == 'event') {
-
         var eventPriority;
+
         if (item['startDateTime'] != null) {
           DateTime datetime = DateTime.parse(item['startDateTime']);
-          print('$datetime / ${item['subject']}');
+//          print('$datetime / ${item['subject']}');
 
           eventPriority = datetime.millisecondsSinceEpoch;
         } else {
           // No startdate.
           var now = new DateTime.now();
           DateTime datetime = new DateTime(2012, DateTime.DECEMBER, 12, now.hour, now.second, now.millisecond);
-          print('$datetime / ${item['subject']} / NULL');
+//          print('$datetime / ${item['subject']} / NULL');
 
           eventPriority = datetime.millisecondsSinceEpoch;
         }
+
         itemsByTypeRef.setWithPriority(item, eventPriority);
+        itemsByTypeRef.update({'startDateTimePriority':'${eventPriority}'});
       } else {
         itemsByTypeRef.setWithPriority(item, -epochTime);
       }
-
-
-
-
-
-
     });
   }
 
@@ -306,6 +302,7 @@ class InboxList extends PolymerElement with Observable {
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
 //    scriptUpdateCommentCounts(); // Run 3rd.
 //      scriptAddPriorityOnPeople(); // 4.
+  // Then, kill empty items in items_by_community.
 
 //    scriptAddPriorityOnItemsByCommunity(); // Deprecated.
 //    scriptAddPriorityOnItems(); // Deprecated.

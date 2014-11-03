@@ -3,6 +3,7 @@ library date_formatter;
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'date_group.dart';
+import 'shared_util.dart' as sharedUtil;
 
 /**
  * A useful utility class for formatting input.
@@ -348,4 +349,224 @@ class InputFormatter {
 
     return content.replaceAll('\n', '<br />');
   }
+
+  /**
+   * Cuts text short.
+   *
+   * Makes sure that words aren't cut in half or URIs.
+   */
+  static String cutText(String text, [int length = 250, dots = false]) {
+    if (text == null) return '';
+
+    if (text.length <= length) return text;
+
+    var wasCut = text.length > length;
+
+    // Go to the potential end.
+    var position = min(length, text.length) - 3;
+
+    // If we are at the end of a word, we should include it.
+    position += 1;
+
+    // We are in the middle of something? Don't just crop directly (i.e. "fooooo" -> "foo...") always prefer to cut words.
+    var regExp = new RegExp('[a-zA-Z]');
+    while (position > 0 && regExp.hasMatch(text[position - 1])) {
+      position--;
+    }
+
+    // Get rid of potential crap at the end.
+    regExp = new RegExp('[^a-zA-Z]');
+    while (position > 0 && regExp.hasMatch(text[position - 1])) {
+      position--;
+    }
+
+    // Find URL start/end -indexes.
+    var urls = new RegExp('(https?://|www.)[^ ]+').allMatches(text);
+    var urlBoundaries = [];
+    urls.forEach((Match match) {
+      var startIndex = text.indexOf(match.group(0));
+      var endIndex = startIndex + match.group(0).length;
+      urlBoundaries.add([startIndex, endIndex]);
+    });
+
+    var inMiddleOfUrl = false;
+    var amount = 0;
+    urlBoundaries.forEach((List<int> boundary) {
+      if (position > boundary[0] && position < boundary[1]) {
+        amount = position - boundary[0];
+        inMiddleOfUrl = true;
+      }
+    });
+
+    if (inMiddleOfUrl) {
+      position -= amount;
+    }
+
+    if (position <= 0) return '';
+
+    text = text.substring(0, position).trim();
+    text = '$text...';
+
+    return text;
+  }
+
+  /**
+   * Strips the HTML.
+   *
+   * This leaves the content inside tags.
+   */
+  static String stripHtml(String html, [List<String> exclude = const []]) {
+    if (html == null) return '';
+
+    var tagOpen = false, stripped = '', tagName, letterRegExp = new RegExp('^[a-zA-Z]\$');
+
+    for (var i = 0, length = html.length; i < length; i++) {
+      if (html[i] == '<') {
+        tagOpen = true;
+        tagName = '';
+
+        if (i + 1 < html.length) {
+          var a = 1;
+
+          if (html[i+1] == '/') {
+            a++;
+          }
+
+          while (true) {
+            if (html.length >= i + a) break;
+
+            var character = html[i + a];
+
+            if (!letterRegExp.hasMatch(character)) {
+              break;
+            }
+
+            tagName = '$tagName$character';
+
+            a++;
+          }
+        }
+
+        tagName =  tagName.toLowerCase();
+      }
+
+      if (tagOpen == false || exclude.contains(tagName)) {
+        stripped = '${stripped}${html[i]}';
+      }
+
+      if (html[i] == '>') {
+        tagOpen = false;
+        tagName = '';
+      }
+    }
+
+    return stripped;
+  }
+
+  /**
+   * Create intelligent teasers.
+   */
+  static String createIntelligentTeaser(String contents, {int length: 200, int minLength: 75}) {
+    if (contents == null) return '';
+
+    contents = sharedUtil.htmlDecode(contents);
+
+    contents = nl2br(stripHtml(contents).trim());
+
+    if (length >= contents.length) length = contents.length - 1;
+
+    // Find links.
+    var linkMatches = new RegExp('(http://|www.)[^ ]+').allMatches(contents);
+
+    var lastSingleDotPosition = 0;
+    for (var i = length; i > minLength; i--) {
+      // This is it!
+      if (contents[i] == '.' && contents[i - 1] != '.' && (i == length || contents[i + 1] != '.')) {
+        // Don't accept this if in the middle of a link!
+        var isLink = false;
+        linkMatches.forEach((match) {
+          if (match.start < i && match.end > i) isLink = true;
+        });
+
+        if (isLink) continue;
+
+        lastSingleDotPosition = i + 1;
+        break;
+      }
+    }
+
+    // Only three-dotted sentence available.
+    if (lastSingleDotPosition == 0) {
+      var index = contents.indexOf('.');
+      if (index != -1) {
+        if (contents.length > index + 1 && contents[index + 1] == '.') lastSingleDotPosition = index + 3;
+        else lastSingleDotPosition = index + 1;
+      }
+    }
+
+    var cutPosition = min(min(lastSingleDotPosition, contents.length), length);
+
+    // Cut.
+    if (lastSingleDotPosition != 0) contents = contents.substring(0, cutPosition);
+
+    // Replace <br>'s with an empty space.
+    contents = contents.replaceAll(new RegExp('<br ?/?>'), ' ');
+
+    // Weird stuff on Meetup...
+    contents = contents.replaceAll('\\', '');
+
+    // Get rid of &nbsp;
+    contents = contents.replaceAll(new RegExp('&nbsp;?', caseSensitive: false), '');
+
+    // Make sure there's no crazy whitespace.
+    contents = contents.replaceAll(new RegExp(' {2,}'), ' ');
+
+    return contents;
+  }
+
+  static String makeExternalLinksTargetBlank(String contents) {
+    if (contents == null) return '';
+
+    return contents.replaceAllMapped('<a ', (Match m) {
+      return '<a target="_blank" ';
+    });
+  }
+
+  /**
+   * Creates a teaser out of the content.
+   *
+   * Removes HTML, strips whitespace and cuts the length.
+   */
+  static String createTeaser(String contents, [int length = 150]) {
+    var originalContent = contents;
+
+    if (originalContent == null) return '';
+
+    contents = contents != null ? nl2br(cutText(stripHtml(contents).trim(), length)) : '';
+
+    // Replace <br>'s with an empty space.
+    contents = contents.replaceAll(new RegExp('<br ?/?>'), ' ');
+
+    // Strip non-letters from the end.
+    if (originalContent.length > length) {
+      contents = contents.replaceAll(new RegExp('[^a-zA-Z]+\$', multiLine: false), '');
+    }
+
+    // Weird stuff on Meetup...
+    contents = contents.replaceAll('\\', '');
+
+    // Get rid of &nbsp;
+    contents = contents.replaceAll(new RegExp('&nbsp;?', caseSensitive: false), '');
+
+    // Make sure there's no crazy whitespace.
+    contents = contents.replaceAll(new RegExp(' {2,}'), ' ');
+
+    if (originalContent.length > length && contents.length > 100) {
+      return '$contents...';
+    }
+
+    return contents;
+  }
+
+
 }

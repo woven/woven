@@ -26,6 +26,7 @@ class FeedViewModel extends Observable {
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
   FeedViewModel({this.app, this.typeFilter}) {
+
     if (typeFilter == 'event') {
       var now = new DateTime.now();
       DateTime startOfToday = new DateTime(now.year, now.month, now.day);

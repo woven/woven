@@ -17,6 +17,7 @@ import 'routing/router.dart';
 import 'firebase.dart';
 
 import 'package:woven/src/server/mailer/mailer.dart';
+import 'package:woven/src/server/digest/email_digest.dart';
 
 
 class App {
@@ -49,11 +50,14 @@ class App {
 
     // Set up emailing.
     mailer = new Mailgun();
-
   }
 
   void onServerEstablished(HttpServer server) {
     print("Server started.");
+
+    // Temporary: Send an email.
+//    var tempMailer = new EmailDigest(this);
+//    tempMailer.makeDigest();
 
     server.listen((HttpRequest request) {
       // Some redirects if coming from related domains.
