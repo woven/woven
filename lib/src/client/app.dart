@@ -157,4 +157,10 @@ class App extends Observable {
     var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
     window.location.assign(signInUrl);
   }
+
+  void signInWithEmail() {
+    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
+    window.location.assign(signInUrl);
+  }
+
 }

@@ -17,7 +17,7 @@ class EmailDigest {
     List items = [];
     Map jsonForTemplate;
 
-    var now = new DateTime.now();
+    var now = DateTime.parse("2014-11-04");
     var startOfToday = new DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
     var endOfToday = new DateTime(now.year, now.month, now.day, 23, 59, 59, 999).millisecondsSinceEpoch;
     var query = '/items_by_community_by_type/miamitech/event.json?orderBy="startDateTimePriority"&startAt="$startOfToday"&endAt="$endOfToday"'; //&endAt="$endOfToday"
@@ -48,6 +48,7 @@ class EmailDigest {
         // Output to an HTML file.
         new File('web/static/templates/daily_digest.html').writeAsString(output);
 
+        return;
         // Send the welcome email.
         var envelope = new Envelope()
           ..from = "Woven <hello@woven.co>"

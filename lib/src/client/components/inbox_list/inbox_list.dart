@@ -244,6 +244,7 @@ class InboxList extends PolymerElement with Observable {
         }
 
         itemsByTypeRef.setWithPriority(item, eventPriority);
+        // TODO: Add this to add_stuff.
         itemsByTypeRef.update({'startDateTimePriority':'${eventPriority}'});
       } else {
         itemsByTypeRef.setWithPriority(item, -epochTime);
@@ -293,10 +294,33 @@ class InboxList extends PolymerElement with Observable {
     }));
   }
 
+  getUsers() {
+    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    var usersRef = f.child('/users');
+    Map user;
+
+    usersRef.once('value').then((snapshot) {
+      snapshot.forEach((userSnapshot) {
+        user = userSnapshot.val();
+        print(user['firstName']);
+      });
+      snapshot.forEach((userSnapshot) {
+        user = userSnapshot.val();
+        print(user['lastName']);
+      });
+      snapshot.forEach((userSnapshot) {
+        user = userSnapshot.val();
+        print(user['email']);
+      });
+    });
+  }
+
   attached() {
     print("+InboxList");
 
     initializeInfiniteScrolling();
+
+    getUsers();
 
 //    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
