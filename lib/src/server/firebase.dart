@@ -61,6 +61,6 @@ class Firebase {
       }
 
       return null;
-    });
+    }).catchError((error) => print(error));
   }
 }

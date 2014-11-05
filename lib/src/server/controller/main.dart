@@ -74,7 +74,7 @@ class MainController {
       return Firebase.get('/users/$username.json').then((userData) {
         // Send the welcome email.
         var envelope = new Envelope()
-          ..from = "Woven <support@woven.org>"
+          ..from = "Woven <hello@woven.co>"
           ..to = "${userData['firstName']} ${userData['lastName']} <${userData['email']}>"
           ..bcc = "David Notik <davenotik@gmail.com>"
           ..subject = 'Welcome, ${userData['firstName']}!'
@@ -84,6 +84,8 @@ Hey ${userData['firstName']},
 Thank you for creating an account on the new Woven.
 
 Beyond social networking, this is collaborative networking. Woven is being designed from the ground up to help us coordinate our actions to improve the world.
+
+Here's a manifesto of sorts: http://woven.co/item/LUpZTWEtZWZOejRFRklYVTYxWmY=
 
 The new Woven is starting simple and getting better every day.
 
