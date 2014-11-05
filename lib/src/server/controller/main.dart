@@ -99,7 +99,7 @@ Thank you for your early support!
 
 --
 Woven
-http://mycommunity.org
+http://woven.co
 ''';
         return app.mailer.send(envelope).then((success) {
           return new Response(success);
