@@ -100,6 +100,9 @@ Thank you for your early support!
 --
 Woven
 http://woven.co
+
+http://facebook.com/woven
+http://twitter.com/wovenco
 ''';
         return app.mailer.send(envelope).then((success) {
           return new Response(success);
