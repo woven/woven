@@ -317,10 +317,30 @@ class InboxList extends PolymerElement with Observable {
 
   attached() {
     print("+InboxList");
+    print(viewModel.lastScrollPos);
+    // Scroll to last known position.
 
     initializeInfiniteScrolling();
 
-    getUsers();
+    subscriptions.add(app.scroller.onScroll.listen((e) {
+      viewModel.lastScrollPos = app.scroller.scrollTop;
+      print(viewModel.lastScrollPos);
+    }));
+
+    print("scroller.scrollHeight: ${app.scroller.scrollHeight}");
+
+    new Timer(new Duration(seconds:2), () {
+      print("#2 scroller.scrollHeight: ${app.scroller.scrollHeight}");
+      app.scroller.scrollTop = viewModel.lastScrollPos;
+    });
+
+
+
+
+//    getUsers();
+
+    viewModel.someFunction();
+
 
 //    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
@@ -335,6 +355,7 @@ class InboxList extends PolymerElement with Observable {
 
   detached() {
     print("-InboxList");
+//    viewModel.lastScrollPos = app.scroller.scrollTop;
 
     // TODO: If we cancel, how to resume? pause/resume instead?
 //    viewModel.childAddedSubscriber.cancel();

@@ -16,6 +16,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/components/page/woven_app/woven_app.dart';
 import 'package:woven/src/client/view_model/main.dart';
 import 'package:woven/src/client/view_model/feed.dart';
+import 'package:core_elements/core_header_panel.dart';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -124,6 +125,15 @@ class App extends Observable {
     }
   }
 
+  /**
+   * Get the main scrolling element on app.
+   */
+  HtmlElement get scroller {
+    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
+    HtmlElement scroller = el.scroller;
+    return scroller;
+  }
+
   // Unused for now.
   void resetCommunityTitle() {
     if (community !=null) {
@@ -159,8 +169,8 @@ class App extends Observable {
   }
 
   void signInWithEmail() {
-    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
-    window.location.assign(signInUrl);
+//    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
+//    window.location.assign(signInUrl);
   }
 
 }

@@ -6,8 +6,9 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/date_group.dart';
 import 'dart:async';
+import 'base.dart';
 
-class FeedViewModel extends Observable {
+class FeedViewModel extends BaseViewModel with Observable {
   final App app;
   final List items = toObservable([]);
   final Map groupedItems = toObservable({});
