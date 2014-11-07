@@ -5,12 +5,10 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:woven/src/shared/util.dart';
 import 'feed.dart';
 import 'item.dart';
 import 'list.dart';
-
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
 
 class MainViewModel extends Observable {
   final App app;
@@ -42,10 +40,8 @@ class MainViewModel extends Observable {
 
     if (Uri.parse(path).pathSegments.length > 1) {
       // Decode the base64 URL and determine the item.
-      var base64 = Uri.parse(window.location.toString()).pathSegments[1];
-      var bytes = CryptoUtils.base64StringToBytes(base64);
-      var decodedItem = UTF8.decode(bytes);
-      id = decodedItem;
+      var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
+      id = hashDecode(encodedItem);
     }
 
     if (id == null) return null; // No item.

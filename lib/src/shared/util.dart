@@ -1,9 +1,7 @@
 library util;
 
 import 'dart:convert';
-import 'dart:math';
-import 'dart:async';
-import 'package:intl/intl.dart';
+import 'package:crypto/crypto.dart';
 
 /**
  * Parses a date into a DateTime object.
@@ -63,3 +61,23 @@ parseTime(String time) {
     return null;
   }
 }
+
+/**
+ * Hash some string, e.g. for an item ID in a URL.
+ */
+hashEncode(String text) {
+  var encodedText = CryptoUtils.bytesToBase64(UTF8.encode(text));
+  return encodedText;
+}
+
+/**
+ * Decode a hashed string, e.g. an item ID in a URL.
+ */
+hashDecode(String encodedText) {
+  var base64 = encodedText;
+  var bytes = CryptoUtils.base64StringToBytes(base64);
+  var decodedText = UTF8.decode(bytes);
+  return decodedText;
+}
+
+

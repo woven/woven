@@ -6,8 +6,7 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/input_formatter.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
+import 'package:woven/src/shared/util.dart';
 
 class ItemViewModel extends Observable {
   final App app;
@@ -37,9 +36,8 @@ class ItemViewModel extends Observable {
       // If there's no app.selectedItem, we probably
       // came here directly, so let's get it.
       // Decode the base64 URL and determine the item.
-      var base64 = Uri.parse(window.location.toString()).pathSegments[1];
-      var bytes = CryptoUtils.base64StringToBytes(base64);
-      var decodedItem = UTF8.decode(bytes);
+      var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
+      var decodedItem = hashDecode(encodedItem);
 
       var f = new db.Firebase(firebaseLocation);
 

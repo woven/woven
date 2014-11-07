@@ -5,10 +5,9 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/uri_policy.dart';
+import 'package:woven/src/shared/util.dart';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
@@ -38,9 +37,8 @@ class ItemActivities extends PolymerElement {
     // came here directly, so let's use itemId from the URL.
     if (app.selectedItem == null) {
       // Decode the base64 URL and determine the item.
-      var base64 = Uri.parse(window.location.toString()).pathSegments[1];
-      var bytes = CryptoUtils.base64StringToBytes(base64);
-      itemId = UTF8.decode(bytes);
+      var encodedItemId = Uri.parse(window.location.toString()).pathSegments[1];
+      itemId = hashDecode(encodedItemId);
     } else {
       itemId = app.selectedItem['id'];
     }

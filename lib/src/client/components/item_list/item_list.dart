@@ -1,14 +1,9 @@
 import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart' as db;
 import 'dart:html';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:core_elements/core_pages.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
-
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
+import 'package:woven/src/shared/util.dart';
 
 /**
  * The InboxList class is for the list of inbox items, which is pulled from Firebase.
@@ -31,11 +26,8 @@ class ItemList extends PolymerElement with Observable {
     app.selectedPage = 1;
     app.userCameFromInbox = true;
 
-    var str = target.dataset['id'];
-    var bytes = UTF8.encode(str);
-    var base64 = CryptoUtils.bytesToBase64(bytes);
-
-    app.router.dispatch(url: "/item/$base64");
+    var encodedItemId =  hashEncode(target.dataset['id']);
+    app.router.dispatch(url: "/item/$encodedItemId");
   }
 
   toggleLike(Event e, var detail, Element target) {
@@ -74,8 +66,6 @@ class ItemList extends PolymerElement with Observable {
     if (app.user != null) {
       viewModel.starredViewModel.loadStarredItemsForUser();
     }
-
-    //CreateCommunityItemsScript();
   }
 
   detached() {

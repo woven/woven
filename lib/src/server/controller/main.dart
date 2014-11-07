@@ -2,14 +2,13 @@ library main_controller;
 
 import 'dart:io';
 import 'dart:convert';
-import 'dart:async';
 import '../app.dart';
 import '../firebase.dart';
 import '../../shared/response.dart';
-import '../../shared/model/user.dart';
 import '../../../config/config.dart';
 import '../mailer/mailer.dart';
 import 'package:crypto/crypto.dart';
+import 'package:woven/src/shared/util.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -122,7 +121,7 @@ http://twitter.com/wovenco
     return Firebase.get('/items/$item.json').then((itemData) {
       notificationData['itemSubject'] = itemData['subject'];
       notificationData['itemAuthor'] = itemData['user'];
-      var encodedItem = CryptoUtils.bytesToBase64(UTF8.encode(item));
+      var encodedItem = hashEncode(item);
       notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
     }).then((_) {
       return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
