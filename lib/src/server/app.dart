@@ -12,12 +12,12 @@ import '../shared/response.dart';
 import 'controller/hello.dart';
 import 'controller/main.dart';
 import 'controller/sign_in.dart';
+import 'controller/admin.dart';
 import 'routing/router.dart';
 
 import 'firebase.dart';
 
 import 'package:woven/src/server/mailer/mailer.dart';
-import 'package:woven/src/server/digest/email_digest.dart';
 
 
 class App {
@@ -41,7 +41,8 @@ class App {
       ..routes[Routes.starred] = MainController.serveApp
       ..routes[Routes.people] = MainController.serveApp
       ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail
-      ..routes[Routes.sendNotifications] = MainController.sendNotifications;
+      ..routes[Routes.sendNotifications] = MainController.sendNotifications
+      ..routes[Routes.generateDigest] = AdminController.generateDigest;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
@@ -54,10 +55,6 @@ class App {
 
   void onServerEstablished(HttpServer server) {
     print("Server started.");
-
-    // Temporary: Send an email.
-//    var tempMailer = new EmailDigest(this);
-//    tempMailer.makeDigest();
 
     server.listen((HttpRequest request) {
       // Some redirects if coming from related domains.
