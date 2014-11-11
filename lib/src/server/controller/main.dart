@@ -145,7 +145,7 @@ http://twitter.com/wovenco
 
       // Send notification.
       var envelope = new Envelope()
-        ..from = "Woven <support@woven.co>"
+        ..from = "Woven <hello@woven.co>"
         ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
         ..bcc = "David Notik <davenotik@gmail.com>"
         ..subject = '${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} commented on your post'
