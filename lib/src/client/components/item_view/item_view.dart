@@ -1,30 +1,26 @@
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
-import 'dart:math';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/input_formatter.dart';
-import 'package:firebase/firebase.dart' as db;
-import 'package:woven/config/config.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
-import 'package:woven/src/client/view_model/main.dart';
+import 'package:woven/src/client/view_model/item.dart';
 import 'package:woven/src/client/uri_policy.dart';
 
 @CustomTag('item-view')
-class ItemView extends PolymerElement {
+class ItemView extends PolymerElement with Observable {
   @published App app;
-  @published MainViewModel viewModel;
+  @published ItemViewModel viewModel;
+
+  List<StreamSubscription> subscriptions = [];
 
   NodeValidator get nodeValidator => new NodeValidatorBuilder()
     ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
-  // TODO: Revisit all this. It seems ridiculous.
-  // See http://stackoverflow.com/a/25772893/1286442.
-  @ComputedProperty('viewModel.itemViewModel.item')
-  @observable Map get item {
-    if (viewModel == null || viewModel.itemViewModel == null) return null;
-    return viewModel.itemViewModel.item;
+  // TODO: Revisit all this. It seems ridiculous. See http://stackoverflow.com/a/25772893/1286442.
+  @ComputedProperty('viewModel.item')
+  Map get item {
+    if (viewModel == null) return null;
+    return viewModel.item;
   }
 
   formatText(String text) {
@@ -40,18 +36,7 @@ class ItemView extends PolymerElement {
     if (item.isNotEmpty) safeHtml.shadowRoot.innerHtml = formatText(item['body']);
   }
 
-  ItemView.created() : super.created() {
-    // The old magic to ensure we're notified of changes to
-    // the item in the itemViewModel. See http://stackoverflow.com/a/25772893/1286442.
-//    new PathObserver(this, [#viewModel, #itemViewModel, #item])
-//    .open((newValue, oldValue) {
-//      notifyPropertyChange(#item, oldValue, newValue);
-//
-      // Trick to respect line breaks.
-//      HtmlElement body = $['body'];
-//      body.innerHtml = formattedBody;
-//    });
-  }
+  ItemView.created() : super.created();
 
   String formatItemDate(DateTime value) {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
@@ -64,25 +49,41 @@ class ItemView extends PolymerElement {
 
   toggleLike(Event e, var detail, Element target) {
     e.stopPropagation();
-
-    viewModel.itemViewModel.toggleLike();
+    viewModel.toggleLike();
   }
 
   toggleStar(Event e, var detail, Element target) {
     e.stopPropagation();
-
-    viewModel.itemViewModel.toggleStar();
+    viewModel.toggleStar();
   }
 
   attached() {
-    print("+Item");
+    print("+ItemView");
     app.pageTitle = "";
+
+    app.scroller.scrollTop = 0;
+
     if (item != null) {
       itemChanged();
     }
+
+    // Once the view is loaded, handle scroll position.
+    viewModel.onLoad.then((_) {
+      // Wait one event loop, so the view is truly loaded, then jump to last known position.
+      Timer.run(() {
+        app.scroller.scrollTop = viewModel.lastScrollPos;
+      });
+
+      // On scroll, record new scroll position.
+      subscriptions.add(app.scroller.onScroll.listen((e) {
+        viewModel.lastScrollPos = app.scroller.scrollTop;
+      }));
+    });
   }
 
   detached() {
-    //
+    subscriptions.forEach((subscription) {
+      subscription.cancel();
+    });
   }
 }

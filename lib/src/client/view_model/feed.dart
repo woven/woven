@@ -56,6 +56,8 @@ class FeedViewModel extends BaseViewModel with Observable {
       .startAt(priority: lastPriority)
       .limit(pageSize + 1);
 
+    if (items.length == 0) onLoadCompleter.complete(true);
+
     // Get the list of items, and listen for new ones.
     itemsRef.once('value').then((snapshot) {
       snapshot.forEach((itemSnapshot) {

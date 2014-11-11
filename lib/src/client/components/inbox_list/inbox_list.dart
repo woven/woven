@@ -21,7 +21,7 @@ class InboxList extends PolymerElement with Observable {
   @published App app;
   @published FeedViewModel viewModel;
 
-  List<StreamSubscription> subscriptions;
+  List<StreamSubscription> subscriptions = [];
 
   InboxList.created() : super.created();
 
@@ -32,9 +32,10 @@ class InboxList extends PolymerElement with Observable {
     // id passed in the data-id attribute on the element.
     var item = viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
+    app.previousPage = app.selectedPage;
     app.selectedItem = item;
     app.selectedPage = 1;
-    app.userCameFromInbox = true;
+
 
     var str = target.dataset['id'];
     var bytes = UTF8.encode(str);
@@ -288,7 +289,6 @@ class InboxList extends PolymerElement with Observable {
     HtmlElement element = $['content-container'];
     var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
 
-    subscriptions = [];
     subscriptions.add(scroll.onScroll.listen((_) {
       if (!viewModel.reloadingContent) viewModel.paginate();
     }));
@@ -317,30 +317,23 @@ class InboxList extends PolymerElement with Observable {
 
   attached() {
     print("+InboxList");
-    print(viewModel.lastScrollPos);
-    // Scroll to last known position.
 
     initializeInfiniteScrolling();
 
-    subscriptions.add(app.scroller.onScroll.listen((e) {
-      viewModel.lastScrollPos = app.scroller.scrollTop;
-      print(viewModel.lastScrollPos);
-    }));
+    // Once the view is loaded, handle scroll position.
+    viewModel.onLoad.then((_) {
+      // Wait one event loop, so the view is truly loaded, then jump to last known position.
+      Timer.run(() {
+        app.scroller.scrollTop = viewModel.lastScrollPos;
+      });
 
-    print("scroller.scrollHeight: ${app.scroller.scrollHeight}");
-
-    new Timer(new Duration(seconds:2), () {
-      print("#2 scroller.scrollHeight: ${app.scroller.scrollHeight}");
-      app.scroller.scrollTop = viewModel.lastScrollPos;
+      // On scroll, record new scroll position.
+      subscriptions.add(app.scroller.onScroll.listen((e) {
+        viewModel.lastScrollPos = app.scroller.scrollTop;
+      }));
     });
 
-
-
-
 //    getUsers();
-
-    viewModel.someFunction();
-
 
 //    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.

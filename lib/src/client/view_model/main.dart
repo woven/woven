@@ -9,8 +9,9 @@ import 'package:woven/src/shared/util.dart';
 import 'feed.dart';
 import 'item.dart';
 import 'list.dart';
+import 'base.dart';
 
-class MainViewModel extends Observable {
+class MainViewModel extends BaseViewModel with Observable {
   final App app;
   final List communities = toObservable([]);
   final List users = toObservable([]);
@@ -67,11 +68,10 @@ class MainViewModel extends Observable {
 
     if (!feedViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
-      print("New FeedViewModel...");
       var vm = new FeedViewModel(app: app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
       feedViewModels[id] = vm; // Store it.
     }
-    print("Called model! $id");
+
     return feedViewModels[id];
   }
 
@@ -83,11 +83,9 @@ class MainViewModel extends Observable {
     if (id == null) return null;
 
     if (!feedViewModels.containsKey(id)) {
-      print("New FeedViewModel w/ typeFilter: event");
       var vm = new FeedViewModel(app: app, typeFilter: 'event');
       feedViewModels[id] = vm;
     }
-    print("Called model! $id");
     return feedViewModels[id];
   }
 
@@ -99,6 +97,7 @@ class MainViewModel extends Observable {
       var vm = new StarredViewModel(app);
       starredViewModelForUser = vm; // Store it.
     }
+
     return starredViewModelForUser;
   }
 
@@ -163,11 +162,7 @@ class MainViewModel extends Observable {
   void toggleCommunityStar(id) {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
-    //    app.showMessage("Stars aren't working well yet. :)");
-
     var community = communities.firstWhere((i) => i['id'] == id);
-
-
     var starredCommunityRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
     var communityRef = f.child('/communities/' + community['id']);
 
@@ -189,6 +184,7 @@ class MainViewModel extends Observable {
 
       // Update the list of users who starred.
       f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).remove();
+
     } else {
       // If it's not starred, time to star it.
       community['starred'] = true;
@@ -215,6 +211,7 @@ class MainViewModel extends Observable {
    */
   loadUsersByPage() {
     reloadingContent = true;
+    if (users.length == 0) onLoadCompleter.complete(true);
 
     var itemsRef = f.child('/users').startAt(priority: snapshotPriority).limit(pageSize + 1);
     int count = 0;

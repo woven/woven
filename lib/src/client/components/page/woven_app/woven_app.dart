@@ -32,10 +32,14 @@ class WovenApp extends PolymerElement with Observable {
     app.router.dispatch(url: target.dataset['url']);
   }
 
+  void scrollToTop() {
+    app.scroller.scrollTop = 0;
+  }
+
   void goBack(Event e, var detail, Element target) {
-    app.router.dispatch(url: (app.community != null ? '/${app.community.alias}' : '/'));
-    // TODO: Update so goes back to view you came from.
-    app.community != null ? app.selectedPage = 0 : app.selectedPage = 4;
+    if (app.previousPage == 0) app.router.dispatch(url: (app.community != null ? '/${app.community.alias}' : '/'));
+    if (app.previousPage == 5) app.router.dispatch(url: (app.community != null ? '/${app.community.alias}/events' : '/events'));
+    (app.community != null) ? app.selectedPage = app.previousPage : app.selectedPage = 4;
   }
 
   signInWithFacebook() {

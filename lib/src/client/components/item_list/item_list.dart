@@ -22,9 +22,10 @@ class ItemList extends PolymerElement with Observable {
     // id passed in the data-id attribute on the element.
     var item = viewModel.starredViewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
+//    app.userCameFromInbox = true;
     app.selectedItem = item;
     app.selectedPage = 1;
-    app.userCameFromInbox = true;
+
 
     var encodedItemId =  hashEncode(target.dataset['id']);
     app.router.dispatch(url: "/item/$encodedItemId");

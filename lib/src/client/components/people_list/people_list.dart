@@ -1,18 +1,11 @@
-import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart' as db;
 import 'dart:html';
 import 'dart:async';
+import 'package:polymer/polymer.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/view_model/main.dart';
-import 'package:core_elements/core_pages.dart';
-import 'package:woven/config/config.dart';
-import 'package:woven/src/client/components/page/woven_app/woven_app.dart' show showToastMessage;
 import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:core_elements/core_header_panel.dart';
-
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 
 /**
  * This class represents a list of users.
@@ -22,7 +15,7 @@ class PeopleList extends PolymerElement with Observable {
   @published App app;
   @published MainViewModel viewModel;
 
-  List<StreamSubscription> subscriptions;
+  List<StreamSubscription> subscriptions = [];
 
   PeopleList.created() : super.created();
 
@@ -57,8 +50,24 @@ class PeopleList extends PolymerElement with Observable {
     app.pageTitle = "People";
 
     initializeInfiniteScrolling();
+
+    // Once the view is loaded, handle scroll position.
+    viewModel.onLoad.then((_) {
+      // Wait one event loop, so the view is truly loaded, then jump to last known position.
+      Timer.run(() {
+        app.scroller.scrollTop = viewModel.lastScrollPos;
+      });
+
+      // On scroll, record new scroll position.
+      subscriptions.add(app.scroller.onScroll.listen((e) {
+        viewModel.lastScrollPos = app.scroller.scrollTop;
+      }));
+    });
   }
 
   detached() {
+    subscriptions.forEach((subscription) {
+      subscription.cancel();
+    });
   }
 }

@@ -7,8 +7,9 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/client/view_model/base.dart';
 
-class ItemViewModel extends Observable {
+class ItemViewModel extends BaseViewModel with Observable {
   final App app;
   @observable Map item = toObservable({});
   final String firebaseLocation = config['datastore']['firebaseLocation'];
@@ -29,13 +30,14 @@ class ItemViewModel extends Observable {
    * Get the item.
    */
   void getItem() {
+    if (item.length == 0) onLoadCompleter.complete(true);
+
     if (app.selectedItem != null) {
       item = app.selectedItem;
 
     } else {
       // If there's no app.selectedItem, we probably
-      // came here directly, so let's get it.
-      // Decode the base64 URL and determine the item.
+      // came here directly, so let's get it using the URL.
       var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
       var decodedItem = hashDecode(encodedItem);
 
