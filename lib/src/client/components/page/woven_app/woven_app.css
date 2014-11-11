@@ -62,6 +62,10 @@
   opacity: 1;
 }
 
+#woven-logo {
+  width: 130px;
+}
+
 /* drawer is always visible on a wide screen
    so menu button isn't required */
 core-drawer-panel:not([narrow]) #menu-button {
