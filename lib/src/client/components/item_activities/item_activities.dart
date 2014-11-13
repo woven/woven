@@ -8,6 +8,7 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/shared/util.dart';
+import 'package:core_elements/core_input.dart';
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
@@ -58,6 +59,22 @@ class ItemActivities extends PolymerElement {
     if (text.trim().isEmpty) return 'Loading...';
     String formattedText = InputFormatter.nl2br(InputFormatter.linkify(text.trim()));
     return formattedText;
+  }
+
+  expandInput(Event e, detail, CoreInput target) {
+    Element textarea = target.shadowRoot.querySelector("textarea");
+    // TODO: Make the textarea shrink; right now it just grows.
+    textarea.style.height = "${textarea.scrollHeight}px";
+  }
+
+  onFocusHandler(Event e, detail, CoreInput target) {
+    document.querySelector("::shadow footer").style.display = "inline";
+  }
+
+  onBlurHandler(Event e, detail, CoreInput target) {
+    if (target.inputValue.trim().isEmpty) {
+      document.querySelector("::shadow footer").style.display = "none";
+    }
   }
 
   /**

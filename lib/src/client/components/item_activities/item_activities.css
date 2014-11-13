@@ -35,12 +35,18 @@ core-field input {
 }
 
 .field-wrapper {
-  padding: 10px;
-  border-top: solid 1px #eee;
+  padding: 16px 10px 10px 10px;
+  border: solid 1px #e6e6e6;
+  background-color: #fff;
 }
 
 .field-wrapper.first {
   border-top: none;
+}
+
+.field-wrapper.transparent {
+  background: transparent;
+  border: none;
 }
 
 core-input {
@@ -48,6 +54,10 @@ core-input {
   font-size: 14px;
   outline: none;
   width: 100%;
+}
+
+core-input::shadow textarea {
+  overflow:hidden;
 }
 
 #post-container {
@@ -59,15 +69,22 @@ core-input {
   flex-flow: column;
   -webkit-flex-flow: column;
   /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
-  background: #fff;
   max-width: 800px;
   margin: 10px auto 10px auto;
   border-radius: 2px;
 }
 
+#comment {
+  overflow: hidden;
+}
+
 footer {
   background-color: #F5F5F5;
-  border-top: solid 1px #e7e7e7;
+  padding: 3px;
+  border-width: 0 1px 1px 1px;
+  border-color: #e6e6e6;
+  border-style: solid;
+  display: none;
 }
 
 footer .btn {
@@ -127,6 +144,7 @@ cursor: pointer;
 
 #signin-container {
   padding: 10px;
+  background: #fff;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;

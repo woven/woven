@@ -9,14 +9,13 @@
     <link rel="stylesheet" href="item_activities.css">
     <div id="post-container">
       <template if="{{app.user != null}}">
-        <div class="field-wrapper first">
-          <core-input id="name" placeholder="Your name" autocomplete="off"
-                      value="{{app.user.username}}"
-                      disabled></core-input>
+        <div class="field-wrapper first transparent">
+          <strong>{{app.user.username}}</strong>
         </div>
         <div class="field-wrapper full-height">
-          <core-input class="expand" id="comment" multiline rows="3" required placeholder="Your comment..." autocomplete="off"
-                      inputValue="{{theData['comment']}}"></core-input>
+          <core-input class="expand" id="comment" multiline rows="1" required placeholder="Your comment..." autocomplete="off"
+                      inputValue="{{theData['comment']}}" on-keypress="{{expandInput}}"
+                      on-focus="{{onFocusHandler}}" on-blur="{{onBlurHandler}}"></core-input>
         </div>
         <footer>
           <core-icon-button class="btn action" icon="send" on-tap="{{addComment}}"></core-icon-button>
