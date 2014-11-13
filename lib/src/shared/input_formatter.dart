@@ -88,7 +88,7 @@ class InputFormatter {
   static String linkify(String content, {bool noExternalIcon: false, bool absolute: false}) {
     if (content == null) content = '';
 
-    content = content.replaceAllMapped(new RegExp(r'((([A-Za-z]{3,9}:(?:\/\/))(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[.-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+[.])((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)'), (Match match) {
+    content = content.replaceAllMapped(new RegExp(r'((([A-Za-z]{3,9}:(?:\/\/))(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[.-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+[.][A-Za-z]{2})((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)'), (Match match) {
       var address = match.group(0);
       if (absolute && address.startsWith('http') == false) address = 'http://$address';
 
