@@ -121,6 +121,7 @@ http://twitter.com/wovenco
 
     Future findItem() {
       return Firebase.get('/items/$item.json').then((itemData) {
+        print("findItem: $itemData");
         notificationData['itemSubject'] = itemData['subject'];
         notificationData['itemAuthor'] = itemData['user'];
         var encodedItem = hashEncode(item);
@@ -134,6 +135,7 @@ http://twitter.com/wovenco
 
     Future findAuthorInfo() {
       return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
+        print("findAuthorInfo: $userData");
         notificationData['itemAuthorEmail'] = userData['email'];
         notificationData['itemAuthorFirstName'] = userData['firstName'];
         notificationData['itemAuthorLastName'] = userData['lastName'];
@@ -142,6 +144,7 @@ http://twitter.com/wovenco
 
     Future findCommentInfo() {
       return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
+        print("findCommentInfo: $commentData");
         notificationData['commentText'] = commentData['comment'];
         notificationData['commentAuthor'] = commentData['user'];
       });
@@ -149,6 +152,7 @@ http://twitter.com/wovenco
 
     Future findCommentAuthor(_) {
       return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
+        print("findCommentAuthor: $userData");
         notificationData['commentAuthorFirstName'] = userData['firstName'];
         notificationData['commentAuthorLastName'] = userData['lastName'];
       });
@@ -169,15 +173,14 @@ http://twitter.com/wovenco
 
   static _notifyAuthor(App app, Map notificationData) {
     // Don't send notifications when the item author comments on their own post.
-    if (notificationData['itemAuthor'] == notificationData['commentAuthor']) return false;
-
-    // Send notification.
-    var envelope = new Envelope()
-      ..from = "Woven <hello@woven.co>"
-      ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
-      ..bcc = "David Notik <davenotik@gmail.com>"
-      ..subject = '${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} commented on your post'
-      ..text = '''
+    if (notificationData['itemAuthor'] != notificationData['commentAuthor']) {
+      // Send notification.
+      var envelope = new Envelope()
+        ..from = "Woven <hello@woven.co>"
+        ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
+        ..bcc = "David Notik <davenotik@gmail.com>"
+        ..subject = '${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} commented on your post'
+        ..text = '''
 Hey ${notificationData['itemAuthorFirstName']},
 
 ${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} just commented on your post:
@@ -191,7 +194,8 @@ ${notificationData['commentText']}
 Woven
 http://woven.co
 ''';
-    return app.mailer.send(envelope);
+      return app.mailer.send(envelope);
+    }
   }
 
   static _notifyOtherParticipants(App app, Map notificationData) {
