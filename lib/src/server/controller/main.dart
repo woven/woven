@@ -143,6 +143,7 @@ http://twitter.com/wovenco
     }
 
     Future findCommentInfo() {
+      print("Comment: $comment");
       return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
         print("findCommentInfo: $commentData");
         notificationData['commentText'] = commentData['comment'];
