@@ -23,6 +23,7 @@ class FeedViewModel extends BaseViewModel with Observable {
   var lastPriority = null;
   var topPriority = null;
   bool isFirstRun = true;
+  var secondToLastPriority = null;
 
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
@@ -69,6 +70,9 @@ class FeedViewModel extends BaseViewModel with Observable {
         // Don't process the extra item we tacked onto pageSize in the limit() above.
         if (count > pageSize) return;
 
+        // Remember the priority of the last item, excluding the extra item which we ignore above.
+        secondToLastPriority = itemSnapshot.getPriority();
+
         // Insert each new item into the list.
         // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
         items.add(toObservable(processItem(itemSnapshot)));
@@ -83,20 +87,6 @@ class FeedViewModel extends BaseViewModel with Observable {
       if (count <= pageSize) reachedEnd = true;
       reloadingContent = false;
     });
-  }
-
-  // Group items by date group (Today, Tomorrow, etc.) and store in a separate list.
-  updateEventView() {
-    if (typeFilter == 'event') {
-      groupedItems.clear();
-      items.forEach((item) {
-        var key = item['dateGroup'];
-        if (groupedItems[key] == null) {
-          groupedItems[key] = [];
-        }
-        groupedItems[key].add(item);
-      });
-    }
   }
 
   /**
@@ -120,7 +110,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       childRemovedSubscriber = null;
     }
 
-    listenForNewItems(startAt: topPriority, endAt: lastPriority);
+    listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
   }
 
   listenForNewItems({startAt, endAt}) {
@@ -182,6 +172,20 @@ class FeedViewModel extends BaseViewModel with Observable {
       updateEventView();
       items.removeWhere((i) => i['id'] == e.snapshot.name);
     });
+  }
+
+  // Group items by date group (Today, Tomorrow, etc.) and store in a separate list.
+  updateEventView() {
+    if (typeFilter == 'event') {
+      groupedItems.clear();
+      items.forEach((item) {
+        var key = item['dateGroup'];
+        if (groupedItems[key] == null) {
+          groupedItems[key] = [];
+        }
+        groupedItems[key].add(item);
+      });
+    }
   }
 
   processItem(DataSnapshot snapshot) {
@@ -371,7 +375,6 @@ class FeedViewModel extends BaseViewModel with Observable {
   }
 
   void paginate() {
-    print("Paginating...");
     if (reloadingContent == false && reachedEnd == false) loadItemsByPage();
   }
 }
