@@ -88,7 +88,7 @@ class InputFormatter {
   static String linkify(String content, {bool noExternalIcon: false, bool absolute: false}) {
     if (content == null) content = '';
 
-    content = content.replaceAllMapped(new RegExp(r'((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)'), (Match match) {
+    content = content.replaceAllMapped(new RegExp(r'((([A-Za-z]{3,9}:(?:\/\/))(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[.-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+[.])((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)'), (Match match) {
       var address = match.group(0);
       if (absolute && address.startsWith('http') == false) address = 'http://$address';
 
@@ -568,5 +568,18 @@ class InputFormatter {
     return contents;
   }
 
+  /**
+   * Find and format @mentions in the given content.
+   *
+   * Injects HTML to surround each mention with a span that can be styled.
+   */
+  static String formatMentions(String content) {
+    if (content == null) return '';
 
+    var regExp = new RegExp(r'\B@[.a-z0-9_-]+', caseSensitive: false);
+
+    content = content.replaceAllMapped(regExp, (Match m) => '<span class="mention">${m[0]}</span>');
+
+    return content;
+  }
 }

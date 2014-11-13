@@ -167,6 +167,11 @@ safe-html::shadow a:visited {
   color: rgb(106, 56, 223);
 }
 
+safe-html::shadow .mention {
+  color: rgb(245, 108, 0);
+  font-weight: bold;
+}
+
 @media all and (max-width: 800px)  {
   #post-container {
     margin: 10px;

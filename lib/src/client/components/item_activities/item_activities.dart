@@ -57,7 +57,7 @@ class ItemActivities extends PolymerElement {
 
   formatText(String text) {
     if (text.trim().isEmpty) return 'Loading...';
-    String formattedText = InputFormatter.nl2br(InputFormatter.linkify(text.trim()));
+    String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
     return formattedText;
   }
 
