@@ -14,7 +14,7 @@
         </div>
         <div class="field-wrapper full-height">
           <core-input class="expand" id="comment" multiline rows="1" required placeholder="Your comment..." autocomplete="off"
-                      inputValue="{{theData['comment']}}" on-keypress="{{expandInput}}"
+                      inputValue="{{theData['comment']}}" on-keyup="{{expandInput}}"
                       on-focus="{{onFocusHandler}}" on-blur="{{onBlurHandler}}"></core-input>
         </div>
         <footer>
