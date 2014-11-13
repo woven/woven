@@ -172,7 +172,6 @@ http://twitter.com/wovenco
     if (notificationData['itemAuthor'] == notificationData['commentAuthor']) return false;
 
     // Send notification.
-    return false;
     var envelope = new Envelope()
       ..from = "Woven <hello@woven.co>"
       ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
