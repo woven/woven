@@ -1,6 +1,7 @@
 library main_controller;
 
 import 'dart:io';
+import 'dart:async';
 import 'dart:convert';
 import '../app.dart';
 import '../firebase.dart';
@@ -118,38 +119,66 @@ http://twitter.com/wovenco
     var comment = request.requestedUri.queryParameters['commentid'];
     Map notificationData = {};
 
-    return Firebase.get('/items/$item.json').then((itemData) {
-      notificationData['itemSubject'] = itemData['subject'];
-      notificationData['itemAuthor'] = itemData['user'];
-      var encodedItem = hashEncode(item);
-      notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
-    }).then((_) {
+    Future findItem() {
+      return Firebase.get('/items/$item.json').then((itemData) {
+        notificationData['itemSubject'] = itemData['subject'];
+        notificationData['itemAuthor'] = itemData['user'];
+        var encodedItem = hashEncode(item);
+        notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
+
+        // Find all the unique users who have commented on this item.
+        Map comments = itemData['activities']['comments'];
+        notificationData['participants'] = comments.values.map((v) => v['user']).toSet();
+      });
+    }
+
+    Future findAuthorInfo() {
       return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
         notificationData['itemAuthorEmail'] = userData['email'];
         notificationData['itemAuthorFirstName'] = userData['firstName'];
         notificationData['itemAuthorLastName'] = userData['lastName'];
       });
-    }).then((_) {
+    }
+
+    Future findCommentInfo() {
       return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
         notificationData['commentText'] = commentData['comment'];
         notificationData['commentAuthor'] = commentData['user'];
       });
-    }).then((_) {
+    }
+
+    Future findCommentAuthor(_) {
       return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
         notificationData['commentAuthorFirstName'] = userData['firstName'];
         notificationData['commentAuthorLastName'] = userData['lastName'];
       });
-    }).then((_) {
-      // Don't send notifications when the item author comments on their own post.
-      if (notificationData['itemAuthor'] == notificationData['commentAuthor']) return false;
+    }
 
-      // Send notification.
-      var envelope = new Envelope()
-        ..from = "Woven <hello@woven.co>"
-        ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
-        ..bcc = "David Notik <davenotik@gmail.com>"
-        ..subject = '${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} commented on your post'
-        ..text = '''
+    Future notify(_) {
+      _notifyAuthor(app, notificationData);
+      _notifyOtherParticipants(app, notificationData);
+    }
+
+    return findItem()
+    .then((_) => Future.wait([findAuthorInfo(), findCommentInfo()]))
+    .then(findCommentAuthor)
+    .then(notify)
+    .then((success) => new Response(success))
+    .catchError((error) => print("Error sending notifications: $error"));
+  }
+
+  static _notifyAuthor(App app, Map notificationData) {
+    // Don't send notifications when the item author comments on their own post.
+    if (notificationData['itemAuthor'] == notificationData['commentAuthor']) return false;
+
+    // Send notification.
+    return false;
+    var envelope = new Envelope()
+      ..from = "Woven <hello@woven.co>"
+      ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
+      ..bcc = "David Notik <davenotik@gmail.com>"
+      ..subject = '${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} commented on your post'
+      ..text = '''
 Hey ${notificationData['itemAuthorFirstName']},
 
 ${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} just commented on your post:
@@ -163,9 +192,46 @@ ${notificationData['commentText']}
 Woven
 http://woven.co
 ''';
-      return app.mailer.send(envelope).then((success) {
-        return new Response(success);
-      });
+    return app.mailer.send(envelope);
+  }
+
+  static _notifyOtherParticipants(App app, Map notificationData) {
+    Set participants = notificationData['participants'];
+
+    // Notify participants.
+    participants.forEach((participant) {
+      // Don't notify the author of the original item (whom we email above) or said comment.
+      if (participant != notificationData['itemAuthor'] && participant != notificationData['commentAuthor']) {
+        // Get the participant's user details.
+        return Firebase.get('/users/$participant.json').then((userData) {
+          if (userData == null) return false;
+          var participantFirstName = userData['firstName'];
+          var participantLastName = userData['lastName'];
+          var participantEmail = userData['email'];
+
+          // Send notification.
+          var envelope = new Envelope()
+            ..from = "Woven <hello@woven.co>"
+            ..to = "$participantFirstName $participantLastName <$participantEmail>"
+            ..bcc = "David Notik <davenotik@gmail.com>"
+            ..subject = "${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} also commented on ${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])} post"
+            ..text = '''
+Hey $participantFirstName,
+
+${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} also commented on ${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])} post:
+
+${notificationData['itemSubject']}
+${notificationData['itemLink']}
+
+${notificationData['commentText']}
+
+--
+Woven
+http://woven.co
+''';
+          return app.mailer.send(envelope);
+        });
+      }
     });
   }
 }

@@ -80,4 +80,19 @@ hashDecode(String encodedText) {
   return decodedText;
 }
 
+/**
+ * Handle possessives nicely.
+ *
+ * James' beer, not James's beer.
+ */
+
+formatPossessive(String text) {
+  if (text == null) return false;
+
+  if (text.endsWith("s")) {
+    return '$text\'';
+  } else {
+    return '$text\'s';
+  }
+}
 
