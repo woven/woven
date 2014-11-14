@@ -14,7 +14,7 @@ class Mailgun {
     final url = "${config['mailgun']['path']}/messages";
     return http.post(url, body: envelope.toMap(), headers: {"authorization": "Basic $auth"})
     .then((response) {
-      print("Mailgun response: $response");
+      print("Mailgun response: ${response.body}");
       Map responseAsMap = JSON.decode(response.body);
       return {'status': response.statusCode, 'response': responseAsMap};
 //      if (response.statusCode == 400) {
