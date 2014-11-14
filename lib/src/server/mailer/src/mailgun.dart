@@ -15,9 +15,11 @@ class Mailgun {
     return http.post(url, body: envelope.toMap(), headers: {"authorization": "Basic $auth"})
     .then((response) {
       print("Mailgun response: ${response.body}");
+      Map responseAsMap = {};
       try {
-        Map responseAsMap = JSON.decode(response.body);
+        responseAsMap = JSON.decode(response.body);
       } catch(error) {
+        responseAsMap = {'error': '$error'};
         print("Error in MailGun response: $error. Response was: ${response.body}");
       }
 
