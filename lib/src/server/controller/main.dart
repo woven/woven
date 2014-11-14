@@ -121,7 +121,6 @@ http://twitter.com/wovenco
 
     Future findItem() {
       return Firebase.get('/items/$item.json').then((itemData) {
-        print("findItem: $itemData");
         notificationData['itemSubject'] = itemData['subject'];
         notificationData['itemAuthor'] = itemData['user'];
         var encodedItem = hashEncode(item);
@@ -135,7 +134,6 @@ http://twitter.com/wovenco
 
     Future findAuthorInfo() {
       return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
-        print("findAuthorInfo: $userData");
         notificationData['itemAuthorEmail'] = userData['email'];
         notificationData['itemAuthorFirstName'] = userData['firstName'];
         notificationData['itemAuthorLastName'] = userData['lastName'];
@@ -145,7 +143,6 @@ http://twitter.com/wovenco
     Future findCommentInfo() {
       print("Comment: $comment");
       return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
-        print("findCommentInfo: $commentData");
         notificationData['commentText'] = commentData['comment'];
         notificationData['commentAuthor'] = commentData['user'];
       });
@@ -153,7 +150,6 @@ http://twitter.com/wovenco
 
     Future findCommentAuthor(_) {
       return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
-        print("findCommentAuthor: $userData");
         notificationData['commentAuthorFirstName'] = userData['firstName'];
         notificationData['commentAuthorLastName'] = userData['lastName'];
       });
@@ -213,13 +209,16 @@ http://woven.co
           var participantFirstName = userData['firstName'];
           var participantLastName = userData['lastName'];
           var participantEmail = userData['email'];
+          var referToItemAuthorAs = "${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])}";
+          // Don't ever say "Dave commented on Dave's post".
+          if (notificationData['commentAuthor'] == notificationData['itemAuthor']) referToItemAuthorAs = "their";
 
           // Send notification.
           var envelope = new Envelope()
             ..from = "Woven <hello@woven.co>"
             ..to = "$participantFirstName $participantLastName <$participantEmail>"
             ..bcc = "David Notik <davenotik@gmail.com>"
-            ..subject = "${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} also commented on ${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])} post"
+            ..subject = "${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} also commented on $referToItemAuthorAs post"
             ..text = '''
 Hey $participantFirstName,
 

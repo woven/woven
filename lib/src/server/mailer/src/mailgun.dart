@@ -14,13 +14,12 @@ class Mailgun {
     final url = "${config['mailgun']['path']}/messages";
     return http.post(url, body: envelope.toMap(), headers: {"authorization": "Basic $auth"})
     .then((response) {
-      print("Mailgun response: ${response.body}");
       Map responseAsMap = {};
       try {
         responseAsMap = JSON.decode(response.body);
       } catch(error) {
         responseAsMap = {'error': '$error'};
-        print("Error in MailGun response: $error. Response was: ${response.body}");
+        print("Error in MailGun response:\n$error\nMailGun response was:\n${response.body}");
       }
 
       return {'status': response.statusCode, 'response': responseAsMap};
