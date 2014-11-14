@@ -167,7 +167,7 @@ http://twitter.com/wovenco
     return findItem()
     .then((_) => Future.wait([findAuthorInfo(), findCommentInfo()]))
     .then(findCommentAuthor)
-    .then(notify)
+    .then(notify).catchError((error) => print("Error in notify: $error"))
     .then((success) => new Response(success))
     .catchError((error) => print("Error sending notifications: $error"));
   }
@@ -195,8 +195,9 @@ ${notificationData['commentText']}
 Woven
 http://woven.co
 ''';
-      return app.mailer.send(envelope);
+      app.mailer.send(envelope);
     }
+    return;
   }
 
   static _notifyOtherParticipants(App app, Map notificationData) {
@@ -207,8 +208,8 @@ http://woven.co
       // Don't notify the author of the original item (whom we email above) or said comment.
       if (participant != notificationData['itemAuthor'] && participant != notificationData['commentAuthor']) {
         // Get the participant's user details.
-        return Firebase.get('/users/$participant.json').then((userData) {
-          if (userData == null) return false;
+        Firebase.get('/users/$participant.json').then((userData) {
+          if (userData == null) return;
           var participantFirstName = userData['firstName'];
           var participantLastName = userData['lastName'];
           var participantEmail = userData['email'];
@@ -233,9 +234,10 @@ ${notificationData['commentText']}
 Woven
 http://woven.co
 ''';
-          return app.mailer.send(envelope);
+          app.mailer.send(envelope);
         });
       }
+      return;
     });
   }
 }
