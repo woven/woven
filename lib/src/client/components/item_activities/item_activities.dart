@@ -72,6 +72,7 @@ class ItemActivities extends PolymerElement {
   }
 
   onBlurHandler(Event e, detail, CoreInput target) {
+    return; //Disable for now.
     if (target.inputValue.trim().isEmpty) {
       document.querySelector("::shadow footer").style.display = "none";
     }
