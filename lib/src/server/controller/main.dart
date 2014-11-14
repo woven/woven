@@ -162,7 +162,7 @@ http://twitter.com/wovenco
     return findItem()
     .then((_) => Future.wait([findAuthorInfo(), findCommentInfo()]))
     .then(findCommentAuthor)
-    .then(notify).catchError((error) => print("Error in notify: $error"))
+    .then(notify).catchError((error, stack) => print("Error in notify:\n$error\nStack trace:\n$stack"))
     .then((success) => new Response(success))
     .catchError((error) => print("Error sending notifications: $error"));
   }
@@ -184,7 +184,7 @@ http://twitter.com/wovenco
         ..bcc = "David Notik <davenotik@gmail.com>"
         ..subject = '$commentAuthorFirstName $commentAuthorLastName commented on your post'
         ..text = '''
-Hey ${notificationData['itemAuthorFirstName']},
+Hey $itemAuthorFirstName,
 
 $commentAuthorFirstName $commentAuthorLastName just commented on your post:
 
