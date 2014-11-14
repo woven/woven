@@ -142,6 +142,7 @@ http://twitter.com/wovenco
 
     Future findCommentInfo() {
       return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
+        print("Comment: $comment // $commentData");
         notificationData['commentText'] = commentData['comment'];
         notificationData['commentAuthor'] = commentData['user'];
       });
