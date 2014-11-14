@@ -170,16 +170,23 @@ http://twitter.com/wovenco
   static _notifyAuthor(App app, Map notificationData) {
     // Don't send notifications when the item author comments on their own post.
     if (notificationData['itemAuthor'] != notificationData['commentAuthor']) {
+
+      var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
+      var commentAuthorLastName = notificationData['commentAuthorLastName'];
+      var itemAuthorFirstName = notificationData['itemAuthorFirstName'];
+      var itemAuthorLastName = notificationData['itemAuthorLastName'];
+
+
       // Send notification.
       var envelope = new Envelope()
         ..from = "Woven <hello@woven.co>"
-        ..to = "${notificationData['itemAuthorFirstName']} ${notificationData['itemAuthorLastName']} <${notificationData['itemAuthorEmail']}>"
+        ..to = "$itemAuthorFirstName $itemAuthorLastName <${notificationData['itemAuthorEmail']}>"
         ..bcc = "David Notik <davenotik@gmail.com>"
-        ..subject = '${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} commented on your post'
+        ..subject = '$commentAuthorFirstName $commentAuthorLastName commented on your post'
         ..text = '''
 Hey ${notificationData['itemAuthorFirstName']},
 
-${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} just commented on your post:
+$commentAuthorFirstName $commentAuthorLastName just commented on your post:
 
 ${notificationData['itemSubject']}
 ${notificationData['itemLink']}
@@ -205,11 +212,15 @@ http://woven.co
         // Get the participant's user details.
         Firebase.get('/users/$participant.json').then((userData) {
           if (userData == null) return;
+
           var participantFirstName = userData['firstName'];
           var participantLastName = userData['lastName'];
           var participantEmail = userData['email'];
+          var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
+          var commentAuthorLastName = notificationData['commentAuthorLastName'];
           var referToItemAuthorAs = "${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])}";
-          // Don't ever say "Dave commented on Dave's post".
+
+          // Don't ever say "Dave commented on Dave's post". Later we'll know his or her.
           if (notificationData['commentAuthor'] == notificationData['itemAuthor']) referToItemAuthorAs = "their";
 
           // Send notification.
@@ -217,11 +228,11 @@ http://woven.co
             ..from = "Woven <hello@woven.co>"
             ..to = "$participantFirstName $participantLastName <$participantEmail>"
             ..bcc = "David Notik <davenotik@gmail.com>"
-            ..subject = "${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} also commented on $referToItemAuthorAs post"
+            ..subject = "$commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAuthorAs post"
             ..text = '''
 Hey $participantFirstName,
 
-${notificationData['commentAuthorFirstName']} ${notificationData['commentAuthorLastName']} also commented on ${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])} post:
+$commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAuthorAs post:
 
 ${notificationData['itemSubject']}
 ${notificationData['itemLink']}
