@@ -9,13 +9,14 @@ import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/shared/util.dart';
 import 'package:core_elements/core_input.dart';
+import 'package:core_elements/core_a11y_keys.dart';
+
 
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
-  // We'll bind the form data to this.
-  @observable Map theData = toObservable({});
+  @observable Map theData = toObservable({}); // We'll bind the form data to this.
 
   //TODO: Further explore this ViewModel stuff.
   //@observable ActivityCommentModel activity = new ActivityCommentModel();
@@ -25,9 +26,10 @@ class ItemActivities extends PolymerElement {
 
   var firebaseLocation = config['datastore']['firebaseLocation'];
 
-  String formatItemDate(DateTime value) {
-    return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
-  }
+  String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+
+  Node get enterTarget => querySelector('::shadow #comment-send-button');
+  CoreInput get commentInput => querySelector('::shadow #comment') as CoreInput;
 
   /**
    * Get the activities for this item.
@@ -55,18 +57,43 @@ class ItemActivities extends PolymerElement {
     });
   }
 
+  /**
+   * Handle formatting of the comment text.
+   *
+   * Format line breaks, links, @mentions.
+   */
   formatText(String text) {
     if (text.trim().isEmpty) return 'Loading...';
     String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
     return formattedText;
   }
 
-  expandInput(Event e, detail, CoreInput target) {
+  /**
+   * Grow and shrink the comment.
+   *
+   * Responds to key-press event.
+   */
+  resizeCommentInput(Event e, detail, CoreInput target) {
+    e.stopPropagation();
+
     Element textarea = target.shadowRoot.querySelector("textarea");
-    // TODO: Make the textarea shrink; right now it just grows.
-    textarea.style.height = "${textarea.scrollHeight}px";
+
+    // Reset height on every press, so we can get true scrollHeight below.
+    textarea.style.height = "0px";
+
+    // We set this here, as it's not reading it properly from CSS.
+    target.style.lineHeight = "16px";
+
+    // Parse the textarea's height as an int so we can play w/ it.
+    var elHeight = textarea.clientHeight;
+
+    if (textarea.scrollHeight > elHeight) elHeight = textarea.scrollHeight;
+    textarea.style.height = "${elHeight}px";
   }
 
+  /**
+   * Handle focus of the comment input.
+   */
   onFocusHandler(Event e, detail, CoreInput target) {
     document.querySelector("::shadow footer").style.display = "inline";
   }
@@ -89,6 +116,7 @@ class ItemActivities extends PolymerElement {
 
     if (comment == "") {
       window.alert("Your comment is empty.");
+      commentInput.focus();
       return false;
     }
 
@@ -193,12 +221,11 @@ class ItemActivities extends PolymerElement {
     // Reset the fields.
     theData['comment'] = "";
 
-    // TODO: Focus the field: http://goo.gl/wDYQOx
-//    var inp = querySelector('#comment') as CoreInput;
-//    print(querySelector('#comment'));
-//    inp.inputValue = '';
-//    inp.querySelector('* /deep/ #input') // not yet supported with polyfills
-//      ..focus();
+
+    commentInput.focus();
+
+
+
   }
 
   signInWithFacebook() {

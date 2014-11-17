@@ -55,6 +55,7 @@ core-input {
   font-size: 14px;
   outline: none;
   width: 100%;
+  line-height: 16px;
 }
 
 core-input::shadow textarea {
@@ -111,8 +112,9 @@ footer .btn {
 }
 
 .btn.action:focus {
-background-color: rgb(45, 104, 214);
-cursor: pointer;
+  background-color: rgb(45, 104, 214);
+  cursor: pointer;
+  outline: none;
 }
 
 .signin-btn {

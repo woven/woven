@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_field.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_a11y_keys.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
 <polymer-element name="item-activities">
@@ -14,12 +15,17 @@
         </div>
         <div class="field-wrapper full-height">
           <core-input class="expand" id="comment" multiline rows="1" required placeholder="Your comment..." autocomplete="off"
-                      inputValue="{{theData['comment']}}" on-keyup="{{expandInput}}"
-                      on-focus="{{onFocusHandler}}" on-blur="{{onBlurHandler}}"></core-input>
+                      inputValue="{{theData['comment']}}" on-keyup="{{resizeCommentInput}}"
+                      on-focus="{{onFocusHandler}}" on-blur="{{onBlurHandler}}" on-tap="{{onFocusHandler}}">
+                      </core-input>
         </div>
         <footer>
-          <core-icon-button class="btn action" icon="send" on-tap="{{addComment}}"></core-icon-button>
+          <span>Tab + Enter</span>
+          <core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0">
+            <core-a11y-keys target="{{enterTarget}}" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+          </core-icon-button>
         </footer>
+
       </template>
       <template if="{{app.user == null}}">
         <div id="signin-container">
