@@ -21,11 +21,9 @@
         </div>
         <footer>
           <span>Tab + Enter</span>
-          <core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0">
-            <core-a11y-keys target="{{enterTarget}}" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
-          </core-icon-button>
+          <core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>
         </footer>
-
+        <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
       </template>
       <template if="{{app.user == null}}">
         <div id="signin-container">

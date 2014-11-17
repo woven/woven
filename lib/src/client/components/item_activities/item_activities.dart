@@ -28,8 +28,7 @@ class ItemActivities extends PolymerElement {
 
   String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
 
-  Node get enterTarget => querySelector('::shadow #comment-send-button');
-  CoreInput get commentInput => querySelector('::shadow #comment') as CoreInput;
+  Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('item-activities');
 
   /**
    * Get the activities for this item.
@@ -95,14 +94,14 @@ class ItemActivities extends PolymerElement {
    * Handle focus of the comment input.
    */
   onFocusHandler(Event e, detail, CoreInput target) {
-    document.querySelector("::shadow footer").style.display = "inline";
+    elRoot.shadowRoot.querySelector("footer").style.display = "inline";
+
+    CoreA11yKeys a11y = elRoot.shadowRoot.querySelector('#a11y-send');
+    a11y.target = elRoot.shadowRoot.querySelector('#comment-send-button');
   }
 
   onBlurHandler(Event e, detail, CoreInput target) {
-    return; //Disable for now.
-    if (target.inputValue.trim().isEmpty) {
-      document.querySelector("::shadow footer").style.display = "none";
-    }
+    //
   }
 
   /**
@@ -110,6 +109,8 @@ class ItemActivities extends PolymerElement {
    */
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
+
+    CoreInput commentInput = elRoot.shadowRoot.querySelector('#comment');
 
     String comment = theData['comment'];
     comment = comment.trim();
@@ -220,12 +221,7 @@ class ItemActivities extends PolymerElement {
 
     // Reset the fields.
     theData['comment'] = "";
-
-
     commentInput.focus();
-
-
-
   }
 
   signInWithFacebook() {
@@ -244,7 +240,7 @@ class ItemActivities extends PolymerElement {
   attached() {
     print("+ItemActivities");
     getActivities();
-    fixItemCommunities();
+//    fixItemCommunities();
   }
 
   detached() {
