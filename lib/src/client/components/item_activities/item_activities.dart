@@ -222,6 +222,8 @@ class ItemActivities extends PolymerElement {
     // Reset the fields.
     theData['comment'] = "";
     commentInput.focus();
+    Element textarea = target.shadowRoot.querySelector("textarea");
+    textarea.style.height = "0px";
   }
 
   signInWithFacebook() {
