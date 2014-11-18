@@ -125,6 +125,31 @@ class App extends Observable {
     }
   }
 
+   @observable bool get isMobile {
+    if (isMobile == null) {
+      //http://stackoverflow.com/questions/11381673/javascript-solution-to-detect-mobile-browser
+      var a = window.navigator.userAgent;
+
+      if (window.screen.width < 640 ||
+      a.contains('Android') ||
+      a.contains('webOS') ||
+      a.contains('iPhone') ||
+      a.contains('iPad') ||
+      a.contains('iPod') ||
+      a.contains('BlackBerry') ||
+      a.contains('Windows Phone')
+      ) {
+        isMobile = true;
+      } else {
+        isMobile = false;
+      }
+    }
+
+    return isMobile;
+  }
+
+  set isMobile(bool value) => isMobile = value;
+
   /**
    * Get the main scrolling element on app.
    */
