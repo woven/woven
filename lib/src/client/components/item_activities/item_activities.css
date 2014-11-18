@@ -80,6 +80,16 @@ core-input::shadow textarea {
   overflow: hidden;
 }
 
+#comment-message {
+  align-self: center;
+  text-align: right;
+  margin-right: 11px;
+  color: #888;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
 footer {
   background-color: #F5F5F5;
   padding: 3px;

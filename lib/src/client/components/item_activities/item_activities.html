@@ -20,8 +20,10 @@
                       </core-input>
         </div>
         <footer>
-          <span>Tab + Enter</span>
-          <core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>
+          <div layout horizontal>
+            <div id="comment-message" flex>Tab + Enter <template if="{{app.isMobile}}">We're mobile</template></div>
+            <div><core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button></div>
+          </div>
         </footer>
         <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
       </template>

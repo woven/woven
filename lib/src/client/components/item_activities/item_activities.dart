@@ -95,6 +95,7 @@ class ItemActivities extends PolymerElement {
    */
   onFocusHandler(Event e, detail, CoreInput target) {
     elRoot.shadowRoot.querySelector("footer").style.display = "inline";
+    elRoot.shadowRoot.querySelector("#comment-message").style.opacity = "1";
 
     CoreA11yKeys a11y = elRoot.shadowRoot.querySelector('#a11y-send');
     a11y.target = elRoot.shadowRoot.querySelector('#comment-send-button');
@@ -104,20 +105,26 @@ class ItemActivities extends PolymerElement {
     //
   }
 
+  resetCommentInput() {
+    CoreInput commentInput = elRoot.shadowRoot.querySelector('#comment');
+    commentInput.focus();
+    Element textarea = commentInput.shadowRoot.querySelector("textarea");
+    textarea.style.height = "16px";
+    theData['comment'] = "";
+  }
+
   /**
    * Add the activity, in this case a comment.
    */
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    CoreInput commentInput = elRoot.shadowRoot.querySelector('#comment');
-
     String comment = theData['comment'];
     comment = comment.trim();
 
     if (comment == "") {
       window.alert("Your comment is empty.");
-      commentInput.focus();
+      resetCommentInput();
       return false;
     }
 
@@ -220,10 +227,7 @@ class ItemActivities extends PolymerElement {
     HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$commentId");
 
     // Reset the fields.
-    theData['comment'] = "";
-    commentInput.focus();
-    Element textarea = target.shadowRoot.querySelector("textarea");
-    textarea.style.height = "0px";
+    resetCommentInput();
   }
 
   signInWithFacebook() {
