@@ -59,12 +59,12 @@ class App {
 
     server.listen((HttpRequest request) {
       // Some redirects if coming from related domains.
-      if (request.headers.host == "mycommunity.org" || request.headers.host == "woven.org") {
+      if (request.headers.host.contains("mycommunity.org") || request.headers.host.contains("woven.org")) {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: request.uri.path));
         return;
       }
 
-      if (request.headers.host == "miamitech.org") {
+      if (request.headers.host.contains("miamitech.org")) {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: '/miamitech'));
         return;
       }
