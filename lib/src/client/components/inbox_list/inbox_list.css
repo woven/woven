@@ -235,7 +235,7 @@ core-icon {
 #loading-indicator {
   text-align: center;
   width: 100%;
-  font-size: 1.3em;
+  font-size: 13px;
   font-family: inherit;
   color: #999;
   margin-top: 20px;
