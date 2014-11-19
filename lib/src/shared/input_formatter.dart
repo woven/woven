@@ -3,6 +3,7 @@ library date_formatter;
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'date_group.dart';
+import 'regex.dart';
 import 'shared_util.dart' as sharedUtil;
 
 /**
@@ -88,7 +89,7 @@ class InputFormatter {
   static String linkify(String content, {bool noExternalIcon: false, bool absolute: true}) {
     if (content == null) content = '';
 
-    content = content.replaceAllMapped(new RegExp(r'(\b[a-zA-Z.]+@[a-zA-Z.]+\b|\b([a-zA-Z]+:\/\/|[a-zA-Z]+:\/\/www\.|www\.)[a-zA-Z.]+(\/[-~+%_a-zA-Z0-9.]+)*(\/?\?[-+=&;%@_.a-zA-Z0-9]+)?\b)'), (Match match) {
+    content = content.replaceAllMapped(new RegExp(RegexHelper.linkOrEmail), (Match match) {
       var address = match.group(0);
       var label = match.group(0);
 
