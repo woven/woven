@@ -580,7 +580,7 @@ class InputFormatter {
   static String formatMentions(String content) {
     if (content == null) return '';
 
-    var regExp = new RegExp(r'\B@[.a-z0-9_-]+', caseSensitive: false);
+    var regExp = new RegExp(r'\B@[a-zA-Z0-9_-]+', caseSensitive: false);
 
     content = content.replaceAllMapped(regExp, (Match m) => '<span class="mention">${m[0]}</span>');
 

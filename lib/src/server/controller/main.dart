@@ -142,7 +142,6 @@ http://twitter.com/wovenco
 
     Future findCommentInfo() {
       return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
-        print("Item $item // Comment: $comment // $commentData");
         notificationData['commentText'] = commentData['comment'];
         notificationData['commentAuthor'] = commentData['user'];
       });
@@ -156,6 +155,8 @@ http://twitter.com/wovenco
     }
 
     Future notify(_) {
+      // Order matters, as we prioritize notification of mentions over multiple notifications.
+      _notifyMentionedUsers(app, notificationData);
       _notifyAuthor(app, notificationData);
       _notifyOtherParticipants(app, notificationData);
     }
@@ -169,14 +170,15 @@ http://twitter.com/wovenco
   }
 
   static _notifyAuthor(App app, Map notificationData) {
+    // Don't send this notification when we've already notified the author that someone mentioned him.
+    if (notificationData['itemAuthorMentioned'] != null && notificationData['itemAuthorMentioned'] == true) return;
+
     // Don't send notifications when the item author comments on their own post.
     if (notificationData['itemAuthor'] != notificationData['commentAuthor']) {
-
       var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
       var commentAuthorLastName = notificationData['commentAuthorLastName'];
       var itemAuthorFirstName = notificationData['itemAuthorFirstName'];
       var itemAuthorLastName = notificationData['itemAuthorLastName'];
-
 
       // Send notification.
       var envelope = new Envelope()
@@ -248,6 +250,50 @@ http://woven.co
         });
       }
       return;
+    });
+  }
+
+  static _notifyMentionedUsers(App app, Map notificationData) {
+    RegExp regExp = new RegExp(r'\B@[a-zA-Z0-9_-]+', caseSensitive: false);
+    String commentText = notificationData['commentText'];
+    List mentions = [];
+    for (var mention in regExp.allMatches(commentText)) mentions.add(mention.group(0).replaceAll("@", ""));
+
+    mentions.forEach((user) {
+      // If the item author is mentioned, remember it so we don't also send other notifications.
+      if (user == notificationData['itemAuthor']) notificationData['itemAuthorMentioned'] = true;
+      Firebase.get('/users/$user.json').then((userData) {
+        if (userData == null) return;
+
+        var firstName = userData['firstName'];
+        var lastName = userData['lastName'];
+        var email = userData['email'];
+        var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
+        var commentAuthorLastName = notificationData['commentAuthorLastName'];
+
+        // Send notification.
+        var envelope = new Envelope()
+          ..from = "Woven <hello@woven.co>"
+          ..to = "$firstName $lastName <$email>"
+          ..bcc = "David Notik <davenotik@gmail.com>"
+          ..subject = "$commentAuthorFirstName $commentAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
+          ..text = '''
+Hey $firstName,
+
+$commentAuthorFirstName $commentAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post:' : ':'}
+
+${notificationData['itemSubject']}
+${notificationData['itemLink']}
+
+${notificationData['commentText']}
+
+--
+Woven
+http://woven.co
+''';
+        app.mailer.send(envelope);
+
+      });
     });
   }
 }
