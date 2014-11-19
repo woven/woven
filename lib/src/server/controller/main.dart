@@ -164,7 +164,7 @@ http://twitter.com/wovenco
     return findItem()
     .then((_) => Future.wait([findAuthorInfo(), findCommentInfo()]))
     .then(findCommentAuthor)
-    .then(notify).catchError((error, stack) => print("Error in notify:\n$error\nStack trace:\n$stack"))
+    .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
     .then((success) => new Response(success))
     .catchError((error) => print("Error sending notifications: $error"));
   }
