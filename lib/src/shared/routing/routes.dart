@@ -15,6 +15,7 @@ class Routes {
   static final sendWelcome = new UrlPattern(r'/sendwelcome');
   static final sendNotifications = new UrlPattern(r'/x/sendnotifications');
   static final generateDigest = new UrlPattern(r'/admin/generatedigest');
+  static final exportUsers = new UrlPattern(r'/admin/exportusers');
 }
 
 class NoMatchingRoute {}
