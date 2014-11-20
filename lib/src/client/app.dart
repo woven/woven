@@ -21,7 +21,7 @@ import 'package:core_elements/core_header_panel.dart';
 class App extends Observable {
   @observable var selectedItem;
   @observable var selectedPage;
-  @observable var previousPage = 0;
+  @observable var previousPage = null;
   @observable String pageTitle = "";
   @observable UserModel user;
   @observable CommunityModel community;
