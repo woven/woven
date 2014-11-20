@@ -207,9 +207,14 @@ http://woven.co
 
   static _notifyOtherParticipants(App app, Map notificationData) {
     Set participants = notificationData['participants'];
+    List mentions = notificationData['mentions'];
 
     // Notify participants.
     participants.forEach((participant) {
+
+      // If participant mentioned and thus already notified, don't notify again.
+      if (mentions.contains(participant)) return;
+
       // Don't notify the author of the original item (whom we email above) or said comment.
       if (participant != notificationData['itemAuthor'] && participant != notificationData['commentAuthor']) {
         // Get the participant's user details.
@@ -257,11 +262,20 @@ http://woven.co
     RegExp regExp = new RegExp(r'\B@[a-zA-Z0-9_-]+', caseSensitive: false);
     String commentText = notificationData['commentText'];
     List mentions = [];
+
+    // Remember any mentions so we can special case other notifications.
+    notificationData['mentions'] = mentions;
+
     for (var mention in regExp.allMatches(commentText)) mentions.add(mention.group(0).replaceAll("@", ""));
 
     mentions.forEach((user) {
+      // Don't notify when you mention yourself.
+      if (user == notificationData['commentAuthor']) return;
+
       // If the item author is mentioned, remember it so we don't also send other notifications.
       if (user == notificationData['itemAuthor']) notificationData['itemAuthorMentioned'] = true;
+
+      // Get the user data. TODO: Address case sensitivity of usernames.
       Firebase.get('/users/$user.json').then((userData) {
         if (userData == null) return;
 
