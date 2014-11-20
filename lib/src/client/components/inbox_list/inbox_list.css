@@ -235,9 +235,9 @@ core-icon {
 #loading-indicator {
   text-align: center;
   width: 100%;
-  font-size: 13px;
+  font-size: 15px;
   font-family: inherit;
-  color: #999;
+  color: #666;
   margin-top: 20px;
   margin-bottom: 20px;
 }
