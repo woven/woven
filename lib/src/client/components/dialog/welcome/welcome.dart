@@ -2,7 +2,7 @@ import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
 import 'dart:math';
-import 'package:firebase/firebase.dart' as db;
+import 'package:firebase/firebase.dart' as f;
 import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
@@ -50,56 +50,50 @@ class WelcomeDialog extends PolymerElement {
       return false;
     }
 
-    var firebaseLocation = config['datastore']['firebaseLocation'];
+    final fRoot = new f.Firebase(config['datastore']['firebaseLocation']);
 
     DateTime now = new DateTime.now().toUtc();
-
-    var user = new UserModel()
-      ..username = username.inputValue
-      ..firstName = firstname.inputValue
-      ..lastName = lastname.inputValue
-      ..email = email.inputValue
-      ..facebookId = app.user.facebookId
-      ..location = location.inputValue
-      ..createdDate = now.toString()
-      ..isNew = true;
-
-
-    final userData = new db.Firebase("$firebaseLocation/users/${username.inputValue}");
-
-    var epochTime = DateTime.parse(now.toString()).millisecondsSinceEpoch;
 
     // If username is changing, update the Facebook index
     // and remove the old user record.
     if (username.inputValue != app.user.username) {
-      final indexRef = new db.Firebase("$firebaseLocation/facebook_index/${app.user.facebookId}");
-      final oldUserRef = new db.Firebase("$firebaseLocation/users/${app.user.username}");
+      final facebookIndexRef = fRoot.child('/facebook_index/${app.user.facebookId}');
+      final tempUserRef = fRoot.child('/users/${app.user.username}');
+      final userRef = fRoot.child('/users/${username.inputValue}');
+      var epochTime = DateTime.parse(now.toString()).millisecondsSinceEpoch;
 
+      // Move the old user data to its new location and update it.
+      Future updateUser() {
+        facebookIndexRef.set({'username': '${username.inputValue}'});
+        tempUserRef.once('value').then((snapshot) {
+          Map oldUserData = snapshot.val();
+          return oldUserData;
+        }).then((oldUserData) {
+          var user = new UserModel()
+            ..username = username.inputValue
+            ..firstName = firstname.inputValue
+            ..lastName = lastname.inputValue
+            ..email = email.inputValue
+            ..facebookId = app.user.facebookId
+            ..picture = oldUserData['picture']
+            ..location = location.inputValue
+            ..gender = app.user.gender
+            ..createdDate = now.toString()
+            ..isNew = true;
 
+          userRef.setWithPriority(oldUserData, -epochTime);
+          tempUserRef.remove();
+          userRef.update(user.encode());
 
-      Future set(db.Firebase indexRef) {
-        indexRef.set({'username': '${username.inputValue}'});
+          // Update the client's user instance.
+          app.user = user;
+        });
       }
 
-      set(indexRef);
-
-      Future remove(db.Firebase oldUserRef) {
-        oldUserRef.remove();
-      }
-
-      remove(oldUserRef);
-
-      // Update the client's user object.
-      app.user = user;
+      updateUser();
     }
 
-    Future set(db.Firebase userData) {
-      userData.setWithPriority(user.encode(), -epochTime);
-    }
-
-    set(userData);
     overlay.toggle();
-
     app.user.isNew = true;
 
     // When the user completes the welcome dialog, send them a welcome email.
