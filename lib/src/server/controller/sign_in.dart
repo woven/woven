@@ -27,18 +27,21 @@ class SignInController {
       // Try to gather the user info.
       return http.read('https://graph.facebook.com/me?access_token=$accessToken&fields=picture,first_name,last_name,gender,birthday,email,location');
     }).then((String userInfo) {
+      print("debug 4");
       Map facebookData = JSON.decode(userInfo);
 
       var facebookId = facebookData['id'];
 
       // Get the large picture.
       return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((filename) {
+        print("debug 5");
         facebookData['picture'] = filename;
 
         return facebookData;
       });
 
     }).then((Map facebookData) {
+      print("debug 6");
       // Streamline some of this data so it's easier to work with later.
       facebookData['location'] = facebookData['location']['name'];
       facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
