@@ -11,7 +11,7 @@ import 'package:core_elements/core_selector.dart';
 import 'package:woven/src/shared/model/item.dart';
 import 'package:woven/src/shared/model/event.dart';
 import 'package:intl/intl.dart';
-import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/shared/shared_util.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {

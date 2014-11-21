@@ -5,8 +5,7 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/src/shared/input_formatter.dart';
-import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/client/view_model/base.dart';
 
 class ItemViewModel extends BaseViewModel with Observable {
