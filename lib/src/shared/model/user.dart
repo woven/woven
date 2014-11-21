@@ -6,11 +6,15 @@ class UserModel {
   String firstName;
   String lastName;
   String location;
+  String gender;
+  String picture;
   String facebookId;
   String email;
   String createdDate;
   bool isNew = false;
   bool disabled = false;
+
+  String get fullPathToPicture => "/static/images/user/$facebookId/$picture";
 
   Map encode() {
     return {
@@ -20,6 +24,8 @@ class UserModel {
       "email": email,
       "facebookId": facebookId,
       "location": location,
+      "gender": gender,
+      "picture": picture,
       "createdDate": createdDate,
       "disabled": disabled
     };
@@ -33,6 +39,8 @@ class UserModel {
       ..email = data['email']
       ..facebookId = data['facebookId']
       ..location = data['location']
+      ..gender = data['gender']
+      ..picture = data['picture']
       ..createdDate = data['createdDate']
       ..disabled = data['disabled'];
   }
