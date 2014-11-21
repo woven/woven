@@ -139,7 +139,7 @@ class WovenApp extends PolymerElement with Observable {
       el.style.opacity = '0';
       new Timer(new Duration(milliseconds: 750), () {
         el.style.opacity = '1';
-        el.text = app.pageTitle;
+        el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
       });
 
 //      if (changedValue == "community") {
