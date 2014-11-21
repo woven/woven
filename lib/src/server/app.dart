@@ -1,13 +1,16 @@
+library woven_server;
+
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_server/http_server.dart';
+import 'package:path/path.dart' as path;
 import 'package:woven/config/config.dart';
-import 'package:query_string/query_string.dart';
 
 import '../shared/routing/routes.dart';
 import '../shared/response.dart';
+import 'util.dart' as util;
 
 import 'controller/hello.dart';
 import 'controller/main.dart';
@@ -19,11 +22,14 @@ import 'firebase.dart';
 
 import 'package:woven/src/server/mailer/mailer.dart';
 
+// Add parts.
+part 'util/profile_picture_util.dart';
 
 class App {
   Router router;
   VirtualDirectory virtualDirectory;
   Mailgun mailer;
+  ProfilePictureUtil profilePictureUtil;
 
   App() {
     // Start the server.
@@ -50,8 +56,9 @@ class App {
       ..allowDirectoryListing = false
       ..jailRoot = false;
 
-    // Set up emailing.
+    // Set up some objects.
     mailer = new Mailgun();
+    profilePictureUtil = new ProfilePictureUtil(this);
   }
 
   void onServerEstablished(HttpServer server) {
@@ -59,12 +66,12 @@ class App {
 
     server.listen((HttpRequest request) {
       // Some redirects if coming from related domains.
-      if (request.headers.host.contains("mycommunity.org") || request.headers.host.contains("woven.org")) {
+      if (request.headers.host != null && (request.headers.host.contains("mycommunity.org") || request.headers.host.contains("woven.org"))) {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: request.uri.path));
         return;
       }
 
-      if (request.headers.host.contains("miamitech.org")) {
+      if (request.headers.host != null && (request.headers.host.contains("miamitech.org"))) {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: '/miamitech'));
         return;
       }
@@ -133,6 +140,7 @@ class App {
                 }
               } else {
                 // File exists, so serve it.
+                print("Serve file");
                 serveFileBasedOnRequest(request);
               }
             });
