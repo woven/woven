@@ -39,7 +39,6 @@ class SignInController {
       });
 
     }).then((Map facebookData) {
-      print(facebookData);
       // Streamline some of this data so it's easier to work with later.
       facebookData['location'] = facebookData['location'] != null ? facebookData['location']['name'] : null;
       facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
