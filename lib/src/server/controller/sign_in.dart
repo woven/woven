@@ -27,8 +27,6 @@ class SignInController {
       // Try to gather the user info.
       return http.read('https://graph.facebook.com/me?access_token=$accessToken&fields=picture,first_name,last_name,gender,birthday,email,location');
     }).then((String userInfo) {
-      print("Facebook returned: $userInfo");
-
       Map facebookData = JSON.decode(userInfo);
 
       var facebookId = facebookData['id'];
@@ -77,6 +75,7 @@ class SignInController {
 
           // Get the existing user's data so we can compare against it.
           Firebase.get('/users/$username.json').then((Map userData) {
+            print("DEBUG: userData is $userData");
             facebookData.forEach((k, v) {
               if (userData[k] == null) userData[k] = v;
             });
