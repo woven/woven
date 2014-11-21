@@ -75,7 +75,6 @@ class SignInController {
 
           // Get the existing user's data so we can compare against it.
           Firebase.get('/users/$username.json').then((Map userData) {
-            print("DEBUG: userData is $userData");
             facebookData.forEach((k, v) {
               if (userData[k] == null) userData[k] = v;
             });
@@ -88,7 +87,7 @@ class SignInController {
         // Redirect.
         request.response.statusCode = 302;
         request.response.headers.add(HttpHeaders.LOCATION, (userIndexData != null) ? '/' : '/welcome');
-      });
+      }).catchError((e) => print(e.error));
     });
   }
 
