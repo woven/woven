@@ -27,6 +27,8 @@ class SignInController {
       // Try to gather the user info.
       return http.read('https://graph.facebook.com/me?access_token=$accessToken&fields=picture,first_name,last_name,gender,birthday,email,location');
     }).then((String userInfo) {
+      print("Facebook returned: $userInfo");
+
       Map facebookData = JSON.decode(userInfo);
 
       var facebookId = facebookData['id'];
