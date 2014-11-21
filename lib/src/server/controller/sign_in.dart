@@ -27,18 +27,22 @@ class SignInController {
       // Try to gather the user info.
       return http.read('https://graph.facebook.com/me?access_token=$accessToken&fields=picture,first_name,last_name,gender,birthday,email,location');
     }).then((String userInfo) {
+      print("debug 4");
       Map facebookData = JSON.decode(userInfo);
 
       var facebookId = facebookData['id'];
 
       // Get the large picture.
       return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((filename) {
+        print("debug 5");
         facebookData['picture'] = filename;
 
         return facebookData;
       });
 
     }).then((Map facebookData) {
+      print("debug 6");
+      print(facebookData);
       // Streamline some of this data so it's easier to work with later.
       facebookData['location'] = facebookData['location'] != null ? facebookData['location']['name'] : null;
       facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
@@ -64,17 +68,20 @@ class SignInController {
 
       return findFacebookIndex(facebookId).then((Map userIndexData) {
         if (userIndexData == null) {
+          print("debug 1");
           // Store the Facebook ID in an index that references the associated username.
           Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'});
 
           // Store the user, and we can use the index to find it and set a different username later.
           Firebase.put('/users/$facebookId.json', user.encode());
         } else {
+          print("debug 2");
           // If we already know of this Facebook user, update with any new data.
           var username = userIndexData['username'];
 
           // Get the existing user's data so we can compare against it.
           Firebase.get('/users/$username.json').then((Map userData) {
+            print("debug 3");
             facebookData.forEach((k, v) {
               if (userData[k] == null) userData[k] = v;
             });
@@ -87,7 +94,7 @@ class SignInController {
         // Redirect.
         request.response.statusCode = 302;
         request.response.headers.add(HttpHeaders.LOCATION, (userIndexData != null) ? '/' : '/welcome');
-      });
+      }).catchError((e) => print(e.error));
     });
   }
 
