@@ -4,14 +4,12 @@ import 'dart:html';
 import 'dart:async';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/feed.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:core_elements/core_header_panel.dart';
-import 'package:woven/src/shared/util.dart';
 
 /**
  * A list of items.
@@ -294,27 +292,6 @@ class InboxList extends PolymerElement with Observable {
     }));
   }
 
-  getUsers() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
-    var usersRef = f.child('/users');
-    Map user;
-
-    usersRef.once('value').then((snapshot) {
-      snapshot.forEach((userSnapshot) {
-        user = userSnapshot.val();
-        print(user['firstName']);
-      });
-      snapshot.forEach((userSnapshot) {
-        user = userSnapshot.val();
-        print(user['lastName']);
-      });
-      snapshot.forEach((userSnapshot) {
-        user = userSnapshot.val();
-        print(user['email']);
-      });
-    });
-  }
-
   attached() {
     print("+InboxList");
 
@@ -332,8 +309,6 @@ class InboxList extends PolymerElement with Observable {
         viewModel.lastScrollPos = app.scroller.scrollTop;
       }));
     });
-
-//    getUsers();
 
 //    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
