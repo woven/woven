@@ -16,7 +16,7 @@ class SessionManager {
     var domain = config['server']['domain'];
     try {
       domain = request.headers['host'].first;
-    } catch (e) {}
+    } catch (e) { print(e); }
 
     var cookie = new Cookie('session', session['id']);
     // Set the expire date to a year from now.
