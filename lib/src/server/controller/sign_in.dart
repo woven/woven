@@ -44,7 +44,7 @@ class SignInController {
       print("debug 6");
       print(facebookData);
       // Streamline some of this data so it's easier to work with later.
-      facebookData['location'] = facebookData['location']['name'];
+      facebookData['location'] = facebookData['location'] != null ? facebookData['location']['name'] : null;
       facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
       facebookData['lastName'] = facebookData['last_name']; facebookData.remove("last_name");
       var facebookId = facebookData['facebookId'] = facebookData['id']; facebookData.remove("id");
