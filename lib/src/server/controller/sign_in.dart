@@ -42,6 +42,7 @@ class SignInController {
 
     }).then((Map facebookData) {
       print("debug 6");
+      print(facebookData);
       // Streamline some of this data so it's easier to work with later.
       facebookData['location'] = facebookData['location']['name'];
       facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
