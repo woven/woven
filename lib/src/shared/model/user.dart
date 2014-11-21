@@ -14,7 +14,10 @@ class UserModel {
   bool isNew = false;
   bool disabled = false;
 
-  String get fullPathToPicture => "/static/images/user/$facebookId/$picture";
+  String get fullPathToPicture {
+    if (picture == null) return null;
+    return "/static/images/user/$facebookId/$picture";
+  }
 
   Map encode() {
     return {

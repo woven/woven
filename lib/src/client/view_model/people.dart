@@ -99,6 +99,8 @@ class PeopleViewModel extends BaseViewModel with Observable {
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
       users.removeWhere((i) => i['username'] == e.snapshot.name);
+
+      // TODO: Skip if user is disabled.
       users.add(toObservable(processItem(e.snapshot)));
 
       // Sort the list by the item's updatedDate.

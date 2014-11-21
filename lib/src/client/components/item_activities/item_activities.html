@@ -13,9 +13,9 @@
         <div layout horizontal>
           <div class="user-area" vertical layout>
             <div class="user-photo">
-              <!--<template if="{{user['picture'] != null}}">-->
+              <template if="{{app.user.fullPathToPicture != null}}">
               <img _src="{{app.user.fullPathToPicture}}">
-              <!--</template>-->
+              </template>
             </div>
           </div>
           <div flex>
