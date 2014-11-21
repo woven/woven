@@ -28,7 +28,7 @@ class ProfilePictureUtil {
 
         var filename = 'profile-picture$extension';
 
-        var imagePath = 'web/static/images/user/${user}/';
+        var imagePath = '${config['server']['directory']}/static/images/user/${user}/';
 
         return new Directory(imagePath).create(recursive: true).then((_) {
           return util.downloadFileTo(data['data']['url'], '$imagePath$filename').then((_) {
