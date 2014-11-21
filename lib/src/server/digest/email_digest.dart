@@ -6,7 +6,7 @@ import 'package:woven/src/server/firebase.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/server/mailer/mailer.dart';
 import '../app.dart';
-import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/shared/shared_util.dart';
 
 
 class EmailDigest {
