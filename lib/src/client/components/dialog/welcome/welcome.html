@@ -47,13 +47,18 @@
                         value="{{(app.user != null) ? app.user.location : ''}}"></core-input>
           </div>
           <div class="field-wrapper">
-            <core-input id="email" placeholder="Your email" autocomplete="off"
+            <core-input id="email" placeholder="Your email"
+                        autocomplete="off" autocorrect="off" autocapitalize="off"
                         value="{{(app.user != null) ? app.user.email : ''}}"></core-input>
           </div>
           <div class="field-wrapper">
             <core-input id="username" placeholder="Choose a username"
                         autocomplete="off" autocorrect="off" autocapitalize="off"></core-input>
           </div>
+          <!--<div class="field-wrapper">-->
+            <!--<core-input id="password" placeholder="Choose a password"-->
+                        <!--autocomplete="off" autocorrect="off" autocapitalize="off"></core-input>-->
+          <!--</div>-->
         </div>
       </div>
     </x-dialog>
