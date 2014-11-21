@@ -2,6 +2,7 @@
 .idea*
 packages
 web/packages
+web/static/images/user
 build
-#/lib/config/config.dart
+/lib/config/config.dart
 /.pub
