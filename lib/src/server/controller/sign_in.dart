@@ -25,20 +25,35 @@ class SignInController {
       var accessToken = parameters['access_token'];
 
       // Try to gather the user info.
-      return http.read('https://graph.facebook.com/me?access_token=$accessToken');
+      return http.read('https://graph.facebook.com/me?access_token=$accessToken&fields=picture,first_name,last_name,gender,birthday,email,location');
     }).then((String userInfo) {
-      Map userData = JSON.decode(userInfo);
+      Map facebookData = JSON.decode(userInfo);
 
-      var username = userData['username'] != null ? userData['username'] : userData['id'];
-      var facebookId = userData['id'];
+      var facebookId = facebookData['id'];
+
+      // Get the large picture.
+      return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((filename) {
+        facebookData['picture'] = filename;
+
+        return facebookData;
+      });
+
+    }).then((Map facebookData) {
+      // Streamline some of this data so it's easier to work with later.
+      facebookData['location'] = facebookData['location']['name'];
+      facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
+      facebookData['lastName'] = facebookData['last_name']; facebookData.remove("last_name");
+      var facebookId = facebookData['facebookId'] = facebookData['id']; facebookData.remove("id");
 
       var user = new UserModel()
-        ..username = userData['username'] != null ? userData['username'] : userData['id']
-        ..facebookId = userData['id']
-        ..firstName = userData['first_name']
-        ..lastName = userData['last_name']
-        ..email = userData['email']
-        ..location = userData['location'] != null ? userData['location']['name'] : null
+        ..username = facebookData['facebookId']
+        ..facebookId = facebookData['facebookId']
+        ..firstName = facebookData['firstName']
+        ..lastName = facebookData['lastName']
+        ..email = facebookData['email']
+        ..location = facebookData['location']
+        ..gender = facebookData['gender']
+        ..picture = facebookData['picture']
         ..disabled = true;
 
       // Save the user to the session.
@@ -47,18 +62,31 @@ class SignInController {
       var sessionManager = new SessionManager();
       sessionManager.addSessionCookieToRequest(request, request.session);
 
-      return facebookIdExists(facebookId).then((bool facebookIdExists) {
-        if (!facebookIdExists) {
-          //Store the Facebook ID in an index that references the associated username.
-          Firebase.put('/facebook_index/$facebookId.json', {'username': '$username'});
+      return findFacebookIndex(facebookId).then((Map userIndexData) {
+        if (userIndexData == null) {
+          // Store the Facebook ID in an index that references the associated username.
+          Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'});
 
           // Store the user, and we can use the index to find it and set a different username later.
-          Firebase.put('/users/$username.json', user.encode());
+          Firebase.put('/users/$facebookId.json', user.encode());
+        } else {
+          // If we already know of this Facebook user, update with any new data.
+          var username = userIndexData['username'];
+
+          // Get the existing user's data so we can compare against it.
+          Firebase.get('/users/$username.json').then((Map userData) {
+            facebookData.forEach((k, v) {
+              if (userData[k] == null) userData[k] = v;
+            });
+            return userData;
+          }).then((userData) {
+            Firebase.put('/users/$username.json', userData);
+          });
         }
 
         // Redirect.
         request.response.statusCode = 302;
-        request.response.headers.add(HttpHeaders.LOCATION, facebookIdExists ? '/' : '/welcome');
+        request.response.headers.add(HttpHeaders.LOCATION, (userIndexData != null) ? '/' : '/welcome');
       });
     });
   }
@@ -69,9 +97,9 @@ class SignInController {
     });
   }
 
-  static Future<bool> facebookIdExists(String id) {
+  static Future findFacebookIndex(String id) {
     return Firebase.get('/facebook_index/$id.json').then((res) {
-      return (res == null ? false : true);
+      return res;
     });
   }
 }
