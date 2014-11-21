@@ -10,22 +10,33 @@
     <link rel="stylesheet" href="item_activities.css">
     <div id="post-container">
       <template if="{{app.user != null}}">
-        <div class="field-wrapper first transparent">
-          <strong>{{app.user.username}}</strong>
-        </div>
-        <div class="field-wrapper full-height">
-          <core-input class="expand" id="comment" multiline rows="1" required placeholder="Your comment..." autocomplete="off"
-                      inputValue="{{theData['comment']}}" on-keyup="{{resizeCommentInput}}"
-                      on-focus="{{onFocusHandler}}" on-blur="{{onBlurHandler}}" on-tap="{{onFocusHandler}}">
-                      </core-input>
-        </div>
-        <footer>
-          <div layout horizontal>
-            <div id="comment-message" flex></div>
-            <div><core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button></div>
+        <div layout horizontal>
+          <div class="user-area" vertical layout>
+            <div class="user-photo">
+              <!--<template if="{{user['picture'] != null}}">-->
+              <img src="{{app.user.fullPathToPicture}}">
+              <!--</template>-->
+            </div>
           </div>
-        </footer>
-        <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+          <div flex>
+            <!--<div class="field-wrapper first transparent">-->
+              <!--<strong>{{app.user.username}}</strong>-->
+            <!--</div>-->
+            <div class="field-wrapper full-height">
+              <core-input class="expand" id="comment" multiline rows="1" required placeholder="Your comment..." autocomplete="off"
+                          inputValue="{{theData['comment']}}" on-keyup="{{resizeCommentInput}}"
+                          on-focus="{{onFocusHandler}}" on-blur="{{onBlurHandler}}" on-tap="{{onFocusHandler}}">
+                          </core-input>
+            </div>
+            <footer>
+              <div layout horizontal>
+                <div id="comment-message" flex></div>
+                <div><core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button></div>
+              </div>
+            </footer>
+            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+          </div>
+        </div>
       </template>
       <template if="{{app.user == null}}">
         <div id="signin-container">
@@ -37,12 +48,23 @@
 
     <div id="activity-wrapper">
       <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
-        <div class="activity-card">
-          <div id="content">
-            <div class="user">{{comment['user']}}</div>
-            <p><safe-html><template if="{{comment != null}}">{{formatText(comment['comment'])}}</template></safe-html></p>
-            <div class="date-time">
-              <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+        <div layout horizontal>
+          <div class="user-area" vertical layout>
+            <div class="user-photo">
+              <template if="{{comment['user_picture'] != null}}">
+                <img src="{{comment['user_picture']}}">
+              </template>
+            </div>
+          </div>
+          <div class="activity-card" flex>
+            <div id="content">
+              <div class="card-top" horizontal layout>
+                <div flex class="user">{{comment['user']}}</div>
+                <div class="date-time">
+                  <live-date-time value="{{comment['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                </div>
+              </div>
+              <p><safe-html><template if="{{comment != null}}">{{formatText(comment['comment'])}}</template></safe-html></p>
             </div>
           </div>
         </div>
