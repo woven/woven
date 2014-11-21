@@ -2,14 +2,12 @@ library main_controller;
 
 import 'dart:io';
 import 'dart:async';
-import 'dart:convert';
 import '../app.dart';
 import '../firebase.dart';
 import '../../shared/response.dart';
 import '../../../config/config.dart';
 import '../mailer/mailer.dart';
-import 'package:crypto/crypto.dart';
-import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/shared/shared_util.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -38,13 +36,16 @@ class MainController {
   }
 
   static getCurrentUser(App app, HttpRequest request) {
-    var id = request.cookies.firstWhere((cookie) => cookie.name == 'session').value;
-
+    var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+    if (sessionCookie == null) return new Response(false);
+    var id = sessionCookie.value;
     if (id == null) return new Response(false);
 
     // Find the username associated with the Facebook ID
     // that's in session.id, then get that user data.
     return Firebase.get('/facebook_index/$id.json').then((indexData) {
+      if (indexData == null) return new Response(false);
+
       var username = indexData['username'];
       return Firebase.get('/users/$username.json').then((userData) {
         return new Response()
