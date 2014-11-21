@@ -64,17 +64,20 @@ class SignInController {
 
       return findFacebookIndex(facebookId).then((Map userIndexData) {
         if (userIndexData == null) {
+          print("debug 1");
           // Store the Facebook ID in an index that references the associated username.
           Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'});
 
           // Store the user, and we can use the index to find it and set a different username later.
           Firebase.put('/users/$facebookId.json', user.encode());
         } else {
+          print("debug 2");
           // If we already know of this Facebook user, update with any new data.
           var username = userIndexData['username'];
 
           // Get the existing user's data so we can compare against it.
           Firebase.get('/users/$username.json').then((Map userData) {
+            print("debug 3");
             facebookData.forEach((k, v) {
               if (userData[k] == null) userData[k] = v;
             });
