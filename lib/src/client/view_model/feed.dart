@@ -22,7 +22,6 @@ class FeedViewModel extends BaseViewModel with Observable {
   @observable bool reachedEnd = false;
   var lastPriority = null;
   var topPriority = null;
-  bool isFirstRun = true;
   var secondToLastPriority = null;
 
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
@@ -80,7 +79,6 @@ class FeedViewModel extends BaseViewModel with Observable {
 
       updateEventView();
 
-      // TODO: Ensure this listener ignores the extra item tacked onto pageSize above.
       relistenForItems();
 
       // If we received less than we tried to load, we've reached the end.
@@ -211,13 +209,6 @@ class FeedViewModel extends BaseViewModel with Observable {
     // by today, tomorrow, this week, etc.
     if (typeFilter == "event") {
       item['dateGroup'] = DateGroup.getDateGroupName(item['startDateTime']);
-
-//      if (!itemsByGroupDate.contains(item['dateGroup'])) {
-//        print("Does NOT");
-//        itemsByGroupDate.add(dateGroup);
-//      } else {
-//        print("DOES");
-//      }
     }
 
     // Use the Firebase snapshot ID as our ID.

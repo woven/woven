@@ -5,8 +5,9 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/shared/shared_util.dart';
 import 'feed.dart';
+import 'people.dart';
 import 'item.dart';
 import 'list.dart';
 import 'base.dart';
@@ -18,6 +19,7 @@ class MainViewModel extends BaseViewModel with Observable {
   final f = new Firebase(config['datastore']['firebaseLocation']);
   final Map feedViewModels = {};
   final Map itemViewModels = {};
+  final Map peopleViewModels = {};
   var starredViewModelForUser = null;
   int pageSize = 20;
   @observable bool reloadingContent = false;
@@ -26,7 +28,6 @@ class MainViewModel extends BaseViewModel with Observable {
 
   MainViewModel(this.app) {
     loadCommunities();
-    loadUsersByPage();
   }
 
   // Get the view model for the item.
@@ -56,6 +57,21 @@ class MainViewModel extends BaseViewModel with Observable {
     // TODO: More checks?
 
     return itemViewModels[id];
+  }
+
+  // Get the view model for the people list.
+  @observable PeopleViewModel get peopleViewModel {
+    var id = "all"; // Just one global people view for now.
+
+    if (id == null) return null; // No item, no view model to use.
+
+    if (!peopleViewModels.containsKey(id)) {
+      // Item not stored yet, let's create it and store it.
+      var vm = new PeopleViewModel(app: app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
+      peopleViewModels[id] = vm; // Store it.
+    }
+
+    return peopleViewModels[id];
   }
 
   // Get the view model for the current inbox.
@@ -207,42 +223,6 @@ class MainViewModel extends BaseViewModel with Observable {
   }
 
   /**
-   * Get all the users.
-   */
-  loadUsersByPage() {
-    reloadingContent = true;
-    if (users.length == 0) onLoadCompleter.complete(true);
-
-    var itemsRef = f.child('/users').startAt(priority: snapshotPriority).limit(pageSize + 1);
-    int count = 0;
-
-    // Get the list of items, and listen for new ones.
-    itemsRef.once('value').then((snapshot) {
-      snapshot.forEach((itemSnapshot) {
-        count++;
-        // Don't process the extra item we tacked onto pageSize in the limit() above.
-        if (count > pageSize) return;
-
-        var user = itemSnapshot.val();
-
-        // The live-date-time element needs parsed dates.
-        user['createdDate'] = user['createdDate'] != null ? DateTime.parse(user['createdDate']) : new DateTime.now();
-
-        if (user['disabled'] == true) return;
-
-        // Insert each new item into the list.
-        users.add(user);
-
-        // Track the snapshot's priority so we can paginate from the last one.
-        snapshotPriority = itemSnapshot.getPriority();
-      });
-
-      if (count < pageSize) reachedEnd = true;
-      reloadingContent = false;
-    });
-  }
-
-  /**
    * Whenever user signs in/out, we should call this to trigger any necessary updates.
    */
   void invalidateUserState() {
@@ -275,9 +255,5 @@ class MainViewModel extends BaseViewModel with Observable {
         community['starred'] = false;
       }
     });
-  }
-
-  void paginateUsers() {
-    if (reloadingContent == false && reachedEnd == false) loadUsersByPage();
   }
 }

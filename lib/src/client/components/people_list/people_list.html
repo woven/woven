@@ -10,7 +10,11 @@
         <core-item class="item" on-tap="{{selectUser}}" data-user="{{user['username']}}">
           <div class="item-container" horizontal layout>
             <div class="item-col1" vertical layout>
-              <div class="user-photo"></div>
+              <div class="user-photo">
+                <template if="{{user['picture'] != null}}">
+                  <img src="{{user['picture']}}">
+                </template>
+              </div>
             </div>
             <div class="item-col2" flex>
               <div class="user-username">{{ user['username'] }}</div>
