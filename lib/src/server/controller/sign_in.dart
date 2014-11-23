@@ -80,7 +80,7 @@ class SignInController {
             });
             return userData;
           }).then((userData) {
-            Firebase.put('/users/$username.json', userData);
+            Firebase.patch('/users/$username.json', userData);
           });
         }
 

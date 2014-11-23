@@ -46,9 +46,31 @@ class Firebase {
 
   /**
    *
-   * PUT and replace the object at the location.
+   * PATCH to update the object at the location.
    *
-   * Equivalent to a .set() in the Firebase client API.
+   * Equivalent to a .update() in the Firebase client API.
+   */
+  static Future patch(String path, data) {
+    if (data is! String) data = JSON.encode(data);
+    var http = new HttpClient();
+    var uri = Uri.parse('${config['datastore']['firebaseLocation']}$path');
+
+    try {
+      return http.patchUrl(uri).then((HttpClientRequest request) {
+        request.write(data);
+        request.close();
+        return request.done.then((HttpClientResponse response) {
+          return response.statusCode;
+        });
+      });
+    } catch(error, stack) {
+      print("Error $error\n\n$stack");
+    }
+  }
+
+  /**
+   *
+   * GET the object at the location.
    */
   static Future<Map> get(String path) {
     return http.get('${config['datastore']['firebaseLocation']}$path').then((response) {
