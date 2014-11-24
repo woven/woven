@@ -23,9 +23,14 @@ class ItemView extends PolymerElement with Observable {
     return viewModel.item;
   }
 
+  /**
+   * Handle formatting of the body text.
+   *
+   * Format line breaks, links, @mentions.
+   */
   formatText(String text) {
     if (text.trim().isEmpty) return 'Loading...';
-    String formattedText = InputFormatter.nl2br(InputFormatter.linkify(text.trim()));
+    String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
     return formattedText;
   }
 

@@ -123,6 +123,16 @@ core-icon {
   color: #ff6e40;
 }
 
+#body.special {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 17px;
+}
+
+#body {
+  word-wrap: break-word;
+  font-size: 15px;
+}
+
 safe-html::shadow a {
   text-decoration: none;
   color: rgb(34, 110, 223);
@@ -136,14 +146,9 @@ safe-html::shadow a:visited {
   color: rgb(106, 56, 223);
 }
 
-#body.special {
-  font-family: Georgia, "Times New Roman", Times, serif;
-  font-size: 17px;
-}
-
-#body {
-  word-wrap: break-word;
-  font-size: 15px;
+safe-html::shadow .mention {
+  color: rgb(245, 108, 0);
+  font-weight: bold;
 }
 
 @media all and (max-width: 800px)  {
