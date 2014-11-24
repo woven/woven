@@ -12,6 +12,7 @@ import 'package:woven/src/shared/model/item.dart';
 import 'package:woven/src/shared/model/event.dart';
 import 'package:intl/intl.dart';
 import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/routing/routes.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
@@ -135,6 +136,10 @@ class AddStuff extends PolymerElement {
 
     // Run the above Future using the reference from the initial save above.
     setItem(id);
+
+    // Send a notification email to anybody mentioned in the item.
+    var itemId = id.name;
+    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId");
 
     overlay.toggle();
     theData['subject'] = "";

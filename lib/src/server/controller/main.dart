@@ -118,14 +118,19 @@ http://twitter.com/wovenco
   static sendNotifications(App app, HttpRequest request) {
     var item = request.requestedUri.queryParameters['itemid'];
     var comment = request.requestedUri.queryParameters['commentid'];
+    bool isItem = (comment == null) ? true : false; // Sending notifications for an item itself (not a comment)?
+
     Map notificationData = {};
 
     Future findItem() {
       return Firebase.get('/items/$item.json').then((itemData) {
         notificationData['itemSubject'] = itemData['subject'];
         notificationData['itemAuthor'] = itemData['user'];
+        notificationData['itemBody'] = itemData['body'];
         var encodedItem = hashEncode(item);
         notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
+
+        if (isItem) return;
 
         // Find all the unique users who have commented on this item.
         Map comments = itemData['activities']['comments'];
@@ -142,13 +147,15 @@ http://twitter.com/wovenco
     }
 
     Future findCommentInfo() {
+      if (isItem) return null;
       return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
-        notificationData['commentText'] = commentData['comment'];
+        notificationData['commentBody'] = commentData['comment'];
         notificationData['commentAuthor'] = commentData['user'];
       });
     }
 
     Future findCommentAuthor(_) {
+      if (isItem) return null;
       return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
         notificationData['commentAuthorFirstName'] = userData['firstName'];
         notificationData['commentAuthorLastName'] = userData['lastName'];
@@ -158,16 +165,27 @@ http://twitter.com/wovenco
     Future notify(_) {
       // Order matters, as we prioritize notification of mentions over multiple notifications.
       _notifyMentionedUsers(app, notificationData);
+
+      if (isItem) return null; // If it's an item we're notifying about, skip the comment notifications.
+
       _notifyAuthor(app, notificationData);
       _notifyOtherParticipants(app, notificationData);
     }
 
-    return findItem()
-    .then((_) => Future.wait([findAuthorInfo(), findCommentInfo()]))
-    .then(findCommentAuthor)
-    .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
-    .then((success) => new Response(success))
-    .catchError((error) => print("Error sending notifications: $error"));
+    if (isItem) {
+      return findItem()
+      .then((_) => Future.wait([findAuthorInfo()]))
+      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
+      .then((success) => new Response(success))
+      .catchError((error) => print("Error sending notifications: $error"));
+    } else {
+      return findItem()
+      .then((_) => Future.wait([findAuthorInfo(),findCommentInfo()]))
+      .then(findCommentAuthor)
+      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
+      .then((success) => new Response(success))
+      .catchError((error) => print("Error sending notifications: $error"));
+    }
   }
 
   static _notifyAuthor(App app, Map notificationData) {
@@ -195,7 +213,7 @@ $commentAuthorFirstName $commentAuthorLastName just commented on your post:
 ${notificationData['itemSubject']}
 ${notificationData['itemLink']}
 
-${notificationData['commentText']}
+${notificationData['commentBody']}
 
 --
 Woven
@@ -246,7 +264,7 @@ $commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAut
 ${notificationData['itemSubject']}
 ${notificationData['itemLink']}
 
-${notificationData['commentText']}
+${notificationData['commentBody']}
 
 --
 Woven
@@ -261,13 +279,14 @@ http://woven.co
 
   static _notifyMentionedUsers(App app, Map notificationData) {
     RegExp regExp = new RegExp(r'\B@[a-zA-Z0-9_-]+', caseSensitive: false);
-    String commentText = notificationData['commentText'];
+    bool isItem = (notificationData['commentBody'] == null) ? true : false;
+    String postText = (isItem) ? notificationData['itemBody'] : notificationData['commentBody'];
     List mentions = [];
 
     // Remember any mentions so we can special case other notifications.
     notificationData['mentions'] = mentions;
 
-    for (var mention in regExp.allMatches(commentText)) mentions.add(mention.group(0).replaceAll("@", ""));
+    for (var mention in regExp.allMatches(postText)) mentions.add(mention.group(0).replaceAll("@", ""));
 
     mentions.forEach((user) {
       // Don't notify when you mention yourself.
@@ -283,25 +302,30 @@ http://woven.co
         var firstName = userData['firstName'];
         var lastName = userData['lastName'];
         var email = userData['email'];
-        var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
-        var commentAuthorLastName = notificationData['commentAuthorLastName'];
+        var postAuthorFirstName = (isItem) ? notificationData['itemAuthorFirstName'] : notificationData['commentAuthorFirstName'];
+        var postAuthorLastName = (isItem) ? notificationData['itemAuthorLastName'] : notificationData['commentAuthorLastName'];
+        var notificationText;
+
+        if (isItem) {
+          notificationText = '';
+        } else {
+          notificationText = '\n${notificationData['commentBody']}\n';
+        }
 
         // Send notification.
         var envelope = new Envelope()
           ..from = "Woven <hello@woven.co>"
           ..to = "$firstName $lastName <$email>"
           ..bcc = "David Notik <davenotik@gmail.com>"
-          ..subject = "$commentAuthorFirstName $commentAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
+          ..subject = "$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
           ..text = '''
 Hey $firstName,
 
-$commentAuthorFirstName $commentAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post:' : ':'}
+$postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post:' : ':'}
 
 ${notificationData['itemSubject']}
 ${notificationData['itemLink']}
-
-${notificationData['commentText']}
-
+$notificationText
 --
 Woven
 http://woven.co
