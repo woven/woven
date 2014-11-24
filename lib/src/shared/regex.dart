@@ -6,7 +6,7 @@ class RegexHelper {
   static String emailName = '[a-zA-Z.+]+';
   static String email = '\\b${emailName}@${domain}\\b';
 
-  static String queryPath = '\\/[-~+=%_a-zA-Z0-9.]+[-~+=%_a-zA-Z0-9]';
+  static String queryPath = '\\/[-~+=%_a-zA-Z0-9.]*[-~+=%_a-zA-Z0-9]';
   static String searchString = '\\?[-+=&;%@_.a-zA-Z0-9]+[-+=&;%@_a-zA-Z0-9]';
   static String queryHash = '#[-=_a-zA-Z0-9]+';
 
