@@ -62,6 +62,7 @@ class ItemActivities extends PolymerElement {
       }).then((e) {
         // Insert each new item at top of list so the list is ascending.
         comments.insert(0, comment);
+        comments.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
       });
     });
   }
