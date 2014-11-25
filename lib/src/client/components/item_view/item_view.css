@@ -51,7 +51,7 @@ core-item core-icon {
   margin: 0 !important;
 }
 
-core-icon {
+core-icon-button {
   fill: #666;
   color: #666;
   cursor: pointer;
@@ -67,8 +67,9 @@ core-icon {
   width: 21px !important;
 }
 
-#icon-fav.selected {
-  fill: red;
+core-icon-button.selected {
+  fill: #ff1706;
+  color: #ff1706;
 }
 
 #icon-star.selected {
