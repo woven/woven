@@ -10,6 +10,7 @@ import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
 import 'package:woven/src/shared/model/item.dart';
 import 'package:woven/src/shared/model/event.dart';
+import 'package:woven/src/shared/model/news.dart';
 import 'package:intl/intl.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/shared/routing/routes.dart';
@@ -60,10 +61,24 @@ class AddStuff extends PolymerElement {
       }
     }
 
+    _isValidUrl(String url) {
+      if (url.contains("http://") || url.contains("https://") || url.contains("www.")) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    if (theData['url'] != null && _isValidUrl(theData['url']) == false) {
+      window.alert("That's not a valid URL.");
+      return false;
+    }
+
     var now = new DateTime.now().toUtc();
 
     ItemModel item;
     if (selectedType == 'event') item = new EventModel();
+    else if (selectedType == 'news') item = new NewsModel();
     else item = new ItemModel();
 
     item
@@ -80,7 +95,13 @@ class AddStuff extends PolymerElement {
       DateTime time = parseTime(theData['event-start-time']);
       DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute);
       (item as EventModel)
-        ..startDateTime = startDateTime;
+        ..startDateTime = startDateTime
+        ..url = theData['url'];
+    }
+
+    if (item is NewsModel) {
+      (item as NewsModel)
+        ..url = theData['url'];
     }
 
     var encodedItem = item.encode();

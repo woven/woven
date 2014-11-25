@@ -53,6 +53,12 @@
                           inputValue="{{theData['event-start-time']}}" on-focus="{{updateInput}}"></core-input>
             </div>
           </template>
+          <template if="{{selectedType == 'event' || selectedType == 'news'}}">
+            <div class="field-wrapper">
+              <core-input id="url" placeholder="Link to the {{selectedType}}" autocomplete="off"
+                          inputValue="{{theData['url']}}"></core-input>
+            </div>
+          </template>
           <div class="field-wrapper full-height">
             <core-input class="expand" id="body" multiline rows="fit" required placeholder="Sharing is caring..." autocomplete="off"
                         inputValue="{{theData['body']}}"></core-input>

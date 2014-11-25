@@ -68,6 +68,10 @@ core-icon {
   border-left-color: #03a9f4;
 }
 
+.item.news {
+  border-left-color: #117f09;
+}
+
 .item.idea {
   border-left-color: #e040fb;
 }
@@ -145,6 +149,10 @@ core-icon {
 
 .item-type.event {
   color: #03a9f4;
+}
+
+.item-type.news {
+  color: #117f09;
 }
 
 .item-type.idea {

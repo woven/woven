@@ -5,20 +5,35 @@ h1 {
 .item-card {
   /* min-width: 400px; */
   background-color: #fff;
-  /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
-  margin-bottom: 10px;
-  border-radius: 2px 2px 2px 2px;
-  margin: 0px auto 10px auto;
+  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 1px, rgba(0, 0, 0, 0.098) 0 0 3px;
+  border-radius: 2px 2px 0 0;
+  margin: 0 auto 10px auto;
   max-width: 800px;
 }
 
 .item-card .content {
-  padding: 20px;
+  padding: 0;
 }
 
-#action-footer {
-  padding: 5px 5px 5px 8px;
+.content-header  {
+  padding: 20px 20px 10px 20px;
+}
+
+.content-main {
+  padding: 0 20px 10px 20px;
+}
+
+.content-info {
+  padding: 10px 20px;
+  background-color: #f5f5f5;
+  margin: 10px -5px;
+  border: solid 1px #e6e6e6;
+}
+
+#content-footer {
+  padding: 4px 5px 4px 4px;
   border-top: solid 1px #eee;
+  background-color: #F5F5F5;
 
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -65,9 +80,8 @@ core-icon {
   text-align: center;
 }
 .item-col1 span {
-  font-size: 10px;
+  /*font-size: 10px;*/
   color: #3F3F3F;
-  margin-right: 10px;
   align-self: center;
   -webkit-align-self: center;
 }
@@ -90,7 +104,24 @@ core-icon {
 
 .event-date {
   color: #008000;
-  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.item-url {
+}
+
+.item-url a {
+  color: rgb(34, 110, 223);
+  text-decoration: none;
+}
+
+.item-url a:hover {
+  color: rgb(106, 56, 223);
+}
+
+
+.item-url a:hover {
+  text-decoration: underline;
 }
 
 .item-type {
@@ -107,6 +138,10 @@ core-icon {
   color: #03a9f4;
 }
 
+.item-type.news {
+  color: #117f09;
+}
+
 .item-type.idea {
   color: #e040fb;
 }
@@ -121,6 +156,54 @@ core-icon {
 
 .item-type.announcement {
   color: #ff6e40;
+}
+
+.like-button span {
+  position: relative;
+  top: 2px;
+}
+
+.like-button {
+  fill: #eee;
+  color: #eee;
+  box-shadow: none;
+  border: 1px solid #e6e6e6;
+  display: inline-block;
+  cursor: pointer;
+  color: #2e2e2e;
+  font-family: arial;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 3px 10px 3px 5px;
+  text-decoration: none;
+  text-align: left;
+}
+
+.like-button::shadow core-icon {
+  height:20px;
+}
+
+.like-button .item-count {
+}
+
+.like-button:hover {
+  /*background-color:#fff;*/
+}
+.like-button:active {
+  background: #fff;
+  /*position:relative;*/
+  /*top:2px;*/
+}
+
+.like-button:hover {
+  box-shadow: none;
+}
+
+.like-button.selected:not([disabled]) {
+  box-shadow: none;
+  background-color:#ffffff;
+  fill: #ff1706;
+  color: #ff1706;
 }
 
 #body.special {
@@ -157,6 +240,6 @@ safe-html::shadow .mention {
     margin: 0;
   }
   .item-card .content {
-    padding: 20px;
+    /*padding: 20px;*/
   }
 }

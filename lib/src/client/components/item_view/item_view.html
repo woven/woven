@@ -1,6 +1,6 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
 <polymer-element name="item-view">
   <template>
@@ -8,36 +8,45 @@
       <template if="{{item != null}}">
         <div class="item-card">
           <div class="content">
-            <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</div>
-            <div>
-              <h1>{{item['subject']}}</h1>
-            </div>
-            <div class="item-updated">
+            <div class="content-header">
+              <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</div>
+              <div>
+                <h1>{{item['subject']}}</h1>
+              </div>
               <template if="{{app.selectedItem != null}}">
+                <div class="item-updated">
                   <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                   by
-                <span class="item-users">{{item['user']}}</span>
-                <template if="{{item['startDateTime'] != null}}">
-                  <div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div>
-                </template>
+                  <span class="item-users">{{item['user']}}</span>
+                </div>
               </template>
             </div>
-            <div>
-              <p id="body" class="{{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>
+            <template if="{{item['startDateTime'] != null || item['url'] != null}}">
+              <div class="content-info">
+
+                    <template if="{{item['startDateTime'] != null}}">
+                      <div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div>
+                    </template>
+                    <template if="{{item['url'] != null}}">
+                      <div class="item-url"><a target="_blank" href="{{item['url']}}">{{item['url']}}</a></div>
+                    </template>
+
+              </div>
+            </template>
+            <div class="content-main">
+              <div>
+                <p id="body" class="{{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>
+              </div>
             </div>
           </div>
-          <div id="action-footer">
+          <div id="content-footer">
             <div class="item-col1" horizontal layout>
-              <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+              <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
                          id="icon-fav" on-click="{{toggleLike}}"
-                         class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
-                         data-id="{{item['id']}}"></core-icon>
-              <span class="item-count">{{item['like_count']}}</span>
-              <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
-                         <!--id="icon-star" on-click="{{toggleStar}}"-->
-                         <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
-                         <!--data-id="{{ item['id'] }}"></core-icon>-->
-              <!--<span class="item-count">{{item['star_count']}}</span>-->
+                         class="like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                         data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
+                <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
+              </core-icon-button>
             </div>
           </div>
         </div>
