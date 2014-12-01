@@ -1,6 +1,6 @@
 import 'package:polymer/polymer.dart';
 
-@CustomTag('sign-in')
+@CustomTag('sign-in-dialog')
 class SignInDialog extends PolymerElement {
   @published bool opened = false;
 

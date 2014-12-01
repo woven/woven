@@ -226,6 +226,7 @@ class MainViewModel extends BaseViewModel with Observable {
    * Whenever user signs in/out, we should call this to trigger any necessary updates.
    */
   void invalidateUserState() {
+
     loadUserStarredCommunityInformation();
 
     if (itemViewModel != null) {
@@ -242,6 +243,8 @@ class MainViewModel extends BaseViewModel with Observable {
       starredViewModel.loadStarredItemsForUser();
     }
     // Add more cases later as we need.
+
+    app.hasTriedLoadingUser = true;
   }
 
   void loadUserStarredCommunityInformation() {
