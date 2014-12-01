@@ -25,6 +25,7 @@ class App extends Observable {
   @observable String pageTitle = "";
   @observable UserModel user;
   @observable CommunityModel community;
+  @observable bool hasTriedLoadingUser = false;
 //  @observable bool isNewUser = false;
   Router router;
   MainViewModel mainViewModel;

@@ -16,7 +16,7 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_activities/item_activities.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/people_list/people_list.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/community_list/community_list.html">
-<!--<link rel="import" href="../../../../../../../packages/woven/src/client/components/item_list/item_list.html">-->
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/item_list/item_list.html">
 <link rel="import" href="../../../../../../../packages/paper_elements/paper_toast.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_transition_css.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">
@@ -31,7 +31,7 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <template if="{{app.router.route.pattern == '/' && app.user == null}}">
+    <template if="{{app.router.route.pattern == '/' && app.user == null && app.hasTriedLoadingUser ==  true}}">
       <x-home></x-home>
     </template>
     <core-drawer-panel responsiveWidth="{{responsiveWidth}}">
@@ -164,11 +164,11 @@
       <add-stuff app="{{app}}"></add-stuff>
     </template>
     <!--<template if="{{app.user == null}}">-->
-      <!--&lt;!&ndash;<sign-in app="{{app}}"></sign-in>&ndash;&gt;-->
-      <!--&lt;!&ndash;<core-overlay id="sign-in-overlay" class="sign-in-overlay" layered backdrop opened="false" transition="core-transition-center">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span id="message">Please sign in to comment.</span>&ndash;&gt;-->
-        <!--&lt;!&ndash;<button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>&ndash;&gt;-->
-      <!--&lt;!&ndash;</core-overlay>&ndash;&gt;-->
+      <!--<sign-in app="{{app}}"></sign-in>-->
+      <!--<core-overlay id="sign-in-overlay" class="sign-in-overlay" layered backdrop opened="false" transition="core-transition-center">-->
+        <!--<span id="message">Please sign in to comment.</span>-->
+        <!--<button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>-->
+      <!--</core-overlay>-->
     <!--</template>-->
     <paper-toast id="toast-message" duration="4000"></paper-toast>
     <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">
