@@ -124,6 +124,8 @@ class WovenApp extends PolymerElement with Observable {
         // On sign in, greet the user.
         if (app.user.isNew != true) greetUser();
       }
+
+      app.hasTriedLoadingUser = true;
     });
 
     // Listen for App changes so we can do some things.
@@ -163,6 +165,5 @@ class WovenApp extends PolymerElement with Observable {
 
     // A temporary place for some scripts I'm running.
     //
-
   }
 }

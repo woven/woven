@@ -31,7 +31,7 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <template if="{{app.router.route.pattern == '/' && app.user == null && app.hasTriedLoadingUser ==  true}}">
+    <template if="{{app.router.route.pattern == '/' && app.hasTriedLoadingUser && app.user == null}}">
       <x-home></x-home>
     </template>
     <core-drawer-panel responsiveWidth="{{responsiveWidth}}">

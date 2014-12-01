@@ -243,8 +243,6 @@ class MainViewModel extends BaseViewModel with Observable {
       starredViewModel.loadStarredItemsForUser();
     }
     // Add more cases later as we need.
-
-    app.hasTriedLoadingUser = true;
   }
 
   void loadUserStarredCommunityInformation() {
