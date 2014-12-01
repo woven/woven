@@ -3,7 +3,6 @@
   width: 100%;
   z-index: 1;
   background: #15384B;
-  border-left: solid 10px #FFA944;
 }
 
 #content-header-wrapper {
@@ -17,6 +16,7 @@
 #content-wrapper {
   max-width: 600px;
   padding: 25px 25px 25px 25px;
+  border-left: solid 10px #FFA944;
 }
 
 #home-text {
