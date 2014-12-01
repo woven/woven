@@ -1,0 +1,61 @@
+#page-wrapper {
+  padding: 25px 25px 25px 25px;
+  background: #15384B;
+  height: 100%;
+  border-left: solid 10px #FFA944;
+}
+
+#content-header-wrapper {
+  /*text-align: center;*/
+}
+
+#content-header-wrapper img {
+  height: 35px;
+}
+
+#content-wrapper {
+  max-width: 600px;
+}
+
+#home-text {
+  color: #fff;
+  font-size: 24px;
+  font-family: Georgia, serif;
+  font-style: oblique;
+}
+
+#random-word {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.signin-btn {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+}
+
+#facebook-signin {
+  color: #fff;
+  background: #3e5a9b;
+  width: 200px;
+}
+
+#facebook-signin:hover {
+  background: #223E8D;
+}
+
+#message {
+  opacity: 1;
+  transition: opacity 2s;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+@media all and (max-width: 800px)  {
+
+}

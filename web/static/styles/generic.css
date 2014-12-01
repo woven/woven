@@ -8,6 +8,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
+  margin: 0;
 }
 
 /* This somehow fixes the disappearing dialog. */
