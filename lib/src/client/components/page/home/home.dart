@@ -19,6 +19,11 @@ class Home extends PolymerElement with Observable {
     app.signInWithFacebook();
   }
 
+  close() {
+    DivElement el = $['page-wrapper'];
+    el.style.display = 'none';
+  }
+
   animateRandomWords() {
     List words = ['changemakers', 'community organizers', 'movers and shakers',
     'collaborators', 'the crazy ones', 'makers', 'world changers', 'we vs. me', 'repairing the world',
