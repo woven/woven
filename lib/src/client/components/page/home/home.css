@@ -68,6 +68,8 @@
   margin-bottom: 8px;
 }
 
-@media all and (max-width: 800px)  {
-
+@media all and (max-width: 350px)  {
+  #random-word {
+    display: block;
+  }
 }
