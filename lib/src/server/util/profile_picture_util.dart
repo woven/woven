@@ -32,7 +32,7 @@ class ProfilePictureUtil {
         if (data['data']['is_silhouette'] == true) return null;
 
         var extension = path.extension(data['data']['url']).split("?")[0];
-        
+
         var filename = 'profile-picture_orig$extension';
         var gsBucket = 'woven';
         var gsPath = 'public/images/user/$user/profile-picture/$filename';
