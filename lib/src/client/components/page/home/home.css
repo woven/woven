@@ -19,6 +19,8 @@
   border-left: solid 10px #FFA944;
   height: 100vmax;
   overflow: scroll;
+  overflow-y: scroll; /* has to be scroll, not auto */
+  -webkit-overflow-scrolling: touch;
 }
 
 #home-text {
