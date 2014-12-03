@@ -32,8 +32,9 @@ class SignInController {
       var facebookId = facebookData['id'];
 
       // Get the large picture.
-      return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((filename) {
-        facebookData['picture'] = filename;
+      return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((res) {
+        String name = res.name;
+        facebookData['picture'] = name;
 
         return facebookData;
       });

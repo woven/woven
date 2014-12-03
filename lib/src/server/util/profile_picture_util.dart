@@ -26,13 +26,25 @@ class ProfilePictureUtil {
 
         var extension = path.extension(data['data']['url']).split("?")[0];
 
+        var imagePath = '.tmp/public/images/user/$user/profile-picture';
         var filename = 'profile-picture$extension';
-
-        var imagePath = '${config['server']['directory']}/static/images/user/${user}/';
+        var fullPath = '$imagePath/$filename';
+        var gsBucket = 'woven'; // TODO
+        var gsPath = 'public/images/user/$user/profile-picture/$filename';
 
         return new Directory(imagePath).create(recursive: true).then((_) {
-          return util.downloadFileTo(data['data']['url'], '$imagePath$filename').then((_) {
-              return filename;
+          return util.downloadFileTo(data['data']['url'], '$imagePath/$filename').then((_) {
+            // Obtain an authenticated HTTP client which can be used for accessing Google
+            // APIs. We identify this client application and request access for all scopes.
+            // TODO: Move this to App?
+            return auth.clientViaServiceAccount(app.googleServiceAccountCredentials, app.googleApiScopes).then((client) {
+              var api = new storage.StorageApi(client);
+              // Upload the file.
+              return app.cloudStorageUtil.uploadFile(api, fullPath, gsBucket, gsPath, public: true)
+              .whenComplete(() => client.close());
+            }).catchError((error) {
+              print("An unknown error occured: $error");
+            });
           });
         });
       });

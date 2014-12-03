@@ -22,14 +22,31 @@ import 'firebase.dart';
 
 import 'package:woven/src/server/mailer/mailer.dart';
 
+import 'package:googleapis_auth/auth_io.dart' as auth;
+import 'package:googleapis/storage/v1.dart' as storage;
+import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
+
 // Add parts.
 part 'util/profile_picture_util.dart';
+part 'util/cloud_storage_util.dart';
 
 class App {
   Router router;
   VirtualDirectory virtualDirectory;
   Mailgun mailer;
   ProfilePictureUtil profilePictureUtil;
+  CloudStorageUtil cloudStorageUtil;
+
+  // Obtain the service account credentials from the Google Developers Console by
+  // creating new OAuth credentials of application type "Service account".
+  // This will give you a JSON file with the following fields.
+
+  final googleServiceAccountCredentials = new auth.ServiceAccountCredentials.fromJson(config['google']['serviceAccountCredentials']);
+
+  // This is the list of scopes this application will use.
+  // You need to enable the Google Cloud Storage API in the Google Developers
+  // Console.
+  final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
 
   App() {
     // Start the server.
@@ -59,6 +76,17 @@ class App {
     // Set up some objects.
     mailer = new Mailgun();
     profilePictureUtil = new ProfilePictureUtil(this);
+    cloudStorageUtil = new CloudStorageUtil(this);
+
+    // Instantiate Google APIs is what follows.
+    // Taken from example at: http://goo.gl/38YoIm
+
+    // Obtain an authenticated HTTP client which can be used for accessing Google
+    // APIs. We use `AccountCredentials` to identify this client application and
+    // to request access for all scopes in `Scopes`.
+    auth.clientViaServiceAccount(googleServiceAccountCredentials, googleApiScopes).then((client) {
+      var storageApi = new storage.StorageApi(client);
+    });
   }
 
   void onServerEstablished(HttpServer server) {
