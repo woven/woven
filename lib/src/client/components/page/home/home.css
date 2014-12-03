@@ -18,6 +18,7 @@
   padding: 25px 20px 25px 25px;
   border-left: solid 10px #FFA944;
   height: 100vmax;
+  overflow: scroll;
 }
 
 #home-text {
