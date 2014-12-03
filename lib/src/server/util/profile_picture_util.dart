@@ -15,7 +15,7 @@ class ProfilePictureUtil {
       if (id == null) return null;
 
       // Download the profile picture.
-      var profileDataUrl = 'https://graph.facebook.com/$id/picture?width=800&height=800&redirect=false';
+      var profileDataUrl = 'https://graph.facebook.com/$id/picture?width=1000&height=1000&redirect=false';
 
       return http.read(profileDataUrl).then((contents) {
         var data = JSON.decode(contents);
@@ -27,24 +27,16 @@ class ProfilePictureUtil {
         var extension = path.extension(data['data']['url']).split("?")[0];
 
         var imagePath = '.tmp/public/images/user/$user/profile-picture';
-        var filename = 'profile-picture$extension';
+        var filename = 'profile-picture_orig$extension';
         var fullPath = '$imagePath/$filename';
-        var gsBucket = 'woven'; // TODO
+        var gsBucket = 'woven';
         var gsPath = 'public/images/user/$user/profile-picture/$filename';
 
         return new Directory(imagePath).create(recursive: true).then((_) {
+          // First download the file locally.
           return util.downloadFileTo(data['data']['url'], '$imagePath/$filename').then((_) {
-            // Obtain an authenticated HTTP client which can be used for accessing Google
-            // APIs. We identify this client application and request access for all scopes.
-            // TODO: Move this to App?
-            return auth.clientViaServiceAccount(app.googleServiceAccountCredentials, app.googleApiScopes).then((client) {
-              var api = new storage.StorageApi(client);
-              // Upload the file.
-              return app.cloudStorageUtil.uploadFile(api, fullPath, gsBucket, gsPath, public: true)
-              .whenComplete(() => client.close());
-            }).catchError((error) {
-              print("An unknown error occured: $error");
-            });
+            // Then upload the file to the cloud.
+            return app.cloudStorageUtil.uploadFile(fullPath, gsBucket, gsPath, public: true);
           });
         });
       });

@@ -40,13 +40,15 @@ class App {
   // Obtain the service account credentials from the Google Developers Console by
   // creating new OAuth credentials of application type "Service account".
   // This will give you a JSON file with the following fields.
-
   final googleServiceAccountCredentials = new auth.ServiceAccountCredentials.fromJson(config['google']['serviceAccountCredentials']);
 
   // This is the list of scopes this application will use.
   // You need to enable the Google Cloud Storage API in the Google Developers
   // Console.
   final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
+
+  // Store the client authenticated for accessing Google APIs, which we instantiate below.
+  var googleApiClient;
 
   App() {
     // Start the server.
@@ -76,7 +78,6 @@ class App {
     // Set up some objects.
     mailer = new Mailgun();
     profilePictureUtil = new ProfilePictureUtil(this);
-    cloudStorageUtil = new CloudStorageUtil(this);
 
     // Instantiate Google APIs is what follows.
     // Taken from example at: http://goo.gl/38YoIm
@@ -85,7 +86,8 @@ class App {
     // APIs. We use `AccountCredentials` to identify this client application and
     // to request access for all scopes in `Scopes`.
     auth.clientViaServiceAccount(googleServiceAccountCredentials, googleApiScopes).then((client) {
-      var storageApi = new storage.StorageApi(client);
+      this.googleApiClient = client;
+      cloudStorageUtil = new CloudStorageUtil(this);
     });
   }
 

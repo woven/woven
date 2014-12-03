@@ -2,12 +2,13 @@ part of woven_server;
 
 class CloudStorageUtil {
   App app;
+  storage.StorageApi storageApi;
 
-  CloudStorageUtil(this.app);
-
+  CloudStorageUtil(this.app) {
+    this.storageApi = new storage.StorageApi(app.googleApiClient);
+  }
 // Upload a file to Google Cloud Storage.
-  Future uploadFile(storage.StorageApi api,
-                    String file,
+  Future uploadFile(String file,
                     String bucket,
                     String object,
                     {public: false}) {
@@ -15,7 +16,7 @@ class CloudStorageUtil {
     // file. This media object is passed to the API call via `uploadMedia`.
     var localFile = new File(file);
     var media = new Media(localFile.openRead(), localFile.lengthSync());
-    return api.objects.insert(null, bucket, name: object, uploadMedia: media, predefinedAcl: public ? 'publicRead': null);
+    return storageApi.objects.insert(null, bucket, name: object, uploadMedia: media, predefinedAcl: public ? 'publicRead': null);
   }
 
 // Download a file from Google Cloud Storage.
