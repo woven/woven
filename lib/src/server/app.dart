@@ -2,15 +2,11 @@ library woven_server;
 
 import 'dart:io';
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:http_server/http_server.dart';
-import 'package:path/path.dart' as path;
 import 'package:woven/config/config.dart';
 
 import '../shared/routing/routes.dart';
 import '../shared/response.dart';
-import 'util.dart' as util;
 
 import 'controller/hello.dart';
 import 'controller/main.dart';
@@ -27,7 +23,7 @@ import 'package:googleapis/storage/v1.dart' as storage;
 import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
 
 // Add parts.
-part 'util/profile_picture_util.dart';
+import 'package:woven/src/server/util/profile_picture_util.dart';
 part 'util/cloud_storage_util.dart';
 
 class App {
@@ -175,8 +171,8 @@ class App {
               }
             });
           }
-        }).catchError((Exception error) {
-          print(error);
+        }).catchError((Exception error, StackTrace trace) {
+          print('$error\n\n$trace');
 
           // The controller failed. Instead of crashing, just nicely show the error.
           request.response.statusCode = 500;

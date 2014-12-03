@@ -1,4 +1,11 @@
-part of woven_server;
+import 'dart:io';
+import 'dart:async';
+import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'file_util.dart';
+
+import '../app.dart';
 
 class ProfilePictureUtil {
   App app;
@@ -25,18 +32,21 @@ class ProfilePictureUtil {
         if (data['data']['is_silhouette'] == true) return null;
 
         var extension = path.extension(data['data']['url']).split("?")[0];
-
-        var imagePath = '.tmp/public/images/user/$user/profile-picture';
+        
         var filename = 'profile-picture_orig$extension';
-        var fullPath = '$imagePath/$filename';
         var gsBucket = 'woven';
         var gsPath = 'public/images/user/$user/profile-picture/$filename';
 
-        return new Directory(imagePath).create(recursive: true).then((_) {
-          // First download the file locally.
-          return util.downloadFileTo(data['data']['url'], '$imagePath/$filename').then((_) {
+        // Set up a temporary file to write to.
+        return createTemporaryFile().then((File file) {
+          // Download the file locally.
+          return downloadFileTo(data['data']['url'], file).then((File file) {
             // Then upload the file to the cloud.
-            return app.cloudStorageUtil.uploadFile(fullPath, gsBucket, gsPath, public: true);
+            return app.cloudStorageUtil.uploadFile(file.path, gsBucket, gsPath, public: true).then((res) {
+              return file.delete().then((_) {
+                return res;
+              });
+            });
           });
         });
       });
