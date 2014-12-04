@@ -26,6 +26,8 @@ class App extends Observable {
   @observable UserModel user;
   @observable CommunityModel community;
   @observable bool hasTriedLoadingUser = false;
+  @observable bool showHomePage = false;
+  @observable bool skippedHomePage = false;
 //  @observable bool isNewUser = false;
   Router router;
   MainViewModel mainViewModel;
@@ -37,6 +39,12 @@ class App extends Observable {
       // Home goes to the community list for now.
       selectedPage = 4;
       community = null;
+      if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
+//      print('''
+//      hasTriedLoadingUser: $hasTriedLoadingUser
+//      skippedHomePage: $skippedHomePage
+//      showHomePage: $showHomePage
+//      ''');
     }
 
     void welcome(String path) {

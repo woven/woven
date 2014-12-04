@@ -1,8 +1,9 @@
-#page-wrapper {
+.page-wrapper {
   position: absolute;
+  height: 100%;
   width: 100%;
-  z-index: 1;
-  background: #15384B;
+  /*background: #15384B;*/
+  /*border-left: solid 10px #FFA944;*/
 }
 
 #content-header-wrapper {
@@ -16,15 +17,10 @@
 #content-wrapper {
   max-width: 560px;
   padding: 25px 20px 25px 25px;
-  border-left: solid 10px #FFA944;
-  height: 100vmax;
-  overflow: scroll;
-  overflow-y: scroll; /* has to be scroll, not auto */
-  -webkit-overflow-scrolling: touch;
 }
 
 #home-text {
-  color: #fff;
+  /*color: #fff;*/
   font-size: 24px;
   font-family: Georgia, serif;
   font-style: oblique;

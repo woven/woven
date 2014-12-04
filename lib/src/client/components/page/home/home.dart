@@ -10,7 +10,7 @@ import 'package:woven/src/client/app.dart';
 
 @CustomTag('x-home')
 class Home extends PolymerElement with Observable {
-  @published App app = new App();
+  @published App app;
   @observable String randomWord = '';
 
   Home.created() : super.created();
@@ -20,8 +20,9 @@ class Home extends PolymerElement with Observable {
   }
 
   close() {
-    DivElement el = $['page-wrapper'];
-    el.style.display = 'none';
+    app.showHomePage = false;
+    app.skippedHomePage = true;
+    print(app.showHomePage);
   }
 
   animateRandomWords() {

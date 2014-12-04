@@ -126,6 +126,7 @@ class WovenApp extends PolymerElement with Observable {
       }
 
       app.hasTriedLoadingUser = true;
+      if (app.user == null && window.location.pathname == '/') app.showHomePage = true;
     });
 
     // Listen for App changes so we can do some things.
@@ -138,11 +139,13 @@ class WovenApp extends PolymerElement with Observable {
       // If page title changes, show it awesomely.
       HtmlElement el;
       el = this.shadowRoot.querySelector('#page-title');
-      el.style.opacity = '0';
-      new Timer(new Duration(milliseconds: 750), () {
-        el.style.opacity = '1';
-        el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
-      });
+      if (el != null) {
+        el.style.opacity = '0';
+        new Timer(new Duration(milliseconds: 750), () {
+          el.style.opacity = '1';
+          el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
+        });
+      }
 
 //      if (changedValue == "community") {
 //        HtmlElement sidebarTitleElement;
