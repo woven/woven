@@ -118,7 +118,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
         if (k == "createdDate" || k == "updatedDate" || k == "startDateTime") v = DateTime.parse(v);
         if (k == "star_count") v = (v != null) ? v : 0;
         if (k == "like_count") v = (v != null) ? v : 0;
-        if (k == "picture") v = "/static/images/user/${currentData['facebookId']}/$v";
+        if (k == "picture") v = "${config['google']['cloudStoragePath']}/$v";
 
         currentData[k] = v;
       });
