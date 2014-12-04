@@ -45,6 +45,14 @@ packages:
     description: firebase
     source: hosted
     version: "0.2.0+1"
+  googleapis:
+    description: googleapis
+    source: hosted
+    version: "0.1.1"
+  googleapis_auth:
+    description: googleapis_auth
+    source: hosted
+    version: "0.2.2"
   html5lib:
     description: html5lib
     source: hosted
