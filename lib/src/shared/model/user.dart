@@ -1,5 +1,7 @@
 library user_model;
 
+import 'package:woven/config/config.dart';
+
 class UserModel {
   String id;
   String username;
@@ -16,7 +18,7 @@ class UserModel {
 
   String get fullPathToPicture {
     if (picture == null) return null;
-    return "/static/images/user/$facebookId/$picture";
+    return "${config['google']['cloudStoragePath']}/$picture";
   }
 
   Map encode() {
