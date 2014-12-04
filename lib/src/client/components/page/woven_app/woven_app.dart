@@ -71,16 +71,6 @@ class WovenApp extends PolymerElement with Observable {
     app.showMessage("$greeting, ${app.user.firstName}.");
   }
 
-  // Unused, moved this to App.
-  showToastMessage(String message, [String severity]) {
-    PaperToast toastElement = $['toast-message'];
-    if (severity == "important") {
-      toastElement.classes.add("important");
-    }
-    toastElement.text = "$message";
-    toastElement.show();
-  }
-
   // Toggle the drawer panel.
   togglePanel() {
     CoreDrawerPanel panel = this.shadowRoot.querySelector('core-drawer-panel');
@@ -90,11 +80,11 @@ class WovenApp extends PolymerElement with Observable {
   // Toggle the Add Stuff dialog.
   toggleAddStuff() {
     if (app.user == null) {
-      showToastMessage("Kindly sign in first.", "important");
+      app.showMessage("Kindly sign in first.", "important");
       return;
     } else {
       if (app.community == null) {
-        showToastMessage("Please navigate to a community first.", "important");
+        app.showMessage("Please navigate to a community first.", "important");
         return;
       }
     }
@@ -104,7 +94,7 @@ class WovenApp extends PolymerElement with Observable {
 
 // Toggle the sign in dialog.
   toggleSignIn() {
-    showToastMessage("Kindly sign in first.", "important");
+    app.showMessage("Kindly sign in first.", "important");
 //    SignInDialog e = this.shadowRoot.querySelector('sign-in');
 //    e.toggle();
 //    CoreOverlay e = this.shadowRoot.querySelector('#sign-in-overlay');

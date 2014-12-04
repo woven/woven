@@ -22,7 +22,6 @@ class Home extends PolymerElement with Observable {
   close() {
     app.showHomePage = false;
     app.skippedHomePage = true;
-    print(app.showHomePage);
   }
 
   animateRandomWords() {
