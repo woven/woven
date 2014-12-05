@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_overlay.html">
 <link rel="import" href="../widgets/dialog/dialog.html">
+<link rel="import" href="../widgets/dialog/dialog.html">
 
 <polymer-element name="add-stuff">
   <template>
@@ -35,11 +36,6 @@
           </ul>
 
           <div class="field-wrapper first">
-              <core-input id="name" placeholder="Your name" autocomplete="off"
-                          value="{{(app.user != null) ? app.user.username : ''}}"
-                          disabled="{{(app.user != null) ? true : false}}"></core-input>
-          </div>
-          <div class="field-wrapper">
             <core-input id="subject" placeholder="Subject" autocomplete="off"
                         inputValue="{{theData['subject']}}"></core-input>
           </div>
@@ -62,6 +58,10 @@
           <div class="field-wrapper full-height">
             <core-input class="expand" id="body" multiline rows="fit" required placeholder="Sharing is caring..." autocomplete="off"
                         inputValue="{{theData['body']}}"></core-input>
+          </div>
+          <div class="field-wrapper share-to" style="background: aliceblue;">
+            <core-input id="share-to" placeholder="Share to..." autocomplete="off"
+                        inputValue="{{theData['share-to']}}"></core-input>
           </div>
         </div>
       </div>

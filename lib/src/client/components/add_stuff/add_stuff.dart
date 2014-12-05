@@ -25,6 +25,7 @@ class AddStuff extends PolymerElement {
   @published bool opened = false;
   @observable var selectedType;
   @observable Map theData = toObservable({});
+  List validShareToOptions = ['miamitech', 'wynwood', 'woven', 'thelab']; // TODO: Fixed for now, change later.
 
   CoreOverlay get overlay => $['overlay'];
 
@@ -44,7 +45,30 @@ class AddStuff extends PolymerElement {
 
     String subject = theData['subject'];
     String body = theData['body'];
+    String shareTo = theData['share-to'];
 
+    // Validate share tos.
+    if (shareTo.trim().isEmpty) {
+      window.alert("You haven't tagged a community.");
+      return false;
+    }
+
+    var shareTos = shareTo.trim().split(',');
+    List invalidShareTos = [];
+
+    shareTos.forEach((e) {
+      var community = e.trim();
+      if (!validShareToOptions.contains(community)) {
+        invalidShareTos.add(community);
+      }
+    });
+
+    if (invalidShareTos.length > 0) {
+      window.alert("You've tagged an invalid community.\n\nInvalid: ${invalidShareTos.join(', ')}");
+      return false;
+    }
+
+    // Validate other stuff.
     if (subject.trim().isEmpty || body.trim().isEmpty) {
       window.alert("Your message is empty.");
       return false;
@@ -75,6 +99,9 @@ class AddStuff extends PolymerElement {
       window.alert("That's not a valid URL.");
       return false;
     }
+
+    // Handle the share to field.
+    if (theData['share-to'] == null) {}
 
     var now = new DateTime.now().toUtc();
 
@@ -125,35 +152,40 @@ class AddStuff extends PolymerElement {
       itemRef.setWithPriority(encodedItem, -priority).then((e) {
         var item = id.name;
 
-        root.child('/items_by_community/' + app.community.alias + '/' + item)
-          ..setWithPriority(encodedItem, -priority);
+        // Loop over all communities shared to.
+        shareTos.forEach((e) {
+          var community = e.trim();
+          // Add to items_by_community.
+          root.child('/items_by_community/' + community + '/' + item)
+            ..setWithPriority(encodedItem, -priority);
 
-        // Only in the main /items location, store a simple list of its parent communities.
-        root.child('/items/' + item + '/communities/' + app.community.alias)
-          ..set(true);
+          // Only in the main /items location, store a simple list of its parent communities.
+          root.child('/items/' + item + '/communities/' + community)
+            ..set(true);
 
-        // Update the community itself.
-        root.child('/communities/' + app.community.alias).update({
-            'updatedDate': '$now'
+          // Update the community itself.
+          root.child('/communities/' + community).update({
+              'updatedDate': '$now'
+          });
 
+          // Add to items_by_community_by_type.
+          var itemsByTypeRef = root.child('/items_by_community_by_type/' + community + '/$selectedType/' + item);
+
+          // Use a priority based on the start date/time when storing the event in items_by_community_by_type.
+          if (selectedType == 'event') {
+            // Combine the separate date and time fields into one DateTime object.
+            DateTime date = parseDate(theData['event-start-date']);
+            DateTime time = parseTime(theData['event-start-time']);
+            DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute);
+
+            var eventPriority = startDateTime.millisecondsSinceEpoch;
+
+            itemsByTypeRef.setWithPriority(encodedItem, eventPriority);
+
+          } else {
+            itemsByTypeRef.setWithPriority(encodedItem, -priority);
+          }
         });
-
-        var itemsByTypeRef = root.child('/items_by_community_by_type/' + app.community.alias + '/$selectedType/' + item);
-
-        // Use a priority based on the start date/time when storing the event in items_by_community_by_type.
-        if (selectedType == 'event') {
-          // Combine the separate date and time fields into one DateTime object.
-          DateTime date = parseDate(theData['event-start-date']);
-          DateTime time = parseTime(theData['event-start-time']);
-          DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute);
-
-          var eventPriority = startDateTime.millisecondsSinceEpoch;
-
-          itemsByTypeRef.setWithPriority(encodedItem, eventPriority);
-
-        } else {
-          itemsByTypeRef.setWithPriority(encodedItem, -priority);
-        }
       });
     }
 
@@ -178,6 +210,7 @@ class AddStuff extends PolymerElement {
 //      sender.type = "date";
       sender.inputValue = new DateFormat("M/dd/yyyy").format(new DateTime.now());
     }
+
     if (sender.id == "event-start-time" && sender.inputValue == "") {
 //      sender.type = "time";
       sender.inputValue = new DateFormat("h:mm a").format(new DateTime.now());
@@ -185,6 +218,10 @@ class AddStuff extends PolymerElement {
   }
 
   attached() {
+    if (app.community != null) {
+      theData['share-to'] = app.community.alias;
+    }
+
     CoreSelector type = $['content-type'];
     type.addEventListener('core-select', (e) {
       selectedType = type.selected;
