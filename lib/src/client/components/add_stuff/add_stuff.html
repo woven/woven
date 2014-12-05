@@ -12,7 +12,7 @@
 <polymer-element name="add-stuff">
   <template>
     <link rel="stylesheet" href="add_stuff.css">
-    <x-dialog id="overlay" class="dialog" opened="{{opened}}">
+    <core-overlay id="overlay" class="dialog" opened="{{opened}}" transition="core-transition-bottom" autoclosedisabled="true">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
         <div flex horizontal center-justified layout>
@@ -65,7 +65,7 @@
           </div>
         </div>
       </div>
-    </x-dialog>
+    </core-overlay>
   </template>
   <script type="application/dart" src="add_stuff.dart"></script>
 </polymer-element>

@@ -1,1 +1,192 @@
-/* Note that the styles for the dialog are in widgets/dialog/dialog.css */
+/*TODO: Can probably replace manual flexboxes w/ Polymer attributes:*/
+/*http://www.polymer-project.org/docs/polymer/layout-attrs.html*/
+core-overlay {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  overflow: hidden;
+  background: white;
+  max-height: 1000px;
+  max-width: 1000px;
+  width: 400px;
+  bottom: 0;
+  right: 10px;
+  position: absolute;
+}
+
+@media all and (max-width: 600px)  {
+  core-overlay {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+  core-overlay #container {
+    /*position: relative;*/
+    /*overflow: scroll;*/
+    background-color: white;
+  }
+}
+
+core-toolbar {
+  background: #333;
+  color: #fff;
+  fill: #fff;
+}
+
+core-icon-button.action {
+  background-color: rgb(64, 136, 214);
+}
+
+core-icon-button.action:hover {
+  background-color: rgb(45, 104, 214);
+}
+
+h1 {
+  margin: 20px 20px 20px 20px;
+}
+
+p {
+  margin: 15px 20px 15px 10px;
+}
+
+.field-wrapper {
+  padding: 10px;
+  border-bottom: solid 1px #eee;
+}
+
+.field-wrapper.first {
+  border-top: solid 1px #eee;
+}
+
+core-input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+
+footer {
+  height: 45px;
+  background-color: #F5F5F5;
+  border-top: solid 1px #D5D5D5;
+}
+
+footer button {
+  float: right;
+  vertical-align: middle;
+}
+
+button {
+  background-color: white;
+  border-radius: 3px;
+  border: solid 1px #EEEEEE;
+  font-family: arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px 20px;
+  height: 35px;
+  margin: 4px;
+}
+
+button.primary {
+  background-color: rgb(64, 136, 214);
+  color: white;
+}
+
+button.primary:hover {
+  background-color: rgb(45, 104, 214);
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #f8f8f2;
+  cursor: pointer;
+}
+
+button:focus {
+  background-color: #f8f8f2;
+  outline: none;
+}
+
+a {
+  cursor: pointer;
+  color: #0000ee;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+/* Tab-like things */
+.list {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  list-style: none;
+  margin-bottom: 0;
+  padding: 10px;
+}
+
+.list > * {
+  cursor: pointer;
+  color: #000;
+  background: peachpuff;
+  padding: 10px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+
+.list > *.core-selected {
+  background: #333;
+  color: #fff;
+}
+
+core-overlay #container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  border: solid #eee;
+  border-width: 0 1px 0 1px;
+}
+
+core-overlay #container > * {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+core-overlay .full-height {
+  flex-grow: 1 !important;
+  flex-shrink: 1 !important;
+  /*height: 100%;*/
+  position: relative;
+  min-height: 100px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+core-overlay .expand {
+  flex-grow: 1;
+  height: 1px;
+  position: relative;
+  min-height: 117px;
+}
