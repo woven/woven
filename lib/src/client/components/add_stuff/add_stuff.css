@@ -38,6 +38,8 @@ core-toolbar {
   background: #333;
   color: #fff;
   fill: #fff;
+  font-family: 'RobotoDraft', sans-serif;
+  font-weight: bold;
 }
 
 core-icon-button.action {
