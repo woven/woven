@@ -201,8 +201,8 @@ class AddStuff extends PolymerElement {
     theData['body'] = "";
     // TODO: Reset the selected type too? May be useful not to.
 
-    app.selectedPage = 0;
-    app.router.dispatch(url: '/${app.community.alias}');
+    if (app.community != null) app.selectedPage = 0;
+    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
   }
 
   updateInput(Event e, var detail, CoreInput sender) {
