@@ -82,11 +82,6 @@ class WovenApp extends PolymerElement with Observable {
     if (app.user == null) {
       app.showMessage("Kindly sign in first.", "important");
       return;
-    } else {
-      if (app.community == null) {
-        app.showMessage("Please navigate to a community first.", "important");
-        return;
-      }
     }
     AddStuff e = this.shadowRoot.querySelector('add-stuff');
     e.toggleOverlay();
