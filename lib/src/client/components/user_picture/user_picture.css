@@ -1,0 +1,28 @@
+.user-photo {
+  width:50px;
+  height:50px;
+  background: #F5F5F5;
+  border: solid 1px #E6E6E6;
+  overflow:hidden;
+  border-radius: 3px;
+
+  /* Disable iOS highlighting the element on tap. */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.user-photo img {
+  width: 50px;
+  height: 50px;
+}
+
+.user {
+  font-weight: bold;
+}

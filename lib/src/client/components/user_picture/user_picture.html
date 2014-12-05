@@ -1,0 +1,12 @@
+<link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<polymer-element name="user-picture">
+  <template>
+    <link rel="stylesheet" href="user_picture.css">
+    <div class="user-photo">
+      <template if="{{app.user.fullPathToPicture != null}}">
+        <img _src="{{app.user.fullPathToPicture}}">
+      </template>
+    </div>
+  </template>
+  <script type="application/dart" src='user_picture.dart'></script>
+</polymer-element>

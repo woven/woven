@@ -5,6 +5,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_a11y_keys.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
+<link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="item-activities">
   <template>
     <link rel="stylesheet" href="item_activities.css">
@@ -12,11 +13,7 @@
       <template if="{{app.user != null}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
-            <div class="user-photo">
-              <template if="{{app.user.fullPathToPicture != null}}">
-              <img _src="{{app.user.fullPathToPicture}}">
-              </template>
-            </div>
+            <user-picture app="{{app}}"></user-picture>
           </div>
           <div flex>
             <!--<div class="field-wrapper first transparent">-->
