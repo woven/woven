@@ -28,7 +28,7 @@ core-overlay {
     left: 0;
   }
   core-overlay #container {
-    /*position: relative;*/
+    position: relative;
     /*overflow: scroll;*/
     background-color: white;
   }
