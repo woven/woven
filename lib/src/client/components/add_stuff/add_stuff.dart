@@ -29,12 +29,27 @@ class AddStuff extends PolymerElement {
 
   CoreOverlay get overlay => $['overlay'];
 
+  Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('add-stuff');
+
   /**
    * Toggle the overlay.
    */
   toggleOverlay() {
     overlay.toggle();
-//    name.focus(); //Doesn't work
+  }
+
+  handleOpen() {
+    // Add the current community to the share to field.
+    String shareTo = theData['share-to'];
+    shareTo.replaceAll(r',[\s]+', ',');
+    List shareTos = (!shareTo.isEmpty) ? shareTo.trim().split(',') : [];
+
+    if (app.community != null && (!shareTos.contains(app.community.alias.trim()) || shareTos.isEmpty)) shareTos.add(app.community.alias.trim());
+    theData['share-to'] = shareTos.join(',').trim().toString();
+
+    // Focus the subject field.
+    CoreInput subjectInput = elRoot.shadowRoot.querySelector('#subject');
+    subjectInput.focus();
   }
 
   /**
