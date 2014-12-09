@@ -46,7 +46,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     reloadingContent = true;
     int count = 0;
 
-    if (typeFilter == "event") {
+    if (typeFilter != null) {
       dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
     } else {
       dataLocation = '/items_by_community/' + app.community.alias;
@@ -112,7 +112,7 @@ class FeedViewModel extends BaseViewModel with Observable {
   }
 
   listenForNewItems({startAt, endAt}) {
-    if (typeFilter == "event") {
+    if (typeFilter != null) {
       dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
     } else {
       dataLocation = '/items_by_community/' + app.community.alias;
