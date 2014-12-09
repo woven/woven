@@ -17,13 +17,13 @@ class EmailDigest {
   /**
    * Generate HTML for the daily digest.
    *
-   * Format for dates is YYYY-MM-DD, e/g/ 2014-12-22.
+   * Format for dates is YYYY-MM-DD, e.g. 2014-12-22.
    */
   generateDigest(String community, {DateTime from, DateTime to}) {
     List items = [];
     Map jsonForTemplate;
 
-    if (from == null) from = new DateTime.now();
+    if (from == null) from = new DateTime.now().toUtc();
     if (to == null) to = from;
 
     // Start at the beginning of the from date's day.
