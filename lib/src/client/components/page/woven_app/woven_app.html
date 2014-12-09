@@ -103,7 +103,7 @@
         <core-scroll-header-panel id="main-panel" main mode="seamed">
 
           <core-toolbar id="toolbar-main">
-            <template if="{{app.selectedPage != 1 || (app.previousPage != 0 && app.previousPage != 5)}}">
+            <template if="{{app.selectedPage != 1 || (app.previousPage != 0 && app.previousPage != 5 && app.previousPage != 6)}}">
               <core-icon-button class="btn flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
             </template>
             <template if="{{app.selectedPage === 1 && (app.previousPage === 0 || app.previousPage === 5 || app.previousPage === 6)}}">
