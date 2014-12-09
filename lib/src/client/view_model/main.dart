@@ -105,6 +105,20 @@ class MainViewModel extends BaseViewModel with Observable {
     return feedViewModels[id];
   }
 
+  @observable FeedViewModel get announcementViewModel {
+    if (app.community == null) return null;
+
+    var id = app.community.alias + '_announcements';
+
+    if (id == null) return null;
+
+    if (!feedViewModels.containsKey(id)) {
+      var vm = new FeedViewModel(app: app, typeFilter: 'announcement');
+      feedViewModels[id] = vm;
+    }
+    return feedViewModels[id];
+  }
+
   // Get the view model for the user's starred items.
   @observable StarredViewModel get starredViewModel {
     if (app.user == null) return null; // No user, no starred view model.

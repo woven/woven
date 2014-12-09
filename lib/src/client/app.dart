@@ -77,6 +77,10 @@ class App extends Observable {
             pageTitle = "Events";
             selectedPage = 5;
             break;
+          case 'announcements':
+            pageTitle = "Announcements";
+            selectedPage = 6;
+            break;
           default:
 //            selectedPage = 0;
             print('404: ' + path);

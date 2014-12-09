@@ -63,12 +63,15 @@
                            on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
                 <core-item label="Events" icon="event" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="5" data-url="/{{app.community.alias}}/events"></core-item>
+                <core-item label="Announcements" icon="announcement" horizontal center layout class="item" active
+                           on-tap="{{switchPage}}" data-page="6" data-url="/{{app.community.alias}}/announcements"></core-item>
                 <core-item label="People" icon="account-circle" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>
                 <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->
                            <!--on-tap="{{switchPage}}" data-page="2" data-url="/saved" ></core-item>-->
                 <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
                            on-tap="{{switchPage}}" data-page="0" data-url="/" ></core-item>
+
               </template>
               <template if="{{app.community == null}}">
                 <core-item label="Communities" icon="social:communities" horizontal center layout class="item" active
@@ -151,6 +154,15 @@
                   <div cross-fade="{{app.selectedPage === 5}}">
                     <template if="{{app.community != null && app.selectedPage === 5}}">
                       <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></inbox-list>
+                    </template>
+                  </div>
+                </template>
+              </section>
+              <section>
+                <template if="{{app.selectedPage === 6}}">
+                  <div cross-fade="{{app.selectedPage === 6}}">
+                    <template if="{{app.community != null && app.selectedPage === 6}}">
+                      <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.announcementViewModel}}"></inbox-list>
                     </template>
                   </div>
                 </template>
