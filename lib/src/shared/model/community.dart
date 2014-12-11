@@ -7,14 +7,18 @@ class CommunityModel {
   String shortDescription;
   String createdDate;
   String updatedDate;
+  int starCount;
+  bool disabled;
 
-  Map encode() {
+  static Map encode(CommunityModel community) {
     return {
-        "alias": alias,
-        "name": name,
-        "shortDescription": shortDescription,
-        "createdDate": createdDate,
-        "updatedDate": updatedDate
+        "alias": community.alias,
+        "name": community.name,
+        "shortDescription": community.shortDescription,
+        "createdDate": community.createdDate,
+        "updatedDate": community.updatedDate,
+        "star_count": community.starCount,
+        "disabled": community.disabled
     };
   }
 
@@ -24,6 +28,8 @@ class CommunityModel {
       ..name = data['name']
       ..shortDescription = data['shortDescription']
       ..createdDate = data['createdDate']
-      ..updatedDate = data['updatedDate'];
+      ..updatedDate = data['updatedDate']
+      ..starCount = data['star_count']
+      ..disabled = data['disabled'];
   }
 }

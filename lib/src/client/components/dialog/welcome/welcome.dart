@@ -83,7 +83,7 @@ class WelcomeDialog extends PolymerElement {
 
           userRef.setWithPriority(oldUserData, -epochTime);
           tempUserRef.remove();
-          userRef.update(user.encode());
+          userRef.update(UserModel.encode(user));
 
           // Update the client's user instance.
           app.user = user;

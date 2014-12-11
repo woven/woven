@@ -17,6 +17,7 @@ import 'routing/router.dart';
 import 'firebase.dart';
 
 import 'package:woven/src/server/mailer/mailer.dart';
+import 'package:woven/src/server/task_scheduler.dart';
 
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:googleapis/storage/v1.dart' as storage;
@@ -32,6 +33,7 @@ class App {
   Mailgun mailer;
   ProfilePictureUtil profilePictureUtil;
   CloudStorageUtil cloudStorageUtil;
+  TaskScheduler taskScheduler;
 
   // Obtain the service account credentials from the Google Developers Console by
   // creating new OAuth credentials of application type "Service account".
@@ -74,6 +76,9 @@ class App {
     // Set up some objects.
     mailer = new Mailgun();
     profilePictureUtil = new ProfilePictureUtil(this);
+    taskScheduler = new TaskScheduler(this);
+
+    taskScheduler.run();
 
     // Instantiate Google APIs is what follows.
     // Taken from example at: http://goo.gl/38YoIm

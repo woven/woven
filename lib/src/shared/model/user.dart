@@ -16,23 +16,20 @@ class UserModel {
   bool isNew = false;
   bool disabled = false;
 
-  String get fullPathToPicture {
-    if (picture == null) return null;
-    return "${config['google']['cloudStoragePath']}/$picture";
-  }
+  String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/$picture" : null;
 
-  Map encode() {
+  static Map encode(UserModel user) {
     return {
-      "username": username,
-      "firstName": firstName,
-      "lastName": lastName,
-      "email": email,
-      "facebookId": facebookId,
-      "location": location,
-      "gender": gender,
-      "picture": picture,
-      "createdDate": createdDate,
-      "disabled": disabled
+      "username": user.username,
+      "firstName": user.firstName,
+      "lastName": user.lastName,
+      "email": user.email,
+      "facebookId": user.facebookId,
+      "location": user.location,
+      "gender": user.gender,
+      "picture": user.picture,
+      "createdDate": user.createdDate,
+      "disabled": user.disabled
     };
   }
 
