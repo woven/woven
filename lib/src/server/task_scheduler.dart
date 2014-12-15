@@ -37,9 +37,9 @@ class TaskScheduler {
 
             print("runAtTime: $runAtTime / runAtTimeToToday: $runAtTimeToToday / diff: $diff / diff.inMinutes: ${diff.inMinutes}");
 
-            // If we're not within an hour to the scheduled time, get out of here.
+            // If we're not within a minute of the scheduled time, get out of here.
             // TODO: What about edge cases like server restarts? We'll have to save last send to db.
-            if (diff.inMinutes >= 0 || diff.inMinutes < -60) { // We match this diff to the task run interval in task.dart.
+            if (diff.inSeconds.abs() < 60) { // We match this diff to the task run interval in task.dart.
               return;
             }
           }
