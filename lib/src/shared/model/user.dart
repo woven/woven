@@ -34,6 +34,7 @@ class UserModel {
   }
 
   static UserModel decode(Map data) {
+    if (data == null) return null;
     return new UserModel()
       ..firstName = data['firstName']
       ..lastName = data['lastName']

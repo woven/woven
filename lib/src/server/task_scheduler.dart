@@ -19,14 +19,14 @@ class TaskScheduler {
 
   run() {
     tasks.forEach((task) {
-      task.app = app; // TODO: This make sense here? It works.
+      task.app = app; // Inject app dependency.
       if (task.runImmediately) {
         task.run();
       } else {
         next() {
           if (task.isRunning) return;
 
-          // TODO: Experimental run at particular time.
+          // Run at a specific daily time.
           if (task.runAtDailyTime != null) {
             var now = new DateTime.now();
             var other = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
@@ -34,10 +34,12 @@ class TaskScheduler {
             var runAtTime = task.runAtDailyTime;
             var runAtTimeToToday = new DateTime(now.year, now.month, now.day, runAtTime.hour, runAtTime.minute);
             var diff = now.toUtc().difference(runAtTimeToToday.toUtc());
-            // We run our task scheduler every 5 minutes, so let's see if the task's scheduled time is within
-            // 5 minutes from now and if it isn't, let's get out of here.
-            // TODO: What about edge cases like server restarts?
-            if (diff.inMinutes > 5) {
+
+            print("runAtTime: $runAtTime / runAtTimeToToday: $runAtTimeToToday / diff: $diff / diff.inMinutes: ${diff.inMinutes}");
+
+            // If we're not within an hour to the scheduled time, get out of here.
+            // TODO: What about edge cases like server restarts? We'll have to save last send to db.
+            if (diff.inMinutes >= 0 || diff.inMinutes < -60) { // We match this diff to the task run interval in task.dart.
               return;
             }
           }

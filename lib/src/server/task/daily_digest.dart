@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = parseTime('10:11pm');
+  DateTime runAtDailyTime = parseTime('4:00pm');
 
   DailyDigestTask();
 
@@ -23,25 +23,41 @@ class DailyDigestTask extends Task {
    * Runs the task.
    */
   Future run() {
-    // Get a list of maps
-    return CommunityModel.getCommunityUsers().then((List<Map> usersByCommunity) {
+    print("Starting task...");
+    return CommunityModel.getCommunitiesWithUsers().then((List<Map> usersByCommunity) {
       // Loop over each community/users map.
-      usersByCommunity.forEach((Map communityUsers) {
-        CommunityModel community = communityUsers['community'];
-        List<UserModel> users = communityUsers['users'];
-        // Generate the community's digest.
+      usersByCommunity.forEach((Map communitiesWithUsers) {
+        CommunityModel community = communitiesWithUsers['community'];
+        List<UserModel> users = communitiesWithUsers['users'];
+
+        if (users == null) return;
+
         generateDigest(community.alias).then((String output) {
-          sendDigestByEmail(output);
           // Send the digest to each user in the community.
-//          users.forEach((user) {
-//            // Personalize the output using merge tokens.
-//            // We based our merge tokens off of MailChimp: http://goo.gl/xagsyk
-//            var mergedDigest = output
-//              .replaceAll(r'*|FNAME|*', user.firstName)
-//              .replaceAll(r'*|LNAME|*', user.lastName)
-//              .replaceAll(r'*|EMAIL|*', user.email);
-//          });
-        });
+          users.forEach((user) {
+            if (user == null) return;
+            if (user.username != 'dave') return; // TODO: Temporary.
+
+            // Personalize the output using merge tokens.
+            // We based our merge tokens off of MailChimp: http://goo.gl/xagsyk
+            var mergedDigest = output
+              .replaceAll(r'*|FNAME|*', user.firstName)
+              .replaceAll(r'*|LNAME|*', user.lastName)
+              .replaceAll(r'*|EMAIL|*', user.email);
+
+            DateTime now = new DateTime.now();
+
+            // Generate and send the email.
+            var envelope = new Envelope()
+              ..from = "Woven <hello@woven.co>"
+              ..to = "${user.firstName} ${user.lastName} <${user.email}>"
+              ..bcc = "David Notik <davenotik@gmail.com>"
+              ..subject = 'Here\'s the ${community.alias} digest, ${user.firstName} – ${now.toString()}'
+              ..html = '$mergedDigest';
+
+            app.mailer.send(envelope);
+          });
+        }).catchError((e, s) => print("Exception caught generating and sending digest:\n$e\n\n$s"));
       });
     });
   }
@@ -96,7 +112,7 @@ class DailyDigestTask extends Task {
     });
   }
 
-  Future sendDigestByEmail(String output) {
+  Future sendDigestByEmail(UserModel to, CommunityModel community, String output) {
     var envelope = new Envelope()
       ..from = "Woven <hello@woven.co>"
       ..to = "David Notik <davenotik@gmail.com>"
