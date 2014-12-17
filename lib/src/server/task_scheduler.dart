@@ -39,7 +39,7 @@ class TaskScheduler {
 
             // If we're not within a minute of the scheduled time, get out of here.
             // TODO: What about edge cases like server restarts? We'll have to save last send to db.
-            if (diff.inSeconds.abs() < 60) { // We match this diff to the task run interval in task.dart.
+            if (diff.inSeconds.abs() > 60 || diff.inMinutes.abs() < 0) { // We match this diff to the task run interval in task.dart.
               return;
             }
           }
