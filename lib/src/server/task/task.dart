@@ -11,7 +11,7 @@ abstract class Task {
 
   Duration interval = const Duration(seconds: 60);
   bool onceADay = false;
-  DateTime runAtDailyTime = null;
+  DateTime runAtDailyTime = null; // Expects UTC.
 
   Future run();
 }

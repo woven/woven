@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = parseTime('4:00pm');
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12); // Equivalent to 7am EST.
 
   DailyDigestTask();
 

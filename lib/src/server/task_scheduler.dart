@@ -28,18 +28,17 @@ class TaskScheduler {
 
           // Run at a specific daily time.
           if (task.runAtDailyTime != null) {
-            var now = new DateTime.now();
-            var other = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+            var now = new DateTime.now().toUtc();
 
             var runAtTime = task.runAtDailyTime;
-            var runAtTimeToToday = new DateTime(now.year, now.month, now.day, runAtTime.hour, runAtTime.minute);
-            var diff = now.toUtc().difference(runAtTimeToToday.toUtc());
+            var runAtTimeToToday = new DateTime.utc(now.year, now.month, now.day, runAtTime.hour, runAtTime.minute);
+            var diff = now.difference(runAtTimeToToday);
 
-            print("runAtTime: $runAtTime / runAtTimeToToday: $runAtTimeToToday / diff: $diff / diff.inMinutes: ${diff.inMinutes}");
+            print("now: $now / runAtTime: $runAtTime / runAtTimeToToday: $runAtTimeToToday / diff: $diff / diff.inSeconds: ${diff.inSeconds}");
 
             // If we're not within a minute of the scheduled time, get out of here.
             // TODO: What about edge cases like server restarts? We'll have to save last send to db.
-            if (diff.inSeconds.abs() > 60 || diff.inMinutes.abs() < 0) { // We match this diff to the task run interval in task.dart.
+            if (diff.inSeconds.abs() > 60 || diff.inSeconds.abs() < 0) { // We match this diff to the task run interval in task.dart.
               return;
             }
           }
