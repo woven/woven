@@ -2,9 +2,8 @@ library admin_controller;
 
 import 'dart:io';
 import 'dart:async';
-import 'dart:convert';
 import '../app.dart';
-import 'package:woven/src/server/digest/email_digest.dart';
+import 'package:woven/src/server/task/daily_digest.dart';
 import 'package:woven/src/shared/csv.dart';
 import 'package:woven/src/server/firebase.dart';
 
@@ -22,8 +21,8 @@ class AdminController {
       return "Error parsing those dates: $error";
     }
 
-    // Generate a new email digest.
-    var digest = new EmailDigest(app);
+    // Generate a new daily digest.
+    var digest = new DailyDigestTask();
     var digestOutput = digest.generateDigest(community, from: from as DateTime, to: to as DateTime);
     request.response.headers.contentType = ContentType.HTML;
     return digestOutput;
