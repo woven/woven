@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 4, 00); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -34,6 +34,8 @@ class DailyDigestTask extends Task {
         if (users == null) return;
 
         generateDigest(community.alias).then((String output) {
+          // If the digest returned nothing, we're done here.
+          if (output == null) return;
           // Send the digest to each user in the community.
           users.forEach((user) {
             if (user == null) return;
@@ -83,10 +85,12 @@ class DailyDigestTask extends Task {
 
     var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 
-    return Firebase.get(query).then((res) {
-      Map itemsBlob = res;
+    return Firebase.get(query).then((Map itemsMap) {
+      // If there are no items for the digest, get out of here.
+      if (itemsMap.isEmpty) return;
+
       int count = 0;
-      itemsBlob.forEach((k, v) {
+      itemsMap.forEach((k, v) {
         // Add the key, which is the item ID, the map as well.
         var itemMap = v;
         itemMap['id'] = k;
@@ -104,7 +108,9 @@ class DailyDigestTask extends Task {
       jsonForTemplate = {
           'items':items
       };
-    }).catchError((e) => print("Firebase returned an error: $e")).then((e) {
+    }).catchError((e) => print("Firebase returned an error: $e")).then((_) {
+      if (jsonForTemplate == null) return null;
+
       return new File('web/static/templates/daily_digest.mustache').readAsString().then((String contents) {
         // Parse the template.
         var template = mustache.parse(contents);
