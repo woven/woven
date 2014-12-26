@@ -38,6 +38,9 @@ class AddStuff extends PolymerElement {
     overlay.toggle();
   }
 
+  /**
+   * Populate the share to field intelligently.
+   */
   handleOpen() {
     // Add the current community to the share to field.
     String shareTo = theData['share-to'];
@@ -50,6 +53,32 @@ class AddStuff extends PolymerElement {
     // Focus the subject field.
     CoreInput subjectInput = elRoot.shadowRoot.querySelector('#subject');
     subjectInput.focus();
+  }
+
+  /**
+   * Grow and shrink the input.
+   *
+   * Responds to key-press event.
+   */
+  resizeInput(Event e, detail, CoreInput target) {
+    // Not working at the moment.
+    return;
+
+    e.stopPropagation();
+
+    Element textarea = target.shadowRoot.querySelector("textarea");
+
+    // Reset height on every press, so we can get true scrollHeight below.
+    textarea.style.height = "0px";
+
+    // We set this here, as it's not reading it properly from CSS.
+    target.style.lineHeight = "16px";
+
+    // Parse the textarea's height as an int so we can play w/ it.
+    var elHeight = textarea.clientHeight;
+
+    if (textarea.scrollHeight > elHeight) elHeight = textarea.scrollHeight;
+    textarea.style.height = "${elHeight}px";
   }
 
   /**
@@ -137,7 +166,7 @@ class AddStuff extends PolymerElement {
       // Combine the separate date and time fields into one DateTime object.
       DateTime date = parseDate(theData['event-start-date']);
       DateTime time = parseTime(theData['event-start-time']);
-      DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc();
       (item as EventModel)
         ..startDateTime = startDateTime
         ..url = theData['url'];
@@ -191,7 +220,7 @@ class AddStuff extends PolymerElement {
             // Combine the separate date and time fields into one DateTime object.
             DateTime date = parseDate(theData['event-start-date']);
             DateTime time = parseTime(theData['event-start-time']);
-            DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute);
+            DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc();
 
             var eventPriority = startDateTime.millisecondsSinceEpoch;
 
