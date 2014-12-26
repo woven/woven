@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 02, 05); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -23,7 +23,8 @@ class DailyDigestTask extends Task {
    * Runs the task.
    */
   Future run() {
-    print("Starting task...");
+    DateTime now = new DateTime.now().toUtc();
+    print("Starting daily digest task at $now...");
     return CommunityModel.getCommunitiesWithUsers().then((List<Map> usersByCommunity) {
       // Loop over each community/users map.
       usersByCommunity.forEach((Map communitiesWithUsers) {
@@ -36,7 +37,7 @@ class DailyDigestTask extends Task {
           // Send the digest to each user in the community.
           users.forEach((user) {
             if (user == null) return;
-            if (user.username != 'dave') return; // TODO: Temporary.
+            if (user.username != 'dave') return; // TODO: Temporarily limited to Dave.
 
             // Personalize the output using merge tokens.
             // We based our merge tokens off of MailChimp: http://goo.gl/xagsyk
@@ -50,12 +51,14 @@ class DailyDigestTask extends Task {
             // Generate and send the email.
             var envelope = new Envelope()
               ..from = "Woven <hello@woven.co>"
-              ..to = "${user.firstName} ${user.lastName} <${user.email}>"
-              ..bcc = "David Notik <davenotik@gmail.com>"
+              ..to = ['${user.firstName} ${user.lastName} <${user.email}>']
               ..subject = 'Here\'s the ${community.alias} digest, ${user.firstName} – ${now.toString()}'
               ..html = '$mergedDigest';
 
-            app.mailer.send(envelope);
+            app.mailer.send(envelope).then((Map res) {
+              if (res['status'] == 200) return; // Success.
+              print('Daily digest failed to send. Response was:\n$res');
+            });
           });
         }).catchError((e, s) => print("Exception caught generating and sending digest:\n$e\n\n$s"));
       });
@@ -109,18 +112,6 @@ class DailyDigestTask extends Task {
 
         return output;
       });
-    });
-  }
-
-  Future sendDigestByEmail(UserModel to, CommunityModel community, String output) {
-    var envelope = new Envelope()
-      ..from = "Woven <hello@woven.co>"
-      ..to = "David Notik <davenotik@gmail.com>"
-      ..bcc = "David Notik <davenotik@gmail.com>"
-      ..subject = 'Welcome, David!'
-      ..html = '$output';
-    return app.mailer.send(envelope).then((success) {
-      print(success);
     });
   }
 }

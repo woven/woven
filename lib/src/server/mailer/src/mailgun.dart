@@ -12,7 +12,7 @@ class Mailgun {
 
     final auth = CryptoUtils.bytesToBase64(UTF8.encode("$user:$key"));
     final url = "${config['mailgun']['path']}/messages";
-    return http.post(url, body: envelope.toMap(), headers: {"authorization": "Basic $auth"})
+    return http.post(url, body: prepareEnvelopeForPost(envelope), headers: {"authorization": "Basic $auth"})
     .then((response) {
       Map responseAsMap = {};
       try {
@@ -30,5 +30,19 @@ class Mailgun {
 //        return responseAsMap['message'];
 //      }
     });
+  }
+
+  /**
+   * Prepare the envelope for transmission over http POST.
+   *
+   * Removes null properties and converts lists to strings.
+   */
+  prepareEnvelopeForPost(Envelope e) {
+    Map map = e.toMap();
+    Map newMap = new Map.from(map);
+    map.forEach((k, v) {
+      if (v is List) newMap[k] = (v as List).join(',');
+    });
+    return removeNullsFromMap(newMap);
   }
 }

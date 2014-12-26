@@ -76,8 +76,8 @@ class MainController {
         // Send the welcome email.
         var envelope = new Envelope()
           ..from = "Woven <hello@woven.co>"
-          ..to = "${userData['firstName']} ${userData['lastName']} <${userData['email']}>"
-          ..bcc = "David Notik <davenotik@gmail.com>"
+          ..to = ['${userData['firstName']} ${userData['lastName']} <${userData['email']}>']
+          ..bcc = ['David Notik <davenotik@gmail.com>']
           ..subject = 'Welcome, ${userData['firstName']}!'
           ..text = '''
 Hey ${userData['firstName']},
@@ -202,8 +202,8 @@ http://twitter.com/wovenco
       // Send notification.
       var envelope = new Envelope()
         ..from = "Woven <hello@woven.co>"
-        ..to = "$itemAuthorFirstName $itemAuthorLastName <${notificationData['itemAuthorEmail']}>"
-        ..bcc = "David Notik <davenotik@gmail.com>"
+        ..to = ['$itemAuthorFirstName $itemAuthorLastName <${notificationData['itemAuthorEmail']}>']
+        ..bcc = ['David Notik <davenotik@gmail.com>']
         ..subject = '$commentAuthorFirstName $commentAuthorLastName commented on your post'
         ..text = '''
 Hey $itemAuthorFirstName,
@@ -253,8 +253,8 @@ http://woven.co
           // Send notification.
           var envelope = new Envelope()
             ..from = "Woven <hello@woven.co>"
-            ..to = "$participantFirstName $participantLastName <$participantEmail>"
-            ..bcc = "David Notik <davenotik@gmail.com>"
+            ..to = ['$participantFirstName $participantLastName <$participantEmail>']
+            ..bcc = ['David Notik <davenotik@gmail.com>']
             ..subject = "$commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAuthorAs post"
             ..text = '''
 Hey $participantFirstName,
@@ -315,8 +315,8 @@ http://woven.co
         // Send notification.
         var envelope = new Envelope()
           ..from = "Woven <hello@woven.co>"
-          ..to = "$firstName $lastName <$email>"
-          ..bcc = "David Notik <davenotik@gmail.com>"
+          ..to = ['$firstName $lastName <$email>']
+          ..bcc = ['David Notik <davenotik@gmail.com>']
           ..subject = "$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
           ..text = '''
 Hey $firstName,

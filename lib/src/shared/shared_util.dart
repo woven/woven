@@ -126,3 +126,14 @@ formatPossessive(String text) {
     return '$text\'s';
   }
 }
+
+/**
+ * Removes nulls from a given map.
+ */
+removeNullsFromMap(Map map) {
+  Map newMap = new Map.from(map);
+  map.forEach((k, v) {
+    if (v == null) newMap.remove(k);
+  });
+  return newMap;
+}

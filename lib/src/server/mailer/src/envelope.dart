@@ -5,30 +5,20 @@ part of mailer;
  */
 class Envelope {
   String from = 'hello@woven.co';
-  String to;
-  String bcc;
+  List to;
+  List bcc;
   String subject;
   String text;
   String html;
 
-  Future<Map> toMap() {
-    if (html != null) {
-      return {
-          'from': from,
-          'to': to,
-          'bcc': bcc,
-          'subject': subject,
-          'html': html
-      };
-    }
-    if (text != null) {
-      return {
-          'from': from,
-          'to': to,
-          'bcc': bcc,
-          'subject': subject,
-          'text': text
-      };
-    }
+  Map toMap() {
+    return {
+        'from': from,
+        'to': to,
+        'bcc': bcc,
+        'subject': subject,
+        'html': html,
+        'text': text
+    };
   }
 }
