@@ -229,16 +229,13 @@ class InboxList extends PolymerElement with Observable {
         var eventPriority;
 
         if (item['startDateTime'] != null) {
-          DateTime datetime = DateTime.parse(item['startDateTime']).toUtc();
-//          print('$datetime / ${item['subject']}');
-
-          eventPriority = datetime.millisecondsSinceEpoch;
+          DateTime datetime = DateTime.parse(item['startDateTime']);
+          DateTime datetimeToUtc = new DateTime.utc(datetime.year, datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second);
+          eventPriority = datetimeToUtc.millisecondsSinceEpoch;
         } else {
           // No startdate.
           var now = new DateTime.now().toUtc();
           DateTime datetime = new DateTime.utc(2012, DateTime.DECEMBER, 12, now.hour, now.second, now.millisecond);
-//          print('$datetime / ${item['subject']} / NULL');
-
           eventPriority = datetime.millisecondsSinceEpoch;
         }
 
