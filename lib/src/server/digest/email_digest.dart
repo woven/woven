@@ -27,10 +27,10 @@ class EmailDigest {
     if (to == null) to = from;
 
     // Start at the beginning of the from date's day.
-    var startAt = new DateTime(from.year, from.month, from.day).millisecondsSinceEpoch;
+    var startAt = new DateTime(from.year, from.month, from.day).toUtc().millisecondsSinceEpoch;
 
     // End at the end of the to date's day.
-    var endAt = new DateTime(to.year, to.month, to.day, 23, 59, 59, 999).millisecondsSinceEpoch;
+    var endAt = new DateTime(to.year, to.month, to.day, 23, 59, 59, 999).toUtc().millisecondsSinceEpoch;
 
     var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 

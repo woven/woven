@@ -24,7 +24,7 @@ class AdminController {
 
     // Generate a new email digest.
     var digest = new EmailDigest(app);
-    var digestOutput = digest.generateDigest(community, from: from, to: to);
+    var digestOutput = digest.generateDigest(community, from: from as DateTime, to: to as DateTime);
     request.response.headers.contentType = ContentType.HTML;
     return digestOutput;
   }
