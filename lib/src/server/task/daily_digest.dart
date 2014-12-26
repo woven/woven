@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 4, 00); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -76,10 +76,10 @@ class DailyDigestTask extends Task {
     if (to == null) to = from;
 
     // Start at the beginning of the from date's day.
-    var startAt = new DateTime(from.year, from.month, from.day).toUtc().millisecondsSinceEpoch;
+    var startAt = new DateTime.utc(from.year, from.month, from.day).millisecondsSinceEpoch;
 
     // End at the end of the to date's day.
-    var endAt = new DateTime(to.year, to.month, to.day, 23, 59, 59, 999).toUtc().millisecondsSinceEpoch;
+    var endAt = new DateTime.utc(to.year, to.month, to.day, 23, 59, 59, 999).millisecondsSinceEpoch;
 
     var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 
