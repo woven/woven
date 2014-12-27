@@ -113,7 +113,12 @@ class AddStuff extends PolymerElement {
     }
 
     // Validate other stuff.
-    if (subject.trim().isEmpty || body.trim().isEmpty) {
+    if (subject.trim().isEmpty) {
+      window.alert("Your subject is empty.");
+      return false;
+    }
+
+    if (body.trim().isEmpty) {
       window.alert("Your message is empty.");
       return false;
     }
