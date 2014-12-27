@@ -66,10 +66,10 @@ class InboxList extends PolymerElement with Observable {
 
   formatEventDate(DateTime startDate) {
     // TODO: Bring back endDate, currently null.
-    return InputFormatter.formatDate(startDate, showHappenedPrefix: true, trimPast: true);
+    return InputFormatter.formatDate(startDate.toLocal(), showHappenedPrefix: true, trimPast: true);
   }
 
-  //Temporary script, about as good a place as any to put it.
+  // Temporary script, about as good a place as any to put it.
 
   scriptTryPriority() {
     var f = new db.Firebase(config['datastore']['firebaseLocation']);

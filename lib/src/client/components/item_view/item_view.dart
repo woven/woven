@@ -49,7 +49,7 @@ class ItemView extends PolymerElement with Observable {
 
   formatEventDate(DateTime startDate) {
     // TODO: Bring back endDate, currently null.
-    return InputFormatter.formatDate(startDate, showHappenedPrefix: true, trimPast: true, detailed: true);
+    return InputFormatter.formatDate(startDate.toLocal(), showHappenedPrefix: true, trimPast: true, detailed: true);
   }
 
   toggleLike(Event e, var detail, Element target) {
