@@ -75,12 +75,15 @@ class SignInController {
           var username = userIndexData['username'];
 
           // Get the existing user's data so we can compare against it.
+          // TODO: Handle edge case where index points to non-existent user.
           Firebase.get('/users/$username.json').then((Map userData) {
+            if (userData == null) return null;
             facebookData.forEach((k, v) {
               if (userData[k] == null) userData[k] = v;
             });
             return userData;
           }).then((userData) {
+            // TODO handle null.
             Firebase.patch('/users/$username.json', userData);
           });
         }
