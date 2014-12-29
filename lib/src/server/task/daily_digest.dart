@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 22, 10); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 22, 40); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -33,8 +33,8 @@ class DailyDigestTask extends Task {
 
         if (users == null) return;
 
-        // Hardcode EST for now.
-        DateTime todayInEst = now.add(new Duration(hours: 5));
+        // Hardcode EST (UTC-5) for now.
+        DateTime todayInEst = now.subtract(new Duration(hours: 5));
 
         generateDigest(community.alias, from: todayInEst).then((String output) {
           // If the digest returned nothing, we're done here.
