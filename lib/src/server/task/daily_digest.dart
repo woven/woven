@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 18, 00); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 18, 30); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -77,11 +77,16 @@ class DailyDigestTask extends Task {
     if (from == null) from = new DateTime.now().toUtc();
     if (to == null) to = from;
 
+//    DateTime fromToUtc = from.toUtc();
+//    DateTime toToUtc = to.toUtc();
+
     // Start at the beginning of the from date's day.
     var startAt = new DateTime(from.year, from.month, from.day).toUtc().millisecondsSinceEpoch;
+    print(startAt);
 
     // End at the end of the to date's day.
     var endAt = new DateTime(to.year, to.month, to.day, 23, 59, 59, 999).toUtc().millisecondsSinceEpoch;
+    print(endAt);
 
     var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 
@@ -101,7 +106,11 @@ class DailyDigestTask extends Task {
       items.forEach((i) {
         String teaser = InputFormatter.createTeaser(i['body'], 400);
         // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
+        print(i['startDateTime']);
+        print(i['startDateTimePriority']);
         DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours:5));
+        print("subtracted 5: ${startDateTime}");
+        print("---");
         i['body'] = teaser;
         i['startDateTime'] = InputFormatter.formatDate(startDateTime);
         i['encodedId'] = hashEncode(i['id']);
