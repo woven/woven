@@ -74,19 +74,28 @@ class DailyDigestTask extends Task {
     List items = [];
     Map jsonForTemplate;
 
+    print(new DateTime.now().millisecondsSinceEpoch);
+    print(new DateTime.now().toUtc().millisecondsSinceEpoch);
+    print(new DateTime.now());
+    print(new DateTime.now().toUtc());
+    print("**");
+
     if (from == null) from = new DateTime.now().toUtc();
     if (to == null) to = from;
+
+    print(from.isUtc);
+    print(to.isUtc);
 
 //    DateTime fromToUtc = from.toUtc();
 //    DateTime toToUtc = to.toUtc();
 
     // Start at the beginning of the from date's day.
-    var startAt = new DateTime(from.year, from.month, from.day).toUtc().millisecondsSinceEpoch;
-    print(startAt);
+    var startAt = new DateTime(from.year, from.month, from.day).millisecondsSinceEpoch;
+    print("startAt: $startAt");
 
     // End at the end of the to date's day.
-    var endAt = new DateTime(to.year, to.month, to.day, 23, 59, 59, 999).toUtc().millisecondsSinceEpoch;
-    print(endAt);
+    var endAt = new DateTime(to.year, to.month, to.day, 23, 59, 59, 999).millisecondsSinceEpoch;
+    print("endAt: $endAt");
 
     var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 

@@ -197,7 +197,7 @@ class AddStuff extends PolymerElement {
       // Use a priority so Firebase sorts. Use a negative so latest is at top.
       // TODO: Beef this up in case items have same exact timestamp.
       DateTime time = DateTime.parse("$now");
-      var priority = time.toUtc().millisecondsSinceEpoch;
+      var priority = time.millisecondsSinceEpoch;
 
       // Update the main item, then...
       itemRef.setWithPriority(encodedItem, -priority).then((e) {
