@@ -230,11 +230,15 @@ class InboxList extends PolymerElement with Observable {
         DateTime datetime;
 
         if (item['startDateTime'] != null) {
-          DateTime datetimeNonUtc = DateTime.parse(item['startDateTime']);
-          datetime = new DateTime(datetimeNonUtc.year, datetimeNonUtc.month, datetimeNonUtc.day, datetimeNonUtc.hour, datetimeNonUtc.minute, datetimeNonUtc.second).toUtc();
+          DateTime current = DateTime.parse(item['startDateTime']);
+          if (!current.isUtc) {
+            datetime = new DateTime(current.year, current.month, current.day, current.hour, current.minute, current.second).toUtc();
+          } else {
+            datetime = new DateTime(current.year, current.month, current.day, current.hour, current.minute, current.second);
+          }
           eventPriority = datetime.millisecondsSinceEpoch;
         } else {
-          // No startdate.
+          // No startdate. Edge case.
           var now = new DateTime.now();
           datetime = new DateTime(2012, DateTime.DECEMBER, 12, now.hour, now.second, now.millisecond).toUtc();
           eventPriority = datetime.millisecondsSinceEpoch;
@@ -311,7 +315,7 @@ class InboxList extends PolymerElement with Observable {
       }));
     });
 
-//    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
+    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
 //    scriptUpdateCommentCounts(); // Run 3rd.
 //      scriptAddPriorityOnPeople(); // 4.
