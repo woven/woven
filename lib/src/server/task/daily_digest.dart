@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 22, 48); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -34,9 +34,11 @@ class DailyDigestTask extends Task {
         if (users == null) return;
 
         // Hardcode EST (UTC-5) for now.
-        DateTime todayInEst = new DateTime.utc(now.year, now.month, now.day).subtract(new Duration(hours: 5));
+        DateTime startOfDay = new DateTime.utc(now.year, now.month, now.day).add(new Duration(hours:5));
+        DateTime endOfDay = startOfDay.add(new Duration(hours: 23, minutes: 59, seconds: 59));
+//        print("startOf: $startOfDay, endOf: $endOfDay");
 
-        generateDigest(community.alias, from: todayInEst).then((String output) {
+        generateDigest(community.alias, from: startOfDay, to: endOfDay).then((String output) {
           // If the digest returned nothing, we're done here.
           if (output == null) return;
           // Send the digest to each user in the community.
@@ -88,8 +90,6 @@ class DailyDigestTask extends Task {
 
     var startAt = from.millisecondsSinceEpoch;
     var endAt = to.millisecondsSinceEpoch;
-    print(startAt);
-    print(endAt);
 
     var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 
@@ -109,11 +109,7 @@ class DailyDigestTask extends Task {
       items.forEach((i) {
         String teaser = InputFormatter.createTeaser(i['body'], 400);
         // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
-        print(i['startDateTime']);
-        print(i['startDateTimePriority']);
         DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours:5));
-        print("subtracted 5: ${startDateTime}");
-        print("---");
         i['body'] = teaser;
         i['startDateTime'] = InputFormatter.formatDate(startDateTime);
         i['encodedId'] = hashEncode(i['id']);
