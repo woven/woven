@@ -227,21 +227,25 @@ class InboxList extends PolymerElement with Observable {
 
       if (item['type'] == 'event') {
         var eventPriority;
+        DateTime datetime;
 
         if (item['startDateTime'] != null) {
-          DateTime datetime = DateTime.parse(item['startDateTime']);
-          DateTime datetimeToUtc = new DateTime.utc(datetime.year, datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second);
-          eventPriority = datetimeToUtc.millisecondsSinceEpoch;
+          DateTime datetimeNonUtc = DateTime.parse(item['startDateTime']);
+          datetime = new DateTime(datetimeNonUtc.year, datetimeNonUtc.month, datetimeNonUtc.day, datetimeNonUtc.hour, datetimeNonUtc.minute, datetimeNonUtc.second).toUtc();
+          eventPriority = datetime.millisecondsSinceEpoch;
         } else {
           // No startdate.
-          var now = new DateTime.now().toUtc();
-          DateTime datetime = new DateTime.utc(2012, DateTime.DECEMBER, 12, now.hour, now.second, now.millisecond);
+          var now = new DateTime.now();
+          datetime = new DateTime(2012, DateTime.DECEMBER, 12, now.hour, now.second, now.millisecond).toUtc();
           eventPriority = datetime.millisecondsSinceEpoch;
         }
 
         itemsByTypeRef.setWithPriority(item, eventPriority);
         // TODO: Add this to add_stuff.
-        itemsByTypeRef.update({'startDateTimePriority':'${eventPriority}'});
+        itemsByTypeRef.update({
+            'startDateTimePriority':'${eventPriority}',
+            'startDateTime': '${datetime}'}
+        );
       } else {
         itemsByTypeRef.setWithPriority(item, -epochTime);
       }
