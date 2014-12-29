@@ -33,7 +33,10 @@ class DailyDigestTask extends Task {
 
         if (users == null) return;
 
-        generateDigest(community.alias).then((String output) {
+        // Hardcode EST for now.
+        DateTime todayInEst = now.add(new Duration(hours: 5));
+
+        generateDigest(community.alias, from: todayInEst).then((String output) {
           // If the digest returned nothing, we're done here.
           if (output == null) return;
           // Send the digest to each user in the community.
