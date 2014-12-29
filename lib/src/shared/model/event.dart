@@ -9,6 +9,7 @@ class EventModel extends ItemModel with TimeSpan, Link {
   Map encode() {
     var data = super.encode();
     data['startDateTime'] = startDateTime.toString();
+    data['startDateTimePriority'] = startDateTimePriority.toString();
     data['url'] = url;
     return data;
   }
@@ -24,6 +25,7 @@ class EventModel extends ItemModel with TimeSpan, Link {
       ..updatedDate = data['updatedDate']
 
       ..startDateTime = data['startDateTime']
+      ..startDateTimePriority = data['startDateTimePriority']
       ..url = data['url'];
   }
 }

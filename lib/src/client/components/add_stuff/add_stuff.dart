@@ -172,8 +172,10 @@ class AddStuff extends PolymerElement {
       DateTime date = parseDate(theData['event-start-date']);
       DateTime time = parseTime(theData['event-start-time']);
       DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc();
+      int eventPriority = startDateTime.millisecondsSinceEpoch;
       (item as EventModel)
         ..startDateTime = startDateTime
+        ..startDateTimePriority = eventPriority
         ..url = theData['url'];
     }
 
@@ -191,11 +193,11 @@ class AddStuff extends PolymerElement {
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
-    Future setItem(db.Firebase itemRef) {
+    setItem(db.Firebase itemRef) {
       // Use a priority so Firebase sorts. Use a negative so latest is at top.
       // TODO: Beef this up in case items have same exact timestamp.
       DateTime time = DateTime.parse("$now");
-      var priority = time.millisecondsSinceEpoch;
+      var priority = time.toUtc().millisecondsSinceEpoch;
 
       // Update the main item, then...
       itemRef.setWithPriority(encodedItem, -priority).then((e) {

@@ -100,8 +100,10 @@ class DailyDigestTask extends Task {
 
       items.forEach((i) {
         String teaser = InputFormatter.createTeaser(i['body'], 400);
+        // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
+        DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours:5));
         i['body'] = teaser;
-        i['startDateTime'] = InputFormatter.formatDate(DateTime.parse(i['startDateTime']));
+        i['startDateTime'] = InputFormatter.formatDate(startDateTime);
         i['encodedId'] = hashEncode(i['id']);
       });
 
