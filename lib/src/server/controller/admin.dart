@@ -8,6 +8,9 @@ import 'package:woven/src/shared/csv.dart';
 import 'package:woven/src/server/firebase.dart';
 
 class AdminController {
+  /**
+   * Format: admin/generatedigest?community=miamitech&from=2014-12-29T00:00:00-05:00&to=2014-12-29T23:59:59-05:00
+   */
   static generateDigest(App app, HttpRequest request) {
     var community = request.requestedUri.queryParameters['community'];
     var from = request.requestedUri.queryParameters['from'];

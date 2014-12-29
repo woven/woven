@@ -15,7 +15,7 @@ import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 18, 30); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 21, 55); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -73,17 +73,20 @@ class DailyDigestTask extends Task {
   Future generateDigest(String community, {DateTime from, DateTime to}) {
     List items = [];
     Map jsonForTemplate;
+    DateTime now = new DateTime.now().toUtc();
 
-    if (from == null) from = new DateTime.now().toUtc();
-    if (to == null) to = from;
+    // Handle empty to/from.
+    if (from == null) {
+      from = new DateTime.utc(now.year, now.month, now.day);
+    }
+    if (to == null) {
+      to = new DateTime.utc(from.year, from.month, from.day, 23, 59, 59, 999);
+    }
 
-    // Start at the beginning of the from date's day.
-    var startAt = new DateTime.utc(from.year, from.month, from.day).add(new Duration(hours: 5)).millisecondsSinceEpoch;
-    print("startAt: $startAt");
-
-    // End at the end of the to date's day.
-    var endAt = new DateTime.utc(to.year, to.month, to.day, 23, 59, 59, 999).add(new Duration(hours: 5)).millisecondsSinceEpoch;
-    print("endAt: $endAt");
+    var startAt = from.millisecondsSinceEpoch;
+    var endAt = to.millisecondsSinceEpoch;
+    print(startAt);
+    print(endAt);
 
     var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 
