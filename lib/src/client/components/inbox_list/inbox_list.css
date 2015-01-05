@@ -105,7 +105,7 @@ core-icon {
 .item-body {
   color: #5c5c5c;
   font-size: 1em;
-  /*overflow: hidden;*/
+  overflow: hidden;
   white-space: nowrap;
 }
 
@@ -114,6 +114,8 @@ core-icon {
   overflow: hidden;
   font-size: 90%;
   display: block;
+  text-align: right;
+  margin-right: 5px;
 }
 
 .item-star {
@@ -129,6 +131,10 @@ core-icon {
   margin-right: 2px;
   text-transform: none;
   font-weight: normal;
+}
+
+.user-area {
+  margin-top: 10px;
 }
 
 .item-actions {
@@ -186,7 +192,7 @@ core-icon {
 .item-col2 {
   /*border: solid peachpuff 1px;*/
   margin-left: 10px;
-  margin-right: 5px;
+  margin-right: 10px;
   padding-top: 7px;
 }
 

@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
@@ -71,6 +72,9 @@
                     <!--data-id="{{item['id']}}"></core-icon>-->
                     <!--<span class="item-count">{{item['star_count']}}</span>-->
                   </div>
+                  <div class="user-area">
+                    <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
+                  </div>
                   <!--<div class="item-star">-->
                   <!--&lt;!&ndash;<core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">&ndash;&gt;-->
                   <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
@@ -116,6 +120,9 @@
                            <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
                            <!--data-id="{{item['id']}}"></core-icon>-->
                 <!--<span class="item-count">{{item['star_count']}}</span>-->
+              </div>
+              <div class="user-area">
+                <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
               </div>
               <!--<div class="item-star">-->
                 <!--&lt;!&ndash;<core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">&ndash;&gt;-->
