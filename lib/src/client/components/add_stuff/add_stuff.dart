@@ -2,6 +2,7 @@ library add_stuff;
 
 import 'package:polymer/polymer.dart';
 import 'dart:html';
+import 'dart:convert';
 import 'dart:async';
 import 'dart:math';
 import 'package:firebase/firebase.dart' as db;
@@ -16,6 +17,7 @@ import 'package:woven/src/shared/model/news.dart';
 import 'package:intl/intl.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/shared/routing/routes.dart';
+import 'package:woven/src/shared/model/uri_preview.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
@@ -137,7 +139,7 @@ class AddStuff extends PolymerElement {
     }
 
     _isValidUrl(String url) {
-      if (url.contains("http://") || url.contains("https://") || url.contains("www.")) {
+      if (url.contains("http://") || url.contains("https://")) {
         return true;
       } else {
         return false;
@@ -145,7 +147,7 @@ class AddStuff extends PolymerElement {
     }
 
     if (theData['url'] != null && _isValidUrl(theData['url']) == false) {
-      window.alert("That's not a valid URL.");
+      window.alert("That's not a valid URL. Please include http://.");
       return false;
     }
 
@@ -243,8 +245,21 @@ class AddStuff extends PolymerElement {
     // Run the above Future using the reference from the initial save above.
     setItem(id);
 
-    // Send a notification email to anybody mentioned in the item.
+    // Reference to the item.
     var itemId = id.name;
+
+    // For event and news items, let's get URL previews.
+    if (item is EventModel || item is NewsModel) {
+      HttpRequest.request(Routes.getUriPreview.toString() + "?itemid=$itemId").then((HttpRequest req) {
+        Map response = JSON.decode(req.responseText);
+        UriPreview preview = UriPreview.fromJson(response['data']);
+        // TODO: Keep this on server side, why do it client side?
+//        var previewRef = root.child('/uri_previews').push();
+//        previewRef.set(preview.toJson());
+      });
+    }
+
+    // Send a notification email to anybody mentioned in the item.
     HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId");
 
     overlay.toggle();

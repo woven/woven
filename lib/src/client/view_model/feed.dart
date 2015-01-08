@@ -205,6 +205,15 @@ class FeedViewModel extends BaseViewModel with Observable {
       default:
     }
 
+    print(item['uriPreviewId']);
+    // Handle any URI previews the item may have.
+    if (item['uriPreviewId'] != null) {
+      f.child('/item_previews/${item['uriPreviewId']}').onValue.listen((e) {
+        print(e.runtimeType);
+      });
+    }
+
+
     // If we're filtering for just events, let's also get a date group so we can group events
     // by today, tomorrow, this week, etc.
     if (typeFilter == "event") {

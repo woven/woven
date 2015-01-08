@@ -2,6 +2,7 @@ library woven_server;
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
 import 'package:http_server/http_server.dart';
 import 'package:woven/config/config.dart';
 
@@ -65,6 +66,7 @@ class App {
       ..routes[Routes.people] = MainController.serveApp
       ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail
       ..routes[Routes.sendNotifications] = MainController.sendNotifications
+      ..routes[Routes.getUriPreview] = MainController.getUriPreview
       ..routes[Routes.generateDigest] = AdminController.generateDigest
       ..routes[Routes.exportUsers] = AdminController.exportUsers;
 
@@ -142,7 +144,8 @@ class App {
 
               // If the action returned an instance of Response, then let's JSON encode it.
               // This is useful for AJAX and non-HTTP requests.
-              if (response is Response) response = response.encode();
+              // TODO: Temporary hack. We actually want to use (response is Response) instead.
+              if (response.runtimeType.toString() == 'Response') response = JSON.encode(response);
 
               // A controller action responded with some data.
               request.response.write(response);

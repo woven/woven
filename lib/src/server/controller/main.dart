@@ -4,10 +4,13 @@ import 'dart:io';
 import 'dart:async';
 import '../app.dart';
 import '../firebase.dart';
-import '../../shared/response.dart';
-import '../../../config/config.dart';
+import 'package:woven/src/shared/response.dart';
+import 'package:woven/config/config.dart';
 import '../mailer/mailer.dart';
 import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/server/util/crawler_util.dart';
+import 'dart:convert';
+import 'package:woven/src/shared/model/uri_preview.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -37,19 +40,23 @@ class MainController {
 
   static getCurrentUser(App app, HttpRequest request) {
     var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
-    if (sessionCookie == null) return new Response(false);
+    if (sessionCookie == null) return Response.fromError('No session cookie found.');
     var id = sessionCookie.value;
-    if (id == null) return new Response(false);
+
+    if (id == null) return Response.fromError('The user id in the session cookie was null.');
 
     // Find the username associated with the Facebook ID
     // that's in session.id, then get that user data.
     return Firebase.get('/facebook_index/$id.json').then((indexData) {
-      if (indexData == null) return new Response(false);
+      print('debug: $indexData');
+      if (indexData == null) return Response.fromError('No index data for that user id.');
 
       var username = indexData['username'];
       return Firebase.get('/users/$username.json').then((userData) {
-        return new Response()
-          ..data = userData;
+        print('debug: $userData');
+        var response = new Response();
+        response.data = userData;
+        return response;
       });
     });
   }
@@ -57,6 +64,29 @@ class MainController {
   static aliasExists(String alias) {
     Firebase.get('/alias_index/$alias.json').then((res) {
       return (res == null ? false : true);
+    });
+  }
+
+  /**`
+   * Crawl for and get a preview for a given uri/link.
+   */
+  static getUriPreview(App app, HttpRequest request) {
+    var item = request.requestedUri.queryParameters['itemid'];
+    var crawler = new CrawlerUtil();
+
+    return Firebase.get('/items/$item/url.json').then((String uri) {
+      return crawler.getPreview(Uri.parse(uri)).then((UriPreview preview) {
+        var response = new Response();
+//        print(preview.toJson());
+        response.data = preview;
+//        print('debug-response.data: ${response.data}');
+        // TODO: Save the preview.
+        Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
+          Firebase.patch('/items/$item.json', {'uriPreviewId': name});
+          Firebase.patch('/items_by_community/$item.json', {'uriPreviewId': name});
+        });
+        return response;
+      }).catchError(Response.fromError);
     });
   }
 

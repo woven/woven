@@ -1,6 +1,7 @@
 library user_model;
 
 import 'package:woven/config/config.dart';
+import 'dart:convert';
 
 class UserModel {
   String id;
@@ -18,22 +19,22 @@ class UserModel {
 
   String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/$picture" : null;
 
-  static Map encode(UserModel user) {
+  Map toJson() {
     return {
-      "username": user.username,
-      "firstName": user.firstName,
-      "lastName": user.lastName,
-      "email": user.email,
-      "facebookId": user.facebookId,
-      "location": user.location,
-      "gender": user.gender,
-      "picture": user.picture,
-      "createdDate": user.createdDate,
-      "disabled": user.disabled
+      "username": username,
+      "firstName":firstName,
+      "lastName": lastName,
+      "email": email,
+      "facebookId": facebookId,
+      "location": location,
+      "gender": gender,
+      "picture": picture,
+      "createdDate": createdDate,
+      "disabled": disabled
     };
   }
 
-  static UserModel decode(Map data) {
+  static UserModel fromJson(Map data) {
     if (data == null) return null;
     return new UserModel()
       ..firstName = data['firstName']

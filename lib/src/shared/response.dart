@@ -4,22 +4,33 @@ import 'dart:convert';
 
 class Response {
   bool success = true;
-  Map data = {};
+  Map data = null;
+  String message = null;
 
   Response([this.success = true]);
 
-  String encode() {
-    return JSON.encode({
-      "success": success,
-      "data": data
-    });
+  /**
+   * Dart calls this method when encoding this object with JSON.encode.
+   */
+  Map toJson() {
+    return {
+        'success': success,
+        'message': message,
+        'data': data
+    };
   }
 
-  static Response decode(String responseData) {
-    var response = JSON.decode(responseData);
-
+  static Response fromJson(Map data) {
     return new Response()
-      ..success = response['success']
-      ..data = response['data'];
+      ..success = data['success']
+      ..message = data['message']
+      ..data = data['data'];
+  }
+
+  static fromError(String error) {
+    var response =  new Response()
+      ..success = false
+      ..message = error;
+    return response;
   }
 }

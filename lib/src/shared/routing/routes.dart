@@ -14,6 +14,7 @@ class Routes {
   static final people = new UrlPattern(r'/people');
   static final sendWelcome = new UrlPattern(r'/sendwelcome');
   static final sendNotifications = new UrlPattern(r'/x/sendnotifications');
+  static final getUriPreview = new UrlPattern(r'/x/geturipreview');
   static final generateDigest = new UrlPattern(r'/admin/generatedigest');
   static final exportUsers = new UrlPattern(r'/admin/exportusers');
 }

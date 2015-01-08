@@ -71,18 +71,21 @@ class Firebase {
   /**
    *
    * GET the object at the location.
+   *
+   * Returns a Map, or a String for simple values.
    */
-  static Future<Map> get(String path) {
-    return http.get('${config['datastore']['firebaseLocation']}$path').then((response) {
-      if (response.body != 'null') {
-        var message = JSON.decode(response.body);
-        if (message['error'] != null) {
-          throw 'Firebase returned an error.\nPath: $path\nResponse: ${message["error"]}';
-        }
-        return message;
-      }
+  static Future get(String path) {
+    return http.get('${config['datastore']['firebaseLocation']}$path').then((res) {
+      if (res.body != 'null') {
+        var response = JSON.decode(res.body);
 
+        if (response is Map && response['error'] != null) {
+          throw 'Firebase returned an error.\nPath: $path\nResponse: ${response["error"]}';
+        }
+
+        return response;
+      }
       return null;
-    }).catchError((error) => print(error));
+    }).catchError(print);
   }
 }
