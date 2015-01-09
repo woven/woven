@@ -2,7 +2,7 @@ name: woven
 version: 0.0.2
 dependencies:
   browser: any
-  polymer: ">=0.15.3+2 <0.16.0"
+  polymer: ">=0.15.0 <0.16.0"
   core_elements: ">=0.4.0+5 <0.5.0"
   paper_elements: ">=0.5.0 <0.6.0"
   firebase: ">=0.2.0+1 <0.3.0"
