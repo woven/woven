@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../widgets/uri_preview/uri_preview.html">
 <link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="inbox-list">
   <template>
@@ -106,6 +107,9 @@
               <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
               <div class="item-subject">{{item['subject']}}</div>
               <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
+              <template if="{{item['uriPreviewId'] != null}}">
+                <uri-preview id="{{item['uriPreviewId']}}"></uri-preview>
+              </template>
               <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">
                 <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
                 <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>

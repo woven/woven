@@ -1,0 +1,29 @@
+.preview {
+  width: 400px;
+  height: 75px;
+  background: #f1f1f1;
+  border: solid 1px #e0e0e0;
+}
+
+.preview .image {
+  height: 75px;
+  width: 125px;
+  overflow: hidden;
+}
+
+.preview .image img {
+  height: 75px;
+  width: 125px;
+}
+
+.preview .content {
+  padding: 10px;
+  white-space: normal;
+  overflow: hidden;
+}
+
+.preview .content .title {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 5px;
+}

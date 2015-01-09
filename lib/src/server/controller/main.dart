@@ -11,6 +11,7 @@ import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/server/util/crawler_util.dart';
 import 'dart:convert';
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/server/model/item.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -77,13 +78,13 @@ class MainController {
     return Firebase.get('/items/$item/url.json').then((String uri) {
       return crawler.getPreview(Uri.parse(uri)).then((UriPreview preview) {
         var response = new Response();
-//        print(preview.toJson());
         response.data = preview;
-//        print('debug-response.data: ${response.data}');
-        // TODO: Save the preview.
+        // Save the preview.
+        print('DEBUG: ${preview.toJson()}');
         Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
-          Firebase.patch('/items/$item.json', {'uriPreviewId': name});
-          Firebase.patch('/items_by_community/$item.json', {'uriPreviewId': name});
+          var value = {'uriPreviewId': name};
+          // Update the item with a reference to the preview.
+          ItemModel.update(item, value);
         });
         return response;
       }).catchError(Response.fromError);

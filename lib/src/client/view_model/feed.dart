@@ -5,6 +5,7 @@ import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/date_group.dart';
+import 'package:woven/src/shared/model/uri_preview.dart';
 import 'dart:async';
 import 'base.dart';
 
@@ -149,6 +150,15 @@ class FeedViewModel extends BaseViewModel with Observable {
         if (k == "star_count") v = (v != null) ? v : 0;
         if (k == "like_count") v = (v != null) ? v : 0;
 
+        // Handle any URI previews the changed item may have.
+        if (k == 'uriPreviewId') {
+          f.child('/uri_previews/$v').onValue.listen((e) {
+            var previewData = e.snapshot.val();
+            UriPreview preview = UriPreview.fromJson(previewData);
+            currentData['uriPreview'] = preview.toJson();
+          });
+        }
+
         currentData[k] = v;
       });
     });
@@ -205,11 +215,12 @@ class FeedViewModel extends BaseViewModel with Observable {
       default:
     }
 
-    print(item['uriPreviewId']);
     // Handle any URI previews the item may have.
     if (item['uriPreviewId'] != null) {
-      f.child('/item_previews/${item['uriPreviewId']}').onValue.listen((e) {
-        print(e.runtimeType);
+      f.child('/uri_previews/${item['uriPreviewId']}').onValue.listen((e) {
+        var previewData = e.snapshot.val();
+        UriPreview preview = UriPreview.fromJson(previewData);
+        item['uriPreview'] = preview.toJson();
       });
     }
 

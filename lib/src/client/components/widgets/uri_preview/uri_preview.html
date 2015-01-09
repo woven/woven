@@ -1,0 +1,17 @@
+<link rel="import" href="../../../../../../../packages/polymer/polymer.html">
+<polymer-element name="uri-preview">
+  <template>
+    <link rel="stylesheet" href="uri_preview.css">
+    <div class="preview" layout horizontal>
+      <div class="image">
+        <img _src="{{preview['image']}}">
+      </div>
+      <div class="content" flex>
+        <div class="title">{{preview['title']}}</div>
+        <div class="teaser">{{preview['teaser']}}</div>
+      </div>
+    </div>
+  </template>
+
+  <script type="application/dart" src='uri_preview.dart'></script>
+</polymer-element>
