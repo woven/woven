@@ -566,7 +566,7 @@ class InputFormatter {
     // Make sure there's no crazy whitespace.
     contents = contents.replaceAll(new RegExp(' {2,}'), ' ');
 
-    if (originalContent.length > length && contents.length > 100) {
+    if (originalContent.length > length) {
       return '$contents...';
     }
 
