@@ -1,18 +1,35 @@
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: #0000ee;
+}
 .preview {
-  width: 400px;
-  height: 75px;
+  max-width: 450px;
+  height: 100px;
   background: #f1f1f1;
-  border: solid 1px #e0e0e0;
+  box-shadow: 1px 1px 1px #888;
+  margin-top: 10px;
+  color: #000;
+  /*transition: box-shadow 0.2s;*/
+}
+
+.preview:hover {
+  box-shadow: 2px 2px 5px #888;
+  /*transition: box-shadow 0.2s;*/
+  background: #fff;
 }
 
 .preview .image {
-  height: 75px;
+  height: 100px;
   width: 125px;
   overflow: hidden;
+  border-right: solid 1px #e0e0e0;
 }
 
 .preview .image img {
-  height: 75px;
+  height: 100px;
   width: 125px;
 }
 
@@ -26,4 +43,11 @@
   font-weight: bold;
   font-size: 13px;
   margin-bottom: 5px;
+}
+
+.preview .content .host {
+  margin-top: 5px;
+  font-size: 12px;
+  color: green;
+  text-transform: uppercase;
 }

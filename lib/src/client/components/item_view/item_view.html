@@ -2,6 +2,7 @@
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
+<link rel="import" href="../widgets/uri_preview/uri_preview.html">
 <polymer-element name="item-view">
   <template>
     <link rel="stylesheet" href="item_view.css">
@@ -23,20 +24,21 @@
             </div>
             <template if="{{item['startDateTime'] != null || item['url'] != null}}">
               <div class="content-info">
-
                     <template if="{{item['startDateTime'] != null}}">
                       <div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div>
                     </template>
                     <template if="{{item['url'] != null}}">
                       <div class="item-url"><a target="_blank" _href="{{item['url']}}">{{item['url']}}</a></div>
                     </template>
-
               </div>
             </template>
             <div class="content-main">
               <div>
                 <p id="body" class="{{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>
               </div>
+              <template if="{{item['uriPreviewId'] != null}}">
+                <uri-preview id="{{item['uriPreviewId']}}"></uri-preview>
+              </template>
             </div>
           </div>
           <div id="content-footer">

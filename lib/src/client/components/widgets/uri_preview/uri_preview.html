@@ -2,15 +2,20 @@
 <polymer-element name="uri-preview">
   <template>
     <link rel="stylesheet" href="uri_preview.css">
-    <div class="preview" layout horizontal>
-      <div class="image">
-        <img _src="{{preview['image']}}">
+    <a href="{{preview['uri']}}" target="_blank">
+      <div class="preview" layout horizontal>
+        <template if="{{preview['image'] != null}}">
+          <div class="image">
+            <img _src="{{preview['image']}}">
+          </div>
+        </template>
+        <div class="content" flex>
+          <div class="title">{{preview['title']}}</div>
+          <div class="teaser">{{preview['teaser']}}</div>
+          <div class="host">{{preview['uri_host']}}</div>
+        </div>
       </div>
-      <div class="content" flex>
-        <div class="title">{{preview['title']}}</div>
-        <div class="teaser">{{preview['teaser']}}</div>
-      </div>
-    </div>
+    </a>
   </template>
 
   <script type="application/dart" src='uri_preview.dart'></script>
