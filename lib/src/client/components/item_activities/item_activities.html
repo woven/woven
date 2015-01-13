@@ -47,11 +47,7 @@
       <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
-            <div class="user-photo">
-              <template if="{{comment['user_picture'] != null}}">
-                <img _src="{{comment['user_picture']}}">
-              </template>
-            </div>
+            <user-picture app="{{app}}" user="{{comment['user']}}"></user-picture>
           </div>
           <div class="activity-card" flex>
             <div id="content">

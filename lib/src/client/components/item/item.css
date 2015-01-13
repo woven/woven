@@ -46,7 +46,7 @@ core-icon {
 }
 
 .item {
-  padding: 16px 15px 15px 13px;
+  padding: 20px 20px 20px 20px;
   margin: 0;
   border: 1px solid #e5e5e5;
   background-color: white;
@@ -182,34 +182,6 @@ core-icon {
 
 .item-type.announcement {
   color: #ff6e40;
-}
-
-.item-col1 {
-  /*border: solid red 1px;*/
-  text-align: center;
-  margin: 31px 1px 5px 0px
-}
-
-.item-col1 span {
-  font-size: 12px;
-  color: #3F3F3F;
-  font-weight: bold;
-}
-
-.item-col2 {
-  /*border: solid peachpuff 1px;*/
-  margin-left: 10px;
-  margin-right: 10px;
-  padding-top: 7px;
-}
-
-.item-col3 {
-  /*border: solid burlywood 1px;*/
-  padding-top: 7px;
-}
-
-.item-col2 > * {
-  margin-bottom: 5px;
 }
 
 .item-container {
