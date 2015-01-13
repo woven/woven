@@ -69,7 +69,7 @@ class SignInController {
           Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'});
 
           // Store the user, and we can use the index to find it and set a different username later.
-          Firebase.put('/users/$facebookId.json', UserModel.encode(user));
+          Firebase.put('/users/$facebookId.json', user.toJson());
         } else {
           // If we already know of this Facebook user, update with any new data.
           var username = userIndexData['username'];
