@@ -1,0 +1,54 @@
+<link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
+<link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../widgets/uri_preview/uri_preview.html">
+<link rel="import" href="../user_picture/user_picture.html">
+
+<polymer-element name="x-item">
+  <template>
+    <link rel="stylesheet" href="item.css">
+    <div class="item-wrapper">
+      <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-tap="{{selectItem}}" data-id="{{item['id']}}">
+        <div class="item-container" vertical layout>
+          <div class="item-row1" horizontal layout>
+            <div class="user-area">
+              <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
+            </div>
+            <div class="info-area" layout vertical flex>
+              <div class="item-updated">
+                <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}"> <span class="item-users"><strong>David Notik</strong> posted </span>{{(item['type'] != null) ? item['type'] : 'other'}}</div>
+                <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+              </div>
+            </div>
+            <div>
+              <span class="item-count">{{item['like_count']}}</span>
+              <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+                         id="icon-fav" on-tap="{{toggleLike}}"
+                         class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                         data-id="{{item['id']}}"></core-icon>
+            </div>
+          </div>
+          <div vertical layout>
+            <div class="item-subject">{{item['subject']}}</div>
+            <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
+            <template if="{{item['uriPreviewId'] != null}}">
+              <uri-preview id="{{item['uriPreviewId']}}"></uri-preview>
+            </template>
+          </div>
+          <template if="{{item['comment_count'] != null || item['comment_count'] > 0}}">
+            <div horizontal layout>
+              <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">
+                <!--<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Add a comment</strong></template>-->
+                <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
+                <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </core-item>
+    </div>
+  </template>
+  <script type="application/dart" src="item.dart"></script>
+</polymer-element>

@@ -52,3 +52,9 @@ a:hover {
   color: green;
   text-transform: uppercase;
 }
+
+@media all and (max-width: 800px)  {
+  .preview .content .teaser {
+    display: none;
+  }
+}
