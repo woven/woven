@@ -57,6 +57,7 @@ class Firebase {
 
     try {
       return http.patchUrl(uri).then((HttpClientRequest request) {
+        request.headers.contentType = ContentType.JSON; // Without this, possible "String contains invalid characters."
         request.write(data);
         request.close();
         return request.done.then((HttpClientResponse response) {
