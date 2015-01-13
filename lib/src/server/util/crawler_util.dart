@@ -19,7 +19,7 @@ class CrawlerUtil {
         var property = metaTag.attributes['property'];
         if (property == 'og:title') preview.title = metaTag.attributes['content'];
         if (property == 'og:description') preview.teaser = metaTag.attributes['content'];
-        if (property == 'og:image') preview.image = metaTag.attributes['content'];
+        if (property == 'og:image') preview.imageOriginalUrl = metaTag.attributes['content'];
 
         if (metaTag.attributes['name'] == 'description' && preview.teaser == null) preview.teaser = metaTag.attributes['content'];
       });

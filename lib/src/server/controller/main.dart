@@ -12,6 +12,9 @@ import 'package:woven/src/server/util/crawler_util.dart';
 import 'dart:convert';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/server/model/item.dart';
+import '../util/file_util.dart';
+import '../util/image_util.dart';
+import 'package:path/path.dart' as path;
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -49,12 +52,10 @@ class MainController {
     // Find the username associated with the Facebook ID
     // that's in session.id, then get that user data.
     return Firebase.get('/facebook_index/$id.json').then((indexData) {
-      print('debug: $indexData');
       if (indexData == null) return Response.fromError('No index data for that user id.');
 
       var username = indexData['username'];
       return Firebase.get('/users/$username.json').then((userData) {
-        print('debug: $userData');
         var response = new Response();
         response.data = userData;
         return response;
@@ -76,18 +77,50 @@ class MainController {
     var crawler = new CrawlerUtil();
 
     return Firebase.get('/items/$item/url.json').then((String uri) {
+      // Crawl for some data.
       return crawler.getPreview(Uri.parse(uri)).then((UriPreview preview) {
         var response = new Response();
-        response.data = preview;
-        // Save the preview.
-        print('DEBUG: ${preview.toJson()}');
-        Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
-          var value = {'uriPreviewId': name};
-          // Update the item with a reference to the preview.
-          ItemModel.update(item, value);
-        });
-        return response;
-      }).catchError(Response.fromError);
+        if (preview.imageOriginalUrl == null) {
+          response.data = preview;
+          return response;
+        } else {
+          // Resize and save a small preview image.
+          ImageUtil imageUtil = new ImageUtil();
+          // Set up a temporary file to write to.
+          return createTemporaryFile().then((File file) {
+            // Download the image locally to our temporary file.
+            return downloadFileTo(preview.imageOriginalUrl, file).then((_) {
+              return imageUtil.resize(file, '125x100').then((File convertedFile) {
+                // Save the preview.
+                return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
+                  var value = {'uriPreviewId': name};
+
+                  // Update the item with a reference to the preview.
+                  ItemModel.update(item, value);
+
+                  // Convert and save the image.
+                  var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
+                  var filename = 'preview_small$extension';
+                  var gsBucket = 'woven';
+                  var gsPath = 'public/images/preview/$name/$filename';
+
+                  // Then upload the image to our filesystem.
+                  return app.cloudStorageUtil.uploadFile(convertedFile.path, gsBucket, gsPath, public: true).then((_) {
+                    return file.delete().then((_) {
+                      // Update the preview with a reference to the cloud file.
+                      preview.imageSmallLocation = gsPath;
+                      Firebase.patch('/uri_previews/$name.json', JSON.encode(preview.toJson()));
+                      // Return the preview information.
+                      response.data = preview;
+                      return response;
+                    });
+                  });
+                });
+              });
+            });
+          });
+        }
+      });
     });
   }
 

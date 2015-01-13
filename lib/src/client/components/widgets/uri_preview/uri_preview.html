@@ -2,7 +2,7 @@
 <polymer-element name="uri-preview">
   <template>
     <link rel="stylesheet" href="uri_preview.css">
-    <a href="{{preview['uri']}}" target="_blank">
+    <a href="{{preview['uri']}}" target="_blank" on-tap="{{stopPropagation}}">
       <div class="preview" layout horizontal>
         <template if="{{preview['image'] != null}}">
           <div class="image">

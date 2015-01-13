@@ -23,11 +23,20 @@ class UriPreviewElement extends PolymerElement  {
         preview = previewData;
         // Prepare a shortened teaser.
         preview['teaser'] = InputFormatter.createTeaser(preview['teaser'], 80);
+        // Prepare the full path to the image.
+        preview['image'] = '${config['google']['cloudStoragePath']}/${preview['imageSmallLocation']}';
         // Prepare the domain name.
         var uriHost = Uri.parse(preview['uri']).host;
         preview['uri_host'] = uriHost.substring(uriHost.lastIndexOf(".", uriHost.lastIndexOf(".") - 1) + 1);
       });
     }
+  }
+
+  /**
+   * Stop the link click from also firing other events.
+   */
+  stopPropagation(Event e) {
+    e.stopPropagation();
   }
 
   idChanged() {

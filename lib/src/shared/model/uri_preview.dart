@@ -2,7 +2,8 @@ class UriPreview {
   Uri uri;
   String title;
   String teaser;
-  String image;
+  String imageOriginalUrl;
+  String imageSmallLocation;
 
   UriPreview({Uri uri}) {
     this.uri = uri;
@@ -16,7 +17,8 @@ class UriPreview {
         'uri': uri.toString(),
         'title': title,
         'teaser': teaser,
-        'image': image
+        'imageOriginalUrl': imageOriginalUrl,
+        'imageSmallLocation': imageSmallLocation
     };
   }
 
@@ -26,6 +28,7 @@ class UriPreview {
       ..uri = data['uri']
       ..title = data['title']
       ..teaser = data['teaser']
-      ..image = data['image'];
+      ..imageOriginalUrl = data['imageOriginalUrl']
+      ..imageSmallLocation = data['imageSmallLocation'];
   }
 }
