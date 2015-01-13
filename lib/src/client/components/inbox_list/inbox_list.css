@@ -12,8 +12,8 @@ core-item core-icon {
 }
 
 core-icon {
-  fill: #666;
-  color: #666;
+  fill: #999;
+  color: #999;
   /*margin-right: 2px;*/
 }
 
@@ -46,11 +46,9 @@ core-icon {
 }
 
 .item {
-  padding: 10px 20px 13px 13px;
+  padding: 15px 15px 13px 13px;
   margin: 0;
-  border-bottom-width: 0px;
-  /* border-bottom-style: solid; */
-  border-bottom-color: rgb(244, 244, 244);
+  border: 1px solid #e5e5e5;
   background-color: white;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
@@ -61,37 +59,44 @@ core-icon {
   -ms-user-select: none;
   user-select: none;
   /* margin: 10px auto 5px auto; */
-   border-left: solid 6px #5c5c5c;
+   /*border-left: solid 6px #5c5c5c;*/
+  transition: background-color .2s;
+  border-radius: 2px;
+  /*border-top-right-radius: 2px;*/
+  /*border-bottom-right-radius: 2px;*/
+    /*box-shadow: 1px 1px 3px #bbb;*/
+
 }
 
-.item.event {
-  border-left-color: #03a9f4;
-}
+/*.item.event {*/
+  /*border-left-color: #03a9f4;*/
+/*}*/
 
-.item.news {
-  border-left-color: #117f09;
-}
+/*.item.news {*/
+  /*border-left-color: #117f09;*/
+/*}*/
 
-.item.idea {
-  border-left-color: #e040fb;
-}
+/*.item.idea {*/
+  /*border-left-color: #e040fb;*/
+/*}*/
 
-.item.offer {
-  border-left-color: #009688;
-}
+/*.item.offer {*/
+  /*border-left-color: #009688;*/
+/*}*/
 
-.item.ask {
-  border-left-color: #ffc107;
-}
+/*.item.ask {*/
+  /*border-left-color: #ffc107;*/
+/*}*/
 
-.item.announcement {
-  border-left-color: #ff6e40;
-}
+/*.item.announcement {*/
+  /*border-left-color: #ff6e40;*/
+/*}*/
 
 .item:hover {
   cursor: pointer;
   overflow: hidden;
-  background-color: rgb(244, 244, 244);
+  background-color: #f7f7f7;
+  transition: background-color .2s;
 }
 
 .item-subject {
@@ -104,24 +109,25 @@ core-icon {
 
 .item-body {
   color: #5c5c5c;
-  font-size: 1em;
-  overflow: hidden;
+  font-size: 15px;
   white-space: nowrap;
 }
 
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
-  font-size: 90%;
   display: block;
-  text-align: right;
-  margin-right: 5px;
 }
 
 .item-star {
   margin: 9px 0;
   float: right;
   outline: none;
+}
+
+.item-count {
+  margin-right: 5px;
+  color: #999;
 }
 
 .item-users {
@@ -134,7 +140,7 @@ core-icon {
 }
 
 .user-area {
-  margin-top: 10px;
+  margin-right: 8px;
 }
 
 .item-actions {
@@ -210,8 +216,14 @@ core-icon {
   width: 100%;
 }
 
+#content-container {
+  max-width: 640px;
+  margin: auto;
+}
+
 .item-wrapper {
-  border-bottom: solid 1px #f2f2f2;
+  /*border-bottom: solid 1px #f2f2f2;*/
+  margin: 20px;
 }
 
 .event-date {

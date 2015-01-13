@@ -9,15 +9,16 @@ a:hover {
   max-width: 450px;
   height: 100px;
   background: #f1f1f1;
-  box-shadow: 1px 1px 1px #888;
+  /*box-shadow: 1px 1px 1px #888;*/
   margin-top: 10px;
   color: #000;
-  /*transition: box-shadow 0.2s;*/
+  border: solid 1px #e5e5e5;
+  transition: box-shadow 0.2s, background 0.2s;
 }
 
 .preview:hover {
-  box-shadow: 2px 2px 5px #888;
-  /*transition: box-shadow 0.2s;*/
+  box-shadow: 1px 1px 3px #e5e5e5;
+  transition: box-shadow 0.2s, background 0.2s;
   background: #fff;
 }
 

@@ -171,7 +171,7 @@ core-menu core-item:hover {
 
 #main-panel {
   /*border-left: solid 1px #eee;*/
-  background: #eee;
+  background: rgb(233, 234, 237);
 }
 
 #rightPanel {

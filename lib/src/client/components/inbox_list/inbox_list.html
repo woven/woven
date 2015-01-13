@@ -55,7 +55,7 @@
                   <span class="item-count">{{item['like_count']}}</span>
                 </div>
                 <div class="item-col2" flex>
-                  <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
+                  <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}"> <span class="item-users"><strong>{{item['user']}}</strong> posted an </span>{{(item['type'] != null) ? item['type'] : 'other'}}</div>
                   <div class="item-subject">{{item['subject']}}</div>
                   <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
                   <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">
@@ -96,15 +96,23 @@
         <div class="item-wrapper">
         <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-tap="{{selectItem}}" data-id="{{item['id']}}">
           <div class="item-container" horizontal layout>
-            <div class="item-col1" vertical center layout>
-              <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                         id="icon-fav" on-tap="{{toggleLike}}"
-                         class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
-                         data-id="{{item['id']}}"></core-icon>
-              <span class="item-count">{{item['like_count']}}</span>
-            </div>
             <div class="item-col2" flex>
-              <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
+              <div class="item-col2-row1" horizontal layout>
+                <div class="user-area">
+                  <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
+                </div>
+                <div class="info-area" layout vertical>
+                  <div class="item-updated">
+                    <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}"> <span class="item-users"><strong>David Notik</strong> posted an </span>{{(item['type'] != null) ? item['type'] : 'other'}}</div>
+                    <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                    <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
+                    <!--id="icon-star" on-click="{{toggleStar}}"-->
+                    <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
+                    <!--data-id="{{item['id']}}"></core-icon>-->
+                    <!--<span class="item-count">{{item['star_count']}}</span>-->
+                  </div>
+                </div>
+              </div>
               <div class="item-subject">{{item['subject']}}</div>
               <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
               <template if="{{item['uriPreviewId'] != null}}">
@@ -117,25 +125,11 @@
               </div>
             </div>
             <div class="item-col3">
-              <div class="item-updated">
-              <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-                <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
-                           <!--id="icon-star" on-click="{{toggleStar}}"-->
-                           <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
-                           <!--data-id="{{item['id']}}"></core-icon>-->
-                <!--<span class="item-count">{{item['star_count']}}</span>-->
-              </div>
-              <div class="user-area">
-                <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
-              </div>
-              <!--<div class="item-star">-->
-                <!--&lt;!&ndash;<core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">&ndash;&gt;-->
-                  <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
-                             <!--id="icon-star" on-tap="{{toggleStar}}"-->
-                             <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
-                             <!--data-id="{{item['id']}}"></core-icon>-->
-                <!--&lt;!&ndash;</core-tooltip>&ndash;&gt;-->
-              <!--</div>-->
+              <span class="item-count">{{item['like_count']}}</span>
+              <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+                         id="icon-fav" on-tap="{{toggleLike}}"
+                         class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                         data-id="{{item['id']}}"></core-icon>
             </div>
           </div>
         </core-item>
