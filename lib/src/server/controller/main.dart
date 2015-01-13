@@ -81,8 +81,19 @@ class MainController {
       return crawler.getPreview(Uri.parse(uri)).then((UriPreview preview) {
         var response = new Response();
         if (preview.imageOriginalUrl == null) {
-          response.data = preview;
-          return response;
+          // Save the preview.
+          return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
+            var value = {
+                'uriPreviewId': name
+            };
+
+            // Update the item with a reference to the preview.
+            ItemModel.update(item, value);
+
+            // Return the preview information.
+            response.data = preview;
+            return response;
+          });
         } else {
           // Resize and save a small preview image.
           ImageUtil imageUtil = new ImageUtil();

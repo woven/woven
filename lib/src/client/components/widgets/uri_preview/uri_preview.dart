@@ -24,7 +24,7 @@ class UriPreviewElement extends PolymerElement  {
         // Prepare a shortened teaser.
         preview['teaser'] = InputFormatter.createTeaser(preview['teaser'], 80);
         // Prepare the full path to the image.
-        preview['image'] = '${config['google']['cloudStoragePath']}/${preview['imageSmallLocation']}';
+        preview['image'] = (preview['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${preview['imageSmallLocation']}' : null;
         // Prepare the domain name.
         var uriHost = Uri.parse(preview['uri']).host;
         preview['uri_host'] = uriHost.substring(uriHost.lastIndexOf(".", uriHost.lastIndexOf(".") - 1) + 1);

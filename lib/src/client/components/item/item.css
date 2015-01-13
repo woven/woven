@@ -113,6 +113,7 @@ core-icon {
   color: #5c5c5c;
   font-size: 15px;
   white-space: normal;
+  line-height: 1.2em;
 }
 
 .item-updated {
@@ -195,8 +196,8 @@ core-icon {
 }
 
 .event-date {
-  display: inline;
   color: #008000;
+  display: inline;
 }
 
 @media all and (max-width: 900px)  {
