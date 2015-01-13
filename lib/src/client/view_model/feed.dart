@@ -164,22 +164,22 @@ class FeedViewModel extends BaseViewModel with Observable {
     });
 
     // Listen for moved (priority order has changed) items.
-    childMovedSubscriber = itemsRef.onChildMoved.listen((e) {
-      if (typeFilter == 'event') {
-        updateEventView();
-        // Sort the list by the event's startDateTime.
-        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
-      } else {
-        // Sort the list by the item's updatedDate.
-        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-      }
-    });
+//    childMovedSubscriber = itemsRef.onChildMoved.listen((e) {
+//      if (typeFilter == 'event') {
+//        updateEventView();
+//        // Sort the list by the event's startDateTime.
+//        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+//      } else {
+//        // Sort the list by the item's updatedDate.
+//        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+//      }
+//    });
 
     // Listen for removed items.
-    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
-      updateEventView();
-      items.removeWhere((i) => i['id'] == e.snapshot.name);
-    });
+//    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
+//      updateEventView();
+//      items.removeWhere((i) => i['id'] == e.snapshot.name);
+//    });
   }
 
   // Group items by date group (Today, Tomorrow, etc.) and store in a separate list.
