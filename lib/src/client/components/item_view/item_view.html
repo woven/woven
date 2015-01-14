@@ -3,24 +3,24 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
 <link rel="import" href="../widgets/uri_preview/uri_preview.html">
+<link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="item-view">
   <template>
     <link rel="stylesheet" href="item_view.css">
       <template if="{{item != null}}">
         <div class="item-card">
           <div class="content">
-            <div class="content-header">
-              <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</div>
-              <div>
-                <h1>{{item['subject']}}</h1>
+            <div class="content-header" horizontal layout>
+              <div class="user-area">
+                <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
               </div>
-              <template if="{{app.selectedItem != null}}">
-                <div class="item-updated">
-                  <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-                  by
-                  <span class="item-users">{{item['user']}}</span>
+              <div>DEBUG: {{item['user']}}</div>
+              <div class="info-area" layout vertical flex>
+                <div class="item-info">
+                  <div><span class="item-user">David Notik</span> posted <span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
+                  <div class="item-ago"><live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>
                 </div>
-              </template>
+              </div>
             </div>
             <template if="{{item['startDateTime'] != null || item['url'] != null}}">
               <div class="content-info">
