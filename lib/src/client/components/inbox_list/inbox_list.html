@@ -14,13 +14,13 @@
         <template repeat="{{groupDate in viewModel.groupedItems.keys}}">
         <div class="date-group-header">{{groupDate}}</div>
         <template repeat="{{item in viewModel.groupedItems[groupDate]}}">
-          <x-item item="{{item}}" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></x-item>
+          <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>
         </template>
       </template>
     </template>
     <template if="{{viewModel.typeFilter != 'event'}}">
       <template repeat="{{item in viewModel.items}}">
-        <x-item item="{{item}}" app="{{app}}" viewModel="{{app.mainViewModel.feedViewModel}}"></x-item>
+        <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>
       </template>
     </template>
     <template if="{{viewModel.reachedEnd == false}}"><div id="loading-indicator">Fetching...</div></template>
