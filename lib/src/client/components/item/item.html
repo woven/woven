@@ -22,13 +22,6 @@
                 <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
               </div>
             </div>
-            <div>
-              <span class="item-count">{{item['like_count']}}</span>
-              <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                         id="icon-fav" on-tap="{{toggleLike}}"
-                         class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
-                         data-id="{{item['id']}}"></core-icon>
-            </div>
           </div>
           <div vertical layout>
             <div class="item-subject">{{item['subject']}}</div>
@@ -46,8 +39,20 @@
               </div>
             </div>
           </template>
+
         </div>
+
       </core-item>
+      <div id="content-footer">
+        <div class="item-col1" horizontal layout>
+          <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+                            id="icon-fav" on-click="{{toggleLike}}"
+                            class="like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                            data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
+            <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
+          </core-icon-button>
+        </div>
+      </div>
     </div>
   </template>
   <script type="application/dart" src="item.dart"></script>
