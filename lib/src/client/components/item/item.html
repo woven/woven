@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../packages/core_elements/communication_icons.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../widgets/uri_preview/uri_preview.html">
@@ -17,9 +18,9 @@
               <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
             </div>
             <div class="info-area" layout vertical flex>
-              <div class="item-updated">
-                <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}"> <span class="item-users"><strong>David Notik</strong> posted </span>{{(item['type'] != null) ? item['type'] : 'other'}}</div>
-                <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+              <div class="item-info">
+                <div><span class="item-user">David Notik</span> posted <span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
+                <div class="item-ago"><live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>
               </div>
             </div>
           </div>
@@ -30,15 +31,15 @@
               <uri-preview id="{{item['uriPreviewId']}}"></uri-preview>
             </template>
           </div>
-          <template if="{{item['comment_count'] != null || item['comment_count'] > 0}}">
-            <div horizontal layout>
-              <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">
-                <!--<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Add a comment</strong></template>-->
-                <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
-                <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
-              </div>
-            </div>
-          </template>
+          <!--<template if="{{item['comment_count'] != null || item['comment_count'] > 0}}">-->
+            <!--<div horizontal layout>-->
+              <!--<div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">-->
+                <!--&lt;!&ndash;<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Add a comment</strong></template>&ndash;&gt;-->
+                <!--<template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>-->
+                <!--<template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</template>-->
 
         </div>
 
@@ -46,11 +47,22 @@
       <div id="content-footer">
         <div class="item-col1" horizontal layout>
           <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                            id="icon-fav" on-click="{{toggleLike}}"
-                            class="like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                            id="icon-fav" on-tap="{{toggleLike}}"
+                            class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
                             data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
             <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
           </core-icon-button>
+          <core-icon-button icon="communication:comment"
+                            id="icon-fav" on-tap="{{selectItem}}"
+                            class="action-button"
+                            data-id="{{item['id']}}">
+              <span class="item-count">
+                <template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Comment</strong></template>
+                <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
+                <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
+              </span>
+            <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
+          </core-icon-button
         </div>
       </div>
     </div>

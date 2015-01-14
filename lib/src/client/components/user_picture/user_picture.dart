@@ -18,14 +18,21 @@ class UserPicture extends PolymerElement {
 
   UserPicture.created() : super.created();
 
-  attached() {
+  getUser() {
     if (user != null) {
       fb.child('/users/$user').once('value').then((res) {
         userMap = res.val();
         userMap['fullPicturePath'] = '${config['google']['cloudStoragePath']}/${userMap['picture']}';
-//        print(userMap);
       });
 
     }
+  }
+
+  userChanged() {
+    getUser();
+  }
+
+  attached() {
+    getUser();
   }
 }

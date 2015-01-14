@@ -95,11 +95,10 @@ core-icon {
 .item:hover {
   cursor: pointer;
   overflow: hidden;
-  background-color: #f7f7f7;
-  transition: background-color .2s;
 }
 
 .item-subject {
+  display: table;
   white-space: normal;
   margin-right: 5px;
   font-weight: bold;
@@ -107,19 +106,31 @@ core-icon {
   padding: 5px 0 0 0;
   margin-bottom: 10px;
   margin-top: 10px;
+  margin-left: 3px;
+}
+
+.item-subject:hover {
+  color: #3F3F3F;
 }
 
 .item-body {
-  color: #5c5c5c;
+  color: #000;
   font-size: 15px;
   white-space: normal;
   line-height: 1.2em;
+  margin-left: 3px;
 }
 
-.item-updated {
+.item-info {
   color: rgb(102, 102, 102);
   overflow: hidden;
   display: block;
+  font-size: 14px;
+}
+
+.item-ago {
+  margin-top: 5px;
+  font-size: 12px;
 }
 
 .item-star {
@@ -129,17 +140,12 @@ core-icon {
 }
 
 .item-count {
-  margin-right: 5px;
   color: #999;
 }
 
-.item-users {
-  /*color: #3A89BE;*/
-  color: #212121;
-  display: inline;
-  margin-right: 2px;
-  text-transform: none;
-  font-weight: normal;
+.item-user {
+  color: #0076C5;
+  font-weight: bold;
 }
 
 .user-area {
@@ -157,8 +163,6 @@ core-icon {
   margin-right: 3px;
   margin-bottom: 5px;
   border-radius: 3px;
-  font-size: 14px;
-  font-weight: bold;
 }
 
 .item-type.event {
@@ -219,45 +223,49 @@ core-icon {
   user-select: none;
 }
 
-.like-button span {
+.action-button span {
   position: relative;
   top: 2px;
 }
 
-.like-button {
-  fill: #eee;
-  color: #eee;
+.action-button {
+  fill: #bbb;
+  color: #bbb;
   box-shadow: none;
   border: 1px solid #e6e6e6;
   display: inline-block;
   cursor: pointer;
-  color: #2e2e2e;
-  font-family: arial;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   font-weight: bold;
   padding: 3px 10px 3px 5px;
   text-decoration: none;
   text-align: left;
+  background-color: #F5F5F5;
+  transition: background-color .2s;
 }
 
-.like-button::shadow core-icon {
+.action-button::shadow core-icon {
   height:20px;
 }
 
-.like-button .item-count {
+.action-button:hover {
+  background-color:#fff;
+  transition: background-color .2s;
 }
 
-.like-button:hover {
-  /*background-color:#fff;*/
-}
-.like-button:active {
+.action-button:active {
   background: #fff;
   /*position:relative;*/
   /*top:2px;*/
 }
 
-.like-button:hover {
+.action-button:hover {
   box-shadow: none;
+}
+
+.like-button {
+  width: 55px;
 }
 
 .like-button.selected:not([disabled]) {

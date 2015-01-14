@@ -8,7 +8,7 @@ h1 {
   box-shadow: rgba(0, 0, 0, 0.098) 0 2px 1px, rgba(0, 0, 0, 0.098) 0 0 3px;
   border-radius: 2px 2px 0 0;
   margin: 0 auto 10px auto;
-  max-width: 800px;
+  max-width: 640px;
 }
 
 .item-card .content {
@@ -74,6 +74,15 @@ core-icon-button.selected {
 
 #icon-star.selected {
   fill: #f99b15;
+}
+
+.user-area {
+  margin-right: 8px;
+}
+
+.item-user {
+  color: #0076C5;
+  font-weight: bold;
 }
 
 .item-col1 {
