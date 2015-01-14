@@ -3,9 +3,6 @@
   <template>
     <link rel="stylesheet" href="user_picture.css">
     <div class="user-photo">
-      <template if="{{user == null && app.user.fullPathToPicture != null}}">
-        <img _src="{{app.user.fullPathToPicture}}">
-      </template>
       <template if="{{user != null}}">
         <img _src="{{userMap['fullPicturePath']}}">
       </template>

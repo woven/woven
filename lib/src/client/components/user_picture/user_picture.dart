@@ -12,7 +12,7 @@ import 'package:woven/config/config.dart';
 class UserPicture extends PolymerElement {
   @published App app;
   @published String user;
-  @observable Map userMap;
+  @observable Map userMap = toObservable({});
 
   var fb = new Firebase(config['datastore']['firebaseLocation']);
 
@@ -20,11 +20,15 @@ class UserPicture extends PolymerElement {
 
   getUser() {
     if (user != null) {
-      fb.child('/users/$user').once('value').then((res) {
-        userMap = res.val();
-        userMap['fullPicturePath'] = '${config['google']['cloudStoragePath']}/${userMap['picture']}';
-      });
-
+      if (app.user != null && user == app.user.username) {
+        // If we're trying to show the current user, we already know its details.
+        userMap['fullPicturePath'] = app.user.fullPathToPicture;
+      } else {
+        fb.child('/users/$user').once('value').then((res) {
+          userMap = res.val();
+          userMap['fullPicturePath'] = '${config['google']['cloudStoragePath']}/${userMap['picture']}';
+        });
+      }
     }
   }
 

@@ -13,7 +13,7 @@
       <template if="{{app.user != null}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
-            <user-picture app="{{app}}"></user-picture>
+            <user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>
           </div>
           <div flex>
             <!--<div class="field-wrapper first transparent">-->
