@@ -6,7 +6,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_overlay.html">
-<link rel="import" href="../widgets/dialog/dialog.html">
+<link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
 <link rel="import" href="../widgets/dialog/dialog.html">
 
 <polymer-element name="add-stuff">
@@ -37,32 +37,34 @@
           </ul>
 
           <div class="field-wrapper first">
-            <core-input id="subject" placeholder="Subject" autocomplete="off"
-                        inputValue="{{theData['subject']}}"></core-input>
+            <input is="core-input" id="subject" placeholder="Subject" autocomplete="off">
           </div>
           <template if="{{selectedType == 'event'}}">
             <div class="field-wrapper">
-              <core-input id="event-start-date" placeholder="When is the event?" autocomplete="off"
-                          inputValue="{{theData['event-start-date']}}" on-focus="{{updateInput}}"></core-input>
+              <input is="core-input" id="event-start-date" placeholder="When is the event?" autocomplete="off"
+                     on-focus="{{updateInput}}">
             </div>
             <div class="field-wrapper">
-              <core-input id="event-start-time" placeholder="What time does it start?" autocomplete="off"
-                          inputValue="{{theData['event-start-time']}}" on-focus="{{updateInput}}"></core-input>
+              <input is="core-input" id="event-start-time" placeholder="What time does it start?" autocomplete="off"
+                     on-focus="{{updateInput}}">
             </div>
           </template>
           <template if="{{selectedType == 'event' || selectedType == 'news'}}">
             <div class="field-wrapper">
-              <core-input id="url" placeholder="Link to the {{selectedType}}" autocomplete="off"
-                          inputValue="{{theData['url']}}"></core-input>
+              <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off">
             </div>
           </template>
           <div class="field-wrapper full-height">
-            <core-input class="expand" id="body" multiline rows="fit" required placeholder="Share more..." autocomplete="off"
-                        inputValue="{{theData['body']}}"></core-input>
+            <paper-autogrow-textarea
+                id="body"
+                autocomplete="off"
+                maxrows="15"
+                >
+              <textarea id="body-textarea" placeholder="Share more..."></textarea>
+            </paper-autogrow-textarea>
           </div>
           <div class="field-wrapper share-to" style="background: aliceblue;">
-            <core-input id="share-to" placeholder="Share to..." autocomplete="off"
-                        inputValue="{{theData['share-to']}}"></core-input>
+            <input is="core-input" id="share-to" placeholder="Share to..." autocomplete="off">
           </div>
         </div>
       </div>

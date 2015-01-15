@@ -26,12 +26,19 @@ class AddStuff extends PolymerElement {
   @published App app;
   @published bool opened = false;
   @observable var selectedType;
-  @observable Map theData = toObservable({});
   List validShareToOptions = ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode']; // TODO: Fixed for now, change later.
 
   CoreOverlay get overlay => $['overlay'];
 
   Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('add-stuff');
+
+  CoreInput get subjectInput => elRoot.shadowRoot.querySelector('#subject');
+  CoreInput get bodyInput => elRoot.shadowRoot.querySelector('#body-textarea');
+  CoreInput get shareToInput => elRoot.shadowRoot.querySelector('#share-to');
+
+  CoreInput get eventStartDateInput => elRoot.shadowRoot.querySelector('#event-start-date');
+  CoreInput get eventStartTimeInput => elRoot.shadowRoot.querySelector('#event-start-time');
+  CoreInput get urlInput => elRoot.shadowRoot.querySelector('#url');
 
   /**
    * Toggle the overlay.
@@ -45,42 +52,15 @@ class AddStuff extends PolymerElement {
    */
   handleOpen() {
     // Add the current community to the share to field.
-    String shareTo = theData['share-to'];
-    shareTo.replaceAll(r',[\s]+', ',');
-    List shareTos = (!shareTo.isEmpty) ? shareTo.trim().split(',') : [];
+    shareToInput.value.replaceAll(r',[\s]+', ',');
+    List shareTos = (!shareToInput.value.isEmpty) ? shareToInput.value.trim().split(',') : [];
 
     if (app.community != null && (!shareTos.contains(app.community.alias.trim()) || shareTos.isEmpty)) shareTos.add(app.community.alias.trim());
-    theData['share-to'] = shareTos.join(',').trim().toString();
+    shareToInput.value = shareTos.join(',').trim().toString();
 
     // Focus the subject field.
     CoreInput subjectInput = elRoot.shadowRoot.querySelector('#subject');
-    subjectInput.focus();
-  }
-
-  /**
-   * Grow and shrink the input.
-   *
-   * Responds to key-press event.
-   */
-  resizeInput(Event e, detail, CoreInput target) {
-    // Not working at the moment.
-    return;
-
-    e.stopPropagation();
-
-    Element textarea = target.shadowRoot.querySelector("textarea");
-
-    // Reset height on every press, so we can get true scrollHeight below.
-    textarea.style.height = "0px";
-
-    // We set this here, as it's not reading it properly from CSS.
-    target.style.lineHeight = "16px";
-
-    // Parse the textarea's height as an int so we can play w/ it.
-    var elHeight = textarea.clientHeight;
-
-    if (textarea.scrollHeight > elHeight) elHeight = textarea.scrollHeight;
-    textarea.style.height = "${elHeight}px";
+    subjectInput.focus(); // TODO: Not working.
   }
 
   /**
@@ -89,17 +69,13 @@ class AddStuff extends PolymerElement {
   addItem(Event e) {
     e.preventDefault();
 
-    String subject = theData['subject'];
-    String body = theData['body'];
-    String shareTo = theData['share-to'];
-
     // Validate share tos.
-    if (shareTo.trim().isEmpty) {
+    if (shareToInput.value.isEmpty) {
       window.alert("You haven't tagged a community.");
       return false;
     }
 
-    var shareTos = shareTo.trim().split(',');
+    var shareTos = shareToInput.value.trim().split(',');
     List invalidShareTos = [];
 
     shareTos.forEach((e) {
@@ -115,23 +91,23 @@ class AddStuff extends PolymerElement {
     }
 
     // Validate other stuff.
-    if (subject.trim().isEmpty) {
+    if (subjectInput.value.trim().isEmpty) {
       window.alert("Your subject is empty.");
       return false;
     }
 
-    if (body.trim().isEmpty) {
+    if (bodyInput.value.trim().isEmpty) {
       window.alert("Your message is empty.");
       return false;
     }
 
     if (selectedType == "event") {
-      if (parseDate(theData['event-start-date']) == null) {
+      if (parseDate(eventStartDateInput.value) == null) {
 
         window.alert("That's not a valid start date. Ex: " + new DateFormat("M/dd/yyyy").format(new DateTime.now()));
         return false;
       }
-      if (parseTime(theData['event-start-time']) == null) {
+      if (parseTime(eventStartTimeInput.value) == null) {
 
         window.alert("That's not a valid start time. Ex: " + new DateFormat("h:mm a").format(new DateTime.now()) + ', ' + new DateFormat("h a").format(new DateTime.now()));
         return false;
@@ -146,13 +122,13 @@ class AddStuff extends PolymerElement {
       }
     }
 
-    if (theData['url'] != null && _isValidUrl(theData['url']) == false) {
+    if (urlInput != null && _isValidUrl(urlInput.value) == false) {
       window.alert("That's not a valid URL. Please include http://.");
       return false;
     }
 
     // Handle the share to field.
-    if (theData['share-to'] == null) {}
+    if (shareToInput.value == null) {}
 
     var now = new DateTime.now().toUtc();
 
@@ -163,27 +139,27 @@ class AddStuff extends PolymerElement {
 
     item
       ..user = app.user.username
-      ..subject = theData['subject']
+      ..subject = subjectInput.value
       ..type = selectedType
-      ..body = theData['body']
+      ..body = bodyInput.value
       ..createdDate = now
       ..updatedDate = now;
 
     if (item is EventModel) {
       // Combine the separate date and time fields into one DateTime object.
-      DateTime date = parseDate(theData['event-start-date']);
-      DateTime time = parseTime(theData['event-start-time']);
+      DateTime date = parseDate(eventStartDateInput.value);
+      DateTime time = parseTime(eventStartTimeInput.value);
       DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc();
       int eventPriority = startDateTime.millisecondsSinceEpoch;
       (item as EventModel)
         ..startDateTime = startDateTime
         ..startDateTimePriority = eventPriority
-        ..url = theData['url'];
+        ..url = urlInput.value;
     }
 
     if (item is NewsModel) {
       (item as NewsModel)
-        ..url = theData['url'];
+        ..url = urlInput.value;
     }
 
     var encodedItem = item.encode();
@@ -227,8 +203,8 @@ class AddStuff extends PolymerElement {
           // Use a priority based on the start date/time when storing the event in items_by_community_by_type.
           if (selectedType == 'event') {
             // Combine the separate date and time fields into one DateTime object.
-            DateTime date = parseDate(theData['event-start-date']);
-            DateTime time = parseTime(theData['event-start-time']);
+            DateTime date = parseDate(eventStartDateInput.value);
+            DateTime time = parseTime(eventStartTimeInput.value);
             DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc();
 
             var eventPriority = startDateTime.millisecondsSinceEpoch;
@@ -263,8 +239,8 @@ class AddStuff extends PolymerElement {
     HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId");
 
     overlay.toggle();
-    theData['subject'] = "";
-    theData['body'] = "";
+    subjectInput.value = "";
+    bodyInput.value = "";
     // TODO: Reset the selected type too? May be useful not to.
 
     if (app.community != null) app.selectedPage = 0;
@@ -272,20 +248,20 @@ class AddStuff extends PolymerElement {
   }
 
   updateInput(Event e, var detail, CoreInput sender) {
-    if (sender.id == "event-start-date" && sender.inputValue == "") {
+    if (sender.id == "event-start-date" && sender.value == "") {
 //      sender.type = "date";
-      sender.inputValue = new DateFormat("M/dd/yyyy").format(new DateTime.now());
+      sender.value = new DateFormat("M/dd/yyyy").format(new DateTime.now());
     }
 
-    if (sender.id == "event-start-time" && sender.inputValue == "") {
+    if (sender.id == "event-start-time" && sender.value == "") {
 //      sender.type = "time";
-      sender.inputValue = new DateFormat("h:mm a").format(new DateTime.now());
+      sender.value = new DateFormat("h:mm a").format(new DateTime.now());
     }
   }
 
   attached() {
     if (app.community != null) {
-      theData['share-to'] = app.community.alias;
+       shareToInput.value = app.community.alias;
     }
 
     CoreSelector type = $['content-type'];
