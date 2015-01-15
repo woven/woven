@@ -82,16 +82,16 @@ core-field input {
   border: none;
 }
 
-core-input {
+#comment {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   outline: none;
   width: 100%;
-  line-height: 16px;
+  min-height: 22px;
 }
 
-core-input::shadow textarea {
-  overflow:hidden;
+#comment-textarea {
+  font: inherit;
 }
 
 #post-container {
@@ -111,10 +111,6 @@ core-input::shadow textarea {
 #activity-wrapper {
   max-width: 640px;
   margin: 10px auto 10px auto;
-}
-
-#comment {
-  overflow: hidden;
 }
 
 #comment-message {

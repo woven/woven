@@ -1,8 +1,8 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_field.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_a11y_keys.html">
+<link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
 <link rel="import" href="../user_picture/user_picture.html">
@@ -16,14 +16,16 @@
             <user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>
           </div>
           <div flex>
-            <!--<div class="field-wrapper first transparent">-->
-              <!--<strong>{{app.user.username}}</strong>-->
-            <!--</div>-->
             <div class="field-wrapper full-height">
-              <core-input class="expand" id="comment" multiline rows="1" required placeholder="Your comment..." autocomplete="off"
-                          inputValue="{{theData['comment']}}" on-keyup="{{resizeCommentInput}}"
-                          on-focus="{{onFocusHandler}}" on-blur="{{onBlurHandler}}" on-tap="{{onFocusHandler}}">
-                          </core-input>
+              <paper-autogrow-textarea
+                  id="comment"
+                  on-focus="{{onFocusHandler}}"
+                  on-blur="{{onBlurHandler}}"
+                  on-tap="{{onFocusHandler}}"
+                  autocomplete="off"
+                  >
+               <textarea id="comment-textarea" placeholder="Add a comment..."></textarea>
+              </paper-autogrow-textarea>
             </div>
             <footer>
               <div layout horizontal>

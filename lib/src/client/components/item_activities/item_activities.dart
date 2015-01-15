@@ -8,7 +8,7 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/shared/shared_util.dart';
-import 'package:core_elements/core_input.dart';
+import 'package:paper_elements/paper_autogrow_textarea.dart';
 import 'package:core_elements/core_a11y_keys.dart';
 
 
@@ -16,7 +16,6 @@ import 'package:core_elements/core_a11y_keys.dart';
 class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
-  @observable Map theData = toObservable({}); // We'll bind the form data to this.
 
   final f = new db.Firebase(config['datastore']['firebaseLocation']);
 
@@ -79,32 +78,9 @@ class ItemActivities extends PolymerElement {
   }
 
   /**
-   * Grow and shrink the comment.
-   *
-   * Responds to key-press event.
-   */
-  resizeCommentInput(Event e, detail, CoreInput target) {
-    e.stopPropagation();
-
-    Element textarea = target.shadowRoot.querySelector("textarea");
-
-    // Reset height on every press, so we can get true scrollHeight below.
-    textarea.style.height = "0px";
-
-    // We set this here, as it's not reading it properly from CSS.
-    target.style.lineHeight = "16px";
-
-    // Parse the textarea's height as an int so we can play w/ it.
-    var elHeight = textarea.clientHeight;
-
-    if (textarea.scrollHeight > elHeight) elHeight = textarea.scrollHeight;
-    textarea.style.height = "${elHeight}px";
-  }
-
-  /**
    * Handle focus of the comment input.
    */
-  onFocusHandler(Event e, detail, CoreInput target) {
+  onFocusHandler(Event e, detail, Element target) {
     elRoot.shadowRoot.querySelector("footer").style.display = "block";
     elRoot.shadowRoot.querySelector("#comment-message").style.opacity = "1";
 
@@ -112,16 +88,16 @@ class ItemActivities extends PolymerElement {
     a11y.target = elRoot.shadowRoot.querySelector('#comment-send-button');
   }
 
-  onBlurHandler(Event e, detail, CoreInput target) {
+  onBlurHandler(Event e, detail, Element target) {
     //
   }
 
   resetCommentInput() {
-    CoreInput commentInput = elRoot.shadowRoot.querySelector('#comment');
-    commentInput.focus();
-    Element textarea = commentInput.shadowRoot.querySelector("textarea");
-    textarea.style.height = "16px";
-    theData['comment'] = "";
+    PaperAutogrowTextarea commentInput = elRoot.shadowRoot.querySelector('#comment');
+    TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
+    textarea.value = "";
+    textarea.focus();
+    commentInput.update;
   }
 
   /**
@@ -130,7 +106,8 @@ class ItemActivities extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    String comment = theData['comment'];
+    TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
+    String comment = textarea.value;
     comment = comment.trim();
 
     if (comment == "") {
