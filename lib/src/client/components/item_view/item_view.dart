@@ -35,6 +35,7 @@ class ItemView extends PolymerElement with Observable {
   }
 
   itemChanged() {
+//    print(item['user']);
     // Pass the item body to the safe-html element.
     HtmlElement body = $['body'];
     HtmlElement safeHtml = body.childNodes[0];
@@ -64,6 +65,7 @@ class ItemView extends PolymerElement with Observable {
 
   attached() {
     print("+ItemView");
+//    print(item['user']);
     app.pageTitle = "";
 
     app.scroller.scrollTop = 0;

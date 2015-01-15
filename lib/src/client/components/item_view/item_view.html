@@ -10,16 +10,19 @@
       <template if="{{item != null}}">
         <div class="item-card">
           <div class="content">
-            <div class="content-header" horizontal layout>
-              <div class="user-area">
-                <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
-              </div>
-              <div class="info-area" layout vertical flex>
-                <div class="item-info">
-                  <div><span class="item-user">David Notik</span> posted <span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
-                  <div class="item-ago"><live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>
+            <div class="content-header" vertical layout>
+              <div class="info-area" horizontal layout>
+                <div class="user-area">
+                  <user-picture app="{{app}}" user="{{item['user']}}"></user-picture>
+                </div>
+                <div class="info-area" layout vertical flex>
+                  <div class="item-info">
+                    <div><span class="item-user">David Notik</span> posted <span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
+                    <div class="item-ago"><live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>
+                  </div>
                 </div>
               </div>
+              <h1 class="item-subject">{{item['subject']}}</h1>
             </div>
             <template if="{{item['startDateTime'] != null || item['url'] != null}}">
               <div class="content-info">
@@ -33,10 +36,10 @@
             </template>
             <div class="content-main">
               <div>
-                <p id="body" class="{{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>
+                <p id="body" class="item-body {{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>
               </div>
               <template if="{{item['uriPreviewId'] != null}}">
-                <uri-preview id="{{item['uriPreviewId']}}"></uri-preview>
+                <uri-preview previewid="{{item['uriPreviewId']}}"></uri-preview>
               </template>
             </div>
           </div>

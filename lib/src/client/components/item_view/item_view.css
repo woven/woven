@@ -16,7 +16,11 @@ h1 {
 }
 
 .content-header  {
-  padding: 20px 20px 10px 20px;
+  padding: 20px 20px 0 20px;
+}
+
+.info-area {
+  margin-bottom: 10px;
 }
 
 .content-main {
@@ -27,7 +31,7 @@ h1 {
   padding: 10px 20px;
   background-color: #f5f5f5;
   margin: 10px -5px;
-  border: solid 1px #e6e6e6;
+  border: solid 1px #ddd;
 }
 
 #content-footer {
@@ -134,13 +138,39 @@ core-icon-button.selected {
   text-decoration: underline;
 }
 
+.item-subject {
+  display: table;
+  white-space: normal;
+  font-weight: bold;
+  font-size: 18px;
+  margin-left: 3px;
+}
+
+.item-body {
+  color: #000;
+  font-size: 15px;
+  white-space: normal;
+  line-height: 1.2em;
+  margin-left: 3px;
+}
+
+.item-info {
+  color: rgb(102, 102, 102);
+  overflow: hidden;
+  display: block;
+  font-size: 14px;
+}
+
+.item-ago {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
 .item-type {
   color: #212121;
-  text-transform: capitalize;
   margin-right: 3px;
   margin-bottom: 5px;
   border-radius: 3px;
-  font-size: 0.98em;
   font-weight: bold;
 }
 
