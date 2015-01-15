@@ -19,9 +19,9 @@ a:hover {
 }
 
 .preview:hover {
-  box-shadow: 1px 1px 3px #e5e5e5;
-  transition: box-shadow 0.2s, background 0.2s;
   background: #fff;
+  border: 1px solid #C5C5C5;
+  transition: border .2s, background .2s;
 }
 
 .preview .image {
@@ -31,7 +31,7 @@ a:hover {
   border-right: solid 1px #e0e0e0;
 }
 
-.preview .image img {
+.preview .image core-image {
   height: 100px;
   width: 125px;
 }

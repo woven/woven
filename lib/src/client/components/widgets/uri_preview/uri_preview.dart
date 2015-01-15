@@ -10,15 +10,15 @@ import 'package:woven/src/shared/input_formatter.dart';
 
 @CustomTag("uri-preview")
 class UriPreviewElement extends PolymerElement  {
-  @published String id = '';
+  @published String previewId = '';
   @observable Map preview;
   var f = new db.Firebase(config['datastore']['firebaseLocation']);
 
   UriPreviewElement.created() : super.created();
 
   getPreview() {
-    if (id != null) {
-      f.child('/uri_previews/$id').onValue.listen((e) {
+    if (previewId != null) {
+      f.child('/uri_previews/$previewId').onValue.listen((e) {
         Map previewData = e.snapshot.val();
         preview = previewData;
         // Prepare a shortened teaser.
@@ -39,7 +39,7 @@ class UriPreviewElement extends PolymerElement  {
     e.stopPropagation();
   }
 
-  idChanged() {
+  previewIdChanged() {
     getPreview();
   }
 
