@@ -1,11 +1,10 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_image.html">
 <polymer-element name="user-picture">
   <template>
     <link rel="stylesheet" href="user_picture.css">
     <div class="user-photo">
-      <template if="{{user != null}}">
-        <img _src="{{userMap['fullPicturePath']}}">
-      </template>
+        <core-image sizing="cover" preload fade src="{{userMap['fullPicturePath']}}"></core-image>
     </div>
   </template>
   <script type="application/dart" src='user_picture.dart'></script>
