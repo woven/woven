@@ -2,17 +2,24 @@ h1 {
   margin: 0;
 }
 
-.item-card {
-  /* min-width: 400px; */
-  background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 1px, rgba(0, 0, 0, 0.098) 0 0 3px;
-  border-radius: 2px 2px 0 0;
-  margin: 0 auto 10px auto;
-  max-width: 640px;
-}
-
-.item-card .content {
+.item {
   padding: 0;
+  border: 1px solid #e5e5e5;
+  background-color: white;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* margin: 10px auto 5px auto; */
+  /*border-left: solid 6px #5c5c5c;*/
+  transition: background-color .2s;
+  border-radius: 4px;
+  max-width: 640px;
+  margin: auto;
 }
 
 .content-header  {
@@ -34,7 +41,8 @@ h1 {
   border: solid 1px #ddd;
 }
 
-#content-footer {
+.content-footer {
+  margin-top: 20px;
   padding: 4px 5px 4px 4px;
   border-top: solid 1px #eee;
   background-color: #F5F5F5;
@@ -198,45 +206,49 @@ core-icon-button.selected {
   color: #ff6e40;
 }
 
-.like-button span {
+.action-button span {
   position: relative;
   top: 2px;
 }
 
-.like-button {
-  fill: #eee;
-  color: #eee;
+.action-button {
+  fill: #bbb;
+  color: #bbb;
   box-shadow: none;
   border: 1px solid #e6e6e6;
   display: inline-block;
   cursor: pointer;
-  color: #2e2e2e;
-  font-family: arial;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   font-weight: bold;
   padding: 3px 10px 3px 5px;
   text-decoration: none;
   text-align: left;
+  background-color: #F5F5F5;
+  transition: background-color .2s;
 }
 
-.like-button::shadow core-icon {
+.action-button::shadow core-icon {
   height:20px;
 }
 
-.like-button .item-count {
+.action-button:hover {
+  background-color:#fff;
+  transition: background-color .2s;
 }
 
-.like-button:hover {
-  /*background-color:#fff;*/
-}
-.like-button:active {
+.action-button:active {
   background: #fff;
   /*position:relative;*/
   /*top:2px;*/
 }
 
-.like-button:hover {
+.action-button:hover {
   box-shadow: none;
+}
+
+.like-button {
+  width: 55px;
 }
 
 .like-button.selected:not([disabled]) {

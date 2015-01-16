@@ -34,6 +34,13 @@ class ItemView extends PolymerElement with Observable {
     return formattedText;
   }
 
+  /**
+   * Format the given string with "a" or "an" or none.
+   */
+  formatWordArticle(String content) {
+    return InputFormatter.formatWordArticle(content);
+  }
+
   itemChanged() {
 //    print(item['user']);
     // Pass the item body to the safe-html element.

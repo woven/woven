@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_field.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_a11y_keys.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
@@ -15,7 +16,7 @@
           <div class="user-area" vertical layout>
             <user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>
           </div>
-          <div flex>
+          <div vertical layout flex>
             <div class="field-wrapper full-height">
               <paper-autogrow-textarea
                   id="comment"
@@ -27,12 +28,11 @@
                <textarea id="comment-textarea" placeholder="Add a comment..."></textarea>
               </paper-autogrow-textarea>
             </div>
-            <footer>
-              <div layout horizontal>
-                <div id="comment-message" flex></div>
-                <div><core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button></div>
-              </div>
-            </footer>
+            <div id="footer">
+              <core-tooltip label="Tab + Enter" position="left">
+                <core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>
+              </core-tooltip>
+            </div>
             <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
           </div>
         </div>

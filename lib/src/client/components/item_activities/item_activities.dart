@@ -81,8 +81,8 @@ class ItemActivities extends PolymerElement {
    * Handle focus of the comment input.
    */
   onFocusHandler(Event e, detail, Element target) {
-    elRoot.shadowRoot.querySelector("footer").style.display = "block";
-    elRoot.shadowRoot.querySelector("#comment-message").style.opacity = "1";
+    elRoot.shadowRoot.querySelector("#footer").style.display = "block";
+//    elRoot.shadowRoot.querySelector("#comment-message").style.opacity = "1";
 
     CoreA11yKeys a11y = elRoot.shadowRoot.querySelector('#a11y-send');
     a11y.target = elRoot.shadowRoot.querySelector('#comment-send-button');

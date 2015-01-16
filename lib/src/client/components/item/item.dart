@@ -1,15 +1,11 @@
 import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart' as db;
 import 'dart:html';
 import 'dart:async';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/feed.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
-import 'package:woven/src/client/infinite_scroll.dart';
-import 'package:core_elements/core_header_panel.dart';
 
 /**
  * A list of items.
@@ -60,6 +56,14 @@ class Item extends PolymerElement with Observable {
 
     viewModel.toggleItemStar(target.dataset['id']);
   }
+
+  /**
+   * Format the given string with "a" or "an" or none.
+   */
+  formatWordArticle(String content) {
+    return InputFormatter.formatWordArticle(content);
+  }
+
 
   formatItemDate(DateTime value) {
     return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);

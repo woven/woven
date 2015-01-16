@@ -21,7 +21,7 @@
               </div>
               <div class="info-area" layout vertical flex>
                 <div class="item-info">
-                  <div><span class="item-user">David Notik</span> posted <span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
+                  <div><span class="item-user">{{item['user']}}</span> posted {{formatWordArticle(item['type'])}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
                   <div class="item-ago"><live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>
                 </div>
               </div>

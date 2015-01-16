@@ -12,10 +12,10 @@ core-field input {
 
 .activity-card {
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.098) 0 2px 1px, rgba(0, 0, 0, 0.098) 0 0 3px;
   max-width: 800px;
   margin: 0 auto 10px auto;
-  border-radius: 2px;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
 }
 
 .activity-card #content {
@@ -94,6 +94,10 @@ core-field input {
   font: inherit;
 }
 
+core-tooltip::shadow .core-tooltip {
+  font-size: 12px;
+}
+
 #post-container {
   display: -webkit-box;
   display: -moz-box;
@@ -105,7 +109,7 @@ core-field input {
   /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
   max-width: 640px;
   margin: 10px auto 10px auto;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 #activity-wrapper {
@@ -123,19 +127,18 @@ core-field input {
   transition: opacity 1s;
 }
 
-footer {
+#footer {
   background-color: #F5F5F5;
   padding: 3px;
-  border-width: 0 1px 1px 1px;
-  border-color: #e6e6e6;
-  border-style: solid;
-  display: none;
+  border: 1px solid #e6e6e6;
+  border-top-width: 0;
+  text-align: right;
 }
 
-footer .btn {
-  float: right;
-  vertical-align: middle;
-}
+/*#footer .btn {*/
+  /*float: right;*/
+  /*vertical-align: middle;*/
+/*}*/
 
 /* Odd how woven-app.css btn.primary bleeds to here, only in Safari. */
 /* Therefore using .btn.action instead. */

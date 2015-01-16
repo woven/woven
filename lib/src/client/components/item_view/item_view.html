@@ -8,7 +8,7 @@
   <template>
     <link rel="stylesheet" href="item_view.css">
       <template if="{{item != null}}">
-        <div class="item-card">
+        <div class="item">
           <div class="content">
             <div class="content-header" vertical layout>
               <div class="info-area" horizontal layout>
@@ -17,8 +17,12 @@
                 </div>
                 <div class="info-area" layout vertical flex>
                   <div class="item-info">
-                    <div><span class="item-user">David Notik</span> posted <span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
-                    <div class="item-ago"><live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>
+                    <div><span class="item-user">{{item['user']}}</span> posted {{formatWordArticle(item['type'])}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
+                    <div class="item-ago">
+                      <template if="{{item['createdDate'] != null}}">
+                        <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                      </template>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -43,11 +47,11 @@
               </template>
             </div>
           </div>
-          <div id="content-footer">
+          <div class="content-footer">
             <div class="item-col1" horizontal layout>
               <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
                          id="icon-fav" on-click="{{toggleLike}}"
-                         class="like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                         class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
                          data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
                 <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
               </core-icon-button>

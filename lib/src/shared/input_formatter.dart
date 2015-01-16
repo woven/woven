@@ -587,4 +587,13 @@ class InputFormatter {
 
     return content;
   }
+
+  /**
+  * Tries to choose the proper article ("a" or "an" or none) for a given string.
+  */
+  static String formatWordArticle(String word) {
+    if (word.endsWith('s')) return null;
+    if (word.startsWith(new RegExp('[aeiou]'))) return 'an ';
+    return 'a ';
+  }
 }
