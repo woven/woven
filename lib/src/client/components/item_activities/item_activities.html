@@ -28,12 +28,12 @@
                <textarea id="comment-textarea" placeholder="Add a comment..."></textarea>
               </paper-autogrow-textarea>
             </div>
-            <div id="footer">
-              <core-tooltip label="Tab + Enter" position="left">
-                <core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>
-              </core-tooltip>
-            </div>
-            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+            <!--<div id="footer">-->
+              <!--<core-tooltip label="Tab + Enter" position="left" tabindex="-1">-->
+                <!--<core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>-->
+              <!--</core-tooltip>-->
+            <!--</div>-->
+            <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
           </div>
         </div>
       </template>

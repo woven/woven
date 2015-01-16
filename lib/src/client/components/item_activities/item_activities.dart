@@ -29,6 +29,8 @@ class ItemActivities extends PolymerElement {
 
   Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('item-activities');
 
+  TextAreaElement get textarea => elRoot.shadowRoot.querySelector('#comment-textarea');
+
   /**
    * Get the activities for this item.
    */
@@ -81,11 +83,11 @@ class ItemActivities extends PolymerElement {
    * Handle focus of the comment input.
    */
   onFocusHandler(Event e, detail, Element target) {
-    elRoot.shadowRoot.querySelector("#footer").style.display = "block";
+//    elRoot.shadowRoot.querySelector("#footer").style.display = "block";
 //    elRoot.shadowRoot.querySelector("#comment-message").style.opacity = "1";
 
     CoreA11yKeys a11y = elRoot.shadowRoot.querySelector('#a11y-send');
-    a11y.target = elRoot.shadowRoot.querySelector('#comment-send-button');
+    a11y.target = elRoot.shadowRoot.querySelector('#comment-textarea');
   }
 
   onBlurHandler(Event e, detail, Element target) {
@@ -97,7 +99,11 @@ class ItemActivities extends PolymerElement {
     TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
     textarea.value = "";
     textarea.focus();
-    commentInput.update;
+    commentInput.update();
+  }
+
+  debugKeys() {
+    print("Woooot!");
   }
 
   /**
@@ -108,12 +114,10 @@ class ItemActivities extends PolymerElement {
 
     TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
     String comment = textarea.value;
-    comment = comment.trim();
-
-    if (comment == "") {
-      window.alert("Your comment is empty.");
+    if (comment.trim() == "") {
+//      window.alert("Your comment is empty.");
       resetCommentInput();
-      return false;
+      return;
     }
 
     var itemId = app.selectedItem['id'];
