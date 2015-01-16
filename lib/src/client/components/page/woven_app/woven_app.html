@@ -184,7 +184,7 @@
         <!--</core-overlay>-->
       <!--</template>-->
       <paper-toast id="toast-message" duration="4000"></paper-toast>
-      <template if="{{app.router.route.pattern == '/welcome' && app.user != null}}">
+      <template if="{{app.user != null && app.user.disabled == true}}">
         <welcome-dialog app="{{app}}"></welcome-dialog>
       </template>
     </template>
