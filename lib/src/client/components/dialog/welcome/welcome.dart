@@ -39,13 +39,13 @@ class WelcomeDialog extends PolymerElement {
     CoreInput username = $['username'];
     CoreInput location = $['location'];
 
-    if (username.inputValue.trim().isEmpty) {
+    if (username.value.trim().isEmpty) {
       window.alert("You must choose a username.");
       return false;
     }
 
     //TODO: Regex this for all disallowed cases.
-    if (username.inputValue.trim().contains(" ")) {
+    if (username.value.trim().contains(" ")) {
       window.alert("Your username may not contain spaces.");
       return false;
     }
@@ -56,27 +56,27 @@ class WelcomeDialog extends PolymerElement {
 
     // If username is changing, update the Facebook index
     // and remove the old user record.
-    if (username.inputValue != app.user.username) {
+    if (username.value != app.user.username) {
       final facebookIndexRef = fRoot.child('/facebook_index/${app.user.facebookId}');
       final tempUserRef = fRoot.child('/users/${app.user.username}');
-      final userRef = fRoot.child('/users/${username.inputValue}');
+      final userRef = fRoot.child('/users/${username.value}');
       var epochTime = DateTime.parse(now.toString()).millisecondsSinceEpoch;
 
       // Move the old user data to its new location and update it.
       Future updateUser() {
-        facebookIndexRef.set({'username': '${username.inputValue}'});
+        facebookIndexRef.set({'username': '${username.value}'});
         tempUserRef.once('value').then((snapshot) {
           Map oldUserData = snapshot.val();
           return oldUserData;
         }).then((oldUserData) {
           var user = new UserModel()
-            ..username = username.inputValue
-            ..firstName = firstname.inputValue
-            ..lastName = lastname.inputValue
-            ..email = email.inputValue
+            ..username = username.value
+            ..firstName = firstname.value
+            ..lastName = lastname.value
+            ..email = email.value
             ..facebookId = app.user.facebookId
             ..picture = oldUserData['picture']
-            ..location = location.inputValue
+            ..location = location.value
             ..gender = app.user.gender
             ..createdDate = now.toString()
             ..isNew = true;
