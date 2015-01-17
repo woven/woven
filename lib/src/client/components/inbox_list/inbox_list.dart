@@ -293,7 +293,8 @@ class InboxList extends PolymerElement with Observable {
     var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
 
     subscriptions.add(scroll.onScroll.listen((_) {
-      if (!viewModel.reloadingContent) viewModel.paginate();
+//      print("DEBUG: ${viewModel.reloadingContent} // ${viewModel.reachedEnd}");
+      if (!viewModel.reloadingContent && !viewModel.reachedEnd) viewModel.paginate();
     }));
   }
 
