@@ -25,6 +25,7 @@
     </template>
     <template if="{{viewModel.reachedEnd == false}}"><div id="loading-indicator">Fetching...</div></template>
     <template if="{{viewModel.reachedEnd == true}}"><div id="loading-indicator">You've reached the end of this universe.</div></template>
+      <!--<template if="{{viewModel.count <= viewModel.pageSize}}"><div id="loading-indicator">You've reached the end of this universe.</div></template>-->
     </div>
   </template>
   <script type="application/dart" src="inbox_list.dart"></script>

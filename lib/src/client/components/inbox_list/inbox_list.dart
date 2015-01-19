@@ -290,7 +290,7 @@ class InboxList extends PolymerElement with Observable {
     CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
     HtmlElement scroller = el.scroller;
     HtmlElement element = $['content-container'];
-    var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
+    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller);
 
     subscriptions.add(scroll.onScroll.listen((_) {
 //      print("DEBUG: ${viewModel.reloadingContent} // ${viewModel.reachedEnd}");

@@ -18,8 +18,7 @@ class FeedViewModel extends BaseViewModel with Observable {
   String dataLocation = '';
   @observable String typeFilter;
 
-  @observable int count = 0;
-  @observable int pageSize = 10;
+  int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var lastPriority = null;
@@ -45,9 +44,8 @@ class FeedViewModel extends BaseViewModel with Observable {
    * Load more items pageSize at a time.
    */
   loadItemsByPage() {
-    print('loadItemsByPage');
     reloadingContent = true;
-    count = 0;
+    int count = 0;
 
     if (typeFilter != null) {
       dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
@@ -62,73 +60,96 @@ class FeedViewModel extends BaseViewModel with Observable {
     if (items.length == 0) onLoadCompleter.complete(true);
 
     // Get the list of items, and listen for new ones.
-    itemsRef.onChildAdded.listen((e) {
-      print("onChildAdded");
-      var itemSnapshot = e.snapshot;
-      count++;
+    itemsRef.once('value').then((snapshot) {
+      snapshot.forEach((itemSnapshot) {
+        count++;
 
-      print(count);
+        // Track the snapshot's priority so we can paginate from the last one.
+        lastPriority = itemSnapshot.getPriority();
 
-      // Track the snapshot's priority so we can paginate from the last one.
-      lastPriority = itemSnapshot.getPriority();
+        // Don't process the extra item we tacked onto pageSize in the limit() above.
+        if (count > pageSize) return;
 
+        // Remember the priority of the last item, excluding the extra item which we ignore above.
+        secondToLastPriority = itemSnapshot.getPriority();
 
-      // Don't process the extra item we tacked onto pageSize in the limit() above.
-      if (count > pageSize) {
-        count--;
-        return;
+        // Insert each new item into the list.
+        // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
+        items.add(toObservable(processItem(itemSnapshot)));
+      });
+
+      updateEventView();
+
+      relistenForItems();
+
+      // If we received less than we tried to load, we've reached the end.
+      if (count <= pageSize) reachedEnd = true;
+      reloadingContent = false;
+    });
+  }
+
+  /**
+   * Listen for new stuff within the items we're currently showing.
+   */
+  void relistenForItems() {
+    if (childAddedSubscriber != null) {
+      childAddedSubscriber.cancel();
+      childAddedSubscriber = null;
+    }
+    if (childChangedSubscriber != null) {
+      childChangedSubscriber.cancel();
+      childChangedSubscriber = null;
+    }
+    if (childMovedSubscriber != null) {
+      childMovedSubscriber.cancel();
+      childMovedSubscriber = null;
+    }
+    if (childRemovedSubscriber != null) {
+      childRemovedSubscriber.cancel();
+      childRemovedSubscriber = null;
+    }
+
+    listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
+  }
+
+  listenForNewItems({startAt, endAt}) {
+    if (typeFilter != null) {
+      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
+    } else {
+      dataLocation = '/items_by_community/' + app.community.alias;
+    }
+
+    // Find the index of the item with the closest updated date.
+    indexOfClosestItemByDate(date) {
+      for (var item in items) {
+        if ((item['updatedDate'] as DateTime).isAfter(date)) return items.indexOf(item);
       }
+    }
 
-      // Remember the priority of the last item, excluding the extra item which we ignore above.
-      secondToLastPriority = itemSnapshot.getPriority();
+    // If this is the first item loaded, start listening for new items.
+    var itemsRef = f.child(dataLocation)
+      .startAt(priority: startAt)
+      .endAt(priority: endAt);
 
-      // Insert each new item into the list.
-      // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
-      items.add(toObservable(processItem(itemSnapshot)));
+    // Listen for new items.
+    childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
+      Map newItem = e.snapshot.val();
+      var existingItem = items.firstWhere((i) => i['id'] == e.snapshot.name, orElse: () => null);
+      if (existingItem != null) return;
 
+      var index = indexOfClosestItemByDate(DateTime.parse(newItem['updatedDate']));
+
+      items.insert(index == null ? 0 : index, toObservable(processItem(e.snapshot)));
 
       if (typeFilter == 'event') {
         // Sort the list by the event's startDateTime.
         items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
         updateEventView();
-      } else {
-        // Sort the list by the item's updatedDate.
-        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
       }
-
-      // If we received less than we tried to load, we've reached the end.
-//      if (count <= pageSize) reachedEnd = true;
-//      reloadingContent = false; //TODO: Never reaches end for the moment.
-    print("$reloadingContent // $reachedEnd");
     });
 
-    var broadcastStream = itemsRef.onChildAdded.asBroadcastStream();
-
-    broadcastStream.length.then((int length) {
-      print('length: $length');
-    });
-
-
-
-    itemsRef.onChildRemoved.listen((e) {
-//        updateEventView();
-      items.removeWhere((i) => i['id'] == e.snapshot.name);
-      count--;
-      print("onChildRemoved");
-      print(count);
-    });
-
-    itemsRef.onChildMoved.listen((e) {
-      print(e.snapshot.val());
-      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-//        updateEventView();
-      print("onChildMoved");
-      print(count);
-    });
-
-    itemsRef.onChildChanged.listen((e) {
-      print("onChildChanged");
-      print(count);
+    // Listen for changed items.
+    childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
 
@@ -149,101 +170,29 @@ class FeedViewModel extends BaseViewModel with Observable {
         currentData[k] = v;
       });
     });
-  }
-
-  /**
-   * Listen for new stuff within the items we're currently showing.
-   */
-//  void relistenForItems() {
-//    if (childAddedSubscriber != null) {
-//      childAddedSubscriber.cancel();
-//      childAddedSubscriber = null;
-//    }
-//    if (childChangedSubscriber != null) {
-//      childChangedSubscriber.cancel();
-//      childChangedSubscriber = null;
-//    }
-//    if (childMovedSubscriber != null) {
-//      childMovedSubscriber.cancel();
-//      childMovedSubscriber = null;
-//    }
-//    if (childRemovedSubscriber != null) {
-//      childRemovedSubscriber.cancel();
-//      childRemovedSubscriber = null;
-//    }
-//
-//    listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
-//  }
-//
-//  listenForNewItems({startAt, endAt}) {
-//    if (typeFilter != null) {
-//      dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
-//    } else {
-//      dataLocation = '/items_by_community/' + app.community.alias;
-//    }
-//
-//    // If this is the first item loaded, start listening for new items.
-//    var itemsRef = f.child(dataLocation)
-//      .startAt(priority: startAt)
-//      .endAt(priority: endAt);
-//
-//    // Listen for new items.
-//    childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
-//      items.removeWhere((i) => i['id'] == e.snapshot.name);
-//      items.add(toObservable(processItem(e.snapshot)));
-//
-//      if (typeFilter == 'event') {
-//        // Sort the list by the event's startDateTime.
-//        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
-//
-//        updateEventView();
-//      } else {
-//        // Sort the list by the item's updatedDate.
-//        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-//      }
-//    });
-//
-//    // Listen for changed items.
-//    childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
-//      Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
-//      Map newData = e.snapshot.val();
-//
-//      newData.forEach((k, v) {
-//        if (k == "createdDate" || k == "updatedDate" || k == "startDateTime") v = DateTime.parse(v);
-//        if (k == "star_count") v = (v != null) ? v : 0;
-//        if (k == "like_count") v = (v != null) ? v : 0;
-//
-//        // Handle any URI previews the changed item may have.
-//        if (k == 'uriPreviewId') {
-//          f.child('/uri_previews/$v').onValue.listen((e) {
-//            var previewData = e.snapshot.val();
-//            UriPreview preview = UriPreview.fromJson(previewData);
-//            currentData['uriPreview'] = preview.toJson();
-//          });
-//        }
-//
-//        currentData[k] = v;
-//      });
-//    });
 
     // Listen for moved (priority order has changed) items.
-//    childMovedSubscriber = itemsRef.onChildMoved.listen((e) {
-//      if (typeFilter == 'event') {
-//        updateEventView();
-//        // Sort the list by the event's startDateTime.
-//        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
-//      } else {
-//        // Sort the list by the item's updatedDate.
-//        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-//      }
-//    });
+    childMovedSubscriber = itemsRef.onChildMoved.listen((e) {
+      return; // TODO: Don't change position for now.
+      var movedItem = e.snapshot.val();
+
+      if (typeFilter == 'event') {
+        updateEventView();
+        // Sort the list by the event's startDateTime.
+        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+      } else {
+        var index = indexOfClosestItemByDate(DateTime.parse(movedItem['updatedDate']));
+
+        items.insert(index == null ? 0 : index, toObservable(processItem(e.snapshot)));
+      }
+    });
 
     // Listen for removed items.
 //    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
 //      updateEventView();
 //      items.removeWhere((i) => i['id'] == e.snapshot.name);
 //    });
-//  }
+  }
 
   // Group items by date group (Today, Tomorrow, etc.) and store in a separate list.
   updateEventView() {
