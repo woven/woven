@@ -143,7 +143,8 @@ class PeopleViewModel extends BaseViewModel with Observable {
     user['createdDate'] = user['createdDate'] != null ? DateTime.parse(user['createdDate']) : new DateTime.now();
 
     // Assemble the full path of the user's profile picture.
-    if (user['picture'] != null) user['picture'] = "${config['google']['cloudStoragePath']}/${user['picture']}";
+    // TODO: Simplify choosing of original or small.
+    if (user['picture'] != null) user['picture'] = "${config['google']['cloudStoragePath']}/${(user['pictureSmall'] != null) ? user['pictureSmall'] : user['picture']}";
 
     return user;
   }

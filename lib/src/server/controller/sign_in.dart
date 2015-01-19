@@ -7,8 +7,9 @@ import 'package:query_string/query_string.dart';
 import 'package:http/http.dart' as http;
 import '../app.dart';
 import '../firebase.dart';
-import '../../shared/model/user.dart';
-import '../../../config/config.dart';
+import 'package:woven/src/shared/model/user.dart';
+import 'package:woven/src/shared/response.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/server/session_manager.dart';
 
 class SignInController {
@@ -31,10 +32,12 @@ class SignInController {
 
       var facebookId = facebookData['id'];
 
-      // Get the large picture.
-      return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((res) {
-        String name = res.name;
-        facebookData['picture'] = name;
+      // Get the profile pictures.
+      return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((Response res) {
+        Map pictures = res.data;
+
+        facebookData['picture'] = pictures['original'];
+        facebookData['pictureSmall'] = pictures['small'];
 
         return facebookData;
       });
@@ -55,6 +58,7 @@ class SignInController {
         ..location = facebookData['location']
         ..gender = facebookData['gender']
         ..picture = facebookData['picture']
+        ..pictureSmall = facebookData['pictureSmall']
         ..disabled = true;
 
       // Save the user to the session.

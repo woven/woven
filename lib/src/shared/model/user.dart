@@ -11,13 +11,15 @@ class UserModel {
   String location;
   String gender;
   String picture;
+  String pictureSmall;
   String facebookId;
   String email;
   String createdDate;
   bool isNew = false;
   bool disabled = false;
 
-  String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/$picture" : null;
+  // Return the path to the small picture if we have it, otherwise the original picture.
+  String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}" : null;
 
   Map toJson() {
     return {
@@ -29,6 +31,7 @@ class UserModel {
       "location": location,
       "gender": gender,
       "picture": picture,
+      "pictureSmall": pictureSmall,
       "createdDate": createdDate,
       "disabled": disabled
     };
@@ -45,6 +48,7 @@ class UserModel {
       ..location = data['location']
       ..gender = data['gender']
       ..picture = data['picture']
+      ..pictureSmall = data['pictureSmall']
       ..createdDate = data['createdDate']
       ..disabled = data['disabled'];
   }
