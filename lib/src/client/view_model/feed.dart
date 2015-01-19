@@ -18,7 +18,8 @@ class FeedViewModel extends BaseViewModel with Observable {
   String dataLocation = '';
   @observable String typeFilter;
 
-  int pageSize = 5;
+  @observable int count = 0;
+  @observable int pageSize = 10;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var lastPriority = null;
@@ -46,7 +47,7 @@ class FeedViewModel extends BaseViewModel with Observable {
   loadItemsByPage() {
     print('loadItemsByPage');
     reloadingContent = true;
-    int count = 0;
+    count = 0;
 
     if (typeFilter != null) {
       dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
@@ -71,10 +72,10 @@ class FeedViewModel extends BaseViewModel with Observable {
       // Track the snapshot's priority so we can paginate from the last one.
       lastPriority = itemSnapshot.getPriority();
 
+
       // Don't process the extra item we tacked onto pageSize in the limit() above.
       if (count > pageSize) {
         count--;
-        reloadingContent = false; //TODO: Never reaches end for the moment.
         return;
       }
 
@@ -84,19 +85,30 @@ class FeedViewModel extends BaseViewModel with Observable {
       // Insert each new item into the list.
       // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
       items.add(toObservable(processItem(itemSnapshot)));
-      // Sort the list by the item's updatedDate.
-      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
-      //TODO: Right place?
-      updateEventView();
 
-//      relistenForItems();
+      if (typeFilter == 'event') {
+        // Sort the list by the event's startDateTime.
+        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+        updateEventView();
+      } else {
+        // Sort the list by the item's updatedDate.
+        items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+      }
 
       // If we received less than we tried to load, we've reached the end.
 //      if (count <= pageSize) reachedEnd = true;
 //      reloadingContent = false; //TODO: Never reaches end for the moment.
     print("$reloadingContent // $reachedEnd");
     });
+
+    var broadcastStream = itemsRef.onChildAdded.asBroadcastStream();
+
+    broadcastStream.length.then((int length) {
+      print('length: $length');
+    });
+
+
 
     itemsRef.onChildRemoved.listen((e) {
 //        updateEventView();
