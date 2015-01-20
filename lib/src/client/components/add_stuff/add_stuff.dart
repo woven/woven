@@ -243,8 +243,9 @@ class AddStuff extends PolymerElement {
     bodyInput.value = "";
     // TODO: Reset the selected type too? May be useful not to.
 
-    if (app.community != null) app.selectedPage = 0;
-    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
+//    if (app.community != null) app.selectedPage = 0;
+//    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
+    app.showMessage('Your ${selectedType == 'other' ? 'post' : selectedType} was added.');
   }
 
   updateInput(Event e, var detail, CoreInput sender) {
