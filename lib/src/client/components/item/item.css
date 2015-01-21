@@ -64,6 +64,10 @@ core-icon {
   border-radius: 4px;
 }
 
+.item.compact {
+  padding-top: 15px;
+}
+
 /*.item.event {*/
 /*border-left-color: #03a9f4;*/
 /*}*/
@@ -112,11 +116,20 @@ core-icon {
 }
 
 .item-body {
-  color: #000;
-  font-size: 15px;
+  color: #333;
+  font-size: 14px;
   white-space: normal;
-  line-height: 1.2em;
+  line-height: 1.25em;
   margin-left: 3px;
+}
+
+.item.compact .item-body {
+  color: #666;
+}
+
+.item.compact:hover .item-body {
+  color: #000;
+  transition: color .2s;
 }
 
 .item-info {

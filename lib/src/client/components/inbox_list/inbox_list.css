@@ -13,12 +13,14 @@
 }
 
 .date-group-header {
-  padding: 5px 13px 5px;
-  color: #666;
+  padding: 10px 25px 10px;
+  color: #FFF;
   font-size: 16px;
   font-weight: bold;
   font-family: 'RobotoDraft', sans-serif;
   margin-top: 20px;
+  background: #1A9AF5;
+  border-radius: 3px;
 }
 
 .cta {

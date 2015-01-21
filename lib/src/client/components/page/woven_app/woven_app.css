@@ -50,6 +50,11 @@
   cursor: pointer;
 }
 
+#page-title:hover {
+  color: #ddd;
+  transition: color .2s;
+}
+
 #sidebar-title {
   opacity: 1;
   transition: .2s opacity;

@@ -19,9 +19,8 @@ a:hover {
 }
 
 .preview:hover {
-  background: #fff;
   border: 1px solid #C5C5C5;
-  transition: border .2s, background .2s;
+  transition: border .2s;
 }
 
 .preview .image {
