@@ -76,49 +76,87 @@ class DailyDigestTask extends Task {
    * Generate the HTML output for the daily digest.
    */
   Future generateDigest(String community, {DateTime from, DateTime to}) {
-    List items = [];
     Map jsonForTemplate;
+    List events = [];
+    List news = [];
+
     DateTime now = new DateTime.now().toUtc();
+    DateTime yesterday = now.subtract(new Duration(days: 1));
 
-    // Handle empty to/from.
-    if (from == null) {
-      from = new DateTime.utc(now.year, now.month, now.day);
-    }
-    if (to == null) {
-      to = new DateTime.utc(from.year, from.month, from.day, 23, 59, 59, 999);
-    }
+    Future<List> findEvents() {
+      // Handle empty to/from.
+      if (from == null) {
+        from = new DateTime.utc(now.year, now.month, now.day);
+      }
+      if (to == null) {
+        to = new DateTime.utc(from.year, from.month, from.day, 23, 59, 59, 999);
+      }
 
-    var startAt = from.millisecondsSinceEpoch;
-    var endAt = to.millisecondsSinceEpoch;
+      var startAt = from.millisecondsSinceEpoch;
+      var endAt = to.millisecondsSinceEpoch;
+      var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
 
-    var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
+      return Firebase.get(query).then((Map itemsMap) {
+        // If there are no items for the digest, get out of here.
+        if (itemsMap.isEmpty) return null;
 
-    return Firebase.get(query).then((Map itemsMap) {
-      // If there are no items for the digest, get out of here.
-      if (itemsMap.isEmpty) return;
+        itemsMap.forEach((k, v) {
+          // Add the key, which is the item ID, the map as well.
+          var itemMap = v;
+          itemMap['id'] = k;
+          events.add(itemMap);
+        });
 
-      int count = 0;
-      itemsMap.forEach((k, v) {
-        // Add the key, which is the item ID, the map as well.
-        var itemMap = v;
-        itemMap['id'] = k;
-        items.add(itemMap);
-        count++;
+        // Do some pre-processing.
+        events.forEach((i) {
+          String teaser = InputFormatter.createTeaser(i['body'], 200);
+          // Convert the UTC start date to EST (UTC-5) for the newsletter.
+          // TODO: Later, consider more timezones.
+          DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 5));
+          i['body'] = teaser;
+          i['startDateTime'] = InputFormatter.formatDate(startDateTime);
+          i['encodedId'] = hashEncode(i['id']);
+        });
+
+        return events;
       });
+    }
 
-      items.forEach((i) {
-        String teaser = InputFormatter.createTeaser(i['body'], 400);
-        // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
-        DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours:5));
-        i['body'] = teaser;
-        i['startDateTime'] = InputFormatter.formatDate(startDateTime);
-        i['encodedId'] = hashEncode(i['id']);
+    Future<List> findNews() {
+      var startAt = new DateTime.utc(yesterday.year, yesterday.month, yesterday.day, 12, 00, 00);
+      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59, 00); // TODO: Set back to 12 UTC.
+      var query = '/items_by_community_by_type/$community/news.json?orderBy="createdDate"&startAt="$startAt"&endAt="$endAt"';
+
+      return Firebase.get(query).then((Map itemsMap) {
+        if (itemsMap.isEmpty) return null;
+
+        itemsMap.forEach((k, v) {
+          // Add the key, which is the item ID, the map as well.
+          var itemMap = v;
+          itemMap['id'] = k;
+          news.add(itemMap);
+        });
+
+        // Do some pre-processing.
+        news.forEach((i) {
+          String teaser = InputFormatter.createTeaser(i['body'], 200);
+          // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
+          DateTime createdDate = DateTime.parse(i['createdDate']).subtract(new Duration(hours: 5));
+          i['body'] = teaser;
+          i['createdDate'] = InputFormatter.formatDate(createdDate);
+          i['encodedId'] = hashEncode(i['id']);
+        });
+
+        return news;
       });
+    }
 
+    return Future.wait([findEvents(), findNews()]).then((_) {
       jsonForTemplate = {
-          'items':items
+          'events': events,
+          'news': news
       };
-    }).catchError((e) => print("Firebase returned an error: $e")).then((_) {
+    }).then((_) {
       if (jsonForTemplate == null) return null;
 
       return new File('web/static/templates/daily_digest.mustache').readAsString().then((String contents) {
