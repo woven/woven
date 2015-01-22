@@ -2,6 +2,12 @@
   width: 40px;
   height: 40px;
   background: #F5F5F5;
+}
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  background: #F5F5F5;
   border: solid 1px #E6E6E6;
   overflow:hidden;
   border-radius: 3px;

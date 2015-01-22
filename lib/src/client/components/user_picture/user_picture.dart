@@ -26,7 +26,7 @@ class UserPicture extends PolymerElement {
       } else {
         fb.child('/users/$user').once('value').then((res) {
           userMap = res.val();
-          userMap['fullPicturePath'] = '${config['google']['cloudStoragePath']}/${userMap['picture']}';
+          userMap['fullPicturePath'] = (userMap['picture'] != null) ? '${config['google']['cloudStoragePath']}/${userMap['picture']}' : null;
         });
       }
     }
