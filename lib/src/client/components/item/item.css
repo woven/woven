@@ -335,25 +335,34 @@ core-icon {
 
 @media all and (max-width: 900px)  {
   .item-wrapper {
-    margin: 10px;
+    margin: 5px;
   }
 
   .item-photo-area .item-photo-wrapper {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     overflow: hidden;
   }
   .item-photo-area .item-photo {
-    width: 100px;
+    width: 80px;
   }
-  .item-body {
+  .item-photo-area .item-photo-icon-none {
+    width: 60px;
+    margin-top: 0 !important;
+  }
+  .item.compact .item-body {
     white-space: nowrap;
   }
-  .event-date {
+  .item.compact .event-date {
     display: block;
     margin-bottom: 5px;
   }
-  .item-subject {
+  .item.compact .item-subject {
     white-space: nowrap;
+    font-size: 1.2em;
+  }
+
+  .item.compact .content-main {
+    padding: 4px 10px 4px 0;
   }
 }
