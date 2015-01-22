@@ -65,7 +65,7 @@ core-icon {
 }
 
 .item.compact {
-  padding-top: 15px;
+  /*padding-top: 15px;*/
 }
 
 /*.item.event {*/
@@ -100,10 +100,35 @@ core-icon {
   transition: border .2s, background-color .2s;
 }
 
+.item-photo-area {
+  padding: 10px 10px 7px 10px
+}
+
+.item-photo-area .item-photo-wrapper {
+  border: solid 1px #eee;
+  width:225px;
+  height:125px;
+  text-align: center;
+}
+
+.item-photo-area .item-photo {
+  width:225px;
+  height:125px;
+}
+
+.item-photo-area .item-photo-icon-none {
+  width: 80px;
+  height: 80px;
+  margin-top: 10% !important;
+  /* margin-top: 20px; */
+  color: #ddd;
+}
+
 .item-subject {
   display: table;
   white-space: normal;
   margin-right: 5px;
+  color: #212121;
   font-weight: bold;
   font-size: 1.3em;
   padding: 5px 0 0 0;
@@ -112,11 +137,11 @@ core-icon {
 }
 
 .item-subject:hover {
-  color: #3F3F3F;
+  color: #666;
 }
 
 .item-body {
-  color: #333;
+  color: #212121;
   font-size: 14px;
   white-space: normal;
   line-height: 1.25em;
@@ -128,7 +153,7 @@ core-icon {
 }
 
 .item.compact:hover .item-body {
-  color: #000;
+  color: #212121;
   transition: color .2s;
 }
 
@@ -219,8 +244,16 @@ core-icon {
   padding: 20px 20px 5px 20px;
 }
 
+.item.compact .content-header {
+  padding: 10px 20px 5px 5px;
+}
+
 .content-main {
-  padding: 0 20px 0 20px;
+  padding: 3px 20px 0 20px;
+}
+
+.item.compact .content-main {
+  padding: 10px 10px 7px 0;
 }
 
 .content-footer {
@@ -242,6 +275,10 @@ core-icon {
   user-select: none;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
+}
+
+.item.compact .content-footer {
+  margin-top: 0;
 }
 
 .action-button span {
@@ -299,5 +336,24 @@ core-icon {
 @media all and (max-width: 900px)  {
   .item-wrapper {
     margin: 10px;
+  }
+
+  .item-photo-area .item-photo-wrapper {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+  }
+  .item-photo-area .item-photo {
+    width: 100px;
+  }
+  .item-body {
+    white-space: nowrap;
+  }
+  .event-date {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .item-subject {
+    white-space: nowrap;
   }
 }

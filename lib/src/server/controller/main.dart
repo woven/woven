@@ -102,7 +102,7 @@ class MainController {
             // Download the image locally to our temporary file.
             return downloadFileTo(preview.imageOriginalUrl, file).then((_) {
               // Resize the image.
-              return imageUtil.resize(file, '125x100').then((File convertedFile) {
+              return imageUtil.resize(file, width: 225, height: 125).then((File convertedFile) {
                 // Save the preview.
                 return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
                   var value = {'uriPreviewId': name};

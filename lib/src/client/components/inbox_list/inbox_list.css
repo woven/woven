@@ -12,6 +12,10 @@
   margin: auto;
 }
 
+#content-container.compact {
+  max-width: 640px;
+}
+
 .date-group-header {
   padding: 10px 25px 10px;
   color: #FFF;
@@ -53,6 +57,7 @@
 
 @media all and (max-width: 900px)  {
   .date-group-header {
-    /*margin-top: 0;*/
+    margin-top: 0;
+    border-radius: 0;
   }
 }

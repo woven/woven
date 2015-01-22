@@ -164,6 +164,7 @@ class FeedViewModel extends BaseViewModel with Observable {
             var previewData = e.snapshot.val();
             UriPreview preview = UriPreview.fromJson(previewData);
             currentData['uriPreview'] = preview.toJson();
+            currentData['uriPreview']['imageSmallLocation'] = (currentData['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${currentData['uriPreview']['imageSmallLocation']}' : null;
           });
         }
 
@@ -233,9 +234,12 @@ class FeedViewModel extends BaseViewModel with Observable {
         var previewData = e.snapshot.val();
         UriPreview preview = UriPreview.fromJson(previewData);
         item['uriPreview'] = preview.toJson();
+        item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${item['uriPreview']['imageSmallLocation']}' : null;
+        item['uriPreviewTried'] = true;
       });
+    } else {
+      item['uriPreviewTried'] = true;
     }
-
 
     // If we're filtering for just events, let's also get a date group so we can group events
     // by today, tomorrow, this week, etc.

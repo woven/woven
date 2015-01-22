@@ -76,7 +76,7 @@ class Item extends PolymerElement with Observable {
 
 
   attached() {
-    item['body'] = InputFormatter.createTeaser(item['body'], 125);
+    item['body'] = InputFormatter.createTeaser(item['body'], 75);
   }
 
   detached() {

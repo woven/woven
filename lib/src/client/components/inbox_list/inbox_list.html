@@ -9,7 +9,7 @@
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
-    <div id="content-container">
+    <div id="content-container" class="{{viewModel.typeFilter != null ? 'compact' : null}}">
       <template if="{{viewModel.typeFilter == 'event'}}">
         <template repeat="{{groupDate in viewModel.groupedItems.keys}}">
         <div class="date-group-header">{{groupDate}}</div>
