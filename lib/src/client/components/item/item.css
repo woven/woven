@@ -114,6 +114,7 @@ core-icon {
 .item-photo-area .item-photo {
   width:225px;
   height:125px;
+  background: #fff;
 }
 
 .item-photo-area .item-photo-icon-none {
@@ -345,6 +346,7 @@ core-icon {
   }
   .item-photo-area .item-photo {
     width: 80px;
+    height: 80px;
   }
   .item-photo-area .item-photo-icon-none {
     width: 60px;

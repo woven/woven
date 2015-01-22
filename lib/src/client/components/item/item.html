@@ -23,18 +23,64 @@
                 </div>
                 <div class="info-area" layout vertical flex>
                   <div class="item-info">
-                    <div><span class="item-user">{{item['user']}}</span> posted {{formatWordArticle(item['type'])}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
+                    <div><span class="item-user">{{item['user']}}</span> posted {{formatWordArticle(item['type'].toString())}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>
                     <div class="item-ago"><live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="content-main" vertical layout>
-              <div class="item-subject">{{item['subject']}}</div>
-              <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
-              <template if="{{item['uriPreviewId'] != null}}">
-                <uri-preview previewid="{{item['uriPreviewId']}}"></uri-preview>
-              </template>
+              <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" on-tap="{{selectItem}}" data-id="{{item['id']}}">
+                <div class="item-container" vertical layout>
+                  <!--<div class="content-header" vertical layout>-->
+                  <!--<div horizontal layout>-->
+                  <!--<div class="user-area">-->
+                  <!--<user-picture app="{{app}}" user="{{item['user']}}"></user-picture>-->
+                  <!--</div>-->
+                  <!--<div class="info-area" layout vertical flex>-->
+                  <!--<div class="item-info">-->
+                  <!--<div><span class="item-user">{{item['user']}}</span> posted {{formatWordArticle(item['type'])}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>-->
+                  <!--<div class="item-ago"><live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <div layout horizontal>
+                    <div class="item-photo-area">
+                      <div class="item-photo-wrapper">
+                        <template if="{{item['uriPreview']['imageSmallLocation'] != null}}">
+                          <core-image class="item-photo" sizing="cover" preload fade src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
+                        </template>
+                        <template if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
+                          <core-icon class="item-photo-icon-none" icon="event"></core-icon>
+                        </template>
+                      </div>
+                    </div>
+                    <div class="content-main" vertical layout flex>
+                      <div class="item-subject first">{{item['subject']}}</div>
+                      <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
+                      <!--<template if="{{item['uriPreviewId'] != null}}">-->
+                      <!--<uri-preview previewid="{{item['uriPreviewId']}}"></uri-preview>-->
+                      <!--</template>-->
+                      <div class="content-header" vertical layout>
+                        <div horizontal layout>
+                          <!--<div class="user-area">-->
+                          <!--<user-picture app="{{app}}" user="{{item['user']}}"></user-picture>-->
+                          <!--</div>-->
+                          <div class="info-area" layout vertical flex>
+                            <div class="item-info">
+                              <div>
+                                <span class="item-user">{{item['user']}}</span> posted this.</div>
+                              <!--<div class="item-ago"><live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>-->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </core-item>
             </div>
             <div class="content-footer">
               <div class="item-col1" horizontal layout>
