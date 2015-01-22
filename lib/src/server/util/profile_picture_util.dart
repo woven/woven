@@ -53,7 +53,7 @@ class ProfilePictureUtil {
               ImageUtil imageUtil = new ImageUtil();
 
               // Resize the image. Use double dimensions for retina displays.
-              return imageUtil.resize(file, '80x80').then((File convertedFile) {
+              return imageUtil.resize(file, height: 80, width: 80).then((File convertedFile) {
                 var filename = 'profile-picture_small$extension';
 
                 // Save the small profile picture to the cloud.
