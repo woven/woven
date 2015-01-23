@@ -50,6 +50,11 @@ core-icon-button.action:hover {
   background-color: rgb(45, 104, 214);
 }
 
+core-icon {
+  fill: #999;
+  color: #999;
+}
+
 h1 {
   margin: 20px 20px 20px 20px;
 }
@@ -67,11 +72,29 @@ p {
   border-top: solid 1px #eee;
 }
 
+.field-wrapper.last {
+  border-bottom: none;
+}
+
 input {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px !important;
   outline: none;
   width: 100%;
+  vertical-align: middle;
+}
+
+#post {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  min-height: 19px;
+}
+
+#post-textarea {
+  font: inherit;
+  margin-top: 5px;
 }
 
 #body {
@@ -138,6 +161,12 @@ a:hover {
   text-decoration: underline;
 }
 
+#content-container {
+  margin: 4px;
+  margin-bottom: 8px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
 
 /* Tab-like things */
 .list {
@@ -150,14 +179,15 @@ a:hover {
   -webkit-flex-flow: row wrap;
   list-style: none;
   margin-bottom: 0;
-  padding: 10px;
+  margin-top: 10px;
+  padding: 0 7px;
 }
 
 .list > * {
   cursor: pointer;
   color: #000;
   background: peachpuff;
-  padding: 10px;
+  padding: 9px;
   margin-right: 5px;
   margin-bottom: 10px;
   border-radius: 3px;
@@ -190,7 +220,7 @@ core-overlay .full-height {
   flex-shrink: 1 !important;
   /*height: 100%;*/
   position: relative;
-  min-height: 100px;
+  min-height: 50px;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;

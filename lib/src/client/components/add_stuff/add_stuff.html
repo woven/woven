@@ -6,6 +6,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_overlay.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
 <link rel="import" href="../widgets/dialog/dialog.html">
 
@@ -22,48 +23,68 @@
         <core-icon-button icon="send" on-tap="{{addItem}}" class="action"></core-icon-button>
       </core-toolbar>
       <div id="container">
+        <div id="post-container">
+          <div class="field-wrapper full-height last">
+            <paper-autogrow-textarea
+                id="post"
+                autocomplete="off"
+                maxrows="15"
+                row="4"
+                >
+              <textarea id="post-textarea" placeholder="Say something..."></textarea>
+            </paper-autogrow-textarea>
+          </div>
+        </div>
         <div id="content-container">
-          <core-selector id="content-type" target="{{$['types']}}" itemsSelector="li" valueattr="value"
-                         selected="other"></core-selector>
+          <core-selector id="content-type" target="{{$['types']}}" itemsSelector="li"
+                         valueattr="value" selected="other"></core-selector>
           <ul id="types" class="list">
-            <li value="announcement">Announcement</li>
             <!--<li value="ask">Ask</li>-->
             <!--<li value="offer">Offer</li>-->
             <!--<li value="idea">Idea</li>-->
             <li value="event">Event</li>
             <li value="news">News</li>
+            <li value="announcement">Announcement</li>
             <!--<li value="project">Project</li>-->
             <li value="other">Other</li>
           </ul>
 
-          <div class="field-wrapper first">
-            <input is="core-input" id="subject" placeholder="Subject" autocomplete="off">
-          </div>
-          <template if="{{selectedType == 'event'}}">
-            <div class="field-wrapper">
-              <input is="core-input" id="event-start-date" placeholder="When is the event?" autocomplete="off"
-                     on-focus="{{updateInput}}">
+          <template if="{{selectedType != null}}">
+            <div class="field-wrapper {{selectedType != null ? 'first' : null}}">
+              <input is="core-input" id="subject" placeholder="Subject" autocomplete="off">
             </div>
-            <div class="field-wrapper">
-              <input is="core-input" id="event-start-time" placeholder="What time does it start?" autocomplete="off"
-                     on-focus="{{updateInput}}">
+            <template if="{{selectedType == 'event'}}">
+              <div class="field-wrapper">
+                <input is="core-input" id="event-start-date" placeholder="When is the event?" autocomplete="off"
+                       on-focus="{{updateInput}}">
+              </div>
+              <div class="field-wrapper">
+                <input is="core-input" id="event-start-time" placeholder="What time does it start?" autocomplete="off"
+                       on-focus="{{updateInput}}">
+              </div>
+            </template>
+            <template if="{{selectedType == 'event' || selectedType == 'news'}}">
+              <div class="field-wrapper">
+                <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off">
+              </div>
+            </template>
+            <div class="field-wrapper last">
+              <paper-autogrow-textarea
+                  id="body"
+                  autocomplete="off"
+                  maxrows="15"
+                  row="2"
+                  >
+                <textarea id="body-textarea" placeholder="Description"></textarea>
+              </paper-autogrow-textarea>
             </div>
           </template>
-          <template if="{{selectedType == 'event' || selectedType == 'news'}}">
-            <div class="field-wrapper">
-              <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off">
-            </div>
-          </template>
-          <div class="field-wrapper full-height">
-            <paper-autogrow-textarea
-                id="body"
-                autocomplete="off"
-                maxrows="15"
-                >
-              <textarea id="body-textarea" placeholder="Share more..."></textarea>
-            </paper-autogrow-textarea>
-          </div>
-          <div class="field-wrapper share-to" style="background: aliceblue;">
+        </div>
+        <div id="footer-container">
+          <div class="field-wrapper share-to first">
+            <core-tooltip label="Share to multiple communities with a comma" noarrow="true" tabindex="-1">
+              <core-icon icon="social:communities"></core-icon>
+            </core-tooltip>
             <input is="core-input" id="share-to" placeholder="Share to..." autocomplete="off">
           </div>
         </div>
