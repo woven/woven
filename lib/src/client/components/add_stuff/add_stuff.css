@@ -90,6 +90,7 @@ input {
   outline: none;
   width: 100%;
   min-height: 19px;
+  margin-top: 5px;
 }
 
 #post-textarea {
