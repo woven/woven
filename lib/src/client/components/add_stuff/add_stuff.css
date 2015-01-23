@@ -110,6 +110,10 @@ input {
   font: inherit;
 }
 
+#share-to {
+  margin-left: 5px;
+}
+
 footer {
   height: 45px;
   background-color: #F5F5F5;
