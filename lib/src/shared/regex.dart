@@ -3,7 +3,7 @@ class RegexHelper {
   static String protocol = '[a-zA-Z]+:\\/\\/';
   static String www = 'www\\.';
 
-  static String emailName = '[a-zA-Z.+]+';
+  static String emailName = '[a-zA-Z0-9-._+]';
   static String email = '\\b${emailName}@${domain}\\b';
 
   static String queryPath = '\\/[-~+=%_a-zA-Z0-9.]*[-~+=%_a-zA-Z0-9]';
