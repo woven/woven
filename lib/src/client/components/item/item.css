@@ -100,6 +100,11 @@ core-icon {
   transition: border .2s, background-color .2s;
 }
 
+.item.inside:hover {
+  /*transition: none;*/
+  /*border: 1px solid #e5e5e5;*/
+}
+
 .item-photo-area {
   padding: 10px 10px 7px 10px
 }
