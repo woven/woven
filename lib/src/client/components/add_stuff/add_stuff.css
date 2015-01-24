@@ -50,7 +50,7 @@ core-icon-button.action:hover {
   background-color: rgb(45, 104, 214);
 }
 
-core-icon {
+.field-wrapper core-icon {
   fill: #999;
   color: #999;
 }
