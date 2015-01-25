@@ -139,7 +139,6 @@ core-icon {
   font-size: 18px;
   padding: 5px 0 0 0;
   margin-bottom: 10px;
-  margin-left: 3px;
 }
 
 .item-subject:hover {
@@ -151,7 +150,6 @@ core-icon {
   font-size: 14px;
   white-space: normal;
   line-height: 1.25em;
-  margin-left: 3px;
 }
 
 .item.compact .item-body {
@@ -236,6 +234,10 @@ core-icon {
   width: 100%;
 }
 
+.item-main-container {
+  padding: 12px;
+}
+
 .item-wrapper {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -247,23 +249,22 @@ core-icon {
 }
 
 .content-header {
-  padding: 20px 20px 5px 20px;
+  padding: 0 0 5px 0;
 }
 
 .item.compact .content-header {
-  padding: 10px 20px 5px 5px;
+  padding: 5px 0 5px 0;
 }
 
 .content-main {
-  padding: 3px 20px 0 20px;
+  padding: 3px 0 0 0;
 }
 
 .item.compact .content-main {
-  padding: 10px 10px 7px 0;
+  padding: 10px 0 0 0;
 }
 
 .content-footer {
-  margin-top: 20px;
   padding: 4px 5px 4px 4px;
   /*border-top: solid 1px #eee;*/
   border-top: 1px solid #e5e5e5;
@@ -341,7 +342,11 @@ core-icon {
 
 @media all and (max-width: 900px)  {
   .item-wrapper {
-    margin: 5px;
+    margin: 8px 5px;
+  }
+
+  .item-main-container {
+    padding: 8px;
   }
 
   .item-photo-area .item-photo-wrapper {
@@ -366,6 +371,7 @@ core-icon {
   }
   .item.compact .item-subject {
     white-space: nowrap;
+    margin-bottom: 0
   }
 
   .item.compact .content-main {

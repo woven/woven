@@ -238,3 +238,7 @@ core-overlay .expand {
   position: relative;
   min-height: 117px;
 }
+
+core-tooltip::shadow .core-tooltip {
+  font-size: 12px;
+}
