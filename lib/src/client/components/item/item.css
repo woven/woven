@@ -116,10 +116,16 @@ core-icon {
   text-align: center;
 }
 
-.message.with-type {
-  margin-bottom: 10px;
+.message {
   font-size: 15px;
   margin-left: 2px;
+  white-space: normal;
+  color: #434343;
+  line-height: 1.15em;
+}
+
+.message.with-type {
+  margin-bottom: 10px;
 }
 
 .item-photo-area .item-photo {
@@ -263,7 +269,7 @@ core-icon {
 }
 
 .content-main {
-  padding: 3px 0 0 0;
+  padding: 5px 0 0 0;
 }
 
 .item.compact .content-main {
