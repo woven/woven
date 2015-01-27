@@ -225,6 +225,9 @@ class FeedViewModel extends BaseViewModel with Observable {
       case 'event':
         if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
         break;
+      case 'other':
+        item['type'] = null;
+        break;
       default:
     }
 

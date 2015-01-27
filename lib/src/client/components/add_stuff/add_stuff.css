@@ -84,7 +84,7 @@ input {
   vertical-align: middle;
 }
 
-#post {
+#message {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   outline: none;
@@ -93,7 +93,7 @@ input {
   margin-top: 5px;
 }
 
-#post-textarea {
+#message-textarea {
   font: inherit;
 }
 
@@ -182,8 +182,8 @@ a:hover {
   flex-flow: row wrap;
   -webkit-flex-flow: row wrap;
   list-style: none;
-  margin-bottom: 0;
-  margin-top: 10px;
+  margin-bottom: 7px;
+  margin-top: 7px;
   padding: 0 7px;
 }
 
@@ -191,15 +191,25 @@ a:hover {
   cursor: pointer;
   color: #000;
   background: peachpuff;
-  padding: 9px;
+  padding: 8px;
   margin-right: 5px;
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
   border-radius: 3px;
 }
 
 .list > *.core-selected {
   background: #333;
   color: #fff;
+}
+
+#content-type-close {
+  margin: auto 5px;
+  cursor: pointer;
+}
+
+#content-type-close core-icon {
+  fill: #ddd;
+  color: #ddd;
 }
 
 core-overlay #container {

@@ -32,6 +32,8 @@ class AddStuff extends PolymerElement {
 
   Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('add-stuff');
 
+  CoreInput get messageInput => elRoot.shadowRoot.querySelector('#message-textarea');
+
   CoreInput get subjectInput => elRoot.shadowRoot.querySelector('#subject');
   CoreInput get bodyInput => elRoot.shadowRoot.querySelector('#body-textarea');
   CoreInput get shareToInput => elRoot.shadowRoot.querySelector('#share-to');
@@ -59,8 +61,8 @@ class AddStuff extends PolymerElement {
     shareToInput.value = shareTos.join(',').trim().toString();
 
     // Focus the subject field.
-    CoreInput subjectInput = elRoot.shadowRoot.querySelector('#subject');
-    subjectInput.focus(); // TODO: Not working.
+//    CoreInput subjectInput = elRoot.shadowRoot.querySelector('#subject');
+//    subjectInput.focus(); // TODO: Not working.
   }
 
   /**
@@ -90,41 +92,45 @@ class AddStuff extends PolymerElement {
       return false;
     }
 
-    // Validate other stuff.
-    if (subjectInput.value.trim().isEmpty) {
-      window.alert("Your subject is empty.");
-      return false;
-    }
+    // Validate other fields only if user selected a type to attach.
+    if (selectedType != null) {
 
-    if (bodyInput.value.trim().isEmpty) {
-      window.alert("Your message is empty.");
-      return false;
-    }
-
-    if (selectedType == "event") {
-      if (parseDate(eventStartDateInput.value) == null) {
-
-        window.alert("That's not a valid start date. Ex: " + new DateFormat("M/dd/yyyy").format(new DateTime.now()));
+      // Validate other stuff.
+      if (subjectInput.value.trim().isEmpty) {
+        window.alert("Your subject is empty.");
         return false;
       }
-      if (parseTime(eventStartTimeInput.value) == null) {
 
-        window.alert("That's not a valid start time. Ex: " + new DateFormat("h:mm a").format(new DateTime.now()) + ', ' + new DateFormat("h a").format(new DateTime.now()));
+      if (bodyInput.value.trim().isEmpty) {
+        window.alert("Your message is empty.");
         return false;
       }
-    }
 
-    _isValidUrl(String url) {
-      if (url.contains("http://") || url.contains("https://")) {
-        return true;
-      } else {
+      if (selectedType == "event") {
+        if (parseDate(eventStartDateInput.value) == null) {
+
+          window.alert("That's not a valid start date. Ex: " + new DateFormat("M/dd/yyyy").format(new DateTime.now()));
+          return false;
+        }
+        if (parseTime(eventStartTimeInput.value) == null) {
+
+          window.alert("That's not a valid start time. Ex: " + new DateFormat("h:mm a").format(new DateTime.now()) + ', ' + new DateFormat("h a").format(new DateTime.now()));
+          return false;
+        }
+      }
+
+      _isValidUrl(String url) {
+        if (url.contains("http://") || url.contains("https://")) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (urlInput != null && _isValidUrl(urlInput.value) == false) {
+        window.alert("That's not a valid URL. Please include http://.");
         return false;
       }
-    }
-
-    if (urlInput != null && _isValidUrl(urlInput.value) == false) {
-      window.alert("That's not a valid URL. Please include http://.");
-      return false;
     }
 
     // Handle the share to field.
@@ -139,9 +145,10 @@ class AddStuff extends PolymerElement {
 
     item
       ..user = app.user.username
-      ..subject = subjectInput.value
-      ..type = selectedType
-      ..body = bodyInput.value
+      ..message = (messageInput != null) ? messageInput.value : null
+      ..subject = (subjectInput != null) ? subjectInput.value : null
+      ..type = (selectedType != null) ? selectedType : 'message'
+      ..body = (bodyInput != null) ? bodyInput.value : null
       ..createdDate = now
       ..updatedDate = now;
 
@@ -239,13 +246,15 @@ class AddStuff extends PolymerElement {
     HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId");
 
     overlay.toggle();
-    subjectInput.value = "";
-    bodyInput.value = "";
-    // TODO: Reset the selected type too? May be useful not to.
+    if (selectedType != null) {
+      subjectInput.value = "";
+      bodyInput.value = "";
+      // TODO: Reset the selected type too? May be useful not to.
+    }
 
 //    if (app.community != null) app.selectedPage = 0;
 //    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
-    app.showMessage('Your ${selectedType == 'other' ? 'post' : selectedType} was added.');
+    app.showMessage('Your ${selectedType == 'other' || selectedType == null ? 'post' : selectedType} was added.');
   }
 
   updateInput(Event e, var detail, CoreInput sender) {
@@ -260,11 +269,19 @@ class AddStuff extends PolymerElement {
     }
   }
 
+  noTypeSelected() {
+    CoreSelector type = $['content-type'];
+    selectedType = null;
+    type.selected = null;
+
+  }
+
   attached() {
     if (app.community != null) {
        shareToInput.value = app.community.alias;
     }
 
+    // Update the selectedType var when a type is selected.
     CoreSelector type = $['content-type'];
     type.addEventListener('core-select', (e) {
       selectedType = type.selected;

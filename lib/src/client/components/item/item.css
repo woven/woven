@@ -116,6 +116,12 @@ core-icon {
   text-align: center;
 }
 
+.message.with-type {
+  margin-bottom: 10px;
+  font-size: 15px;
+  margin-left: 2px;
+}
+
 .item-photo-area .item-photo {
   width:225px;
   height:125px;
