@@ -47,7 +47,7 @@ class ProfilePictureUtil {
 
             // Save the original profile picture to the cloud.
             return app.cloudStorageUtil.uploadFile(file.path, gsBucket, '$gsPath/$filename', public: true).then((res) {
-              pictures['original'] = res.name;
+              pictures['original'] = (res.name != null ) ? res.name : null;
 
               // Create a small version of the profile picture.
               ImageUtil imageUtil = new ImageUtil();
@@ -58,7 +58,7 @@ class ProfilePictureUtil {
 
                 // Save the small profile picture to the cloud.
                 return app.cloudStorageUtil.uploadFile(convertedFile.path, gsBucket, '$gsPath/$filename', public: true).then((res) {
-                  pictures['small'] = res.name;
+                  pictures['small'] = (res.name != null ) ? res.name : null;
 
                   file.delete();
                   convertedFile.delete();
