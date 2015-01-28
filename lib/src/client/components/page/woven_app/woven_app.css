@@ -74,7 +74,7 @@
 /* drawer is always visible on a wide screen
    so menu button isn't required */
 core-drawer-panel:not([narrow]) #menu-button {
-  display: none;
+  visibility: hidden;
 }
 
 /*core-drawer-oanel #menu-button:active {*/
