@@ -26,6 +26,7 @@ class AddStuff extends PolymerElement {
   @published App app;
   @published bool opened = false;
   @observable var selectedType;
+  @observable Map formData = {};
   List validShareToOptions = ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode']; // TODO: Fixed for now, change later.
 
   CoreOverlay get overlay => $['overlay'];
@@ -93,7 +94,7 @@ class AddStuff extends PolymerElement {
     }
 
     // Validate other fields only if user selected a type to attach.
-    if (selectedType != null) {
+    if (selectedType != 'message') {
 
       // Validate other stuff.
       if (subjectInput.value.trim().isEmpty) {
@@ -246,7 +247,7 @@ class AddStuff extends PolymerElement {
     HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId");
 
     overlay.toggle();
-    if (selectedType != null) {
+    if (selectedType != 'message') {
       subjectInput.value = "";
       bodyInput.value = "";
       // TODO: Reset the selected type too? May be useful not to.
@@ -254,26 +255,19 @@ class AddStuff extends PolymerElement {
 
 //    if (app.community != null) app.selectedPage = 0;
 //    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
-    app.showMessage('Your ${selectedType == 'other' || selectedType == null ? 'post' : selectedType} was added.');
+    app.showMessage('Your ${selectedType == 'message' || selectedType == null ? 'message' : selectedType} was added.');
   }
 
   updateInput(Event e, var detail, CoreInput sender) {
-    if (sender.id == "event-start-date" && sender.value == "") {
+    if (sender.id == "event-start-date" && sender.value.trim() == "") {
 //      sender.type = "date";
       sender.value = new DateFormat("M/dd/yyyy").format(new DateTime.now());
     }
 
-    if (sender.id == "event-start-time" && sender.value == "") {
+    if (sender.id == "event-start-time" && sender.value.trim() == "") {
 //      sender.type = "time";
       sender.value = new DateFormat("h:mm a").format(new DateTime.now());
     }
-  }
-
-  noTypeSelected() {
-    CoreSelector type = $['content-type'];
-    selectedType = null;
-    type.selected = null;
-
   }
 
   attached() {

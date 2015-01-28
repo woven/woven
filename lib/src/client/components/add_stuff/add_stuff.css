@@ -113,6 +113,12 @@ input {
   margin-left: 5px;
 }
 
+.share-to-label {
+  font-size: 14px;
+  color: #848484;
+  font-family: inherit;
+}
+
 footer {
   height: 45px;
   background-color: #F5F5F5;
