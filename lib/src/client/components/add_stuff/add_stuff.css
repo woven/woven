@@ -15,6 +15,7 @@ core-overlay {
   bottom: 0;
   right: 10px;
   position: absolute;
+  box-shadow: 0 0 8px 0 rgba(0,0,0,.15);
 }
 
 @media all and (max-width: 600px)  {
@@ -80,7 +81,7 @@ input {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px !important;
   outline: none;
-  width: 100%;
+  width: 100% !important;
   vertical-align: middle;
 }
 
@@ -117,6 +118,8 @@ input {
   font-size: 14px;
   color: #848484;
   font-family: inherit;
+  top: 1px;
+  position: relative;
 }
 
 footer {

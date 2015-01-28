@@ -51,9 +51,14 @@
           </div>
         </div>
         <div id="content-container">
+          <template if="{{selectedType == 'event' || selectedType == 'news'}}">
+            <div class="field-wrapper first">
+              <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off" value="{{formData['url']}}">
+            </div>
+          </template>
           <template if="{{selectedType != 'message'}}">
-            <div class="field-wrapper {{selectedType != null ? 'first' : null}}">
-              <input is="core-input" id="subject" placeholder="Subject" autocomplete="off" value="{{formData['subject']}}">
+            <div class="field-wrapper">
+              <input is="core-input" id="subject" placeholder="Title" autocomplete="off" value="{{formData['subject']}}">
             </div>
             <template if="{{selectedType == 'event'}}">
               <div class="field-wrapper">
@@ -63,11 +68,6 @@
               <div class="field-wrapper">
                 <input is="core-input" id="event-start-time" placeholder="What time does it start?" autocomplete="off"
                        on-focus="{{updateInput}}" value="{{formData['event-start-time']}}">
-              </div>
-            </template>
-            <template if="{{selectedType == 'event' || selectedType == 'news'}}">
-              <div class="field-wrapper">
-                <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off" value="{{formData['url']}}">
               </div>
             </template>
             <div class="field-wrapper last">
@@ -86,7 +86,7 @@
           <div class="field-wrapper share-to first">
             <div layout horizontal>
               <div class="share-to-label">Share to:</div>
-              <input is="core-input" id="share-to" autocomplete="off">
+              <div flex><input is="core-input" id="share-to" autocomplete="off"></div>
             </div>
           </div>
         </div>
