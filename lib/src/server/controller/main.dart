@@ -203,6 +203,7 @@ http://twitter.com/wovenco
         notificationData['itemSubject'] = itemData['subject'];
         notificationData['itemAuthor'] = itemData['user'];
         notificationData['itemBody'] = itemData['body'];
+        notificationData['message'] = itemData['message'];
         var encodedItem = hashEncode(item);
         notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
 
@@ -356,13 +357,18 @@ http://woven.co
   static _notifyMentionedUsers(App app, Map notificationData) {
     RegExp regExp = new RegExp(r'\B@[a-zA-Z0-9_-]+', caseSensitive: false);
     bool isItem = (notificationData['commentBody'] == null) ? true : false;
-    String postText = (isItem) ? notificationData['itemBody'] : notificationData['commentBody'];
+
+    // Combine message and item body fields for purpose of parsing all @mentions in either.
+    String postText = (isItem) ? '${notificationData['message']}\n===\n${notificationData['itemBody']}' : notificationData['commentBody'];
     List mentions = [];
 
     // Remember any mentions so we can special case other notifications.
     notificationData['mentions'] = mentions;
 
-    for (var mention in regExp.allMatches(postText)) mentions.add(mention.group(0).replaceAll("@", ""));
+    for (var mention in regExp.allMatches(postText)) {
+      if (mentions.contains(mention.group(0))) return;
+      mentions.add(mention.group(0).replaceAll("@", ""));
+    }
 
     mentions.forEach((user) {
       // Don't notify when you mention yourself.
@@ -399,9 +405,7 @@ Hey $firstName,
 
 $postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post:' : ':'}
 
-${notificationData['itemSubject']}
 ${notificationData['itemLink']}
-$notificationText
 --
 Woven
 http://woven.co
