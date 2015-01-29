@@ -233,10 +233,6 @@ core-menu core-item:hover {
   background: #3e5a9b;
 }
 
-.list > *.core-selected {
-  background: #333;
-}
-
 paper-toast {
   right: 10px;
   left: auto;
