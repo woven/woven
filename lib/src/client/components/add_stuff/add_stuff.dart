@@ -26,7 +26,7 @@ class AddStuff extends PolymerElement {
   @published App app;
   @published bool opened = false;
   @observable var selectedType;
-  @observable Map formData = {};
+  @observable Map formData = toObservable({});
   List validShareToOptions = ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode']; // TODO: Fixed for now, change later.
 
   CoreOverlay get overlay => $['overlay'];
@@ -252,11 +252,11 @@ class AddStuff extends PolymerElement {
     HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId");
 
     overlay.toggle();
-    if (selectedType != 'message') {
-      subjectInput.value = "";
-      bodyInput.value = "";
-      // TODO: Reset the selected type too? May be useful not to.
-    }
+
+    // Reset all form fields. Wait a bit for the dialog to close first.
+    new Timer(new Duration(seconds: 1), () {
+      formData.forEach((k, v) => formData[k] = '');
+    });
 
 //    if (app.community != null) app.selectedPage = 0;
 //    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');

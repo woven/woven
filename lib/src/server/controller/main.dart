@@ -406,6 +406,7 @@ Hey $firstName,
 $postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post:' : ':'}
 
 ${notificationData['itemLink']}
+
 --
 Woven
 http://woven.co
