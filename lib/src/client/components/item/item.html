@@ -39,19 +39,6 @@
                 <template if="{{item['type'] != 'message' && item['type'] != null}}">
                   <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" on-tap="{{selectItem}}" data-id="{{item['id']}}">
                     <div class="item-container" vertical layout>
-                      <!--<div class="content-header" vertical layout>-->
-                      <!--<div horizontal layout>-->
-                      <!--<div class="user-area">-->
-                      <!--<user-picture app="{{app}}" user="{{item['user']}}"></user-picture>-->
-                      <!--</div>-->
-                      <!--<div class="info-area" layout vertical flex>-->
-                      <!--<div class="item-info">-->
-                      <!--<div><span class="item-user">{{item['user']}}</span> posted {{formatWordArticle(item['type'])}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>-->
-                      <!--<div class="item-ago"><live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>-->
-                      <!--</div>-->
-                      <!--</div>-->
-                      <!--</div>-->
-                      <!--</div>-->
                       <div layout horizontal>
                         <div class="item-photo-area">
                           <div class="item-photo-wrapper">
@@ -65,24 +52,7 @@
                         </div>
                         <div class="content-main" vertical layout flex>
                           <div class="item-subject first">{{item['subject']}}</div>
-                          <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
-                          <!--<template if="{{item['uriPreviewId'] != null}}">-->
-                          <!--<uri-preview previewid="{{item['uriPreviewId']}}"></uri-preview>-->
-                          <!--</template>-->
-                          <!--<div class="content-header" vertical layout>-->
-                            <!--<div horizontal layout>-->
-                              <!--&lt;!&ndash;<div class="user-area">&ndash;&gt;-->
-                              <!--&lt;!&ndash;<user-picture app="{{app}}" user="{{item['user']}}"></user-picture>&ndash;&gt;-->
-                              <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                              <!--<div class="info-area" layout vertical flex>-->
-                                <!--<div class="item-info">-->
-                                  <!--<div>-->
-                                    <!--<span class="item-user">{{item['user']}}</span> posted this.</div>-->
-                                  <!--&lt;!&ndash;<div class="item-ago"><live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time></div>&ndash;&gt;-->
-                                <!--</div>-->
-                              <!--</div>-->
-                            <!--</div>-->
-                          <!--</div>-->
+                          <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{formattedBody}}</div>
                         </div>
                       </div>
                     </div>
@@ -144,7 +114,7 @@
               </div>
               <div class="content-main" vertical layout flex>
                 <div class="item-subject first">{{item['subject']}}</div>
-                <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
+                <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{formattedBody}}</div>
                 <!--<template if="{{item['uriPreviewId'] != null}}">-->
                   <!--<uri-preview previewid="{{item['uriPreviewId']}}"></uri-preview>-->
                 <!--</template>-->

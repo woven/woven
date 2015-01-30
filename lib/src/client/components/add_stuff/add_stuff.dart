@@ -93,17 +93,22 @@ class AddStuff extends PolymerElement {
       return false;
     }
 
+    if (selectedType == 'message' && messageInput.value.trim().isEmpty) {
+      window.alert("Add a message or choose another type.");
+      return false;
+    }
+
     // Validate other fields only if user selected a type to attach.
     if (selectedType != 'message') {
 
       // Validate other stuff.
       if (subjectInput.value.trim().isEmpty) {
-        window.alert("Your subject is empty.");
+        window.alert("The title is empty.");
         return false;
       }
 
       if (bodyInput.value.trim().isEmpty) {
-        window.alert("Your message is empty.");
+        window.alert("The description is empty.");
         return false;
       }
 
@@ -146,10 +151,10 @@ class AddStuff extends PolymerElement {
 
     item
       ..user = app.user.username
-      ..message = (messageInput != null) ? messageInput.value : null
-      ..subject = (subjectInput != null) ? subjectInput.value : null
+      ..message = (messageInput != null && !messageInput.value.trim().isEmpty) ? messageInput.value : null
+      ..subject = (subjectInput != null && !subjectInput.value.trim().isEmpty) ? subjectInput.value : null
       ..type = (selectedType != null) ? selectedType : 'message'
-      ..body = (bodyInput != null) ? bodyInput.value : null
+      ..body = (bodyInput != null && !bodyInput.value.trim().isEmpty) ? bodyInput.value : null
       ..createdDate = now
       ..updatedDate = now;
 

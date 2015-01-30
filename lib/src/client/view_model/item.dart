@@ -7,6 +7,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/client/view_model/base.dart';
+import 'package:woven/src/shared/model/uri_preview.dart';
 
 class ItemViewModel extends BaseViewModel with Observable {
   final App app;
@@ -55,6 +56,19 @@ class ItemViewModel extends BaseViewModel with Observable {
           default:
         }
 
+        // Handle any URI previews the item may have.
+        if (item['uriPreviewId'] != null) {
+          f.child('/uri_previews/${item['uriPreviewId']}').onValue.listen((e) {
+            var previewData = e.snapshot.val();
+            UriPreview preview = UriPreview.fromJson(previewData);
+            item['uriPreview'] = preview.toJson();
+            item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${item['uriPreview']['imageSmallLocation']}' : null;
+            item['uriPreviewTried'] = true;
+          });
+        } else {
+          item['uriPreviewTried'] = true;
+        }
+
         // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
         // So we'll add that to our local item list.
         item['id'] = e.snapshot.name;
@@ -67,6 +81,11 @@ class ItemViewModel extends BaseViewModel with Observable {
         // Listen for realtime changes to the like count.
         f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
           item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+        });
+
+        // Listen for realtime changes to the comment count.
+        f.child('/items/' + item['id'] + '/comment_count').onValue.listen((e) {
+          item['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
         });
 
         app.selectedItem = item;

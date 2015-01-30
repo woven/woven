@@ -22,6 +22,8 @@ class Item extends PolymerElement with Observable {
 
   InputElement get subject => $['subject'];
 
+  String get formattedBody => InputFormatter.createTeaser(item['body'], 75);
+
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
     // id passed in the data-id attribute on the element.
@@ -30,7 +32,6 @@ class Item extends PolymerElement with Observable {
     app.previousPage = app.selectedPage;
     app.selectedItem = item;
     app.selectedPage = 1;
-
 
     var str = target.dataset['id'];
     var bytes = UTF8.encode(str);
@@ -76,7 +77,7 @@ class Item extends PolymerElement with Observable {
 
 
   attached() {
-    item['body'] = InputFormatter.createTeaser(item['body'], 75);
+    //
   }
 
   detached() {

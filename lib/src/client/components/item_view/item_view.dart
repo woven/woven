@@ -41,14 +41,6 @@ class ItemView extends PolymerElement with Observable {
     return InputFormatter.formatWordArticle(content);
   }
 
-  itemChanged() {
-//    print(item['user']);
-    // Pass the item body to the safe-html element.
-    HtmlElement body = $['body'];
-    HtmlElement safeHtml = body.childNodes[0];
-    if (item.isNotEmpty) safeHtml.shadowRoot.innerHtml = formatText(item['body']);
-  }
-
   ItemView.created() : super.created();
 
   String formatItemDate(DateTime value) {
@@ -72,14 +64,9 @@ class ItemView extends PolymerElement with Observable {
 
   attached() {
     print("+ItemView");
-//    print(item['user']);
     app.pageTitle = "";
 
     app.scroller.scrollTop = 0;
-
-    if (item != null) {
-      itemChanged();
-    }
 
     // Once the view is loaded, handle scroll position.
     viewModel.onLoad.then((_) {
