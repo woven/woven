@@ -93,7 +93,7 @@ class App extends Observable {
     }
 
     void globalHandler(String path) {
-      print("Global handler fired at: $path");
+      if (config['debug_mode']) print("Global handler fired at: $path");
 
       /* TODO: Things like G tracking could be handled here. */
 //      if (js.context['_gaq'] != null) {

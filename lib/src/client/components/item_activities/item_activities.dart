@@ -234,13 +234,12 @@ class ItemActivities extends PolymerElement {
   }
 
   attached() {
-    print("+ItemActivities");
     getActivities();
 //    fixItemCommunities();
   }
 
   detached() {
-    print("-ItemActivities");
+    //
   }
 
   ItemActivities.created() : super.created();

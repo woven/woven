@@ -63,7 +63,6 @@ class ItemView extends PolymerElement with Observable {
   }
 
   attached() {
-    print("+ItemView");
     app.pageTitle = "";
 
     app.scroller.scrollTop = 0;

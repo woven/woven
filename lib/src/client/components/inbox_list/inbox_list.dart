@@ -299,8 +299,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   attached() {
-    print("+InboxList");
-
     initializeInfiniteScrolling();
 
     // Once the view is loaded, handle scroll position.
@@ -328,7 +326,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   detached() {
-    print("-InboxList");
 //    viewModel.lastScrollPos = app.scroller.scrollTop;
 
     // TODO: If we cancel, how to resume? pause/resume instead?
