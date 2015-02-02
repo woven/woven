@@ -75,6 +75,10 @@ class Item extends PolymerElement with Observable {
     return InputFormatter.formatDate(startDate.toLocal(), showHappenedPrefix: true, trimPast: true);
   }
 
+  stopProp(Event e) {
+    e.stopPropagation();
+  }
+
 
   attached() {
     //

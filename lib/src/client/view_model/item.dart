@@ -69,6 +69,13 @@ class ItemViewModel extends BaseViewModel with Observable {
           item['uriPreviewTried'] = true;
         }
 
+        // Format the URL for display.
+        if (item['url'] != null) {
+          String uriHost = Uri.parse(item['url']).host;
+          String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
+          item['uriHost'] = uriHostShortened;
+        }
+
         // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
         // So we'll add that to our local item list.
         item['id'] = e.snapshot.name;

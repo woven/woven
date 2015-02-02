@@ -322,6 +322,54 @@ core-icon {
   box-shadow: none;
 }
 
+.link-button {
+  fill: #bbb;
+  color: #bbb;
+  box-shadow: none;
+  border: 1px solid #e6e6e6;
+  display: inline-block;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  padding: 3px 10px 3px 5px;
+  text-decoration: none;
+  text-align: left;
+  background-color: #F5F5F5;
+  transition: background-color .2s;
+  width: 100%;
+  margin: 10px 0;
+  height: 35px;
+}
+
+.link-button:hover {
+  background-color:#fff;
+  transition: background-color .2s;
+  box-shadow: none;
+}
+
+.link-button:active {
+  background: #fff;
+  /*position:relative;*/
+  /*top:2px;*/
+}
+
+.link-button span {
+  position: relative;
+  top: 1px;
+  color: #0061BB;
+}
+
+.item-url {
+  margin-top: 15px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.item-url a, .item-url a:visited {
+  color: green;
+  text-decoration: none;
+}
+
 .like-button {
   width: 55px;
 }
@@ -377,7 +425,6 @@ safe-html::shadow .mention {
   }
 
   .item.compact .item-body {
-    white-space: nowrap;
   }
 
   .item.compact .event-date {
@@ -386,7 +433,6 @@ safe-html::shadow .mention {
   }
 
   .item.compact .item-subject {
-    white-space: nowrap;
     margin-bottom: 5px;
     font-size: 16px;
   }

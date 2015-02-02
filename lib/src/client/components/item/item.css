@@ -166,7 +166,7 @@ core-icon {
   color: #212121;
   font-size: 14px;
   white-space: normal;
-  line-height: 1.25em;
+  line-height: 1.4em;
 }
 
 .item.compact .item-body {
@@ -203,6 +203,21 @@ core-icon {
 .item-user {
   color: #0076C5;
   font-weight: bold;
+}
+
+.item-url {
+  margin-top: 15px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.item-url a, .item-url a:visited {
+  color: green;
+  text-decoration: none;
+}
+
+.item-url a:hover {
+  color: #016400;
 }
 
 .user-area {
@@ -334,16 +349,13 @@ core-icon {
 .action-button:hover {
   background-color:#fff;
   transition: background-color .2s;
+  box-shadow: none;
 }
 
 .action-button:active {
   background: #fff;
   /*position:relative;*/
   /*top:2px;*/
-}
-
-.action-button:hover {
-  box-shadow: none;
 }
 
 .like-button {

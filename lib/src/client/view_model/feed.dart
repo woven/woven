@@ -224,6 +224,13 @@ class FeedViewModel extends BaseViewModel with Observable {
     switch (item['type']) {
       case 'event':
         if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
+        item['defaultImage'] = 'event';
+        break;
+      case 'announcement':
+        item['defaultImage'] = 'announcement';
+        break;
+      case 'news':
+        item['defaultImage'] = 'custom-icons:news';
         break;
       case 'message':
       case 'other':
@@ -243,6 +250,13 @@ class FeedViewModel extends BaseViewModel with Observable {
       });
     } else {
       item['uriPreviewTried'] = true;
+    }
+
+    // Prepare the domain name.
+    if (item['url'] != null) {
+      String uriHost = Uri.parse(item['url']).host;
+      String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
+      item['uriHost'] = uriHostShortened;
     }
 
     // If we're filtering for just events, let's also get a date group so we can group events
