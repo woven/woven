@@ -56,7 +56,7 @@
               <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off" value="{{formData['url']}}">
             </div>
           </template>
-          <template if="{{selectedType != 'message'}}">
+          <template if="{{selectedType == 'event'}}">
             <div class="field-wrapper">
               <input is="core-input" id="subject" placeholder="Title" autocomplete="off" value="{{formData['subject']}}">
             </div>

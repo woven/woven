@@ -99,7 +99,8 @@ class AddStuff extends PolymerElement {
     }
 
     // Validate other fields only if user selected a type to attach.
-    if (selectedType != 'message') {
+    // TODO: Other fields limited to event type for now.
+    if (selectedType == 'event') {
 
       // Validate other stuff.
       if (subjectInput.value.trim().isEmpty) {

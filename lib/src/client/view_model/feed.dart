@@ -165,6 +165,10 @@ class FeedViewModel extends BaseViewModel with Observable {
             UriPreview preview = UriPreview.fromJson(previewData);
             currentData['uriPreview'] = preview.toJson();
             currentData['uriPreview']['imageSmallLocation'] = (currentData['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${currentData['uriPreview']['imageSmallLocation']}' : null;
+
+            // If subject and body are empty, use title and teaser from URI preview instead.
+            if (k['subject'] == null) k['subject'] = preview.title;
+            if (k['body'] == null) k['body'] = preview.teaser;
           });
         }
 
@@ -247,6 +251,10 @@ class FeedViewModel extends BaseViewModel with Observable {
         item['uriPreview'] = preview.toJson();
         item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${item['uriPreview']['imageSmallLocation']}' : null;
         item['uriPreviewTried'] = true;
+
+        // If subject and body are empty, use title and teaser from URI preview instead.
+        if (item['subject'] == null) item['subject'] = preview.title;
+        if (item['body'] == null) item['body'] = preview.teaser;
       });
     } else {
       item['uriPreviewTried'] = true;
