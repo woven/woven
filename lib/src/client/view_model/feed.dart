@@ -152,6 +152,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
+      UriPreview preview;
 
       newData.forEach((k, v) {
         if (k == "createdDate" || k == "updatedDate" || k == "startDateTime") v = DateTime.parse(v);
@@ -162,17 +163,26 @@ class FeedViewModel extends BaseViewModel with Observable {
         if (k == 'uriPreviewId') {
           f.child('/uri_previews/$v').onValue.listen((e) {
             var previewData = e.snapshot.val();
-            UriPreview preview = UriPreview.fromJson(previewData);
+            preview = UriPreview.fromJson(previewData);
             currentData['uriPreview'] = preview.toJson();
             currentData['uriPreview']['imageSmallLocation'] = (currentData['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${currentData['uriPreview']['imageSmallLocation']}' : null;
 
-            // If subject and body are empty, use title and teaser from URI preview instead.
-            if (k['subject'] == null) k['subject'] = preview.title;
-            if (k['body'] == null) k['body'] = preview.teaser;
+            // If subject and body are empty, use title and teaser from URI preview instead if we have one.
+            if (newData['subject'] == null) currentData['subject'] = preview.title;
+            if (newData['body'] == null) currentData['body'] = preview.teaser;
           });
         }
 
-        currentData[k] = v;
+        if (k == 'subject' || k == 'body') {
+          if (k == 'subject') {
+            if (v == null && preview.title == null) currentData[k] = v;
+          }
+          if (k == 'body') {
+            if (v == null && preview.teaser == null) currentData[k] = v;
+          }
+        } else {
+          currentData[k] = v;
+        }
       });
     });
 
