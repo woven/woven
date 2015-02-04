@@ -142,9 +142,6 @@ removeNullsFromMap(Map map) {
  * Check if given string is a valid URL.
  */
 bool isValidUrl(String url) {
-  // Let's enforce http/https for now.
-  if (!url.contains("http://") || !url.contains("https://")) return false;
-
   try {
     Uri.parse(url);
   } catch (e) {

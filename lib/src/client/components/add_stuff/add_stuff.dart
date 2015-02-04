@@ -97,7 +97,7 @@ class AddStuff extends PolymerElement {
       return false;
     }
 
-    if (urlInput != null && isValidUrl(urlInput.value) == false) {
+    if (urlInput != null && !isValidUrl(urlInput.value)) {
       window.alert("That's not a valid URL. Please include http://.");
       return false;
     }
