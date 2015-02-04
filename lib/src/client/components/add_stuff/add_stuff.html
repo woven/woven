@@ -52,7 +52,7 @@
         </div>
         <div id="content-container">
           <template if="{{selectedType == 'event' || selectedType == 'news'}}">
-            <div class="field-wrapper first">
+            <div class="field-wrapper first {{(selectedType == 'news') ? 'last' : ''}}">
               <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off" value="{{formData['url']}}">
             </div>
           </template>

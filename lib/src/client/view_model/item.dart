@@ -64,6 +64,10 @@ class ItemViewModel extends BaseViewModel with Observable {
             item['uriPreview'] = preview.toJson();
             item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${item['uriPreview']['imageSmallLocation']}' : null;
             item['uriPreviewTried'] = true;
+
+            // If subject and body are empty, use title and teaser from URI preview instead.
+            if (item['subject'] == null) item['subject'] = toObservable(preview.title);
+            if (item['body'] == null) item['body'] =  toObservable(preview.teaser);;
           });
         } else {
           item['uriPreviewTried'] = true;
