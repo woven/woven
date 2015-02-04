@@ -50,15 +50,17 @@
                             </div>
                             <template if="{{item['body'] != null}}"><safe-html>{{getFormattedBody}}</safe-html></template>
                           </div>
-                          <core-icon-button icon="launch"
-                                            class="link-button"
-                                            data-id="{{item['id']}}">
-                            <span class="item-url">
-                              <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}">
-                                {{item['uriHost']}}
-                              </a>
-                            </span>
-                          </core-icon-button>
+                          <div class="item-url">
+                            <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}">
+                              <core-icon-button icon="launch"
+                                                class="link-button"
+                                                data-id="{{item['id']}}">
+                                <span>
+                                    {{item['uriHost']}}
+                                </span>
+                              </core-icon-button>
+                            </a>
+                          </div>
                         </div>
                         <div class="item-photo-area">
                           <div class="item-photo-wrapper">

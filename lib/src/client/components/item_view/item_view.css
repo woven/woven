@@ -359,13 +359,10 @@ core-icon {
   color: #0061BB;
 }
 
-.item-url {
+.item-url span {
   margin-top: 15px;
   font-size: 12px;
   text-transform: uppercase;
-}
-
-.item-url a, .item-url a:visited {
   color: green;
   text-decoration: none;
 }
