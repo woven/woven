@@ -6,6 +6,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/date_group.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/shared/shared_util.dart';
 import 'dart:async';
 import 'base.dart';
 
@@ -152,7 +153,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
-      
+
       Future processData = new Future.sync(() {
         // First pre-process some things.
         if (newData['createdDate'] != null) newData['createdDate'] = DateTime.parse(newData['createdDate']);
@@ -265,9 +266,9 @@ class FeedViewModel extends BaseViewModel with Observable {
     }
 
     // Prepare the domain name.
-    if (item['url'] != null) {
+    if (item['url'] != null && isValidUrl(item['url'])) {
       String uriHost = Uri.parse(item['url']).host;
-      String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
+      String uriHostShortened = (uriHost != null) ? uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1) : null;
       item['uriHost'] = uriHostShortened;
     }
 

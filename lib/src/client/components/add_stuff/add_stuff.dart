@@ -4,7 +4,6 @@ import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:convert';
 import 'dart:async';
-import 'dart:math';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
@@ -98,6 +97,11 @@ class AddStuff extends PolymerElement {
       return false;
     }
 
+    if (urlInput != null && isValidUrl(urlInput.value) == false) {
+      window.alert("That's not a valid URL. Please include http://.");
+      return false;
+    }
+
     // Validate other fields only if user selected a type to attach.
     // TODO: Other fields limited to event type for now.
     if (selectedType == 'event') {
@@ -124,19 +128,6 @@ class AddStuff extends PolymerElement {
           window.alert("That's not a valid start time. Ex: " + new DateFormat("h:mm a").format(new DateTime.now()) + ', ' + new DateFormat("h a").format(new DateTime.now()));
           return false;
         }
-      }
-
-      _isValidUrl(String url) {
-        if (url.contains("http://") || url.contains("https://")) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-
-      if (urlInput != null && _isValidUrl(urlInput.value) == false) {
-        window.alert("That's not a valid URL. Please include http://.");
-        return false;
       }
     }
 
