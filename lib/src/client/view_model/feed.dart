@@ -152,37 +152,31 @@ class FeedViewModel extends BaseViewModel with Observable {
     childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
-      UriPreview preview;
+      
+      Future processData = new Future.sync(() {
+        // First pre-process some things.
+        if (newData['createdDate'] != null) newData['createdDate'] = DateTime.parse(newData['createdDate']);
+        if (newData['updatedDate'] != null) newData['updatedDate'] = DateTime.parse(newData['updatedDate']);
+        if (newData['startDateTime'] != null) newData['startDateTime'] = DateTime.parse(newData['startDateTime']);
+        if (newData['star_count'] == null) newData['star_count'] = 0;
+        if (newData['like_count'] == null) newData['like_count'] = 0;
 
-      newData.forEach((k, v) {
-        if (k == "createdDate" || k == "updatedDate" || k == "startDateTime") v = DateTime.parse(v);
-        if (k == "star_count") v = (v != null) ? v : 0;
-        if (k == "like_count") v = (v != null) ? v : 0;
-
-        // Handle any URI previews the changed item may have.
-        if (k == 'uriPreviewId') {
-          f.child('/uri_previews/$v').onValue.listen((e) {
-            var previewData = e.snapshot.val();
-            preview = UriPreview.fromJson(previewData);
+        if (newData['uriPreviewId'] != null) {
+          // Get the associated URI preview.
+          return f.child('/uri_previews/${newData['uriPreviewId']}').once('value').then((e) {
+            var previewData = e.val();
+            UriPreview preview = UriPreview.fromJson(previewData);
             currentData['uriPreview'] = preview.toJson();
             currentData['uriPreview']['imageSmallLocation'] = (currentData['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${currentData['uriPreview']['imageSmallLocation']}' : null;
 
-            // If subject and body are empty, use title and teaser from URI preview instead if we have one.
-            if (newData['subject'] == null) currentData['subject'] = preview.title;
-            if (newData['body'] == null) currentData['body'] = preview.teaser;
+            // If item's subject/body are empty, use any title/teaser from URI preview instead.
+            if (newData['subject'] == null) newData['subject'] = preview.title;
+            if (newData['body'] == null) newData['body'] = preview.teaser;
           });
         }
-
-        if (k == 'subject' || k == 'body') {
-          if (k == 'subject') {
-            if (v == null && preview.title == null) currentData[k] = v;
-          }
-          if (k == 'body') {
-            if (v == null && preview.teaser == null) currentData[k] = v;
-          }
-        } else {
-          currentData[k] = v;
-        }
+      }).then((_) {
+        // Now that new data is pre-processed, update current data.
+        newData.forEach((k, v) => currentData[k] = v);
       });
     });
 
