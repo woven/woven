@@ -22,7 +22,11 @@ class Item extends PolymerElement with Observable {
 
   InputElement get subject => $['subject'];
 
+  @ComputedProperty("item['body']")
   String get formattedBody => InputFormatter.createTeaser(item['body'], 75);
+
+  @ComputedProperty("item['subject']")
+  String get formattedSubject => InputFormatter.createTeaser(item['subject'], 75);
 
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
@@ -52,7 +56,7 @@ class Item extends PolymerElement with Observable {
     viewModel.toggleItemLike(target.dataset['id']);
   }
 
-  toggleStar(Event e, var detail, Element target) {
+  void toggleStar(Event e, var detail, Element target) {
     e.stopPropagation();
 
     viewModel.toggleItemStar(target.dataset['id']);

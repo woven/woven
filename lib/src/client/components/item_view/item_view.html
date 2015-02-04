@@ -44,7 +44,12 @@
                         <div class="content-main" vertical layout flex>
                           <div class="item-subject first">{{item['subject']}}</div>
                           <!--<p id="body" class="item-body {{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>-->
-                          <div class="item-body"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div><safe-html>{{formatText(item['body'])}}</safe-html></div>
+                          <div class="item-body">
+                            <div class="event-date">
+                              <live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time>
+                            </div>
+                            <template if="{{item['body'] != null}}"><safe-html>{{getFormattedBody}}</safe-html></template>
+                          </div>
                           <core-icon-button icon="launch"
                                             class="link-button"
                                             data-id="{{item['id']}}">
