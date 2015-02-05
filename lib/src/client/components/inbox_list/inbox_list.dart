@@ -234,7 +234,7 @@ class InboxList extends PolymerElement with Observable {
           if (!current.isUtc) {
             datetime = new DateTime(current.year, current.month, current.day, current.hour, current.minute, current.second).toUtc();
           } else {
-            datetime = new DateTime(current.year, current.month, current.day, current.hour, current.minute, current.second);
+            datetime = new DateTime.utc(current.year, current.month, current.day, current.hour, current.minute, current.second);
           }
           eventPriority = datetime.millisecondsSinceEpoch;
         } else {
