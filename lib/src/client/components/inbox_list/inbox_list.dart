@@ -315,7 +315,7 @@ class InboxList extends PolymerElement with Observable {
       }));
     });
 
-    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
+//    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
 //    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
 //    scriptUpdateCommentCounts(); // Run 3rd.
 //      scriptAddPriorityOnPeople(); // 4.
