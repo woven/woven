@@ -2,6 +2,7 @@
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../widgets/custom_icons/custom_icons.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
 <link rel="import" href="../widgets/uri_preview/uri_preview.html">
 <link rel="import" href="../user_picture/user_picture.html">
@@ -9,6 +10,7 @@
 <polymer-element name="item-view">
   <template>
     <link rel="stylesheet" href="item_view.css">
+    <custom-icons></custom-icons>
       <template if="{{item != null}}">
         <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" data-id="{{item['id']}}">
           <div class="item-container" vertical layout>
@@ -68,7 +70,7 @@
                               <core-image class="item-photo" sizing="cover" preload fade src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
                             </template>
                             <template if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
-                              <core-icon class="item-photo-icon-none" icon="event"></core-icon>
+                              <core-icon class="item-photo-icon-none" icon="{{item['defaultImage']}}"></core-icon>
                             </template>
                           </div>
                         </div>

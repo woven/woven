@@ -52,6 +52,17 @@ class ItemViewModel extends BaseViewModel with Observable {
         switch (item['type']) {
           case 'event':
             if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
+            item['defaultImage'] = 'event';
+            break;
+          case 'announcement':
+            item['defaultImage'] = 'announcement';
+            break;
+          case 'news':
+            item['defaultImage'] = 'custom-icons:news';
+            break;
+          case 'message':
+          case 'other':
+            item['type'] = null;
             break;
           default:
         }
