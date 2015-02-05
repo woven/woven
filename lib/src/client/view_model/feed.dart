@@ -167,8 +167,9 @@ class FeedViewModel extends BaseViewModel with Observable {
           return f.child('/uri_previews/${newData['uriPreviewId']}').once('value').then((e) {
             var previewData = e.val();
             UriPreview preview = UriPreview.fromJson(previewData);
-            currentData['uriPreview'] = preview.toJson();
-            currentData['uriPreview']['imageSmallLocation'] = (currentData['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${currentData['uriPreview']['imageSmallLocation']}' : null;
+            newData['uriPreview'] = preview.toJson();
+            newData['uriPreview']['imageSmallLocation'] = (newData['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${newData['uriPreview']['imageSmallLocation']}' : null;
+//            newData['uriPreviewTried'] = true;
 
             // If item's subject/body are empty, use any title/teaser from URI preview instead.
             if (newData['subject'] == null) newData['subject'] = preview.title;
