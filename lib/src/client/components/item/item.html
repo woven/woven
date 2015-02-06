@@ -34,11 +34,14 @@
               </div>
               <div class="content-main" vertical layout>
                 <template if="{{item['message'] != null}}">
+                  <template if="{{item['uriPreviewId'] == null}}">
+                    <div class="item-subject">{{formattedSubject}}</div>
+                  </template>
                   <div class="message {{item['type'] != null && item['type'] != 'message' ? 'with-type' : ''}}">
                     {{item['message']}}
                   </div>
                 </template>
-                <template if="{{item['type'] != 'message' && item['type'] != null}}">
+                <template if="{{item['type'] != 'message' && item['type'] != null && item['uriPreviewId'] != null}}">
                   <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" data-id="{{item['id']}}">
                     <div class="item-container" vertical layout>
                       <div layout horizontal>
