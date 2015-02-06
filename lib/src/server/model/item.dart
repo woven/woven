@@ -21,12 +21,14 @@ class ItemModel extends shared.ItemModel {
       }).then((_) {
         // Get a list of the communities this item is in.
         Firebase.get('/items/$itemId/communities.json').then((Map res) {
+          if (res == null) return null;
           List communities = [];
           res.forEach((k, v) {
             communities.add(k);
           });
           return communities;
         }).then((List communities) {
+          if (communities == null) return;
           // For each community the item is in...
           communities.forEach((community) {
             // Update the item in items_by_community.

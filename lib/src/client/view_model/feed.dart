@@ -223,6 +223,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     var item = toObservable(snapshot.val());
 
     // If no updated date, use the created date.
+    // TODO: We assume createdDate is never null!
     if (item['updatedDate'] == null) {
       item['updatedDate'] = item['createdDate'];
     }
