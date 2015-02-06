@@ -34,7 +34,7 @@
               </div>
               <div class="content-main" vertical layout>
                 <template if="{{item['message'] != null}}">
-                  <template if="{{item['uriPreviewId'] == null}}">
+                  <template if="{{item['uriPreviewTried'] && item['uriPreviewId'] == null && item['subject'] != null && item['url'] == null}}">
                     <div class="item-subject">{{formattedSubject}}</div>
                   </template>
                   <div class="message {{item['type'] != null && item['type'] != 'message' ? 'with-type' : ''}}">
