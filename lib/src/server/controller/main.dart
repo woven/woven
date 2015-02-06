@@ -76,19 +76,26 @@ class MainController {
     var item = request.requestedUri.queryParameters['itemid'];
     var crawler = new CrawlerUtil();
 
-    return Firebase.get('/items/$item/url.json').then((String uri) {
+    return Firebase.get('/items/$item.json').then((Map itemMap) {
+      String uri = itemMap['url'];
       // Crawl for some data.
-      return crawler.getPreview(Uri.parse(uri)).then((UriPreview preview) {
+      return crawler.getPreview(Uri.parse(uri)).then((Response res) {
+        if (res.success == false) return Response.fromError('Could not fetch from that URL.');
+
+        UriPreview preview = UriPreview.fromJson(res.data);
         var response = new Response();
         if (preview.imageOriginalUrl == null) {
           // Save the preview.
           return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
-            var value = {
-                'uriPreviewId': name
-            };
+            Map updates = {};
+            updates['uriPreviewId'] = name;
+
+            // If no subject/body, use preview's title/teaser.
+            if (itemMap['subject'] == null) updates['subject'] = preview.title;
+            if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
             // Update the item with a reference to the preview.
-            ItemModel.update(item, value);
+            ItemModel.update(item, updates);
 
             // Return the preview information.
             response.data = preview;
@@ -105,10 +112,13 @@ class MainController {
               return imageUtil.resize(file, width: 225, height: 125).then((File convertedFile) {
                 // Save the preview.
                 return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
-                  var value = {'uriPreviewId': name};
+                  Map updates = {};
+                  updates['uriPreviewId'] = name;
+                  if (itemMap['subject'] == null) updates['subject'] = preview.title;
+                  if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
                   // Update the item with a reference to the preview.
-                  ItemModel.update(item, value);
+                  ItemModel.update(item, updates);
 
                   // Convert and save the image.
                   var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];

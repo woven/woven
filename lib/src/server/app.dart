@@ -26,7 +26,7 @@ import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
 
 // Add parts.
 import 'package:woven/src/server/util/profile_picture_util.dart';
-part 'util/cloud_storage_util.dart';
+import 'package:woven/src/server/util/cloud_storage_util.dart';
 
 class App {
   Router router;
@@ -90,7 +90,7 @@ class App {
     // to request access for all scopes in `Scopes`.
     auth.clientViaServiceAccount(googleServiceAccountCredentials, googleApiScopes).then((client) {
       this.googleApiClient = client;
-      cloudStorageUtil = new CloudStorageUtil(this);
+      cloudStorageUtil = new CloudStorageUtil(googleApiClient);
     });
   }
 

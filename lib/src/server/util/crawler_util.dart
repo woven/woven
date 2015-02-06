@@ -5,11 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:html5lib/parser.dart' show parse;
 import 'package:html5lib/dom.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/shared/response.dart';
 
 class CrawlerUtil {
   CrawlerUtil();
 
-  Future<UriPreview> getPreview(Uri uri) {
+  Future<Response> getPreview(Uri uri) {
+    Response response = new Response();
+
     return http.read(uri).then((String contents) {
       UriPreview preview = new UriPreview(uri: uri);
       var document = parse(contents);
@@ -26,7 +29,10 @@ class CrawlerUtil {
 
       if (preview.title == null) preview.title = document.querySelector('title').innerHtml;
 
-      return preview;
+      response.data = preview.toJson();
+      return response;
+    }).catchError((error) {
+      return Response.fromError(error);
     });
   }
 }

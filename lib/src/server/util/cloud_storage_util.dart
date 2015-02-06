@@ -1,11 +1,15 @@
-part of woven_server;
+library cloud_storage_util;
+
+import 'dart:io';
+import 'dart:async';
+import 'package:googleapis/storage/v1.dart' as storage;
+import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
 
 class CloudStorageUtil {
-  App app;
   storage.StorageApi storageApi;
 
-  CloudStorageUtil(this.app) {
-    this.storageApi = new storage.StorageApi(app.googleApiClient);
+  CloudStorageUtil(googleApiClient) {
+    this.storageApi = new storage.StorageApi(googleApiClient);
   }
 // Upload a file to Google Cloud Storage.
   Future uploadFile(String file,
