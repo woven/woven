@@ -108,13 +108,13 @@ core-tooltip::shadow .core-tooltip {
   -webkit-flex-flow: column;
   /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
   max-width: 640px;
-  margin: 10px auto 10px auto;
+  margin: 0 auto 20px auto;
   border-radius: 4px;
 }
 
 #activity-wrapper {
   max-width: 640px;
-  margin: 10px auto 10px auto;
+  margin: 10px auto 0 auto;
 }
 
 #comment-message {

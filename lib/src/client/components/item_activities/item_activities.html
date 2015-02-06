@@ -10,41 +10,6 @@
 <polymer-element name="item-activities">
   <template>
     <link rel="stylesheet" href="item_activities.css">
-    <div id="post-container">
-      <template if="{{app.user != null}}">
-        <div layout horizontal>
-          <div class="user-area" vertical layout>
-            <user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>
-          </div>
-          <div vertical layout flex>
-            <div class="field-wrapper full-height">
-              <paper-autogrow-textarea
-                  id="comment"
-                  on-focus="{{onFocusHandler}}"
-                  on-blur="{{onBlurHandler}}"
-                  on-tap="{{onFocusHandler}}"
-                  autocomplete="off"
-                  >
-               <textarea id="comment-textarea" placeholder="Add a comment..."></textarea>
-              </paper-autogrow-textarea>
-            </div>
-            <!--<div id="footer">-->
-              <!--<core-tooltip label="Tab + Enter" position="left" tabindex="-1">-->
-                <!--<core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>-->
-              <!--</core-tooltip>-->
-            <!--</div>-->
-            <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
-          </div>
-        </div>
-      </template>
-      <template if="{{app.user == null}}">
-        <div id="signin-container">
-          <span id="message">Please sign in to comment.</span>
-          <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
-        </div>
-      </template>
-    </div>
-
     <div id="activity-wrapper">
       <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
         <div layout horizontal>
@@ -62,6 +27,40 @@
               <p><safe-html><template if="{{comment != null}}">{{formatText(comment['comment'])}}</template></safe-html></p>
             </div>
           </div>
+        </div>
+      </template>
+    </div>
+    <div id="post-container">
+      <template if="{{app.user != null}}">
+        <div layout horizontal>
+          <div class="user-area" vertical layout>
+            <user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>
+          </div>
+          <div vertical layout flex>
+            <div class="field-wrapper full-height">
+              <paper-autogrow-textarea
+                  id="comment"
+                  on-focus="{{onFocusHandler}}"
+                  on-blur="{{onBlurHandler}}"
+                  on-tap="{{onFocusHandler}}"
+                  autocomplete="off"
+                  >
+                <textarea id="comment-textarea" placeholder="Add a comment..."></textarea>
+              </paper-autogrow-textarea>
+            </div>
+            <!--<div id="footer">-->
+            <!--<core-tooltip label="Tab + Enter" position="left" tabindex="-1">-->
+            <!--<core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>-->
+            <!--</core-tooltip>-->
+            <!--</div>-->
+            <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+          </div>
+        </div>
+      </template>
+      <template if="{{app.user == null}}">
+        <div id="signin-container">
+          <span id="message">Please sign in to comment.</span>
+          <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
         </div>
       </template>
     </div>
