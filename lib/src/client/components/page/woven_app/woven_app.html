@@ -104,7 +104,7 @@
 
         </div>
 
-        <core-scroll-header-panel id="main-panel" main>
+        <core-scroll-header-panel id="main-panel" main fixed>
 
           <core-toolbar id="toolbar-main">
             <template if="{{app.selectedPage != 1 || (app.previousPage != 0 && app.previousPage != 5 && app.previousPage != 6)}}">
@@ -120,7 +120,7 @@
 
           <div class="content" layout vertical>
             <div id="main-scrollable" class="main" flex>
-            <core-animated-pages id="pages" selected="{{app.selectedPage}}">
+            <core-animated-pages id="pages" selected="{{app.selectedPage}}" fit>
               <section>
                 <template if="{{app.community != null && app.selectedPage === 0}}">
                   <chat-view id="inbox-list" app="{{app}}"></chat-view>
@@ -180,13 +180,13 @@
               </section>
             </core-animated-pages>
             </div>
-            <div class="footer">
-              <template if="{{app.community != null && app.selectedPage === 0}}">
-                <div class="fixed-area">
-                  Footer!
-                </div>
-              </template>
-            </div>
+            <!--<div class="footer">-->
+              <!--<template if="{{app.community != null && app.selectedPage === 0}}">-->
+                <!--<div class="fixed-area">-->
+                  <!--Footer!-->
+                <!--</div>-->
+              <!--</template>-->
+            <!--</div>-->
           </div>
           <!--<div>-->
             <!--<template if="{{app.community != null && app.selectedPage === 0}}">-->

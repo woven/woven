@@ -1,14 +1,4 @@
-core-field {
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  padding-left: 5px;
-  height: 40px;
-  background-color: #fff;
-}
 
-core-field input {
-  font-family: arial, sans-serif;
-}
 
 .activity-card {
   background-color: #fff;
@@ -64,57 +54,6 @@ core-field input {
 .date-time {
   color: #3F3F3F;
   font-size: 90%;
-}
-
-.field-wrapper {
-  padding: 12px 10px 6px 10px;
-  border: solid 1px #e6e6e6;
-  background-color: #fff;
-}
-
-.field-wrapper.first {
-  border-top: none;
-}
-
-.field-wrapper.transparent {
-  background: transparent;
-  border: none;
-}
-
-#comment {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  outline: none;
-  width: 100%;
-  min-height: 22px;
-}
-
-#comment-textarea {
-  font: inherit;
-}
-
-core-tooltip::shadow .core-tooltip {
-  font-size: 12px;
-}
-
-#fixed-area {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-}
-
-#post-container {
-
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: column;
-  -webkit-flex-flow: column;
-  /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
-  margin: 20px;
-  border-radius: 4px;
 }
 
 #activity-wrapper {

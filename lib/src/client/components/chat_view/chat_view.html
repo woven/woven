@@ -1,69 +1,17 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_field.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_a11y_keys.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
-<link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
-<link rel="import" href="../widgets/live_date_time/live_date_time.html">
-<link rel="import" href="../widgets/safe_html/safe_html.html">
-<link rel="import" href="../user_picture/user_picture.html">
+<link rel="import" href="../chat_list/chat_list.html">
+<link rel="import" href="../chat_box/chat_box.html">
+
 <polymer-element name="chat-view">
   <template>
     <link rel="stylesheet" href="chat_view.css">
-    <!--<div id="fixed-area">-->
-      <!--<div id="post-container">-->
-        <!--<template if="{{app.user != null}}">-->
-          <!--<div layout horizontal>-->
-            <!--<div class="user-area" vertical layout>-->
-              <!--<user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>-->
-            <!--</div>-->
-            <!--<div vertical layout flex>-->
-              <!--<div class="field-wrapper full-height">-->
-                <!--<paper-autogrow-textarea-->
-                    <!--id="comment"-->
-                    <!--on-focus="{{onFocusHandler}}"-->
-                    <!--on-blur="{{onBlurHandler}}"-->
-                    <!--on-tap="{{onFocusHandler}}"-->
-                    <!--autocomplete="off">-->
-                  <!--<textarea id="comment-textarea" placeholder="Add a comment..."></textarea>-->
-                <!--</paper-autogrow-textarea>-->
-              <!--</div>-->
-              <!--&lt;!&ndash;<div id="footer">&ndash;&gt;-->
-              <!--&lt;!&ndash;<core-tooltip label="Tab + Enter" position="left" tabindex="-1">&ndash;&gt;-->
-              <!--&lt;!&ndash;<core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>&ndash;&gt;-->
-              <!--&lt;!&ndash;</core-tooltip>&ndash;&gt;-->
-              <!--&lt;!&ndash;</div>&ndash;&gt;-->
-              <!--<core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</template>-->
-        <!--<template if="{{app.user == null}}">-->
-          <!--<div id="signin-container">-->
-            <!--<span id="message">Please sign in to comment.</span>-->
-            <!--<button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>-->
-          <!--</div>-->
-        <!--</template>-->
-      <!--</div>-->
-    <!--</div>-->
-    <div id="activity-wrapper">
-      <template if="{{messages != null}}" repeat="{{message in messages}}">
-        <div layout horizontal>
-          <div class="user-area" vertical layout>
-            <user-picture app="{{app}}" user="{{message['user']}}"></user-picture>
-          </div>
-          <div class="activity-card" flex>
-            <div id="content">
-              <div class="card-top" horizontal layout>
-                <div flex class="user">{{message['user']}}</div>
-                <div class="date-time">
-                  <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-                </div>
-              </div>
-              <p><safe-html><template if="{{message != null}}">{{formatText(message['comment'])}}</template></safe-html></p>
-            </div>
-          </div>
-        </div>
-      </template>
+    <div layout vertical fit>
+      <div class="main-area" flex>
+        <chat-list app="{{app}}"></chat-list>
+      </div>
+      <div class="footer-area">
+        <chat-box app="{{app}}"></chat-box>
+      </div>
     </div>
   </template>
   <script type="application/dart" src="chat_view.dart"></script>
