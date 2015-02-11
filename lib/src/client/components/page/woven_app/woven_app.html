@@ -104,7 +104,7 @@
 
         </div>
 
-        <core-scroll-header-panel id="main-panel" main mode="seamed">
+        <core-scroll-header-panel id="main-panel" main>
 
           <core-toolbar id="toolbar-main">
             <template if="{{app.selectedPage != 1 || (app.previousPage != 0 && app.previousPage != 5 && app.previousPage != 6)}}">
@@ -119,7 +119,7 @@
 
 
           <div class="content" layout vertical>
-            <div class="main" flex>
+            <div id="main-scrollable" class="main" flex>
             <core-animated-pages id="pages" selected="{{app.selectedPage}}">
               <section>
                 <template if="{{app.community != null && app.selectedPage === 0}}">

@@ -287,8 +287,7 @@ class InboxList extends PolymerElement with Observable {
    * Initializes the infinite scrolling ability.
    */
   initializeInfiniteScrolling() {
-    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
-    HtmlElement scroller = el.scroller;
+    var scroller = app.scroller;
     HtmlElement element = $['content-container'];
     var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller);
 
