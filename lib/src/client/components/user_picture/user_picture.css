@@ -8,9 +8,9 @@
   width: 40px;
   height: 40px;
   background: #F5F5F5;
-  /*border: solid 1px #E6E6E6;*/
+  border: solid 1px #E6E6E6;
   overflow:hidden;
-  /*border-radius: 3px;*/
+  border-radius: 3px;
 
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);

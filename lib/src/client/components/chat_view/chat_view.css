@@ -1,3 +1,240 @@
-.main-area {
-  overflow: auto;
+core-field {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  height: 40px;
+  background-color: #fff;
+}
+
+core-field input {
+  font-family: arial, sans-serif;
+}
+
+.activity-card {
+  background-color: #fff;
+  margin: 0 auto 10px auto;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+}
+
+.activity-card #content {
+  padding: 10px 10px 3px 10px;
+  white-space: inherit;
+  word-wrap: break-word;
+  line-height: 18px;
+}
+
+.activity-card .card-top {
+  margin-bottom: 2px;
+}
+
+.user-area {
+  margin-right: 10px;
+}
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  background: #F5F5F5;
+  border: solid 1px #E6E6E6;
+  overflow:hidden;
+  border-radius: 3px;
+
+  /* Disable iOS highlighting the element on tap. */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.user-photo img {
+  width: 50px;
+  height: 50px;
+}
+
+.user {
+  font-weight: bold;
+}
+
+.date-time {
+  color: #3F3F3F;
+  font-size: 90%;
+}
+
+.field-wrapper {
+  padding: 12px 10px 6px 10px;
+  border: solid 1px #e6e6e6;
+  background-color: #fff;
+}
+
+.field-wrapper.first {
+  border-top: none;
+}
+
+.field-wrapper.transparent {
+  background: transparent;
+  border: none;
+}
+
+#comment {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  min-height: 22px;
+}
+
+#comment-textarea {
+  font: inherit;
+}
+
+core-tooltip::shadow .core-tooltip {
+  font-size: 12px;
+}
+
+#fixed-area {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#post-container {
+
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  /*box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px;*/
+  margin: 20px;
+  border-radius: 4px;
+}
+
+#activity-wrapper {
+  margin: 20px;
+}
+
+#comment-message {
+  align-self: center;
+  text-align: right;
+  margin-right: 11px;
+  color: #888;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+#footer {
+  background-color: #F5F5F5;
+  padding: 3px;
+  border: 1px solid #e6e6e6;
+  border-top-width: 0;
+  text-align: right;
+}
+
+/*#footer .btn {*/
+  /*float: right;*/
+  /*vertical-align: middle;*/
+/*}*/
+
+/* Odd how woven-app.css btn.primary bleeds to here, only in Safari. */
+/* Therefore using .btn.action instead. */
+
+.btn {
+  background-color: white;
+}
+
+.btn.action {
+  background-color: rgb(64, 136, 214);
+  color: white;
+}
+
+.btn.action:hover {
+  background-color: rgb(45, 104, 214);
+  cursor: pointer;
+}
+
+.btn.action:focus {
+  background-color: rgb(45, 104, 214);
+  cursor: pointer;
+  outline: none;
+}
+
+.signin-btn {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+}
+
+#facebook-signin {
+  color: #fff;
+  background: #3e5a9b;
+  width: 200px;
+}
+
+#facebook-signin:active {
+  background: #223E8D;
+}
+
+#message {
+  opacity: 1;
+  transition: opacity 2s;
+  font-size: 13px;
+  display: inline;
+  margin-bottom: 8px;
+}
+
+#signin-container {
+  padding: 10px;
+  background: #fff;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+}
+
+safe-html::shadow a {
+  text-decoration: none;
+  color: rgb(34, 110, 223);
+}
+
+safe-html::shadow a:hover {
+  text-decoration: underline;
+}
+
+safe-html::shadow a:visited {
+  color: rgb(106, 56, 223);
+}
+
+safe-html::shadow .mention {
+  color: rgb(245, 108, 0);
+  font-weight: bold;
+}
+
+@media all and (max-width: 800px)  {
+  #post-container {
+    margin: 10px;
+  }
+  #activity-wrapper {
+    margin: 10px;
+  }
+
+  .activity-card {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
