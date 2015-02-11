@@ -17,6 +17,7 @@
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/people_list/people_list.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/community_list/community_list.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/item_list/item_list.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/chat_view/chat_view.html">
 <link rel="import" href="../../../../../../../packages/paper_elements/paper_toast.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_transition_css.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_animated_pages.html">
@@ -25,6 +26,7 @@
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/hero-transition.html">
 <link rel="import" href="../../../../../../../packages/core_elements/src/core-animated-pages/transitions/scale-up.html">
 <link rel="import" href="../../../../../../../packages/core_elements/social_icons.html">
+<link rel="import" href="../../../../../../../packages/core_elements/communication_icons.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/page/home/home.html">
 
 
@@ -59,8 +61,10 @@
 
             <core-menu valueattr="label" selected="{{app.pageTitle}}" class="menu" theme="core-dark-theme">
               <template if="{{app.community != null}}">
-                <core-item label="Everything" icon="list" horizontal center layout class="item"
-                           on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}" ></core-item>
+                <core-item label="Chat" icon="communication:forum" horizontal center layout class="item"
+                           on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}"></core-item>
+                <core-item label="Feed" icon="list" horizontal center layout class="item"
+                           on-tap="{{switchPage}}" data-page="7" data-url="/{{app.community.alias}}/feed"></core-item>
                 <core-item label="Events" icon="event" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="5" data-url="/{{app.community.alias}}/events"></core-item>
                 <core-item label="Announcements" icon="announcement" horizontal center layout class="item" active
@@ -113,15 +117,12 @@
             <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
           </core-toolbar>
 
+
           <div class="content">
             <core-animated-pages id="pages" selected="{{app.selectedPage}}">
               <section>
-                <template if="{{app.selectedPage === 0}}">
-                  <div cross-fade="{{app.selectedPage === 0}}">
-                    <template if="{{app.community != null && app.selectedPage === 0}}">
-                      <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.feedViewModel}}"></inbox-list>
-                    </template>
-                  </div>
+                <template if="{{app.community != null && app.selectedPage === 0}}">
+                  <chat-view id="inbox-list" app="{{app}}"></chat-view>
                 </template>
               </section>
               <section layout vertical>
@@ -167,9 +168,24 @@
                   </div>
                 </template>
               </section>
+              <section>
+                <template if="{{app.selectedPage === 7}}">
+                  <div cross-fade="{{app.selectedPage === 7}}">
+                    <template if="{{app.community != null && app.selectedPage === 7}}">
+                      <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.feedViewModel}}"></inbox-list>
+                    </template>
+                  </div>
+                </template>
+              </section>
             </core-animated-pages>
           </div>
-
+          <div fit>
+            <template if="{{app.community != null && app.selectedPage === 0}}">
+              <div class="fixed-area">
+                Footer!
+              </div>
+            </template>
+          </div>
         </core-scroll-header-panel>
 
       </core-drawer-panel>

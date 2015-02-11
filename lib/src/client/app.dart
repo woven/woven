@@ -60,9 +60,9 @@ class App extends Observable {
       selectedPage = 3;
     }
 
-    // We're using this as a kind of placeholder for variable routes.
+    // We're using this as a kind of placeholder for various routes.
     void notFound(String path) {
-      pageTitle = "Everything";
+      pageTitle = "Lobby";
       var pathUri = Uri.parse(path);
       if (pathUri.pathSegments.length == 1) {
         selectedPage = 0;
@@ -76,6 +76,10 @@ class App extends Observable {
           case 'events':
             pageTitle = "Events";
             selectedPage = 5;
+            break;
+          case 'feed':
+            pageTitle = "Feed";
+            selectedPage = 7;
             break;
           case 'announcements':
             pageTitle = "Announcements";
