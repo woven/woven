@@ -105,7 +105,6 @@
         </div>
 
         <core-scroll-header-panel id="main-panel" main fixed>
-
           <core-toolbar id="toolbar-main">
             <template if="{{app.selectedPage != 1 || (app.previousPage != 0 && app.previousPage != 5 && app.previousPage != 6)}}">
               <core-icon-button class="btn flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
@@ -116,7 +115,6 @@
             <span id="page-title" flex on-tap="{{scrollToTop}}"></span>
             <core-icon-button class="btn primary flashing-fix" id="add-button" icon="create" on-tap="{{toggleAddStuff}}"></core-icon-button>
           </core-toolbar>
-
 
           <div class="content" layout vertical>
             <core-animated-pages id="pages" selected="{{app.selectedPage}}" fit>
