@@ -171,8 +171,9 @@ class App extends Observable {
    * Get the main scrolling element on app.
    */
   HtmlElement get scroller {
-    DivElement el = document.querySelector("woven-app").shadowRoot.querySelector("#main-scrollable");
-    return el;
+    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
+    HtmlElement scroller = el.scroller;
+    return scroller;
   }
 
   // Unused for now.
