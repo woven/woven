@@ -6,16 +6,18 @@
   position: absolute;
 }
 
-/*.content {*/
-  /*overflow: auto;*/
-/*}*/
+.content {
+  height: 100%;
+}
+
+.main {
+  overflow: auto;
+}
 
 .fixed-area {
   background-color: #1A9AF5;
   padding: 5px;
-  position: fixed;
   width: 100%;
-  bottom: 0;
 }
 
 .toolbar {

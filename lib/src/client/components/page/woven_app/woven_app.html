@@ -118,7 +118,8 @@
           </core-toolbar>
 
 
-          <div class="content">
+          <div class="content" layout vertical>
+            <div class="main" flex>
             <core-animated-pages id="pages" selected="{{app.selectedPage}}">
               <section>
                 <template if="{{app.community != null && app.selectedPage === 0}}">
@@ -178,14 +179,22 @@
                 </template>
               </section>
             </core-animated-pages>
+            </div>
+            <div class="footer">
+              <template if="{{app.community != null && app.selectedPage === 0}}">
+                <div class="fixed-area">
+                  Footer!
+                </div>
+              </template>
+            </div>
           </div>
-          <div fit>
-            <template if="{{app.community != null && app.selectedPage === 0}}">
-              <div class="fixed-area">
-                Footer!
-              </div>
-            </template>
-          </div>
+          <!--<div>-->
+            <!--<template if="{{app.community != null && app.selectedPage === 0}}">-->
+              <!--<div class="fixed-area">-->
+                <!--Footer!-->
+              <!--</div>-->
+            <!--</template>-->
+          <!--</div>-->
         </core-scroll-header-panel>
 
       </core-drawer-panel>
