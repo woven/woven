@@ -250,8 +250,8 @@ class AddStuff extends PolymerElement {
       formData.forEach((k, v) => formData[k] = '');
     });
 
-//    if (app.community != null) app.selectedPage = 0;
-//    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
+    if (app.community != null) app.selectedPage = 7;
+    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/feed');
     app.showMessage('Your ${selectedType == 'message' || selectedType == null ? 'message' : selectedType} was added.');
   }
 
