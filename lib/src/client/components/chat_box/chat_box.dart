@@ -6,6 +6,7 @@ import 'package:paper_elements/paper_autogrow_textarea.dart';
 import 'package:core_elements/core_a11y_keys.dart';
 import 'package:woven/config/config.dart';
 import 'package:firebase/firebase.dart' as db;
+import 'package:woven/src/client/components/chat_view/chat_view.dart';
 
 
 @CustomTag('chat-box')
@@ -17,6 +18,8 @@ class ChatBox extends PolymerElement {
   final f = new db.Firebase(config['datastore']['firebaseLocation']);
 
   TextAreaElement get textarea => this.shadowRoot.querySelector('#comment-textarea');
+
+  ChatView get chatViewEl => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
 
   /**
    * Handle focus of the comment input.
@@ -47,6 +50,12 @@ class ChatBox extends PolymerElement {
    */
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
+
+//    new Timer(new Duration(milliseconds: 500), () {
+//      chatViewEl.scroller.scrollTop = chatViewEl.scroller.scrollHeight + 1000;
+//    });
+
+    print(chatViewEl.scroller.scrollHeight);
 
     TextAreaElement textarea = this.shadowRoot.querySelector('#comment-textarea');
     String comment = textarea.value;

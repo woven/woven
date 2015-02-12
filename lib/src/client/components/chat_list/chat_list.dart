@@ -1,13 +1,13 @@
 import 'package:polymer/polymer.dart';
 import 'dart:html';
+import 'dart:async';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
 
 import 'package:woven/src/client/uri_policy.dart';
-
-
+import 'package:woven/src/client/components/chat_view/chat_view.dart';
 
 @CustomTag('chat-list')
 class ChatList extends PolymerElement {
@@ -22,6 +22,8 @@ class ChatList extends PolymerElement {
   String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
 
   Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('chat-list');
+
+  ChatView get chatViewEl => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
 
   /**
    * Get the activities for this item.
@@ -53,6 +55,10 @@ class ChatList extends PolymerElement {
         // Insert each new item at end of list so the list is descending.
         messages.insert(messages.length, comment);
 //        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
+        // TODO: Look into not scrolling if user has scrolled up.
+        new Timer(new Duration(milliseconds: 50), () {
+          chatViewEl.scroller.scrollTop = chatViewEl.scroller.scrollHeight;
+        });
       });
     });
 

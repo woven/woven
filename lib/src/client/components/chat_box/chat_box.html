@@ -18,12 +18,13 @@
           <div vertical layout flex>
             <div class="field-wrapper full-height">
               <paper-autogrow-textarea
+                  maxRows="7"
                   id="comment"
                   on-focus="{{onFocusHandler}}"
                   on-blur="{{onBlurHandler}}"
                   on-tap="{{onFocusHandler}}"
                   autocomplete="off">
-                <textarea id="comment-textarea" placeholder="Say something..."></textarea>
+                <textarea id="comment-textarea" placeholder="Say something..." type="submit"></textarea>
               </paper-autogrow-textarea>
             </div>
             <!--<div id="footer">-->
@@ -37,7 +38,7 @@
       </template>
       <template if="{{app.user == null}}">
         <div id="signin-container">
-          <span id="message">Please sign in to comment.</span>
+          <span id="message">Please sign in to participate.</span>
           <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
         </div>
       </template>
