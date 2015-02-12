@@ -298,7 +298,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   attached() {
-    app.pageTitle = "Feed";
     initializeInfiniteScrolling();
 
     // Once the view is loaded, handle scroll position.

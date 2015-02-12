@@ -250,8 +250,10 @@ class AddStuff extends PolymerElement {
       formData.forEach((k, v) => formData[k] = '');
     });
 
+    // After add, jump to an appropriate page.
+    // TODO: Better handle use case where channel you added to isn't the one you're in.
     if (app.community != null) app.selectedPage = 7;
-    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/feed');
+    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
     app.showMessage('Your ${selectedType == 'message' || selectedType == null ? 'message' : selectedType} was added.');
   }
 
