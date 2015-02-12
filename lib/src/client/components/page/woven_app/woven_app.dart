@@ -1,23 +1,17 @@
 import 'dart:html';
 import 'dart:async';
-import 'dart:js' show JsObject;
 import 'dart:mirrors';
 import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_drawer_panel.dart';
-import 'package:core_elements/core_icon_button.dart';
-import 'package:paper_elements/paper_toast.dart';
 
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
 
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
-//import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
-import 'package:core_elements/core_overlay.dart';
 
 
 @CustomTag('woven-app')

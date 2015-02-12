@@ -7,6 +7,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'feed.dart';
+import 'chat.dart';
 import 'people.dart';
 import 'item.dart';
 import 'list.dart';
@@ -20,6 +21,7 @@ class MainViewModel extends BaseViewModel with Observable {
   final Map feedViewModels = {};
   final Map itemViewModels = {};
   final Map peopleViewModels = {};
+  final Map chatViewModels = {};
   var starredViewModelForUser = null;
   int pageSize = 20;
   @observable bool reloadingContent = false;
@@ -117,6 +119,23 @@ class MainViewModel extends BaseViewModel with Observable {
       feedViewModels[id] = vm;
     }
     return feedViewModels[id];
+  }
+
+  // Get the view model for the current inbox.
+  @observable ChatViewModel get chatViewModel {
+    if (app.community == null) return null;
+
+    var id = app.community.alias;
+
+    if (id == null) return null; // No item, no view model to use.
+
+    if (!chatViewModels.containsKey(id)) {
+      // Item not stored yet, let's create it and store it.
+      var vm = new ChatViewModel(app: app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
+      chatViewModels[id] = vm; // Store it.
+    }
+
+    return chatViewModels[id];
   }
 
   // Get the view model for the user's starred items.

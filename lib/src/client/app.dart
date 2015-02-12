@@ -1,21 +1,15 @@
 library application;
 
 import 'package:polymer/polymer.dart';
-import 'package:core_elements/core_animation.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'dart:html';
-import 'dart:async';
-import 'dart:js' as js;
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
-import 'dart:convert';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
-import 'package:woven/src/client/components/page/woven_app/woven_app.dart';
 import 'package:woven/src/client/view_model/main.dart';
-import 'package:woven/src/client/view_model/feed.dart';
 import 'package:core_elements/core_header_panel.dart';
 
 class App extends Observable {

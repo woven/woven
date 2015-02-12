@@ -7,11 +7,13 @@ import 'package:core_elements/core_a11y_keys.dart';
 import 'package:woven/config/config.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
+import 'package:woven/src/client/view_model/chat.dart';
 
 
 @CustomTag('chat-box')
 class ChatBox extends PolymerElement {
   @published App app;
+  @published ChatViewModel viewModel;
 
   ChatBox.created() : super.created();
 
@@ -58,8 +60,8 @@ class ChatBox extends PolymerElement {
     print(chatViewEl.scroller.scrollHeight);
 
     TextAreaElement textarea = this.shadowRoot.querySelector('#comment-textarea');
-    String comment = textarea.value;
-    if (comment.trim() == "") {
+    String message = textarea.value;
+    if (message.trim() == "") {
 //      window.alert("Your comment is empty.");
       resetCommentInput();
       return;
@@ -71,15 +73,16 @@ class ChatBox extends PolymerElement {
 
     // Save the comment
     var id = f.child('/messages_by_community/${app.community.alias}').push();
-    var commentJson =  {'user': app.user.username, 'comment': comment, 'createdDate': '$now'};
+    var commentJson =  {'user': app.user.username, 'message': message, 'createdDate': '$now'};
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
-    Future setComment(db.Firebase commentRef) {
-      commentRef.set(commentJson);
+    Future setMessage(db.Firebase commentRef) {
+      var priority = now.millisecondsSinceEpoch;
+      commentRef.setWithPriority(commentJson, -priority);
     }
 
-    setComment(id);
+    setMessage(id);
 
     // Update some details on the parent item.
     var parent = f.child('/communities/$communityId');

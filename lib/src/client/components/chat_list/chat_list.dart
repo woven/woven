@@ -1,68 +1,25 @@
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
-import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/input_formatter.dart';
-import 'package:firebase/firebase.dart' as db;
 
 import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
+import 'package:woven/src/client/view_model/chat.dart';
+import 'package:woven/src/client/app.dart';
 
 @CustomTag('chat-list')
 class ChatList extends PolymerElement {
+  @published ChatViewModel viewModel;
   @published App app;
-  @observable List messages = toObservable([]);
+  List<StreamSubscription> subscriptions = [];
 
-  final f = new db.Firebase(config['datastore']['firebaseLocation']);
-
-    NodeValidator get nodeValidator => new NodeValidatorBuilder()
-    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
+  NodeValidator get nodeValidator => new NodeValidatorBuilder()
+  ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
   String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
-
   Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('chat-list');
-
-  ChatView get chatViewEl => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
-
-  /**
-   * Get the activities for this item.
-   */
-  getMessages() {
-    var communityId;
-
-    if (app.community == null) {
-      communityId = Uri.parse(window.location.toString()).pathSegments[0];
-    } else {
-      communityId = app.community.alias;
-    }
-
-    var messagesRef = f.child('/messages_by_community/$communityId');
-    messagesRef.onChildAdded.listen((e) {
-      var comment = e.snapshot.val();
-      comment['createdDate'] = DateTime.parse(comment['createdDate']);
-      comment['id'] = e.snapshot.name;
-
-      f.child('/users/' + comment['user']).once('value').then((snapshot) {
-        Map user = snapshot.val();
-        if (user == null) return;
-        if (user['picture'] != null) {
-          comment['user_picture'] = "${config['google']['cloudStoragePath']}/${user['picture']}";
-        } else {
-          comment['user_picture'] = null;
-        }
-      }).then((e) {
-        // Insert each new item at end of list so the list is descending.
-        messages.insert(messages.length, comment);
-//        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
-        // TODO: Look into not scrolling if user has scrolled up.
-        new Timer(new Duration(milliseconds: 50), () {
-          chatViewEl.scroller.scrollTop = chatViewEl.scroller.scrollHeight;
-        });
-      });
-    });
-
-  }
+  ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
 
   /**
    * Handle formatting of the comment text.
@@ -75,17 +32,21 @@ class ChatList extends PolymerElement {
     return formattedText;
   }
 
-  fixItemCommunities() {
-      if (app.community != null) {
-          // Update the community's copy of the item.
-        f.child('/items/' + app.selectedItem['id'] + '/communities/' + app.community.alias)
-          ..set(true);
-      }
-  }
-
   attached() {
-    getMessages();
-//    fixItemCommunities();
+//    initializeInfiniteScrolling();
+
+    // Once the view is loaded, handle scroll position.
+    viewModel.onLoad.then((_) {
+      // Wait one event loop, so the view is truly loaded, then jump to last known position.
+      Timer.run(() {
+        chatView.scroller.scrollTop = viewModel.lastScrollPos;
+      });
+
+      // On scroll, record new scroll position.
+      subscriptions.add(chatView.scroller.onScroll.listen((e) {
+        viewModel.lastScrollPos = chatView.scroller.scrollTop;
+      }));
+    });
   }
 
   detached() {

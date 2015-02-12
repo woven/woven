@@ -61,9 +61,9 @@
 
             <core-menu valueattr="label" selected="{{app.pageTitle}}" class="menu" theme="core-dark-theme">
               <template if="{{app.community != null}}">
-                <core-item label="Chat" icon="communication:forum" horizontal center layout class="item"
+                <core-item label="Lobby" icon="communication:forum" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}"></core-item>
-                <core-item label="Feed" icon="list" horizontal center layout class="item"
+                <core-item label="Feed" icon="view-stream" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="7" data-url="/{{app.community.alias}}/feed"></core-item>
                 <core-item label="Events" icon="event" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="5" data-url="/{{app.community.alias}}/events"></core-item>
@@ -120,7 +120,7 @@
             <core-animated-pages id="pages" selected="{{app.selectedPage}}" fit>
               <section>
                 <template if="{{app.community != null && app.selectedPage === 0}}">
-                  <chat-view id="inbox-list" app="{{app}}"></chat-view>
+                  <chat-view app="{{app}}" viewModel="{{app.mainViewModel.chatViewModel}}"></chat-view>
                 </template>
               </section>
               <section layout vertical>

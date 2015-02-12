@@ -6,7 +6,7 @@
   <template>
     <link rel="stylesheet" href="chat_list.css">
     <div id="activity-wrapper">
-      <template if="{{messages != null}}" repeat="{{message in messages}}">
+      <template if="{{viewModel.messages != null}}" repeat="{{message in viewModel.messages}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
             <user-picture app="{{app}}" user="{{message['user']}}"></user-picture>
@@ -19,7 +19,7 @@
                   <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                 </div>
               </div>
-              <p><safe-html><template if="{{message != null}}">{{formatText(message['comment'])}}</template></safe-html></p>
+              <p><safe-html><template if="{{message != null}}">{{formatText(message['message'])}}</template></safe-html></p>
             </div>
           </div>
         </div>
