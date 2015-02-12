@@ -11,7 +11,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
   final App app;
   final List users = toObservable([]);
   final f = new Firebase(config['datastore']['firebaseLocation']);
-  int pageSize = 20;
+  int pageSize = 40;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var lastPriority = null;
