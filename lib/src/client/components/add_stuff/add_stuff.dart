@@ -26,7 +26,7 @@ class AddStuff extends PolymerElement {
   @published bool opened = false;
   @observable var selectedType;
   @observable Map formData = toObservable({});
-  List validShareToOptions = ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode', 'ideagarden']; // TODO: Fixed for now, change later.
+  List validShareToOptions = ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode', 'ideagarden', 'fiu']; // TODO: Fixed for now, change later.
 
   CoreOverlay get overlay => $['overlay'];
 
