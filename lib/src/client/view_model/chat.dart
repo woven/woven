@@ -63,6 +63,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         // Insert each new item into the list.
         // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
         messages.add(toObservable(processItem(itemSnapshot)));
+        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
         // Wait for the message to come in over the network, then set scroll position to new bottom.
         new Timer(new Duration(milliseconds: 50), () {
           chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
@@ -130,6 +131,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       // Insert the message at the bottom of the current list, or at a given index.
       messages.insert(index == null ? messages.length : index, toObservable(processItem(e.snapshot)));
+      messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
 
       // Wait for the message to come in over the network, then set scroll position to new bottom.
       new Timer(new Duration(milliseconds: 50), () {
