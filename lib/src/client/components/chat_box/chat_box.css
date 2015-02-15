@@ -10,6 +10,12 @@ core-field input {
   font-family: arial, sans-serif;
 }
 
+#message-box {
+  border: solid 1px #e6e6e6;
+  transition: border .4s;
+  border-radius: 2px;
+}
+
 .field-wrapper {
   padding: 12px 10px 6px 10px;
   border: solid 1px #e6e6e6;

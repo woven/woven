@@ -16,15 +16,14 @@
             <user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>
           </div>
           <div vertical layout flex>
-            <div class="field-wrapper full-height">
+            <div id="message-box" class="field-wrapper full-height">
               <paper-autogrow-textarea
                   maxRows="7"
                   id="comment"
-                  on-focus="{{onFocusHandler}}"
-                  on-blur="{{onBlurHandler}}"
-                  on-tap="{{onFocusHandler}}"
                   autocomplete="off">
-                <textarea id="comment-textarea" placeholder="Say something..." type="submit"></textarea>
+                <textarea id="comment-textarea" placeholder="Say something..." type="submit"
+                          on-focus="{{onFocusHandler}}"
+                          on-blur="{{onBlurHandler}}"></textarea>
               </paper-autogrow-textarea>
             </div>
             <!--<div id="footer">-->

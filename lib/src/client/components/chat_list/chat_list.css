@@ -156,7 +156,7 @@ safe-html::shadow a:hover {
 }
 
 safe-html::shadow a:visited {
-  color: rgb(106, 56, 223);
+  color: rgb(83, 53, 163);
 }
 
 safe-html::shadow .mention {

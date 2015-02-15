@@ -29,10 +29,11 @@ class ChatBox extends PolymerElement {
   onFocusHandler(Event e, detail, Element target) {
     CoreA11yKeys a11y = this.shadowRoot.querySelector('#a11y-send');
     a11y.target = this.shadowRoot.querySelector('#comment-textarea');
+    this.shadowRoot.querySelector('#message-box').style.border = 'solid 1px rgb(39, 178, 1)';
   }
 
   onBlurHandler(Event e, detail, Element target) {
-    //
+    this.shadowRoot.querySelector('#message-box').style.border = 'solid 1px #e6e6e6';
   }
 
   resetCommentInput() {
