@@ -44,10 +44,6 @@ class ChatBox extends PolymerElement {
     commentInput.update();
   }
 
-  debugKeys() {
-    print("Woooot!");
-  }
-
   /**
    * Add the activity, in this case a comment.
    */
