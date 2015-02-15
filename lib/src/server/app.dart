@@ -68,7 +68,9 @@ class App {
       ..routes[Routes.sendNotifications] = MainController.sendNotifications
       ..routes[Routes.getUriPreview] = MainController.getUriPreview
       ..routes[Routes.generateDigest] = AdminController.generateDigest
-      ..routes[Routes.exportUsers] = AdminController.exportUsers;
+      ..routes[Routes.exportUsers] = AdminController.exportUsers
+      ..routes[Routes.addItem] = MainController.addItem
+      ..routes[Routes.addMessage] = MainController.addMessage;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])

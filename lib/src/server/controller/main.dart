@@ -72,6 +72,54 @@ class MainController {
   /**`
    * Crawl for and get a preview for a given uri/link.
    */
+  static addItem(App app, HttpRequest req) {
+//    HttpResponse res = req.response;
+//    req.listen((List<int> buffer) {
+//      // Return the data back to the client.
+//      var response = new Response();
+//      response.data = new String.fromCharCodes(buffer);
+//      return 'Here it is: ' + response;
+//    });
+  }
+
+  /**`
+   * Crawl for and get a preview for a given uri/link.
+   */
+  static addMessage(App app, HttpRequest req) {
+    HttpResponse res = req.response;
+    String dataReceived;
+
+    return req.listen((List<int> buffer) {
+      dataReceived = new String.fromCharCodes(buffer);
+    }).asFuture().then((_) {
+      Map data = JSON.decode(dataReceived);
+      Map message = {};
+      String community = data['community'];
+
+      // Use the server's UTC time.
+      DateTime now = new DateTime.now().toUtc();
+      data['createdDate'] = now.toString();
+
+      // Do some things with the data before saving.
+      data.remove('community');
+      data['.priority'] = -now.millisecondsSinceEpoch;
+
+
+      // Add the message.
+      return Firebase.post('/messages_by_community/$community.json', JSON.encode(data)).then((String name) {
+        Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()});
+        // Return the data back to the client.
+        var response = new Response();
+        response.data = name;
+        response.success = true;
+        return response;
+      });
+    });
+  }
+
+  /**`
+   * Crawl for and get a preview for a given uri/link.
+   */
   static getUriPreview(App app, HttpRequest request) {
     var item = request.requestedUri.queryParameters['itemid'];
     var crawler = new CrawlerUtil();

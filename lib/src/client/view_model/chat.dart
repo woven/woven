@@ -70,8 +70,6 @@ class ChatViewModel extends BaseViewModel with Observable {
         });
       });
 
-      print(messages);
-
       relistenForItems();
 
       // If we received less than we tried to load, we've reached the end.

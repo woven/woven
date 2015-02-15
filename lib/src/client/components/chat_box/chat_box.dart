@@ -1,6 +1,7 @@
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
+import 'dart:convert';
 import 'package:woven/src/client/app.dart';
 import 'package:paper_elements/paper_autogrow_textarea.dart';
 import 'package:core_elements/core_a11y_keys.dart';
@@ -8,6 +9,8 @@ import 'package:woven/config/config.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/client/view_model/chat.dart';
+import 'package:woven/src/shared/routing/routes.dart';
+import 'package:woven/src/shared/response.dart';
 
 
 @CustomTag('chat-box')
@@ -54,7 +57,7 @@ class ChatBox extends PolymerElement {
 //      chatViewEl.scroller.scrollTop = chatViewEl.scroller.scrollHeight + 1000;
 //    });
 
-    print(chatViewEl.scroller.scrollHeight);
+//    print(chatViewEl.scroller.scrollHeight);
 
     TextAreaElement textarea = this.shadowRoot.querySelector('#comment-textarea');
     String message = textarea.value;
@@ -68,41 +71,37 @@ class ChatBox extends PolymerElement {
 
     DateTime now = new DateTime.now().toUtc();
 
-    // Save the comment
-    var id = f.child('/messages_by_community/${app.community.alias}').push();
-    var commentJson =  {'user': app.user.username, 'message': message, 'createdDate': '$now'};
+    // Save the message.
+    var commentJson =  {'user': app.user.username, 'message': message, 'createdDate': '$now', 'community': communityId};
 
-    // Set the item in multiple places because denormalization equals speed.
-    // We also want to be able to load the item when we don't know the community.
-    Future setMessage(db.Firebase commentRef) {
-      var priority = now.millisecondsSinceEpoch;
-      commentRef.setWithPriority(commentJson, -priority);
-    }
+    HttpRequest.request(
+        Routes.addMessage.toString(),
+        method: 'POST',
+        sendData: JSON.encode(commentJson))
+    .then((HttpRequest res) {
+      // Set up the response as an object.
+      var response = Response.fromJson(JSON.decode(res.responseText));
+      var messageId = response.data;
+      // TODO: Handle response.success true/false later.
 
-    setMessage(id);
+      // Update some details on the parent item.
+      var parent = f.child('/communities/$communityId');
 
-    // Update some details on the parent item.
-    var parent = f.child('/communities/$communityId');
-    Future updateParentItem(db.Firebase parentRef) {
-      parent.update({
-          'updatedDate': '$now'
-      }).then((e) {
-        // Update the comment count on the parent.
-        parent.child('message_count').transaction((currentCount) {
-          if (currentCount == null || currentCount == 0) {
-            return 1;
-          } else {
-            return currentCount + 1;
-          }
-        });
+      parent.child('message_count').transaction((currentCount) {
+        if (currentCount == null || currentCount == 0) {
+          return 1;
+        } else {
+          return currentCount + 1;
+        }
       });
-    }
 
-    updateParentItem(parent);
+//      print(messageId);
 
-    var commentId = id.name;
-    // Send a notification email to the item's author.
-//    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$commentId");
+      // TODO: Handle notifications for chat messages.
+//    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$messageId");
+    });
+
+
 
     // Reset the fields.
     resetCommentInput();
