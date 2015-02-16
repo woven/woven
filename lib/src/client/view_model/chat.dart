@@ -17,7 +17,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   final f = new Firebase(config['datastore']['firebaseLocation']);
 
-  int pageSize = 2000;
+  int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var lastPriority = null;
@@ -65,9 +65,9 @@ class ChatViewModel extends BaseViewModel with Observable {
         messages.add(toObservable(processItem(itemSnapshot)));
         messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
         // Wait for the message to come in over the network, then set scroll position to new bottom.
-        new Timer(new Duration(milliseconds: 50), () {
-          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
-        });
+//        new Timer(new Duration(milliseconds: 50), () {
+//          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
+//        });
       });
 
       relistenForItems();
@@ -132,9 +132,9 @@ class ChatViewModel extends BaseViewModel with Observable {
       messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
 
       // Wait for the message to come in over the network, then set scroll position to new bottom.
-      new Timer(new Duration(milliseconds: 50), () {
-        chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
-      });
+//      new Timer(new Duration(milliseconds: 50), () {
+//        chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
+//      });
     });
 
     // Listen for changed items.

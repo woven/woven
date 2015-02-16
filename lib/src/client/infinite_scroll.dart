@@ -11,6 +11,7 @@ class InfiniteScroll {
   int threshold = 0;
   int lastY = 0;
   bool paused = false;
+  bool reversed = false;
 
   var scroller;
   Element element;
@@ -20,7 +21,7 @@ class InfiniteScroll {
 
   var _scrollSubscription;
 
-  InfiniteScroll({this.pageSize: 10, this.element, this.scroller, this.threshold: 512}) {
+  InfiniteScroll({this.pageSize: 10, this.element, this.scroller, this.threshold: 512, this.reversed: false}) {
     limit = pageSize;
     originalPageSize = pageSize;
 
@@ -52,7 +53,8 @@ class InfiniteScroll {
       return;
     }
 
-    var elementBottomY, scrollerBottomY;
+    var elementBottomY, scrollerBottomY, elementTopY, scrollerTopY;
+    var elementScrollBottom;
 
     if (scroller is Window) {
       var scrollY = scroller.scrollY;
@@ -62,17 +64,47 @@ class InfiniteScroll {
 
       scrollerBottomY = scrollY + scroller.innerHeight;
       elementBottomY = element.clientHeight + element.offsetTop;
+
+      scrollerTopY = scrollY + scroller.innerHeight;
+      elementTopY = element.clientHeight + element.offsetTop;
     } else {
       scrollerBottomY = scroller.scrollTop + scroller.clientHeight;
       elementBottomY = element.clientHeight + element.offsetTop - scroller.offsetTop;
+
+      scrollerTopY = scroller.scrollTop;
+      elementTopY = element.clientHeight + element.offsetTop - scroller.offsetTop;
+
+      elementTopY = element.clientHeight + element.offsetTop - scroller.offsetTop;
+      elementScrollBottom = 
     }
 
-    // Make sure we scrolled past the element's bottom Y, and that we have scroller more than last time.
-    if (scrollerBottomY >= elementBottomY - threshold && /*scrollerBottomY > lastY &&*/ !paused) {
-      limit += pageSize;
-      lastY = scrollerBottomY;
+    print('''
+elementTopY: $elementTopY
+scrollerTopY: $scrollerTopY
+threshhold: $threshold
+scroller.clientHeight: ${scroller.clientHeight}
+element.clientHeight: ${element.clientHeight}
+element.offsetTop: ${element.offsetTop}
+scroller.offsetTop: ${scroller.offsetTop}
+bottom: ${scroller.scrollTop - element.offsetTop}
+    ''');
 
-      _controllerScroll.add(true);
+    // Make sure we scrolled past the element's bottom Y, and that we have scroller more than last time.
+    if (!reversed) {
+      if (scrollerBottomY >= elementBottomY - threshold && /*scrollerBottomY > lastY &&*/ !paused) {
+        limit += pageSize;
+        lastY = scrollerBottomY;
+
+        _controllerScroll.add(true);
+      }
+    } else {
+      if (scrollerTopY <= scroller.clientHeight + threshold && !paused) {
+        print("DEBUG GOT HERE");
+        limit += pageSize;
+        lastY = scrollerTopY;
+
+        _controllerScroll.add(true);
+      }
     }
   }
 

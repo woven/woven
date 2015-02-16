@@ -6,6 +6,8 @@
   <template>
     <link rel="stylesheet" href="chat_list.css">
     <div id="activity-wrapper">
+      <template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator">Fetching...</div></template>
+      <template if="{{viewModel.reachedEnd}}"><div id="loading-indicator">You've reached the beginning of all time.</div></template>
       <template if="{{viewModel.messages != null}}" repeat="{{message in viewModel.messages}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>

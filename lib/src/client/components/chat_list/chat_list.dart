@@ -7,6 +7,7 @@ import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/client/view_model/chat.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:woven/src/client/infinite_scroll.dart';
 
 @CustomTag('chat-list')
 class ChatList extends PolymerElement {
@@ -32,8 +33,26 @@ class ChatList extends PolymerElement {
     return formattedText;
   }
 
+  /**
+   * Initializes the infinite scrolling ability.
+   */
+  initializeInfiniteScrolling() {
+    var scroller = chatView.scroller;
+    HtmlElement element = $['activity-wrapper'];
+    print(element);
+    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller, reversed: true, threshold: 0);
+
+    subscriptions.add(scroll.onScroll.listen((_) {
+      print('debug: scroll');
+//      print("DEBUG: ${viewModel.reloadingContent} // ${viewModel.reachedEnd}");
+      if (!viewModel.reloadingContent && !viewModel.reachedEnd) viewModel.paginate();
+    }));
+  }
+
   attached() {
-//    initializeInfiniteScrolling();
+     new Timer(new Duration(seconds:2), () {
+      initializeInfiniteScrolling();
+     });
 
     // Once the view is loaded, handle scroll position.
     viewModel.onLoad.then((_) {

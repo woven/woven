@@ -60,6 +60,17 @@
   margin: 20px;
 }
 
+#loading-indicator {
+  text-align: center;
+  width: 100%;
+  font-size: 15px;
+  font-family: inherit;
+  color: #666;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+
 #comment-message {
   align-self: center;
   text-align: right;
