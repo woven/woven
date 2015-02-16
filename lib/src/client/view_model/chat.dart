@@ -81,9 +81,10 @@ class ChatViewModel extends BaseViewModel with Observable {
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
 
-      new Timer(new Duration(seconds: 1), () {
-        reloadingContent = false;
-      });
+//      new Timer(new Duration(seconds: 1), () {
+//        reloadingContent = false;
+//      });
+      reloadingContent = false;
 
 
       print('Total count: $totalCount');
