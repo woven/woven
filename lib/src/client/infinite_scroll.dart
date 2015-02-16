@@ -75,7 +75,7 @@ class InfiniteScroll {
       elementTopY = element.clientHeight + element.offsetTop - scroller.offsetTop;
 
       elementTopY = element.clientHeight + element.offsetTop - scroller.offsetTop;
-      elementScrollBottom = 
+      elementScrollBottom = scroller.scrollTop - element.offsetTop;
     }
 
     print('''
@@ -86,7 +86,7 @@ scroller.clientHeight: ${scroller.clientHeight}
 element.clientHeight: ${element.clientHeight}
 element.offsetTop: ${element.offsetTop}
 scroller.offsetTop: ${scroller.offsetTop}
-bottom: ${scroller.scrollTop - element.offsetTop}
+(scroller.scrollTop - element.offsetTop): $elementScrollBottom
     ''');
 
     // Make sure we scrolled past the element's bottom Y, and that we have scroller more than last time.
