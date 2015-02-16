@@ -20,9 +20,11 @@ class ChatViewModel extends BaseViewModel with Observable {
   int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
+  @observable bool isScrollPosAtBottom = false;
   var lastPriority = null;
   var topPriority = null;
   var secondToLastPriority = null;
+  int totalCount = 0;
 
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
@@ -50,6 +52,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     messagesRef.once('value').then((snapshot) {
       snapshot.forEach((itemSnapshot) {
         count++;
+        totalCount++;
 
         // Track the snapshot's priority so we can paginate from the last one.
         lastPriority = itemSnapshot.getPriority();
@@ -65,16 +68,25 @@ class ChatViewModel extends BaseViewModel with Observable {
         messages.add(toObservable(processItem(itemSnapshot)));
         messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
         // Wait for the message to come in over the network, then set scroll position to new bottom.
-//        new Timer(new Duration(milliseconds: 50), () {
-//          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
-//        });
+        // Only do this if the user is already scrolled to bottom, else leave alone.
+        if (isScrollPosAtBottom || lastScrollPos == 0) {
+          new Timer(new Duration(milliseconds: 50), () {
+            chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
+          });
+        }
       });
 
-      relistenForItems();
+//      relistenForItems();
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
-      reloadingContent = false;
+
+      new Timer(new Duration(seconds: 1), () {
+        reloadingContent = false;
+      });
+
+
+      print('Total count: $totalCount');
     });
   }
 
@@ -132,9 +144,16 @@ class ChatViewModel extends BaseViewModel with Observable {
       messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
 
       // Wait for the message to come in over the network, then set scroll position to new bottom.
-//      new Timer(new Duration(milliseconds: 50), () {
-//        chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
-//      });
+      // Only do this if the user is already scrolled to bottom, else leave alone.
+      print('''
+      $isScrollPosAtBottom
+      $lastScrollPos
+      ''');
+      if (isScrollPosAtBottom || lastScrollPos == 0) {
+        new Timer(new Duration(milliseconds: 50), () {
+          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
+        });
+      }
     });
 
     // Listen for changed items.

@@ -12,6 +12,7 @@ class InfiniteScroll {
   int lastY = 0;
   bool paused = false;
   bool reversed = false;
+  bool atBottom = false;
 
   var scroller;
   Element element;
@@ -56,6 +57,7 @@ class InfiniteScroll {
     var elementBottomY, scrollerBottomY, elementTopY, scrollerTopY;
     var elementScrollBottom;
 
+
     if (scroller is Window) {
       var scrollY = scroller.scrollY;
       if (scrollY == null) {
@@ -75,19 +77,22 @@ class InfiniteScroll {
       elementTopY = element.clientHeight + element.offsetTop - scroller.offsetTop;
 
       elementTopY = element.clientHeight + element.offsetTop - scroller.offsetTop;
-      elementScrollBottom = scroller.scrollTop - element.offsetTop;
+//      elementScrollBottom = element.scrollHeight - element.scrollTop;
+      atBottom = scroller.scrollHeight - scroller.scrollTop <= scroller.clientHeight;
+
     }
 
-    print('''
-elementTopY: $elementTopY
-scrollerTopY: $scrollerTopY
-threshhold: $threshold
-scroller.clientHeight: ${scroller.clientHeight}
-element.clientHeight: ${element.clientHeight}
-element.offsetTop: ${element.offsetTop}
-scroller.offsetTop: ${scroller.offsetTop}
-(scroller.scrollTop - element.offsetTop): $elementScrollBottom
-    ''');
+//    print('''
+//elementTopY: $elementTopY
+//scrollerTopY: $scrollerTopY
+//threshhold: $threshold
+//scroller.clientHeight: ${scroller.clientHeight}
+//element.clientHeight: ${element.clientHeight}
+//element.offsetTop: ${element.offsetTop}
+//scroller.offsetTop: ${scroller.offsetTop}
+//scroller.scrollHeight: ${scroller.scrollHeight}
+//atBottom: $atBottom
+//    ''');
 
     // Make sure we scrolled past the element's bottom Y, and that we have scroller more than last time.
     if (!reversed) {
@@ -99,7 +104,6 @@ scroller.offsetTop: ${scroller.offsetTop}
       }
     } else {
       if (scrollerTopY <= scroller.clientHeight + threshold && !paused) {
-        print("DEBUG GOT HERE");
         limit += pageSize;
         lastY = scrollerTopY;
 
