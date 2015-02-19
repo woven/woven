@@ -104,10 +104,16 @@ class InfiniteScroll {
       }
     } else {
       if (scrollerTopY <= scroller.clientHeight + threshold && !paused) {
-        limit += pageSize;
-        lastY = scrollerTopY;
+        print('''
+        lastY: $lastY
+        current: $scrollerTopY
+        ''');
 
-        _controllerScroll.add(true);
+        if (scrollerTopY < lastY) {
+          limit += pageSize;
+          _controllerScroll.add(true);
+        }
+        lastY = scrollerTopY;
       }
     }
   }

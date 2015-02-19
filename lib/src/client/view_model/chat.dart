@@ -17,7 +17,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   final f = new Firebase(config['datastore']['firebaseLocation']);
 
-  int pageSize = 20;
+  int pageSize = 50;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   @observable bool isScrollPosAtBottom = false;
@@ -51,6 +51,11 @@ class ChatViewModel extends BaseViewModel with Observable {
     // Get the list of items, and listen for new ones.
     messagesRef.once('value').then((snapshot) {
       snapshot.forEach((itemSnapshot) {
+        Map message = itemSnapshot.val();
+
+        // Use the Firebase snapshot ID as our ID.
+        message['id'] = itemSnapshot.name;
+
         count++;
         totalCount++;
 
@@ -64,30 +69,33 @@ class ChatViewModel extends BaseViewModel with Observable {
         secondToLastPriority = itemSnapshot.getPriority();
 
         // Insert each new item into the list.
-        // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
-        messages.add(toObservable(processItem(itemSnapshot)));
-        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
+        insertMessage(message);
+
+//        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
+
         // Wait for the message to come in over the network, then set scroll position to new bottom.
         // Only do this if the user is already scrolled to bottom, else leave alone.
         if (isScrollPosAtBottom || lastScrollPos == 0) {
           new Timer(new Duration(milliseconds: 50), () {
-            chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
+//            chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
           });
         }
       });
+      print('[DEBUG] messages.length: ${messages.length}');
 
 //      relistenForItems();
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
 
-      new Timer(new Duration(seconds: 2), () {
+      new Timer(new Duration(seconds: 1), () {
         reloadingContent = false;
       });
 
 
-      print('Total count: $totalCount');
     });
+
+//    print('Total count: $totalCount');
   }
 
   /**
@@ -117,13 +125,6 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   listenForNewItems({startAt, endAt}) {
 
-    // Find the index of the item with the closest updated date.
-    indexOfClosestItemByDate(date) {
-      for (var message in messages) {
-        if ((message['updatedDate'] as DateTime).isAfter(date)) return messages.indexOf(message);
-      }
-    }
-
     // If this is the first item loaded, start listening for new items.
     var itemsRef = f.child('/messages_by_community/${app.community.alias}')
     .startAt(priority: startAt)
@@ -132,26 +133,24 @@ class ChatViewModel extends BaseViewModel with Observable {
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
       Map newItem = e.snapshot.val();
+      newItem['id'] = e.snapshot.name;
+
+      // If we already have the item, get out of here.
       var existingItem = messages.firstWhere((i) => i['id'] == e.snapshot.name, orElse: () => null);
       if (existingItem != null) return;
 
-      if (newItem['updatedDate'] == null) newItem['updatedDate'] = newItem['createdDate'];
-
-      var index = indexOfClosestItemByDate(DateTime.parse(newItem['updatedDate']));
-
-      // Insert the message at the bottom of the current list, or at a given index.
-      messages.insert(index == null ? messages.length : index, toObservable(processItem(e.snapshot)));
-      messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
+      // Insert each new item into the list.
+      insertMessage(newItem);
 
       // Wait for the message to come in over the network, then set scroll position to new bottom.
       // Only do this if the user is already scrolled to bottom, else leave alone.
       print('''
-      $isScrollPosAtBottom
-      $lastScrollPos
+      isScrollPsAtBottom: $isScrollPosAtBottom
+      lastScrollPos: $lastScrollPos
       ''');
       if (isScrollPosAtBottom || lastScrollPos == 0) {
         new Timer(new Duration(milliseconds: 50), () {
-          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
+//          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
         });
       }
     });
@@ -172,23 +171,31 @@ class ChatViewModel extends BaseViewModel with Observable {
     });
   }
 
-  processItem(DataSnapshot snapshot) {
-    var item = toObservable(snapshot.val());
+  /**
+   * Prepare the message and insert it into the observed list.
+   */
+  void insertMessage(Map message) {
+    // Find the index of the item with the closest updated date.
+    indexOfClosestItemByDate(date) {
+      for (var message in messages) {
+        if ((message['updatedDate'] as DateTime).isAfter(date)) return messages.indexOf(message);
+      }
+    }
 
     // If no updated date, use the created date.
     // TODO: We assume createdDate is never null!
-    if (item['updatedDate'] == null) {
-      item['updatedDate'] = item['createdDate'];
+    if (message['updatedDate'] == null) {
+      message['updatedDate'] = message['createdDate'];
     }
 
     // The live-date-time element needs parsed dates.
-    item['updatedDate'] = DateTime.parse(item['updatedDate']);
-    item['createdDate'] = DateTime.parse(item['createdDate']);
+    message['updatedDate'] = DateTime.parse(message['updatedDate']);
+    message['createdDate'] = DateTime.parse(message['createdDate']);
 
-    // Use the Firebase snapshot ID as our ID.
-    item['id'] = snapshot.name;
+    var index = indexOfClosestItemByDate(message['updatedDate']);
 
-    return item;
+    // Insert the message at the bottom of the current list, or at a given index.
+    messages.insert(index == null ? messages.length : index, toObservable(message));
   }
 
   void paginate() {
