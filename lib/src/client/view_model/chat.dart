@@ -76,7 +76,7 @@ class ChatViewModel extends BaseViewModel with Observable {
       });
 
       // Wait until the view is loaded, then scroll to bottom.
-      Timer.run(() => chatView.scrollToBottom());
+//      Timer.run(() => chatView.scrollToBottom());
 
       print('[DEBUG] messages.length: ${messages.length}');
 
@@ -131,7 +131,6 @@ class ChatViewModel extends BaseViewModel with Observable {
       newItem['id'] = e.snapshot.name;
 
       // If we already have the item, get out of here.
-
       var existingItem = messages.firstWhere((i) => (i['id'] != null)
         ? (i['id'] == newItem['id'])
         : (i['user'] == newItem['user'] && i['message'] == newItem['message']), orElse: () => null);
@@ -143,14 +142,9 @@ class ChatViewModel extends BaseViewModel with Observable {
       // Insert each new item into the list.
       insertMessage(newItem);
 
-      // Wait for the message to come in over the network, then set scroll position to new bottom.
-      // Only do this if the user is already scrolled to bottom, else leave alone.
-      print('''
-      isScrollPsAtBottom: $isScrollPosAtBottom
-      lastScrollPos: $lastScrollPos
-      ''');
+      // If user is scrolled to bottom, keep it that way.
       if (isScrollPosAtBottom || lastScrollPos == 0) {
-        new Timer(new Duration(milliseconds: 50), () {
+        Timer.run(() {
 //          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
         });
       }
