@@ -136,18 +136,15 @@ class ChatViewModel extends BaseViewModel with Observable {
         : (i['user'] == newItem['user'] && i['message'] == newItem['message']), orElse: () => null);
       if (existingItem != null) {
         existingItem['id'] = newItem['id'];
-        return;
+      } else {
+        // Insert each new item into the list.
+        insertMessage(newItem);
       }
-
-      // Insert each new item into the list.
-      insertMessage(newItem);
 
       // If user is scrolled to bottom, keep it that way.
-      if (isScrollPosAtBottom || lastScrollPos == 0) {
-        Timer.run(() {
-//          chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
-        });
-      }
+      print(lastScrollPos);
+      if (isScrollPosAtBottom || lastScrollPos == 0) print('scroll to bottom!');
+      if (isScrollPosAtBottom || lastScrollPos == 0) Timer.run(() => chatView.scrollToBottom());
     });
 
     // Listen for changed items.
