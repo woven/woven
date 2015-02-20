@@ -73,14 +73,11 @@ class ChatViewModel extends BaseViewModel with Observable {
 
 //        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
 
-        // Wait for the message to come in over the network, then set scroll position to new bottom.
-        // Only do this if the user is already scrolled to bottom, else leave alone.
-        if (isScrollPosAtBottom || lastScrollPos == 0) {
-          new Timer(new Duration(milliseconds: 50), () {
-//            chatView.scroller.scrollTop = chatView.scroller.scrollHeight;
-          });
-        }
       });
+
+      // Wait until the view is loaded, then scroll to bottom.
+      Timer.run(() => chatView.scrollToBottom());
+
       print('[DEBUG] messages.length: ${messages.length}');
 
 //      relistenForItems();
@@ -91,8 +88,6 @@ class ChatViewModel extends BaseViewModel with Observable {
       new Timer(new Duration(seconds: 1), () {
         reloadingContent = false;
       });
-
-
     });
 
 //    print('Total count: $totalCount');

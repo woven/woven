@@ -24,7 +24,7 @@ class ChatBox extends PolymerElement {
 
   TextAreaElement get textarea => this.shadowRoot.querySelector('#comment-textarea');
 
-  ChatView get chatViewEl => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
+  ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
 
   /**
    * Handle focus of the comment input.
@@ -72,8 +72,15 @@ class ChatBox extends PolymerElement {
     DateTime now = new DateTime.now().toUtc();
 
     // Save the message.
-    var commentJson =  {'user': app.user.username, 'message': message, 'createdDate': '$now', 'community': communityId};
+    var commentJson =  {'user': app.user.username, 'message': message, 'createdDate': now.toString(), 'community': communityId};
+    Map messageMap = new Map.from(commentJson);
 
+    // Insert the message instantly.
+    // TODO: Figure out how to dismiss it client side.
+    viewModel.insertMessage(messageMap);
+    chatView.scrollToBottom();
+
+    // Save the message to Firebase server-side.
     HttpRequest.request(
         Routes.addMessage.toString(),
         method: 'POST',
@@ -84,7 +91,7 @@ class ChatBox extends PolymerElement {
       var messageId = response.data;
       // TODO: Handle response.success true/false later.
 
-      // Update some details on the parent item.
+      // Update details on the community.
       var parent = f.child('/communities/$communityId');
 
       parent.child('message_count').transaction((currentCount) {

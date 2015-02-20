@@ -54,15 +54,22 @@ class ChatList extends PolymerElement {
     // Once the view is loaded, handle scroll position.
     viewModel.onLoad.then((_) {
       // Wait one event loop, so the view is truly loaded, then jump to last known position.
-      Timer.run(() {
-        chatView.scroller.scrollTop = viewModel.lastScrollPos;
-      });
+//      Timer.run(() {
+//        if (viewModel.lastScrollPos == 0) {
+//          print('1');
+//          chatView.scrollToBottom();
+//        } else {
+//          print('2');
+//          chatView.scroller.scrollTop = viewModel.lastScrollPos;
+//        }
+//      });
       // On scroll...
       subscriptions.add(chatView.scroller.onScroll.listen((e) {
+        print('onScrolled');
         // ...record new scroll position.
         viewModel.lastScrollPos = chatView.scroller.scrollTop;
         // ...determine if we're scrolled to the bottom.
-        viewModel.isScrollPosAtBottom = viewModel.isScrollPosAtBottom = chatView.scroller.scrollHeight - chatView.scroller.scrollTop <= chatView.scroller.clientHeight;
+        viewModel.isScrollPosAtBottom = chatView.scroller.scrollHeight - chatView.scroller.scrollTop <= chatView.scroller.clientHeight;
       }));
     });
   }
