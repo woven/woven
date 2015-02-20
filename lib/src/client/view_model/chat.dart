@@ -80,7 +80,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       print('[DEBUG] messages.length: ${messages.length}');
 
-//      relistenForItems();
+      relistenForItems();
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
@@ -131,8 +131,14 @@ class ChatViewModel extends BaseViewModel with Observable {
       newItem['id'] = e.snapshot.name;
 
       // If we already have the item, get out of here.
-      var existingItem = messages.firstWhere((i) => i['id'] == e.snapshot.name, orElse: () => null);
-      if (existingItem != null) return;
+
+      var existingItem = messages.firstWhere((i) => (i['id'] != null)
+        ? (i['id'] == newItem['id'])
+        : (i['user'] == newItem['user'] && i['message'] == newItem['message']), orElse: () => null);
+      if (existingItem != null) {
+        existingItem['id'] = newItem['id'];
+        return;
+      }
 
       // Insert each new item into the list.
       insertMessage(newItem);

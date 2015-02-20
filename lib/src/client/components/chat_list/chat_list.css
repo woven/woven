@@ -14,6 +14,11 @@
   line-height: 18px;
 }
 
+.activity-card #content p.not-delivered {
+  color: gray;
+}
+
+
 .activity-card .card-top {
   margin-bottom: 2px;
 }

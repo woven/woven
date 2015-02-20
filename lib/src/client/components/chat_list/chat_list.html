@@ -21,7 +21,7 @@
                   <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                 </div>
               </div>
-              <p><safe-html><template if="{{message != null}}">{{formatText(message['message'])}}</template></safe-html></p>
+              <p class="{{(message['id'] == null) ? 'not-delivered' : ''}}"><safe-html><template if="{{message != null}}">{{formatText(message['message'])}}</template></safe-html></p>
             </div>
           </div>
         </div>
