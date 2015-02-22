@@ -9,7 +9,7 @@
       <!--<template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator">Fetching...</div></template>-->
       <!--<template if="{{viewModel.reachedEnd}}"><div id="loading-indicator">You've reached the beginning of all time.</div></template>-->
       <template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator">Fetching...</div></template>
-      <template if="{{!viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator"><a on-tap="{{loadNextPage}}">Load more</a><div id="loading-indicator"></template>
+      <template if="{{!viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator"><a on-tap="{{loadNextPage}}">Load more</a></div></template>
       <template if="{{viewModel.reachedEnd}}"><div id="loading-indicator">You've reached the beginning of all time.</div></template>
       <template if="{{viewModel.messages != null}}" repeat="{{message in viewModel.messages}}">
         <div layout horizontal>
