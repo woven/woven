@@ -130,21 +130,22 @@ class ChatViewModel extends BaseViewModel with Observable {
       Map newItem = e.snapshot.val();
       newItem['id'] = e.snapshot.name;
 
-      // If we already have the item, get out of here.
       var existingItem = messages.firstWhere((i) => (i['id'] != null)
         ? (i['id'] == newItem['id'])
         : (i['user'] == newItem['user'] && i['message'] == newItem['message']), orElse: () => null);
+
+      // If we already have the item, get out of here.
       if (existingItem != null) {
+        // Pass the ID to the existing item as we might not have it.
         existingItem['id'] = newItem['id'];
       } else {
         // Insert each new item into the list.
         insertMessage(newItem);
       }
 
-      // If user is scrolled to bottom, keep it that way.
-      print(lastScrollPos);
-      if (isScrollPosAtBottom || lastScrollPos == 0) print('scroll to bottom!');
-      if (isScrollPosAtBottom || lastScrollPos == 0) Timer.run(() => chatView.scrollToBottom());
+//      // If user is scrolled to bottom, keep it that way.
+//      if (isScrollPosAtBottom || lastScrollPos == 0) print('scroll to bottom!');
+//      if (isScrollPosAtBottom || lastScrollPos == 0) Timer.run(() => chatView.scrollToBottom());
     });
 
     // Listen for changed items.
