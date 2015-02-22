@@ -39,7 +39,6 @@ class ChatList extends PolymerElement {
   initializeInfiniteScrolling() {
     var scroller = chatView.scroller;
     HtmlElement element = $['activity-wrapper'];
-    print(element);
     var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller, reversed: true, threshold: 0);
 
     subscriptions.add(scroll.onScroll.listen((_) {
@@ -48,8 +47,20 @@ class ChatList extends PolymerElement {
     }));
   }
 
+  loadNextPage() {
+    HtmlElement element = $['activity-wrapper'];
+    HtmlElement scroller = chatView.scroller;
+    var prevHeight = element.clientHeight;
+    viewModel.loadMessagesByPage().then((_) {
+      Timer.run(() {
+        print(element.clientHeight);
+        scroller.scrollTop = element.clientHeight - prevHeight + scroller.scrollTop;
+      });
+    });
+  }
+
   attached() {
-    initializeInfiniteScrolling();
+//    initializeInfiniteScrolling();
 
     // Once the view is loaded, handle scroll position.
     viewModel.onLoad.then((_) {

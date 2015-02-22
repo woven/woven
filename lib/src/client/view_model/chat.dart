@@ -25,6 +25,7 @@ class ChatViewModel extends BaseViewModel with Observable {
   var topPriority = null;
   var secondToLastPriority = null;
   int totalCount = 0;
+  int prevHeight;
 
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
@@ -36,9 +37,9 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   /**
-   * Load more items pageSize at a time.
+   * Load items pageSize at a time.
    */
-  loadMessagesByPage() {
+  Future loadMessagesByPage() {
     reloadingContent = true;
     int count = 0;
 
@@ -49,7 +50,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     if (messages.length == 0) onLoadCompleter.complete(true);
 
     // Get the list of items, and listen for new ones.
-    messagesRef.once('value').then((snapshot) {
+    return messagesRef.once('value').then((snapshot) {
       snapshot.forEach((itemSnapshot) {
         Map message = itemSnapshot.val();
 
@@ -63,7 +64,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         lastPriority = itemSnapshot.getPriority();
 
         // Don't process the extra item we tacked onto pageSize in the limit() above.
-        if (count > pageSize) return;
+        if (count > pageSize) return null;
 
         // Remember the priority of the last item, excluding the extra item which we ignore above.
         secondToLastPriority = itemSnapshot.getPriority();
