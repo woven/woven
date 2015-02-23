@@ -41,7 +41,6 @@ class ChatBox extends PolymerElement {
 
   resetCommentInput() {
     PaperAutogrowTextarea commentInput = this.shadowRoot.querySelector('#comment');
-    TextAreaElement textarea = this.shadowRoot.querySelector('#comment-textarea');
     textarea.value = "";
     textarea.focus();
     commentInput.update();
@@ -66,6 +65,15 @@ class ChatBox extends PolymerElement {
       resetCommentInput();
       return;
     }
+
+    // TODO: Testing notifications.
+//    Notification.requestPermission().then((res) {
+//      Notification notification = new Notification('New message, dude',
+//      body: message, iconUrl: 'http://woven.app/static/images/favicon-32x32.png');
+//      new Timer(new Duration(seconds: 4), () {
+//        notification.close();
+//      });
+//    });
 
     var communityId = app.community.alias;
 
@@ -107,10 +115,26 @@ class ChatBox extends PolymerElement {
 //    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$messageId");
     });
 
-
-
     // Reset the fields.
     resetCommentInput();
+  }
+
+  focusMessageInput() {
+    PaperAutogrowTextarea commentInput = this.shadowRoot.querySelector('#comment');
+    textarea.focus();
+    commentInput.update();
+  }
+
+  attached() {
+    // If we're signed in on attached, focus the message input.
+    if (app.user != null) Timer.run(focusMessageInput);
+    // If we later get signed in user, focus the message input.
+    app.changes.listen((List<ChangeRecord> records) {
+      PropertyChangeRecord record = records[0] as PropertyChangeRecord;
+      if (record.name == new Symbol('user')) {
+        if (app.user != null) Timer.run(focusMessageInput);
+      }
+    });
   }
 
   signInWithFacebook() {
