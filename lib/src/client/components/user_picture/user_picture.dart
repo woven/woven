@@ -24,21 +24,16 @@ class UserPicture extends PolymerElement {
   getUser() {
     if (username == null) return;
 
-    if (app.user != null && username == app.user.username) {
-      // If we're trying to show the current user, we already know its details.
-      user = app.user;
+    // Check the app cache for the user.
+    if (app.cache.users.containsKey(username)) {
+      user = app.cache.users[username];
     } else {
-      // Check the app cache for the user.
-      if (app.cache.users.containsKey(username)) {
-        user = app.cache.users[username];
-      } else {
-        fb.child('/users/$username').once('value').then((res) {
-          if (res == null) return;
-          user = UserModel.fromJson(res.val());
-          app.cache.users[username] = user;
-        });
-      };
-    }
+      fb.child('/users/$username').once('value').then((res) {
+        if (res == null) return;
+        user = UserModel.fromJson(res.val());
+        app.cache.users[username] = user;
+      });
+    };
   }
 
   userChanged() {

@@ -95,6 +95,7 @@ class WovenApp extends PolymerElement with Observable {
       var response = Response.fromJson(JSON.decode(contents));
       if (response.success && response.data != null) {
         app.user = UserModel.fromJson(response.data);
+        app.cache.users[app.user.username] = app.user;
 
         //TODO: Aha! This triggers a feedViewModel load.
         app.mainViewModel.invalidateUserState();

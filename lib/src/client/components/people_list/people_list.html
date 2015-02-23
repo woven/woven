@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="people-list">
   <template>
     <link rel="stylesheet" href="people_list.css">
@@ -12,7 +13,7 @@
             <div class="item-col1" vertical layout>
               <div class="user-photo">
                 <template if="{{user['picture'] != null}}">
-                  <img _src="{{user['picture']}}">
+                  <user-picture app="{{app}}" username="{{user['username']}}"></user-picture>
                 </template>
               </div>
             </div>

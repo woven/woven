@@ -127,9 +127,13 @@ core-icon {
   width: 100%;
 }
 
+.user-area {
+  margin-right: 10px;
+}
+
 .user-photo {
-  width:50px;
-  height:50px;
+  width: 40px;
+  height: 40px;
   background: #F5F5F5;
   border: solid 1px #E6E6E6;
   overflow:hidden;
@@ -148,8 +152,8 @@ core-icon {
 }
 
 .user-photo img {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 
 #loading-indicator {
