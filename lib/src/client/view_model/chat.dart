@@ -17,7 +17,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   final f = new Firebase(config['datastore']['firebaseLocation']);
 
-  int pageSize = 25;
+  int pageSize = 50;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   @observable bool isScrollPosAtBottom = false;
