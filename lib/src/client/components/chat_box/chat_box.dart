@@ -76,9 +76,8 @@ class ChatBox extends PolymerElement {
     Map messageMap = new Map.from(commentJson);
 
     // Insert the message instantly.
-    // TODO: Figure out how to dismiss it client side.
     viewModel.insertMessage(messageMap);
-    chatView.scrollToBottom();
+    Timer.run(() => chatView.scrollToBottom());
 
     // Save the message to Firebase server-side.
     HttpRequest.request(
