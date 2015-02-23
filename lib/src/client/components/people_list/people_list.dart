@@ -64,9 +64,5 @@ class PeopleList extends PolymerElement with Observable {
     });
   }
 
-  detached() {
-    subscriptions.forEach((subscription) {
-      subscription.cancel();
-    });
-  }
+  detached() => subscriptions.forEach((subscription) => subscription.cancel());
 }

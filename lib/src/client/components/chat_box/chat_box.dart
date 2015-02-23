@@ -18,6 +18,8 @@ class ChatBox extends PolymerElement {
   @published App app;
   @published ChatViewModel viewModel;
 
+  List<StreamSubscription> subscriptions = [];
+
   ChatBox.created() : super.created();
 
   final f = new db.Firebase(config['datastore']['firebaseLocation']);
@@ -129,13 +131,15 @@ class ChatBox extends PolymerElement {
     // If we're signed in on attached, focus the message input.
     if (app.user != null) Timer.run(focusMessageInput);
     // If we later get signed in user, focus the message input.
-    app.changes.listen((List<ChangeRecord> records) {
+    subscriptions.add(app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
       if (record.name == new Symbol('user')) {
         if (app.user != null) Timer.run(focusMessageInput);
       }
-    });
+    }));
   }
+
+  detached() => subscriptions.forEach((subscription) => subscription.cancel());
 
   signInWithFacebook() {
     app.signInWithFacebook();

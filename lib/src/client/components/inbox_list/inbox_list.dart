@@ -333,8 +333,6 @@ class InboxList extends PolymerElement with Observable {
 //    viewModel.childMovedSubscriber.cancel();
 //    viewModel.childRemovedSubscriber.cancel();
 
-    subscriptions.forEach((subscription) {
-      subscription.cancel();
-    });
+    subscriptions.forEach((subscription) => subscription.cancel());
   }
 }

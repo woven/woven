@@ -77,7 +77,7 @@ class ChatList extends PolymerElement {
   }
 
   detached() {
-    //
+    subscriptions.forEach((subscription) => subscription.cancel());
   }
 
   ChatList.created() : super.created();
