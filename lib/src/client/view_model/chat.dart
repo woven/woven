@@ -76,8 +76,6 @@ class ChatViewModel extends BaseViewModel with Observable {
       });
 
       // Wait until the view is loaded, then scroll to bottom.
-      print(lastScrollPos);
-      print(isScrollPosAtBottom);
       if (isScrollPosAtBottom || isFirstLoad) Timer.run(() => chatView.scrollToBottom());
 
       relistenForItems();
@@ -90,8 +88,6 @@ class ChatViewModel extends BaseViewModel with Observable {
         reloadingContent = false;
       });
     });
-
-//    print('Total count: $totalCount');
   }
 
   /**

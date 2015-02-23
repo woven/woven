@@ -14,7 +14,7 @@
       <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
-            <user-picture app="{{app}}" user="{{comment['user']}}"></user-picture>
+            <user-picture app="{{app}}" username="{{comment['user']}}"></user-picture>
           </div>
           <div class="activity-card" flex>
             <div id="content">
@@ -34,7 +34,7 @@
       <template if="{{app.user != null}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
-            <user-picture app="{{app}}" user="{{app.user.username}}"></user-picture>
+            <user-picture app="{{app}}" username="{{app.user.username}}"></user-picture>
           </div>
           <div vertical layout flex>
             <div class="field-wrapper full-height">
