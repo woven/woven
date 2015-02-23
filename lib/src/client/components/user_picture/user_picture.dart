@@ -36,7 +36,7 @@ class UserPicture extends PolymerElement {
     };
   }
 
-  userChanged() {
+  usernameChanged() {
     getUser();
   }
 
