@@ -1,6 +1,5 @@
 import 'dart:html';
 import 'dart:async';
-import 'dart:mirrors';
 import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
@@ -111,19 +110,22 @@ class WovenApp extends PolymerElement with Observable {
     // Listen for App changes so we can do some things.
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
-      String changedValue = MirrorSystem.getName(record.name);
+
+//      String changedValue = MirrorSystem.getName(record.name);
 
 //      print("$changedValue changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
-      HtmlElement el;
-      el = this.shadowRoot.querySelector('#page-title');
-      if (el != null) {
-        el.style.opacity = '0';
-        new Timer(new Duration(milliseconds: 750), () {
-          el.style.opacity = '1';
-          el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
-        });
+      if (record.name == new Symbol("pageTitle")) {
+        HtmlElement el;
+        el = this.shadowRoot.querySelector('#page-title');
+        if (el != null) {
+          el.style.opacity = '0';
+          new Timer(new Duration(milliseconds: 750), () {
+            el.style.opacity = '1';
+            el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
+          });
+        }
       }
 
 //      if (changedValue == "community") {
