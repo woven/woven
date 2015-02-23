@@ -42,7 +42,6 @@ class ChatList extends PolymerElement {
     var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller, reversed: true, threshold: 0);
 
     subscriptions.add(scroll.onScroll.listen((_) {
-      print("Scrolling... reloading: ${viewModel.reloadingContent} // end: ${viewModel.reachedEnd}");
       if (!viewModel.reloadingContent && !viewModel.reachedEnd) viewModel.paginate();
     }));
   }
@@ -51,10 +50,11 @@ class ChatList extends PolymerElement {
     HtmlElement element = $['activity-wrapper'];
     HtmlElement scroller = chatView.scroller;
     var prevHeight = element.clientHeight;
+
     viewModel.loadMessagesByPage().then((_) {
+      var oldPos = scroller.scrollTop;
       Timer.run(() {
-        print(element.clientHeight);
-        scroller.scrollTop = element.clientHeight - prevHeight + scroller.scrollTop;
+        scroller.scrollTop = element.clientHeight - prevHeight + oldPos;
       });
     });
   }
@@ -65,7 +65,7 @@ class ChatList extends PolymerElement {
     // Once the view is loaded, handle scroll position.
     viewModel.onLoad.then((_) {
       // Wait one event loop, so the view is truly loaded, then jump to last known position.
-//      Timer.run(() => chatView.scroller.scrollTop = viewModel.lastScrollPos);
+      Timer.run(() => chatView.scroller.scrollTop = viewModel.lastScrollPos);
       // On scroll...
       subscriptions.add(chatView.scroller.onScroll.listen((e) {
         // ...record new scroll position.

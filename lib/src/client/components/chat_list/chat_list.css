@@ -65,7 +65,7 @@
   margin: 20px;
 }
 
-#loading-indicator {
+.loading-area {
   text-align: center;
   width: 100%;
   font-size: 15px;
@@ -73,6 +73,15 @@
   color: #666;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.loading-area a {
+  cursor: pointer;
+  color: royalblue;
+}
+
+.loading-area a:hover {
+  color: #0061BB;
 }
 
 

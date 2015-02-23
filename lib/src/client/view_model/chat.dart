@@ -17,20 +17,19 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   final f = new Firebase(config['datastore']['firebaseLocation']);
 
-  int pageSize = 50;
+  int pageSize = 100;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   @observable bool isScrollPosAtBottom = false;
+  bool isFirstLoad = true;
   var lastPriority = null;
   var topPriority = null;
   var secondToLastPriority = null;
   int totalCount = 0;
-  int prevHeight;
 
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
   ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
-
 
   ChatViewModel({this.app}) {
     loadMessagesByPage();
@@ -77,14 +76,15 @@ class ChatViewModel extends BaseViewModel with Observable {
       });
 
       // Wait until the view is loaded, then scroll to bottom.
-//      Timer.run(() => chatView.scrollToBottom());
-
-      print('[DEBUG] messages.length: ${messages.length}');
+      print(lastScrollPos);
+      print(isScrollPosAtBottom);
+      if (isScrollPosAtBottom || isFirstLoad) Timer.run(() => chatView.scrollToBottom());
 
       relistenForItems();
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
+      isFirstLoad = false;
 
       new Timer(new Duration(seconds: 1), () {
         reloadingContent = false;

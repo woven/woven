@@ -14,18 +14,7 @@ class ChatView extends PolymerElement {
   /**
    * Get the main scrolling element on app.
    */
-  HtmlElement get scroller {
-    HtmlElement el = $['scroller'];
-    return el;
-  }
+  HtmlElement get scroller => $['scroller'];
 
-  scrollToBottom() {
-    if (viewModel.isScrollPosAtBottom || viewModel.lastScrollPos == 0) {
-      Timer.run(() {
-        this.scroller.scrollTop = this.scroller.scrollHeight;
-        viewModel.lastScrollPos = 0; // Zero out scroll position?
-      });
-    }
-  }
-
+  scrollToBottom() => this.scroller.scrollTop = this.scroller.scrollHeight;
 }

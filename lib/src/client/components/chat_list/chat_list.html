@@ -8,9 +8,12 @@
     <div id="activity-wrapper">
       <!--<template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator">Fetching...</div></template>-->
       <!--<template if="{{viewModel.reachedEnd}}"><div id="loading-indicator">You've reached the beginning of all time.</div></template>-->
-      <template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator">Fetching...</div></template>
-      <template if="{{!viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator"><a on-tap="{{loadNextPage}}">Load more</a></div></template>
-      <template if="{{viewModel.reachedEnd}}"><div id="loading-indicator">You've reached the beginning of all time.</div></template>
+      <div class="loading-area">
+        <template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}">Fetching...</template>
+        <template if="{{!viewModel.reloadingContent && !viewModel.reachedEnd}}"><a on-tap="{{loadNextPage}}">Load more</a></template>
+        <template if="{{viewModel.reachedEnd}}">You've reached the beginning of all time.</template>
+      </div>
+      <!--<div id="loading-indicator"><a on-tap="{{loadNextPage}}">Load more</a></div>-->
       <template if="{{viewModel.messages != null}}" repeat="{{message in viewModel.messages}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
