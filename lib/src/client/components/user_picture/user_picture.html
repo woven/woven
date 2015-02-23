@@ -4,8 +4,8 @@
   <template>
     <link rel="stylesheet" href="user_picture.css">
     <div class="user-photo">
-      <template if="{{userMap['fullPicturePath'] != null}}">
-        <core-image sizing="cover" preload src="{{userMap['fullPicturePath']}}"></core-image>
+      <template if="{{user.fullPathToPicture != null}}">
+        <core-image sizing="cover" preload src="{{user.fullPathToPicture}}"></core-image>
       </template>
     </div>
   </template>

@@ -6,30 +6,38 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
 
 import 'package:woven/src/client/app.dart';
+import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/config/config.dart';
+
+import 'dart:convert';
 
 @CustomTag("user-picture")
 class UserPicture extends PolymerElement {
   @published App app;
-  @published String user;
-  @observable Map userMap = toObservable({});
+  @published String username;
+  @observable UserModel user;
 
   var fb = new Firebase(config['datastore']['firebaseLocation']);
 
   UserPicture.created() : super.created();
 
   getUser() {
-    if (user != null) {
-      if (app.user != null && user == app.user.username) {
-        // If we're trying to show the current user, we already know its details.
-        userMap['fullPicturePath'] = app.user.fullPathToPicture;
+    if (username == null) return;
+
+    if (app.user != null && username == app.user.username) {
+      // If we're trying to show the current user, we already know its details.
+      user = app.user;
+    } else {
+      // Check the app cache for the user.
+      if (app.cache.users.containsKey(username)) {
+        user = app.cache.users[username];
       } else {
-        fb.child('/users/$user').once('value').then((res) {
-          userMap = res.val();
-          if (userMap == null) return;
-          userMap['fullPicturePath'] = (userMap != null && userMap['picture'] != null) ? '${config['google']['cloudStoragePath']}/${userMap['picture']}' : null;
+        fb.child('/users/$username').once('value').then((res) {
+          if (res == null) return;
+          user = JSON.decode(res.val());
+          app.cache.users[username] = user;
         });
-      }
+      };
     }
   }
 

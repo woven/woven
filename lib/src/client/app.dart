@@ -11,6 +11,7 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
 import 'package:core_elements/core_header_panel.dart';
+import 'cache.dart';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -25,9 +26,11 @@ class App extends Observable {
 //  @observable bool isNewUser = false;
   Router router;
   MainViewModel mainViewModel;
+  Cache cache;
 
   App() {
     mainViewModel = new MainViewModel(this);
+    cache = new Cache();
 
     void home(String path) {
       // Home goes to the community list for now.
