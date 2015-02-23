@@ -144,9 +144,8 @@ class ChatViewModel extends BaseViewModel with Observable {
         insertMessage(newItem);
       }
 
-//      // If user is scrolled to bottom, keep it that way.
-//      if (isScrollPosAtBottom || lastScrollPos == 0) print('scroll to bottom!');
-      if (isScrollPosAtBottom || lastScrollPos == 0) Timer.run(() => chatView.scrollToBottom());
+      // If user is scrolled to bottom, keep it that way.
+      if (isScrollPosAtBottom || isFirstLoad) Timer.run(() => chatView.scrollToBottom());
     });
 
     // Listen for changed items.
