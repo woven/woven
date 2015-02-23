@@ -32,9 +32,10 @@ class UserPicture extends PolymerElement {
       if (app.cache.users.containsKey(username)) {
         user = app.cache.users[username];
       } else {
+        print('query');
         fb.child('/users/$username').once('value').then((res) {
           if (res == null) return;
-          user = JSON.decode(res.val());
+          user = UserModel.fromJson(res.val());
           app.cache.users[username] = user;
         });
       };
