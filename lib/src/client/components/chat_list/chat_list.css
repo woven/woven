@@ -5,7 +5,7 @@
   margin: 0 auto 10px auto;
   border-radius: 4px;
   border: 1px solid #e5e5e5;
-  transition: background-color 2s
+  transition: border-color 1s;
 }
 
 .activity-card #content {
@@ -25,8 +25,8 @@
 }
 
 .activity-card.highlight {
-  background-color: #FFFCEA;
-  transition: background-color 1s;
+  border-color: orangered;
+  transition: border-color 1s;
 }
 
 .user-area {
@@ -37,7 +37,7 @@
   width: 40px;
   height: 40px;
   background: #F5F5F5;
-  border: solid 1px #E6E6E6;a
+  border: solid 1px #E6E6E6;
   overflow:hidden;
   border-radius: 3px;
 
