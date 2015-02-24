@@ -5,7 +5,7 @@
   margin: 0 auto 10px auto;
   border-radius: 4px;
   border: 1px solid #e5e5e5;
-  transition: border-color 2s;
+  transition: background-color 2s;
 }
 
 .activity-card #content {
@@ -25,8 +25,8 @@
 }
 
 .activity-card.highlight {
-  border-color: orangered;
-  transition: border-color 1s;
+  background-color: #FFEDC2
+  transition: background-color 1s;
 }
 
 .user-area {
