@@ -19,7 +19,7 @@
           <div class="user-area" vertical layout>
             <user-picture app="{{app}}" username="{{message['user']}}"></user-picture>
           </div>
-          <div class="activity-card" flex>
+          <div id="{{message['id']}}" class="activity-card" flex>
             <div id="content">
               <div class="card-top" horizontal layout>
                 <div flex class="user">{{message['user']}}</div>

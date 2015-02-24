@@ -19,8 +19,9 @@ class ChatList extends PolymerElement {
   ..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
   String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
-  Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('chat-list');
+
   ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
+  Element get chatList => chatView.shadowRoot.querySelector('chat-list');
 
   /**
    * Handle formatting of the comment text.
@@ -59,6 +60,30 @@ class ChatList extends PolymerElement {
     });
   }
 
+  indicateMessagesSinceTimeOfLastFocus() {
+    var indexOfLastItemSeen = viewModel.indexOfClosestItemByDate(app.timeOfLastFocus);
+    if (indexOfLastItemSeen == null) return; // No messages since last focus.
+    var lastItemSeen = viewModel.messages.elementAt(indexOfLastItemSeen);
+
+
+
+    int count = 0;
+    viewModel.messages.skip(indexOfLastItemSeen).forEach((message) {
+      count++;
+      var currentMessageId = message['id'];
+      var el = this.shadowRoot.querySelector('#$currentMessageId');
+      new Timer(new Duration(milliseconds: count*100), () {
+        el.classes.add('highlight');
+        print('add');
+        new Timer(new Duration(seconds: count*1), () {
+          el.classes.remove('highlight');
+          print('remove');
+        });
+      });
+    });
+  }
+
+
   attached() {
 //    initializeInfiniteScrolling();
 
@@ -73,6 +98,17 @@ class ChatList extends PolymerElement {
         // ...keep track of if we're scrolled to the bottom.
         viewModel.isScrollPosAtBottom = chatView.scroller.scrollHeight - chatView.scroller.scrollTop <= chatView.scroller.clientHeight;
       }));
+
+      subscriptions.add(window.onFocus.listen((_) {
+        indicateMessagesSinceTimeOfLastFocus();
+      }));
+
+      subscriptions.add(window.onBlur.listen((_) {
+        print('blur');
+        DateTime now = new DateTime.now().toUtc();
+        app.timeOfLastFocus = now;
+      }));
+
     });
   }
 

@@ -161,16 +161,18 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   /**
+   * Find the index of the item with the closest updated date.
+   */
+  indexOfClosestItemByDate(date) {
+    for (var message in messages) {
+      if ((message['updatedDate'] as DateTime).isAfter(date)) return messages.indexOf(message);
+    }
+  }
+
+  /**
    * Prepare the message and insert it into the observed list.
    */
   void insertMessage(Map message) {
-    // Find the index of the item with the closest updated date.
-    indexOfClosestItemByDate(date) {
-      for (var message in messages) {
-        if ((message['updatedDate'] as DateTime).isAfter(date)) return messages.indexOf(message);
-      }
-    }
-
     // If no updated date, use the created date.
     // TODO: We assume createdDate is never null!
     if (message['updatedDate'] == null) {

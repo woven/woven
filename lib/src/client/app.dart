@@ -12,6 +12,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
 import 'package:core_elements/core_header_panel.dart';
 import 'cache.dart';
+import 'dart:async';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -23,6 +24,7 @@ class App extends Observable {
   @observable bool hasTriedLoadingUser = false;
   @observable bool showHomePage = false;
   @observable bool skippedHomePage = false;
+  DateTime timeOfLastFocus = new DateTime.now().toUtc();
 //  @observable bool isNewUser = false;
   Router router;
   MainViewModel mainViewModel;
