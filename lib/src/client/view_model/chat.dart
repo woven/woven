@@ -173,6 +173,12 @@ class ChatViewModel extends BaseViewModel with Observable {
    * Prepare the message and insert it into the observed list.
    */
   void insertMessage(Map message) {
+    DateTime now = new DateTime.now().toUtc();
+    DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
+
+    message['highlighted'] = false;
+    if (now.isAfter(gracePeriod)) message['highlighted'] = true;
+
     // If no updated date, use the created date.
     // TODO: We assume createdDate is never null!
     if (message['updatedDate'] == null) {
