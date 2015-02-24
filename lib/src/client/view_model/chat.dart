@@ -177,7 +177,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
 
     message['highlighted'] = false;
-    if (now.isAfter(gracePeriod)) message['highlighted'] = true;
+    if (now.isAfter(gracePeriod) && !app.isFocused) message['highlighted'] = true;
 
     // If no updated date, use the created date.
     // TODO: We assume createdDate is never null!

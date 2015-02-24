@@ -68,7 +68,7 @@ class ChatList extends PolymerElement {
     int count = 0;
     viewModel.messages.sublist(indexOfLastItemSeen).reversed.forEach((message) {
       count++;
-      new Timer(new Duration(seconds: count*1), () {
+      new Timer(new Duration(milliseconds: count*700), () {
         message['highlighted'] = false;
       });
     });
@@ -90,15 +90,7 @@ class ChatList extends PolymerElement {
         viewModel.isScrollPosAtBottom = chatView.scroller.scrollHeight - chatView.scroller.scrollTop <= chatView.scroller.clientHeight;
       }));
 
-      subscriptions.add(window.onFocus.listen((_) {
-        dismissHighlightedMessages();
-      }));
-
-      subscriptions.add(window.onBlur.listen((_) {
-        DateTime now = new DateTime.now().toUtc();
-        app.timeOfLastFocus = now;
-      }));
-
+      window.onFocus.listen((_) => dismissHighlightedMessages());
     });
   }
 

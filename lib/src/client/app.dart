@@ -12,7 +12,6 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
 import 'package:core_elements/core_header_panel.dart';
 import 'cache.dart';
-import 'dart:async';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -25,6 +24,7 @@ class App extends Observable {
   @observable bool showHomePage = false;
   @observable bool skippedHomePage = false;
   DateTime timeOfLastFocus = new DateTime.now().toUtc();
+  bool isFocused = true;
 //  @observable bool isNewUser = false;
   Router router;
   MainViewModel mainViewModel;
@@ -34,16 +34,22 @@ class App extends Observable {
     mainViewModel = new MainViewModel(this);
     cache = new Cache();
 
+    // Track when app gets focus.
+    window.onFocus.listen((_) {
+      this.isFocused = true;
+    });
+
+    // Track when app loses focus.
+    window.onBlur.listen((_) {
+      this.isFocused = false;
+      this.timeOfLastFocus = new DateTime.now().toUtc();
+    });
+
     void home(String path) {
       // Home goes to the community list for now.
       selectedPage = 4;
       community = null;
       if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
-//      print('''
-//      hasTriedLoadingUser: $hasTriedLoadingUser
-//      skippedHomePage: $skippedHomePage
-//      showHomePage: $showHomePage
-//      ''');
     }
 
     void welcome(String path) {
@@ -66,7 +72,6 @@ class App extends Observable {
       if (pathUri.pathSegments.length == 1) {
         selectedPage = 0;
       } else {
-//        print(pathUri.pathSegments[1]);
         // If we're at <community>/<something>, see if <something> is a valid page.
         switch (pathUri.pathSegments[1]) {
           case 'people':

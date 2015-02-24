@@ -18,6 +18,8 @@ class WovenApp extends PolymerElement with Observable {
   @published App app = new App();
   @observable var responsiveWidth = "600px";
 
+  List<StreamSubscription> subscriptions = [];
+
   WovenApp.created() : super.created();
 
   void switchPage(Event e, var detail, Element target) {
@@ -112,8 +114,6 @@ class WovenApp extends PolymerElement with Observable {
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
 
-//      String changedValue = MirrorSystem.getName(record.name);
-
 //      print("$changedValue changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
@@ -150,5 +150,9 @@ class WovenApp extends PolymerElement with Observable {
 
     // A temporary place for some scripts I'm running.
     //
+  }
+
+  detached() {
+    subscriptions.forEach((subscription) => subscription.cancel());
   }
 }
