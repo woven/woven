@@ -25,7 +25,7 @@
 }
 
 .activity-card.highlight {
-  background-color: #FFEDC2
+  background-color: #FFEDC2;
   transition: background-color 1s;
 }
 
