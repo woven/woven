@@ -11,17 +11,34 @@
     <!--<link rel="stylesheet" href="welcome.css">-->
     <!--<core-icon-button id="add-button" icon="create" on-tap="{{toggleOverlay}}"></core-icon-button>-->
 
-    <x-dialog id="welcome-overlay" class="dialog" opened="true" autoclosedisabled="true">
+    <x-dialog id="welcome-overlay" class="dialog" opened="{{opened}}" autoclosedisabled="true">
       <core-toolbar center-justified>
-        <core-icon-button icon="close" on-tap="{{updateUser}}"></core-icon-button>
+        <core-icon-button icon="close" on-tap="{{close}}"></core-icon-button>
         <div flex horizontal center-justified layout>
-          <div>Create an account</div>
+          <template if="{{(app.user != null && !app.user.disabled)}}">
+            <div>Update your account</div>
+          </template>
+          <template if="{{(app.user != null && app.user.disabled)}}">
+            <div>Create your account</div>
+          </template>
+          <template if="{{(app.user == null)}}">
+            <div>Create new account</div>
+          </template>
         </div>
-        <core-icon-button icon="done" on-tap="{{updateUser}}" class="action"></core-icon-button>
+        <core-icon-button icon="done" on-tap="{{submit}}" class="action"></core-icon-button>
       </core-toolbar>
       <div id="container">
         <div id="content-container">
-          <p>Please create a personal account.</p>
+          <template if="{{(app.user != null && !app.user.disabled)}}">
+            <p>We noticed you never chose a password.</p>
+            <p>Please choose one now, and I'll get out of your way.</p>
+          </template>
+          <template if="{{(app.user != null && app.user.disabled && app.user.password == null)}}">
+            <p>Almost there! Please create your personal account.</p>
+          </template>
+          <template if="{{(app.user == null)}}">
+            <p>Please create your personal account.</p>
+          </template>
 
           <!--<core-selector id="content-type" target="{{$['list']}}" itemsSelector="li" valueattr="value" selected="other"></core-selector>-->
           <!--<ul id="list" class="list">-->
@@ -33,31 +50,31 @@
             <!--<li value="project">Project</li>-->
             <!--<li value="other">Other</li>-->
           <!--</ul>-->
-
           <div class="field-wrapper first">
-            <input is="core-input" id="firstname" placeholder="Your first name" autocomplete="off"
-                        value="{{(app.user != null) ? app.user.firstName : ''}}">
-          </div>
-          <div class="field-wrapper">
-            <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
-                        value="{{(app.user != null) ? app.user.lastName : ''}}">
-          </div>
-          <div class="field-wrapper">
-            <input is="core-input" id="location" placeholder="Your location" autocomplete="off"
-                        value="{{(app.user != null) ? app.user.location : ''}}">
-          </div>
-          <div class="field-wrapper">
             <input is="core-input" id="email" placeholder="Your email"
-                        autocomplete="off" autocorrect="off" autocapitalize="off"
-                        value="{{(app.user != null) ? app.user.email : ''}}">
+                   autocomplete="off" autocorrect="off" autocapitalize="off"
+                   value="{{(app.user != null) ? app.user.email : ''}}">
           </div>
           <div class="field-wrapper">
             <input is="core-input" id="username" placeholder="Choose a username"
-                        autocomplete="off" autocorrect="off" autocapitalize="off">
+                   autocomplete="off" autocorrect="off" autocapitalize="off"
+                   value="{{(app.user != null && !app.user.disabled) ? app.user.username : ''}}">
+          </div>
+          <div class="field-wrapper">
+            <input is="core-input" id="password" placeholder="Choose a password"
+                   autocomplete="off" autocorrect="off" autocapitalize="off" type="password">
+          </div>
+          <div class="field-wrapper">
+            <input is="core-input" id="firstname" placeholder="Your first name" autocomplete="off"
+                   value="{{(app.user != null) ? app.user.firstName : ''}}">
+          </div>
+          <div class="field-wrapper">
+            <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
+                   value="{{(app.user != null) ? app.user.lastName : ''}}">
           </div>
           <!--<div class="field-wrapper">-->
-            <!--<core-input id="password" placeholder="Choose a password"-->
-                        <!--autocomplete="off" autocorrect="off" autocapitalize="off"></core-input>-->
+            <!--<input is="core-input" id="location" placeholder="Your hometown" autocomplete="off"-->
+                   <!--value="{{(app.user != null) ? app.user.location : ''}}">-->
           <!--</div>-->
         </div>
       </div>

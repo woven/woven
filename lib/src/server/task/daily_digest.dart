@@ -115,7 +115,7 @@ class DailyDigestTask extends Task {
           DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 5));
           i['body'] = teaser;
           i['startDateTime'] = InputFormatter.formatDate(startDateTime);
-          i['encodedId'] = hashEncode(i['id']);
+          i['encodedId'] = base64Encode(i['id']);
         });
 
         return events;
@@ -144,7 +144,7 @@ class DailyDigestTask extends Task {
           DateTime createdDate = DateTime.parse(i['createdDate']).subtract(new Duration(hours: 5));
           i['body'] = teaser;
           i['createdDate'] = InputFormatter.formatDate(createdDate);
-          i['encodedId'] = hashEncode(i['id']);
+          i['encodedId'] = base64Encode(i['id']);
         });
 
         return news;

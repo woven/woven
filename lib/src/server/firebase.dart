@@ -7,16 +7,17 @@ import 'package:http/http.dart' as http;
 import '../../config/config.dart';
 
 class Firebase {
+  String auth;
   /**
    *
    * POST a new object to the location.
    *
    * Equivalent to a .push() in the Firebase client API.
    */
-  static Future post(String path, data) {
+  static Future post(String path, data, String auth) {
     if (data is! String) data = JSON.encode(data);
 
-    return http.post('${config['datastore']['firebaseLocation']}$path', body: data).then((response) {
+    return http.post('${config['datastore']['firebaseLocation']}$path?auth=$auth', body: data).then((response) {
       Map message = JSON.decode(response.body);
       if (message['error'] != null) {
         throw 'Firebase returned an error.\nPath: $path\nData: $data\nResponse: ${message["error"]}';
@@ -33,10 +34,10 @@ class Firebase {
    *
    * Equivalent to a .set() in the Firebase client API.
    */
-  static Future put(String path, data) {
+  static Future put(String path, data, String auth) {
     if (data is! String) data = JSON.encode(data);
 
-    return http.put('${config['datastore']['firebaseLocation']}$path', body: data).then((response) {
+    return http.put('${config['datastore']['firebaseLocation']}$path?auth=$auth', body: data).then((response) {
       var message = JSON.decode(response.body);
       if (message['error'] != null) {
         throw 'Firebase returned an error.\nPath: $path\nData: $data\nResponse: ${message["error"]}';
@@ -50,10 +51,10 @@ class Firebase {
    *
    * Equivalent to a .update() in the Firebase client API.
    */
-  static Future patch(String path, data) {
+  static Future patch(String path, data, String auth) {
     if (data is! String) data = JSON.encode(data);
     var http = new HttpClient();
-    var uri = Uri.parse('${config['datastore']['firebaseLocation']}$path');
+    var uri = Uri.parse('${config['datastore']['firebaseLocation']}$path?auth=$auth');
 
     try {
       return http.patchUrl(uri).then((HttpClientRequest request) {

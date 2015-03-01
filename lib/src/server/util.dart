@@ -1,6 +1,7 @@
 library util;
 
 import '../shared/shared_util.dart' as sharedUtil;
+import 'package:jwt/json_web_token.dart';
 
 /**
  * Returns true if the given status code was "success".
@@ -17,4 +18,18 @@ String correctUrl(String url) {
   url = sharedUtil.htmlDecode(url);
 
   return url;
+}
+
+generateFirebaseToken(Map data) {
+  // Encode (i.e. sign) a payload into a JWT token.
+  final jwt = new JsonWebTokenCodec(secret: "o7SEeh3CLCqofPAZQOtFLeGdcmABhsOEpC3bUiYh");
+  final payload = {
+      'iss': 'woven',
+      'exp': new DateTime.now().add(new Duration(days: 365)).millisecondsSinceEpoch,
+      'v': 0,
+      'iat': new DateTime.now().millisecondsSinceEpoch*1000,
+      'd': data
+  };
+  final token = jwt.encode(payload);
+  return token;
 }

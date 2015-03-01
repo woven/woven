@@ -12,6 +12,7 @@ import '../shared/response.dart';
 import 'controller/hello.dart';
 import 'controller/main.dart';
 import 'controller/sign_in.dart';
+import 'controller/user.dart';
 import 'controller/admin.dart';
 import 'routing/router.dart';
 
@@ -23,6 +24,7 @@ import 'package:woven/src/server/task_scheduler.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:googleapis/storage/v1.dart' as storage;
 import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
+import 'package:woven/src/server/session_manager.dart';
 
 // Add parts.
 import 'package:woven/src/server/util/profile_picture_util.dart';
@@ -35,6 +37,7 @@ class App {
   ProfilePictureUtil profilePictureUtil;
   CloudStorageUtil cloudStorageUtil;
   TaskScheduler taskScheduler;
+  SessionManager sessionManager;
 
   // Obtain the service account credentials from the Google Developers Console by
   // creating new OAuth credentials of application type "Service account".
@@ -46,8 +49,11 @@ class App {
   // Console.
   final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
 
-  // Store the client authenticated for accessing Google APIs, which we instantiate below.
+  // Holds the client authenticated for accessing Google APIs, which we instantiate below.
   var googleApiClient;
+
+  // Holds the Firebase authentication token.
+  var authToken;
 
   App() {
     // Start the server.
@@ -70,7 +76,9 @@ class App {
       ..routes[Routes.generateDigest] = AdminController.generateDigest
       ..routes[Routes.exportUsers] = AdminController.exportUsers
       ..routes[Routes.addItem] = MainController.addItem
-      ..routes[Routes.addMessage] = MainController.addMessage;
+      ..routes[Routes.addMessage] = MainController.addMessage
+      ..routes[Routes.signIn] = SignInController.signIn
+      ..routes[Routes.createNewUser] = UserController.createNewUser;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
@@ -81,6 +89,7 @@ class App {
     mailer = new Mailgun();
     profilePictureUtil = new ProfilePictureUtil(this);
     taskScheduler = new TaskScheduler(this);
+    sessionManager = new SessionManager();
 
     taskScheduler.run();
 
@@ -98,6 +107,8 @@ class App {
 
   void onServerEstablished(HttpServer server) {
     print("Server started.");
+
+    server.sessionTimeout = new DateTime.now().add(new Duration(days: 365)).toUtc().millisecondsSinceEpoch*1000;
 
     server.listen((HttpRequest request) {
       // Some redirects if coming from related domains.
@@ -136,6 +147,18 @@ class App {
       } else {
         router.dispatch(request).then((response) {
           if (response is File) {
+
+
+            // When serving the app, pass along a session.
+            // First, check for an existing session cookie in the request.
+            // Note that we might have just added a new cookie to the request, e.g. in SignInController.
+            var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+            // If there's an existing session cookie, use it. Else, create a new session id.
+            String sessionId = (sessionCookie == null || sessionCookie.value == null) ? sessionManager.createSessionId() : sessionCookie.value;
+
+            // Save the session to a cookie, sent to the browser with the request.
+            sessionManager.addSessionCookieToRequest(request, sessionId);
+
             // A controller action responded with a File.
             virtualDirectory.serveFile(response, request);
           } else if (response is! NoMatchingRoute) {
@@ -158,10 +181,9 @@ class App {
             // If no matching route, first let's try to serve a file.
             new File(config['server']['directory'] + request.uri.path).exists().then((bool exists) {
               if (!exists) {
-                // File doesn't exist, so check if it's a community alias/
+                // File doesn't exist, so check if it's a community alias.
                 if (Uri.parse(request.uri.path).pathSegments.length > 0) {
-                  var alias;
-                  alias = Uri.parse(request.uri.path).pathSegments[0];
+                  var alias = Uri.parse(request.uri.path).pathSegments[0];
                   // Wait for the aliasExists future to complete.
                   Future checkIfAliasExists = aliasExists(alias);
                   checkIfAliasExists.then((res) {
@@ -176,7 +198,6 @@ class App {
                 }
               } else {
                 // File exists, so serve it.
-                print("Serve file");
                 serveFileBasedOnRequest(request);
               }
             });

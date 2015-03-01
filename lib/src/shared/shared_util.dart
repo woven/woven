@@ -94,17 +94,17 @@ parseTime(String time) {
 }
 
 /**
- * Hash some string, e.g. for an item ID in a URL.
+ * Encode some string to base64, e.g. for an item ID in a URL.
  */
-hashEncode(String text) {
+base64Encode(String text) {
   var encodedText = CryptoUtils.bytesToBase64(UTF8.encode(text));
   return encodedText;
 }
 
 /**
- * Decode a hashed string, e.g. an item ID in a URL.
+ * Decode some string to base64, e.g. for an item ID in a URL.
  */
-hashDecode(String encodedText) {
+base64Decode(String encodedText) {
   var base64 = encodedText;
   var bytes = CryptoUtils.base64StringToBytes(base64);
   var decodedText = UTF8.decode(bytes);
@@ -152,4 +152,36 @@ bool isValidUrl(String url) {
   }
 
   return true;
+}
+
+/**
+ * Hash a given string using sha256.
+ */
+String hash(String content) {
+  var sha256 = new SHA256();
+  sha256.add(content.codeUnits);
+  var digest = sha256.close();
+  var hexString = CryptoUtils.bytesToHex(digest);
+  return hexString;
+}
+
+/**
+ * Convert an empty string to null.
+ */
+convertEmptyToNull(String content) {
+  if (content.trim().isEmpty) return null;
+  return content;
+}
+
+/**
+ * Removes empty strings from a given map.
+ */
+removeEmptyStringsFromMap(Map map) {
+  Map newMap = new Map.from(map);
+  map.forEach((k, v) {
+    if (v is String) {
+      if ((v as String).isEmpty) newMap.remove(k);
+    }
+  });
+  return newMap;
 }

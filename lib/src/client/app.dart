@@ -12,6 +12,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
 import 'package:core_elements/core_header_panel.dart';
 import 'cache.dart';
+import 'util.dart';
 
 class App extends Observable {
   @observable var selectedItem;
@@ -29,10 +30,13 @@ class App extends Observable {
   Router router;
   MainViewModel mainViewModel;
   Cache cache;
+  String authToken;
+  String sessionId;
 
   App() {
     mainViewModel = new MainViewModel(this);
     cache = new Cache();
+    sessionId = readCookie('session');
 
     // Track when app gets focus.
     window.onFocus.listen((_) {

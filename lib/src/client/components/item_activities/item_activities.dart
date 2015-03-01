@@ -41,7 +41,7 @@ class ItemActivities extends PolymerElement {
     if (app.selectedItem == null) {
       // Decode the base64 URL and determine the item.
       var encodedItemId = Uri.parse(window.location.toString()).pathSegments[1];
-      itemId = hashDecode(encodedItemId);
+      itemId = base64Decode(encodedItemId);
     } else {
       itemId = app.selectedItem['id'];
     }

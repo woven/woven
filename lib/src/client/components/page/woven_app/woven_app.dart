@@ -9,8 +9,13 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
+import 'package:woven/src/client/util.dart';
+import 'package:woven/config/config.dart';
 
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
+import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
+
+import 'package:firebase/firebase.dart' as db;
 
 
 @CustomTag('woven-app')
@@ -19,6 +24,7 @@ class WovenApp extends PolymerElement with Observable {
   @observable var responsiveWidth = "600px";
 
   List<StreamSubscription> subscriptions = [];
+  var f = new db.Firebase(config['datastore']['firebaseLocation']);
 
   WovenApp.created() : super.created();
 
@@ -44,6 +50,7 @@ class WovenApp extends PolymerElement with Observable {
   void signOut() {
     app.user = null;
     app.mainViewModel.invalidateUserState();
+    deleteCookie('session');
   }
 
   // Greet the user upon sign in.
@@ -78,17 +85,14 @@ class WovenApp extends PolymerElement with Observable {
       app.showMessage("Kindly sign in first.", "important");
       return;
     }
-    AddStuff e = this.shadowRoot.querySelector('add-stuff');
-    e.toggleOverlay();
-  }
+    AddStuff addStuff = this.shadowRoot.querySelector('add-stuff');
+    addStuff.toggleOverlay();
 
+  }
 // Toggle the sign in dialog.
   toggleSignIn() {
-    app.showMessage("Kindly sign in first.", "important");
-//    SignInDialog e = this.shadowRoot.querySelector('sign-in');
-//    e.toggle();
-//    CoreOverlay e = this.shadowRoot.querySelector('#sign-in-overlay');
-//    e.toggle();
+    SignInDialog signInDialog = this.shadowRoot.querySelector('sign-in-dialog');
+    signInDialog.toggleOverlay();
   }
 
   attached() {
@@ -96,9 +100,20 @@ class WovenApp extends PolymerElement with Observable {
     HttpRequest.getString(Routes.currentUser.reverse([])).then((String contents) {
       var response = Response.fromJson(JSON.decode(contents));
       if (response.success && response.data != null) {
+        // We used to store Facebook ID. Store the username instead.
+        if (response.data['needsNewCookie'] != null) {
+          deleteCookie('session');
+          createCookie('session', response.data['username']);
+        }
+
+        app.authToken = response.data['auth_token'];
+        f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+
+        // Set up the user object.
         app.user = UserModel.fromJson(response.data);
         app.cache.users[app.user.username] = app.user;
 
+        // Trigger changes to app state in response to user sign in/out.
         //TODO: Aha! This triggers a feedViewModel load.
         app.mainViewModel.invalidateUserState();
 
@@ -128,18 +143,6 @@ class WovenApp extends PolymerElement with Observable {
           });
         }
       }
-
-//      if (changedValue == "community") {
-//        HtmlElement sidebarTitleElement;
-//        sidebarTitleElement = this.shadowRoot.querySelector('#sidebar-title');
-//        if (app.community != null) {
-//          // Fade in the community title.
-////           sidebarTitleElement.style.opacity = '0';
-//           new Timer(new Duration(milliseconds: 750), () {
-//             sidebarTitleElement.style.opacity = '1';
-//           });
-//         }
-//      }
 
       // If brand new user, greet them.
       if (app.user != null && app.user.isNew == true) {

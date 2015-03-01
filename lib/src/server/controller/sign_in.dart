@@ -10,9 +10,54 @@ import '../firebase.dart';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/server/session_manager.dart';
+import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/server/util.dart';
 
 class SignInController {
+  static signIn(App app, HttpRequest request) {
+    HttpResponse response = request.response;
+    String dataReceived;
+
+    // Check for a session cookie in the request.
+    var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+
+    // If there's an existing session cookie, use it. Else, create a new session id.
+    String sessionId = (sessionCookie == null || sessionCookie.value == null) ? app.sessionManager.createSessionId() : sessionCookie.value;
+
+    // Save the session to a cookie, sent to the browser with the request.
+    app.sessionManager.addSessionCookieToRequest(request, sessionId);
+
+    return request.listen((List<int> buffer) {
+      dataReceived = new String.fromCharCodes(buffer);
+    }).asFuture().then((_) {
+      Map data = JSON.decode(dataReceived);
+      var username = data['username'];
+      var password = data['password'];
+      return checkCredentials(username, password).then((success) {
+        if (!success) return Response.fromError('Bad credentials.');
+        app.authToken = generateFirebaseToken({'uid': username});
+        app.sessionManager.addSessionToIndex(sessionId, username, app.authToken);
+        return findUserInfo(username).then((userData) {
+          var response = new Response();
+          response.data = userData;
+          response.success = true;
+          return response;
+        });
+      });
+    });
+  }
+
+  static Future<bool> checkCredentials(String username, String password) {
+    String hashedPassword = hash(password);
+    return Firebase.get('/users/$username/password.json').then((res) {
+      if (res == null) return false;
+      return res == hashedPassword;
+    });
+  }
+
+  static Future findUserInfo(String username) => Firebase.get('/users/$username.json');
+
+
   static facebook(App app, HttpRequest request) {
     var code = Uri.encodeComponent(request.uri.queryParameters['code']);
     var appId = Uri.encodeComponent(config['authentication']['facebook']['appId']);
@@ -61,40 +106,56 @@ class SignInController {
         ..pictureSmall = facebookData['pictureSmall']
         ..disabled = true;
 
-      // Save the user to the session.
-      request.session['id'] = facebookId;
+//      // Save the user to the session.
+//      request.session['id'] = request.session.id;
       // Save the session to a cookie, sent to the browser with the request.
-      var sessionManager = new SessionManager();
-      sessionManager.addSessionCookieToRequest(request, request.session);
+//      app.sessionManager.addSessionCookieToRequest(request, request.session.id);
 
-      return findFacebookIndex(facebookId).then((Map userIndexData) {
-        if (userIndexData == null) {
+      // Generate a Firebase authentication token using the Facebook id.
+      app.authToken = generateFirebaseToken({'uid': facebookId});
+
+      // Check for a session cookie in the request.
+      var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+
+      // If there's an existing session cookie, use it. Else, create a new session id.
+      String sessionId = (sessionCookie == null || sessionCookie.value == null) ? app.sessionManager.createSessionId() : sessionCookie.value;
+
+      return findFacebookIndex(facebookId).then((Map facebookIndexData) {
+        // Upon sign in with Facebook, we redirect as appropriate.
+        request.response.statusCode = 302;
+        request.response.headers.add(HttpHeaders.LOCATION, '/');
+
+        if (facebookIndexData == null) {
           // Store the Facebook ID in an index that references the associated username.
-          Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'});
+          Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'}, app.authToken);
 
           // Store the user, and we can use the index to find it and set a different username later.
-          Firebase.put('/users/$facebookId.json', user.toJson());
+          Firebase.put('/users/$facebookId.json', user.toJson(), app.authToken);
+
+          // Add the session to our index, and add a session cookie to the request.
+          app.sessionManager.addSessionToIndex(sessionId, facebookId, app.authToken);
+          app.sessionManager.addSessionCookieToRequest(request, sessionId);
         } else {
           // If we already know of this Facebook user, update with any new data.
-          var username = userIndexData['username'];
+          var username = facebookIndexData['username'];
 
           // Get the existing user's data so we can compare against it.
           // TODO: Handle edge case where index points to non-existent user.
-          Firebase.get('/users/$username.json').then((Map userData) {
+          return Firebase.get('/users/$username.json').then((Map userData) {
             if (userData == null) return null;
             facebookData.forEach((k, v) {
               if (userData[k] == null) userData[k] = v;
             });
             return userData;
           }).then((userData) {
-            // TODO handle null.
-            Firebase.patch('/users/$username.json', userData);
+            // TODO: handle null.
+            Firebase.patch('/users/$username.json', userData, app.authToken);
+
+            // Update the session index with a reference to this username.
+            app.sessionManager.addSessionToIndex(sessionId, username, app.authToken);
+            app.sessionManager.addSessionCookieToRequest(request, sessionId);
           });
         }
-
-        // Redirect.
-        request.response.statusCode = 302;
-        request.response.headers.add(HttpHeaders.LOCATION, (userIndexData != null) ? '/' : '/welcome');
       });
     });
   }

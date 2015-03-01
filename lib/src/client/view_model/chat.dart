@@ -6,6 +6,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'dart:async';
 import 'dart:html';
+import 'dart:js';
 import 'base.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 

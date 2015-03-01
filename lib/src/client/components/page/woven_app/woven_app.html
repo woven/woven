@@ -88,14 +88,17 @@
                            <!--on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>-->
               </template>
               <div id="button-area">
-                <template if="{{app.user == null}}">
-                  <p id="message"></p>
-                  <button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>
-                </template>
+                <!--<template if="{{app.user == null}}">-->
+                  <!--<p id="message"></p>-->
+                  <!--<button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>-->
+                <!--</template>-->
 
                 <template if="{{app.user != null}}">
                   <p>Hello, {{app.user.username}}!</p>
                   <button class="signin-btn" id="facebook-signin" on-tap="{{signOut}}">Sign out</button>
+                </template>
+                <template if="{{app.user == null}}">
+                  <button class="signin-btn" id="facebook-signin" on-tap="{{toggleSignIn}}">Sign in</button>
                 </template>
               </div>
 
@@ -181,7 +184,8 @@
 
       </core-drawer-panel>
 
-      <add-stuff app="{{app}}"></add-stuff>
+      <template if="{{app.user != null}}"><add-stuff app="{{app}}"></add-stuff></template>
+      <template if="{{app.hasTriedLoadingUser && app.user == null}}"><sign-in-dialog app="{{app}}"></sign-in-dialog></template>
 
       <!--<template if="{{app.user == null}}">-->
         <!--<sign-in app="{{app}}"></sign-in>-->
@@ -191,9 +195,9 @@
         <!--</core-overlay>-->
       <!--</template>-->
       <paper-toast id="toast-message" duration="4000"></paper-toast>
-      <template if="{{app.user != null && app.user.disabled}}">
-        <welcome-dialog app="{{app}}"></welcome-dialog>
-      </template>
+        <welcome-dialog app="{{app}}"
+                        opened="{{(app.user != null && (app.user.disabled || app.user.password == null))}}">
+        </welcome-dialog>
     </template>
   </template>
   <script type="application/dart" src="woven_app.dart"></script>

@@ -48,6 +48,7 @@ polyfill-next-selector { content: ':host h1'; }
 polyfill-next-selector { content: ':host p'; }
 ::content p {
   margin: 15px 20px 15px 10px;
+  font-size: 14px;
 }
 
 polyfill-next-selector { content: ':host .field-wrapper'; }

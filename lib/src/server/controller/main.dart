@@ -15,6 +15,7 @@ import 'package:woven/src/server/model/item.dart';
 import '../util/file_util.dart';
 import '../util/image_util.dart';
 import 'package:path/path.dart' as path;
+import '../util.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -45,21 +46,42 @@ class MainController {
   static getCurrentUser(App app, HttpRequest request) {
     var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
     if (sessionCookie == null) return Response.fromError('No session cookie found.');
-    var id = sessionCookie.value;
+    if (sessionCookie.value == null) return Response.fromError('The id in the session cookie was null.');
 
-    if (id == null) return Response.fromError('The user id in the session cookie was null.');
+    var sessionId = sessionCookie.value;
 
-    // Find the username associated with the Facebook ID
-    // that's in session.id, then get that user data.
-    return Firebase.get('/facebook_index/$id.json').then((indexData) {
-      if (indexData == null) return Response.fromError('No index data for that user id.');
+    Future findUser(String username) => Firebase.get('/users/$username.json');
+    Future findSession(String sessionId) => Firebase.get('/session_index/$sessionId.json');
+    Future findUsernameFromSession(String sessionId) => Firebase.get('/session_index/$sessionId/username.json');
+    Future findUsernameFromFacebookIndex(String facebookId) => Firebase.get('/facebook_index/$facebookId/username.json');
 
-      var username = indexData['username'];
-      return Firebase.get('/users/$username.json').then((userData) {
+    // Check the session index for the user associated with this session id.
+    return findUsernameFromSession(sessionId).then((String username) {
+      if (username == null) {
+        // The user may have an old cookie, with Facebook ID, so let's check that index.
+        return findUsernameFromFacebookIndex(sessionId).then((String username) {
+          if (username == null) return null;
+          // Update the old cookie to use a newer session ID, and add it to our session index.
+          var newSessionId = app.sessionManager.createSessionId();
+          app.sessionManager.addSessionCookieToRequest(request, newSessionId);
+          app.authToken = generateFirebaseToken({'uid': username});
+          app.sessionManager.addSessionToIndex(newSessionId, username, app.authToken);
+          return username;
+        });
+      }
+      return username;
+    }).then((String username) {
+      if (username == null) return Response.fromError('A user associated with that session id was not found.');
+      // Generate a Firebase authentication token for this user.
+      app.authToken = generateFirebaseToken({'uid': username});
+      // Get the user data.
+      return findUser(username).then((Map userData) {
+        userData['auth_token'] = app.authToken;
         var response = new Response();
         response.data = userData;
         return response;
       });
+
     });
   }
 
@@ -69,7 +91,7 @@ class MainController {
     });
   }
 
-  /**`
+  /**
    * Crawl for and get a preview for a given uri/link.
    */
   static addItem(App app, HttpRequest req) {
@@ -82,7 +104,7 @@ class MainController {
 //    });
   }
 
-  /**`
+  /**
    * Crawl for and get a preview for a given uri/link.
    */
   static addMessage(App app, HttpRequest req) {
@@ -106,8 +128,8 @@ class MainController {
 
 
       // Add the message.
-      return Firebase.post('/messages_by_community/$community.json', JSON.encode(data)).then((String name) {
-        Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()});
+      return Firebase.post('/messages_by_community/$community.json', JSON.encode(data), app.authToken).then((String name) {
+        Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()}, app.authToken);
         // Return the data back to the client.
         var response = new Response();
         response.data = name;
@@ -117,7 +139,7 @@ class MainController {
     });
   }
 
-  /**`
+  /**
    * Crawl for and get a preview for a given uri/link.
    */
   static getUriPreview(App app, HttpRequest request) {
@@ -134,7 +156,7 @@ class MainController {
         var response = new Response();
         if (preview.imageOriginalUrl == null) {
           // Save the preview.
-          return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
+          return Firebase.post('/uri_previews.json', preview.toJson(), app.authToken).then((String name) {
             Map updates = {};
             updates['uriPreviewId'] = name;
 
@@ -159,7 +181,7 @@ class MainController {
               // Resize the image.
               return imageUtil.resize(file, width: 225, height: 125).then((File convertedFile) {
                 // Save the preview.
-                return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
+                return Firebase.post('/uri_previews.json', preview.toJson(), app.authToken).then((String name) {
                   Map updates = {};
                   updates['uriPreviewId'] = name;
                   if (itemMap['subject'] == null) updates['subject'] = preview.title;
@@ -179,7 +201,7 @@ class MainController {
                     return file.delete().then((_) {
                       // Update the preview with a reference to the cloud file.
                       preview.imageSmallLocation = gsPath;
-                      Firebase.patch('/uri_previews/$name.json', JSON.encode(preview.toJson()));
+                      Firebase.patch('/uri_previews/$name.json', JSON.encode(preview.toJson()), app.authToken);
                       // Return the preview information.
                       response.data = preview;
                       return response;
@@ -262,7 +284,7 @@ http://twitter.com/wovenco
         notificationData['itemAuthor'] = itemData['user'];
         notificationData['itemBody'] = itemData['body'];
         notificationData['message'] = itemData['message'];
-        var encodedItem = hashEncode(item);
+        var encodedItem = base64Encode(item);
         notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
 
         if (isItem) return;

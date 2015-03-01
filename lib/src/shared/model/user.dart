@@ -6,6 +6,7 @@ import 'dart:convert';
 class UserModel {
   String id;
   String username;
+  String password;
   String firstName;
   String lastName;
   String location;
@@ -24,6 +25,7 @@ class UserModel {
   Map toJson() {
     return {
       "username": username,
+      "password": password,
       "firstName":firstName,
       "lastName": lastName,
       "email": email,
@@ -43,6 +45,7 @@ class UserModel {
       ..firstName = data['firstName']
       ..lastName = data['lastName']
       ..username = data['username']
+      ..password = data['password']
       ..email = data['email']
       ..facebookId = data['facebookId']
       ..location = data['location']

@@ -39,7 +39,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       // If there's no app.selectedItem, we probably
       // came here directly, so let's get it using the URL.
       var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
-      var decodedItem = hashDecode(encodedItem);
+      var decodedItem = base64Decode(encodedItem);
 
       var f = new db.Firebase(firebaseLocation);
 

@@ -45,7 +45,7 @@ class MainViewModel extends BaseViewModel with Observable {
     if (Uri.parse(path).pathSegments.length > 1) {
       // Decode the base64 URL and determine the item.
       var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
-      id = hashDecode(encodedItem);
+      id = base64Decode(encodedItem);
     }
 
     if (id == null) return null; // No item.
@@ -259,7 +259,6 @@ class MainViewModel extends BaseViewModel with Observable {
    * Whenever user signs in/out, we should call this to trigger any necessary updates.
    */
   void invalidateUserState() {
-
     loadUserStarredCommunityInformation();
 
     if (itemViewModel != null) {
