@@ -245,8 +245,9 @@ core-menu core-item:hover {
 }
 
 #user-area .user-area-text .sub-links span:hover {
-  color: #223E8D;
+  color: #000;
   cursor: pointer;
+  transition: color .3s;
 }
 
 #facebook-signin {
