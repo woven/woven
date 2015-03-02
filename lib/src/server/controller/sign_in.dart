@@ -57,6 +57,11 @@ class SignInController {
 
   static Future findUserInfo(String username) => Firebase.get('/users/$username.json');
 
+  static signOut(App app, HttpRequest request) {
+    try {
+      app.sessionManager.deleteCookie(request);
+    } catch(error) { print(error); }
+  }
 
   static facebook(App app, HttpRequest request) {
     var code = Uri.encodeComponent(request.uri.queryParameters['code']);

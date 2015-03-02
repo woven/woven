@@ -78,6 +78,7 @@ class App {
       ..routes[Routes.addItem] = MainController.addItem
       ..routes[Routes.addMessage] = MainController.addMessage
       ..routes[Routes.signIn] = SignInController.signIn
+      ..routes[Routes.signOut] = SignInController.signOut
       ..routes[Routes.createNewUser] = UserController.createNewUser;
 
     // Set up the virtual directory.

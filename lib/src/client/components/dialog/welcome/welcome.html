@@ -5,6 +5,7 @@
 <link rel="import" href="../../../../../../../packages/core_elements/core_selector.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_input.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_a11y_keys.html">
 <link rel="import" href="../../widgets/dialog/dialog.html">
 <polymer-element name="welcome-dialog">
   <template>
@@ -78,6 +79,7 @@
           <!--</div>-->
         </div>
       </div>
+      <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
     </x-dialog>
   </template>
   <script type="application/dart" src="welcome.dart"></script>

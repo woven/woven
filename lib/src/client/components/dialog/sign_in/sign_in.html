@@ -4,6 +4,8 @@
 <link rel="import" href="../../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_input.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_animation.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_a11y_keys.html">
 <link rel="import" href="../../widgets/dialog/dialog.html">
 <polymer-element name="sign-in-dialog">
   <template>
@@ -13,7 +15,7 @@
         <div flex horizontal center-justified layout>
           <div>Sign in</div>
         </div>
-        <core-icon-button icon="done" on-tap="{{submit}}" class="action"></core-icon-button>
+        <core-icon-button id="submit" icon="done" on-tap="{{submit}}" class="action"></core-icon-button>
       </core-toolbar>
       <div id="container">
         <div id="content-container">
@@ -26,10 +28,12 @@
             <input is="core-input" id="password" placeholder="Your password"
                    autocomplete="off" autocorrect="off" autocapitalize="off" type="password">
           </div>
+          <br/>
           <p>New here? <a on-tap="{{toggleSignUp}}">Create a new account</a></p>
-          <p>Lazy? <a on-tap="{{signInWithFacebook}}">Sign up with Facebook</a></p>
+          <p>Don't want to type? <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a></p>
         </div>
       </div>
+      <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
     </x-dialog>
   </template>
   <script type="application/dart" src="sign_in.dart"></script>

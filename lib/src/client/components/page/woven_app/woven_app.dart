@@ -48,9 +48,12 @@ class WovenApp extends PolymerElement with Observable {
   }
 
   void signOut() {
-    app.user = null;
-    app.mainViewModel.invalidateUserState();
-    deleteCookie('session');
+    HttpRequest.request(
+        Routes.signOut.toString(),
+        method: 'GET').then((_) {
+      app.user = null;
+      app.mainViewModel.invalidateUserState();
+    });
   }
 
   // Greet the user upon sign in.
@@ -100,12 +103,6 @@ class WovenApp extends PolymerElement with Observable {
     HttpRequest.getString(Routes.currentUser.reverse([])).then((String contents) {
       var response = Response.fromJson(JSON.decode(contents));
       if (response.success && response.data != null) {
-        // We used to store Facebook ID. Store the username instead.
-        if (response.data['needsNewCookie'] != null) {
-          deleteCookie('session');
-          createCookie('session', response.data['username']);
-        }
-
         app.authToken = response.data['auth_token'];
         f.authWithCustomToken(app.authToken).catchError((error) => print(error));
 

@@ -20,6 +20,7 @@ class Routes {
   static final generateDigest = new UrlPattern(r'/admin/generatedigest');
   static final exportUsers = new UrlPattern(r'/admin/exportusers');
   static final signIn = new UrlPattern(r'/_signin');
+  static final signOut = new UrlPattern(r'/_signout');
   static final createNewUser = new UrlPattern(r'/_createnewuser');
 }
 
