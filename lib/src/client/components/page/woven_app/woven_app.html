@@ -88,14 +88,16 @@
                            <!--on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>-->
               </template>
               <div id="button-area">
-                <!--<template if="{{app.user == null}}">-->
-                  <!--<p id="message"></p>-->
-                  <!--<button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>-->
-                <!--</template>-->
-
                 <template if="{{app.user != null}}">
-                  <p>Hello, {{app.user.username}}!</p>
-                  <button class="signin-btn" id="facebook-signin" on-tap="{{signOut}}">Sign out</button>
+                  <div id="user-area" layout horizontal>
+                    <div class="user-area-photo"><user-picture app="{{app}}" username="{{app.user.username}}"></user-picture></div>
+                    <div class="user-area-text" flex start-justified layout vertical>
+                      <div>Hello, {{app.user.username}}!</div>
+                      <div class="sub-links">
+                        <span on-tap="{{signOut}}">Sign out</span>
+                      </div>
+                    </div>
+                  </div>
                 </template>
                 <template if="{{app.user == null}}">
                   <button class="signin-btn" id="facebook-signin" on-tap="{{toggleSignIn}}">Sign in</button>

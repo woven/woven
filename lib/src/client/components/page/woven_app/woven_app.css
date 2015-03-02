@@ -222,13 +222,31 @@ core-menu core-item:hover {
   width: 90%;
 }
 
-#button-area p {
-  font-size: 12px;
-  text-align: center;
-}
-
 #button-area button {
   width: 100%;
+}
+
+#user-area .user-area-text {
+  margin-left: 10px;
+}
+
+#user-area .user-area-text {
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+#user-area .user-area-text .sub-links {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+#user-area .user-area-text .sub-links span {
+  color: dimgray;
+}
+
+#user-area .user-area-text .sub-links span:hover {
+  color: #223E8D;
+  cursor: pointer;
 }
 
 #facebook-signin {
