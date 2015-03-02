@@ -30,7 +30,25 @@ class SessionManager {
     cookie.expires = expireDate;
     cookie.path = '/';
     cookie.domain = '.${domain.replaceFirst('www.', '')}';
-    cookie.httpOnly = false;
+    cookie.httpOnly = true;
+    request.response.cookies.add(cookie);
+  }
+
+  deleteCookie(HttpRequest request) {
+    var domain = config['server']['domain'];
+    try {
+      domain = request.headers['host'].first;
+    } catch (e) {}
+
+    var cookie = new Cookie('session', '');
+    // Set the expire date to yesterday so we kill our cookie.
+    DateTime now = new DateTime.now();
+    DateTime expireDate =  now.add(new Duration(days: -1));
+
+    cookie.expires = expireDate;
+    cookie.path = '/';
+    cookie.domain = '.${domain.replaceFirst('www.', '')}';
+    cookie.httpOnly = true;
     request.response.cookies.add(cookie);
   }
 
