@@ -1,9 +1,12 @@
+library woven_app;
+
 import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_drawer_panel.dart';
+import 'package:firebase/firebase.dart' as db;
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
@@ -11,12 +14,7 @@ import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/client/util.dart';
 import 'package:woven/config/config.dart';
-
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
-import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
-
-import 'package:firebase/firebase.dart' as db;
-
 
 @CustomTag('woven-app')
 class WovenApp extends PolymerElement with Observable {
@@ -88,7 +86,7 @@ class WovenApp extends PolymerElement with Observable {
   // Toggle the Add Stuff dialog.
   toggleAddStuff() {
     if (app.user == null) {
-      app.showMessage("Kindly sign in first.", "important");
+      toggleSignIn();
       return;
     }
     AddStuff addStuff = this.shadowRoot.querySelector('add-stuff');
@@ -97,8 +95,7 @@ class WovenApp extends PolymerElement with Observable {
   }
 // Toggle the sign in dialog.
   toggleSignIn() {
-    SignInDialog signInDialog = this.shadowRoot.querySelector('sign-in-dialog');
-    signInDialog.toggleOverlay();
+    app.toggleSignIn();
   }
 
   attached() {

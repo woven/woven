@@ -12,7 +12,6 @@ import 'package:woven/src/client/view_model/chat.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 
-
 @CustomTag('chat-box')
 class ChatBox extends PolymerElement {
   @published App app;
@@ -141,7 +140,7 @@ class ChatBox extends PolymerElement {
 
   detached() => subscriptions.forEach((subscription) => subscription.cancel());
 
-  signInWithFacebook() {
-    app.signInWithFacebook();
+  toggleSignIn() {
+    app.toggleSignIn();
   }
 }

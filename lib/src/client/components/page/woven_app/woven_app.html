@@ -141,7 +141,7 @@
                 </template>
               </section>
               <section data-page="channels" layout vertical>
-                <template if="{{app.hasTriedLoadingUser && app.community == null && app.selectedPage == 'channels'}}">
+                <template if="{{app.community == null && app.selectedPage == 'channels'}}">
                   <div>
                     <community-list id="community-list" app="{{app}}" viewModel="{{app.mainViewModel}}"></community-list>
                   </div>
