@@ -9,7 +9,6 @@ class Routes {
   static final showItem = new UrlPattern(r'/item/(.+)');
   static final signInFacebook = new UrlPattern(r'/signin/facebook');
   static final currentUser = new UrlPattern(r'/currentuser');
-  static final sayWelcome = new UrlPattern(r'/welcome');
   static final starred = new UrlPattern(r'/saved');
   static final people = new UrlPattern(r'/people');
   static final sendWelcome = new UrlPattern(r'/sendwelcome');
