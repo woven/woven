@@ -9,38 +9,27 @@
 <polymer-element name="chat-box">
   <template>
     <link rel="stylesheet" href="chat_box.css">
-    <div id="post-container">
-      <template if="{{app.user != null}}">
-        <div layout horizontal>
-          <div class="user-area" vertical layout>
+    <div id="post-container" layout horizontal>
+        <template if="{{app.user != null}}">
+          <div class="user-area">
             <user-picture app="{{app}}" username="{{app.user.username}}"></user-picture>
           </div>
-          <div vertical layout flex>
-            <div id="message-box" class="field-wrapper full-height">
-              <paper-autogrow-textarea
-                  maxRows="7"
-                  id="comment"
-                  autocomplete="off">
-                <textarea id="comment-textarea" placeholder="Say something..." type="submit"
-                          on-focus="{{onFocusHandler}}"
-                          on-blur="{{onBlurHandler}}"></textarea>
-              </paper-autogrow-textarea>
-            </div>
-            <!--<div id="footer">-->
-            <!--<core-tooltip label="Tab + Enter" position="left" tabindex="-1">-->
-            <!--<core-icon-button id="comment-send-button" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button>-->
-            <!--</core-tooltip>-->
-            <!--</div>-->
-            <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+          <div id="message-box" class="field-wrapper full-height" flex>
+            <paper-autogrow-textarea
+                maxRows="7"
+                id="comment"
+                autocomplete="off">
+              <textarea id="comment-textarea" placeholder="Say something..." type="submit"
+                        on-focus="{{onFocusHandler}}"
+                        on-blur="{{onBlurHandler}}"></textarea>
+            </paper-autogrow-textarea>
           </div>
-        </div>
-      </template>
-      <template if="{{app.user == null}}">
-        <div class="sign-in-container">
-          <span class="message">Please sign in to participate.</span>
-          <button class="button-sign-in" on-click="{{toggleSignIn}}">Sign in</button>
-        </div>
-      </template>
+          <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+        </template>
+        <template if="{{app.user == null}}">
+          <div class="message" self-center flex>Please sign in to participate.</div>
+          <button class="button-sign-in" on-tap="{{toggleSignIn}}">Sign in</button>
+        </template>
     </div>
   </template>
   <script type="application/dart" src="chat_box.dart"></script>

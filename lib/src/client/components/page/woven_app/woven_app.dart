@@ -125,13 +125,11 @@ class WovenApp extends PolymerElement with Observable {
     // Listen for App changes so we can do some things.
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
-      print(record.name);
 
-      print("changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
+      if (config['debug_mode']) print("changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
       if (record.name == new Symbol("pageTitle")) {
-        print('pageTitle changed...');
         HtmlElement el;
         el = this.shadowRoot.querySelector('#page-title');
         if (el != null) {

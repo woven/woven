@@ -3,6 +3,7 @@ library application;
 import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'dart:html';
+import 'dart:async';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/routing/router.dart';
@@ -28,6 +29,7 @@ class App extends Observable {
   DateTime timeOfLastFocus = new DateTime.now().toUtc();
   bool isFocused = true;
 //  @observable bool isNewUser = false;
+
   Router router;
   MainViewModel mainViewModel;
   Cache cache;
@@ -68,12 +70,10 @@ class App extends Observable {
 
     // We're using this as a kind of placeholder for various routes.
     void notFound(String path) {
-      print('notFound');
       var pathUri = Uri.parse(path);
       if (pathUri.pathSegments.length == 1) {
         selectedPage = 'lobby';
       } else {
-        print(pathUri.pathSegments[1]);
         // If we're at <community>/<something>, see if <something> is a valid page.
         switch (pathUri.pathSegments[1]) {
           case 'people':
@@ -81,21 +81,15 @@ class App extends Observable {
             selectedPage = 'people';
             break;
           case 'events':
-//            pageTitle = "Events";
             selectedPage = 'events';
             break;
           case 'feed':
-            print('debug2');
-//            pageTitle = "Feeddd";
-            print('debug3');
             selectedPage = 'feed';
             break;
           case 'announcements':
-//            pageTitle = "Announcements";
             selectedPage = 'announcements';
             break;
           default:
-            print('default');
             pageTitle = "default";
 //            selectedPage = 0;
             print('404: ' + path);

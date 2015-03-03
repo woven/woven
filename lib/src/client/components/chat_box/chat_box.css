@@ -55,16 +55,10 @@ core-tooltip::shadow .core-tooltip {
 
 #post-container {
   background: #F0F0F0;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: column;
-  -webkit-flex-flow: column;
   /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
   padding: 8px;
   border-top: solid 1px #ddd;
+  height: 40px;
 }
 
 .user-area {
@@ -91,4 +85,21 @@ user-picture {
   width: 100px;
   color: #fff;
   background-color: #247BA1;
+}
+
+.message {
+  margin-left: 10px;
+  font-size: 16px;
+  font-family: 'RobotoDraft', sans-serif;
+  white-space: nowrap;
+  color: #333;
+}
+
+@media all and (min-width: 600px)  {
+  .button-sign-in {
+    display: none;
+  }
+  #post-container {
+    height: 40px;
+  }
 }

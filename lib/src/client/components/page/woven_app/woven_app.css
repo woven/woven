@@ -259,7 +259,8 @@ core-menu core-item:hover {
   font-size: 12px;
   cursor: pointer;
   border: none;
-  width: 240px;
+  width: 220px;
+  margin: 0px 0 3px 10px;
   color: #fff;
   background-color: #247BA1;
 }

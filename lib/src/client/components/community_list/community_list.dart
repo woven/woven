@@ -55,12 +55,12 @@ class CommunityList extends PolymerElement with Observable {
   }
 
   attached() {
-    print('+channels');
+    if (config['debug_mode']) print('+channels');
     if (config['debug_mode'] == true) print("+CommunityList");
     app.pageTitle = "Channels";
   }
 
   detached() {
-    if (config['debug_mode']) print("-CommunityList");
+    if (config['debug_mode']) print('-channels');
   }
 }

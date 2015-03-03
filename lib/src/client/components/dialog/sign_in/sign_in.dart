@@ -111,13 +111,23 @@ class SignInDialog extends PolymerElement {
     welcome.toggleOverlay();
   }
 
+  focusMessageInput() {
+    CoreInput usernameInput = $['username'];
+    usernameInput.focus();
+  }
+
   signInWithFacebook() {
     toggleProcessingIndicator();
     app.signInWithFacebook();
   }
 
   attached() {
-    //
+    if (config['debug_mode']) print('+signin');
+    Timer.run(focusMessageInput);
+  }
+
+  detached() {
+    if (config['debug_mode']) print('-signin');
   }
 }
 

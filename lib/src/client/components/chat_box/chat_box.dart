@@ -110,8 +110,6 @@ class ChatBox extends PolymerElement {
         }
       });
 
-//      print(messageId);
-
       // TODO: Handle notifications for chat messages.
 //    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$messageId");
     });

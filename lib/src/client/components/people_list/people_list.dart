@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:polymer/polymer.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/people.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:core_elements/core_header_panel.dart';
@@ -46,7 +47,7 @@ class PeopleList extends PolymerElement with Observable {
   }
 
   attached() {
-    print('+people');
+    if (config['debug_mode']) print('+people');
     app.pageTitle = "People";
 
     initializeInfiniteScrolling();
@@ -65,5 +66,8 @@ class PeopleList extends PolymerElement with Observable {
     });
   }
 
-  detached() => subscriptions.forEach((subscription) => subscription.cancel());
+  detached() {
+    subscriptions.forEach((subscription) => subscription.cancel());
+    if (config['debug_mode']) print('-people');
+  }
 }

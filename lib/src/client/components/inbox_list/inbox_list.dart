@@ -298,18 +298,14 @@ class InboxList extends PolymerElement with Observable {
   }
 
   attached() {
-    print('DEBUGGING: ${viewModel.runtimeType.toString()}');
     switch (viewModel.runtimeType.toString()) {
       case 'FeedViewModel':
-      print('debug1');
         app.pageTitle = 'Feed';
         break;
       case 'AnnouncementViewModel':
-        print('debug2');
         app.pageTitle = 'Announcements';
         break;
       default:
-        print('debug3');
         app.pageTitle = 'Feed';
         break;
     }
