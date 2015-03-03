@@ -276,11 +276,12 @@ paper-toast {
 }
 
 paper-toast.important {
-  background: orangered;
+  background: #ef4206;
+  font-family: 'RobotoDraft', sans-serif;
+  font-size: 15px;
 }
 
 #sign-in-overlay {
-  background-color: red !important;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
