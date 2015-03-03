@@ -35,7 +35,7 @@ class Item extends PolymerElement with Observable {
 
     app.previousPage = app.selectedPage;
     app.selectedItem = item;
-    app.selectedPage = 1;
+    app.selectedPage = 'item';
 
     var str = target.dataset['id'];
     var bytes = UTF8.encode(str);

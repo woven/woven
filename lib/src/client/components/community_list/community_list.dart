@@ -37,8 +37,8 @@ class CommunityList extends PolymerElement with Observable {
       ..createdDate = communityMap['createdDate']
       ..updatedDate = communityMap['updatedDate'];
 
-    app.selectedPage = 0;
     app.community = community;
+    app.selectedPage = 'lobby';
 
     app.router.dispatch(url: "/" + app.community.alias);
   }
@@ -55,6 +55,7 @@ class CommunityList extends PolymerElement with Observable {
   }
 
   attached() {
+    print('+channels');
     if (config['debug_mode'] == true) print("+CommunityList");
     app.pageTitle = "Channels";
   }

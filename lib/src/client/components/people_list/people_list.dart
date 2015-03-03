@@ -46,6 +46,7 @@ class PeopleList extends PolymerElement with Observable {
   }
 
   attached() {
+    print('+people');
     app.pageTitle = "People";
 
     initializeInfiniteScrolling();

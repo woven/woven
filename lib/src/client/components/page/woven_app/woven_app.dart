@@ -31,6 +31,8 @@ class WovenApp extends PolymerElement with Observable {
   void switchPage(Event e, var detail, Element target) {
     togglePanel();
     app.router.dispatch(url: target.dataset['url']);
+//    app.selectedPage = target.dataset['page'];
+//    app.pageTitle = target.dataset['label'];
   }
 
   void scrollToTop() {
@@ -38,6 +40,7 @@ class WovenApp extends PolymerElement with Observable {
   }
 
   void goBack(Event e, var detail, Element target) {
+    // TODO: Clean this up.
     if (app.previousPage == 0) app.router.dispatch(url: (app.community != null ? '/${app.community.alias}' : '/'));
     if (app.previousPage == 5) app.router.dispatch(url: (app.community != null ? '/${app.community.alias}/events' : '/events'));
     (app.community != null) ? app.selectedPage = app.previousPage : app.selectedPage = 4;
@@ -125,11 +128,13 @@ class WovenApp extends PolymerElement with Observable {
     // Listen for App changes so we can do some things.
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
+      print(record.name);
 
-//      print("$changedValue changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
+      print("changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
       if (record.name == new Symbol("pageTitle")) {
+        print('pageTitle changed...');
         HtmlElement el;
         el = this.shadowRoot.querySelector('#page-title');
         if (el != null) {

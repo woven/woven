@@ -16,7 +16,7 @@ import 'util.dart';
 
 class App extends Observable {
   @observable var selectedItem;
-  @observable var selectedPage;
+  @observable var selectedPage = 'lobby';
   @observable var previousPage = null;
   @observable String pageTitle = "";
   @observable UserModel user;
@@ -51,49 +51,51 @@ class App extends Observable {
 
     void home(String path) {
       // Home goes to the community list for now.
-      selectedPage = 4;
+      selectedPage = 'channels';
       community = null;
       if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
     }
 
-    void welcome(String path) {
-      selectedPage = 4;
-    }
-
     void starred(String path) {
-      selectedPage = 2;
+      selectedPage = 'starred';
       pageTitle = "Starred";
     }
 
     void people(String path) {
-      selectedPage = 3;
+      selectedPage = 'people';
     }
 
     // We're using this as a kind of placeholder for various routes.
     void notFound(String path) {
-      pageTitle = "Lobby";
+      print('notFound');
       var pathUri = Uri.parse(path);
       if (pathUri.pathSegments.length == 1) {
-        selectedPage = 0;
+        selectedPage = 'lobby';
       } else {
+        print(pathUri.pathSegments[1]);
         // If we're at <community>/<something>, see if <something> is a valid page.
         switch (pathUri.pathSegments[1]) {
           case 'people':
-            selectedPage = 3;
+            pageTitle = "People";
+            selectedPage = 'people';
             break;
           case 'events':
-            pageTitle = "Events";
-            selectedPage = 5;
+//            pageTitle = "Events";
+            selectedPage = 'events';
             break;
           case 'feed':
-            pageTitle = "Feed";
-            selectedPage = 7;
+            print('debug2');
+//            pageTitle = "Feeddd";
+            print('debug3');
+            selectedPage = 'feed';
             break;
           case 'announcements':
-            pageTitle = "Announcements";
-            selectedPage = 6;
+//            pageTitle = "Announcements";
+            selectedPage = 'announcements';
             break;
           default:
+            print('default');
+            pageTitle = "default";
 //            selectedPage = 0;
             print('404: ' + path);
         }
@@ -101,7 +103,7 @@ class App extends Observable {
     }
 
     void showItem(String path) {
-      selectedPage = 1;
+      selectedPage = 'item';
     }
 
     void globalHandler(String path) {
@@ -120,7 +122,6 @@ class App extends Observable {
       ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
       ..routes[Routes.people] = people
-      ..routes[Routes.sayWelcome] = welcome
 //      ..routes[Routes.anyAlias] = home
       ..routes[Routes.showItem] = showItem;
 

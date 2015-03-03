@@ -17,4 +17,6 @@ class ChatView extends PolymerElement {
   HtmlElement get scroller => $['scroller'];
 
   scrollToBottom() => this.scroller.scrollTop = this.scroller.scrollHeight;
+
+  attached() => app.pageTitle = 'Lobby';
 }

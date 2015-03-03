@@ -33,17 +33,17 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <template if="{{app.showHomePage == true}}">
+    <template if="{{app.showHomePage}}">
       <x-home app="{{app}}"></x-home>
     </template>
-    <template if="{{app.showHomePage == false}}">
+    <template if="{{!app.showHomePage}}">
       <core-drawer-panel responsiveWidth="{{responsiveWidth}}">
 
         <div vertical layout drawer>
           <core-header-panel id="side-panel" navigation flex mode="seamed">
             <core-toolbar id="toolbar-drawer" class="toolbar {{app.community == null ? 'has-logo' : ''}}">
               <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
-                    data-page="0" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
+                    data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
                 <template if="{{app.community == null}}">
                   <img id="woven-logo" src="/static/images/woven-logo-small.png">
                 </template>
@@ -53,60 +53,54 @@
               </span>
             </core-toolbar>
 
-              <!--<core-toolbar id="toolbar-drawer" class="toolbar {{app.community == null ? has-logo : ''}}">-->
-                <!--<span id="community-title" data-page="0" data-url="/" on-tap="{{switchPage}}" >-->
-                  <!--<img src="http://cdn.woven.co/assets/images/woven-logo-small-expanded.png">-->
-                <!--</span>-->
-              <!--</core-toolbar>-->
-
-            <core-menu valueattr="label" selected="{{app.pageTitle}}" class="menu" theme="core-dark-theme">
+            <core-menu valueattr="data-page" selected="{{app.selectedPage}}" class="menu" theme="core-dark-theme">
               <template if="{{app.community != null}}">
                 <core-item label="Lobby" icon="communication:forum" horizontal center layout class="item"
-                           on-tap="{{switchPage}}" data-page="0" data-url="/{{app.community.alias}}"></core-item>
+                           on-tap="{{switchPage}}" data-page="lobby" data-url="/{{app.community.alias}}"></core-item>
                 <core-item label="Feed" icon="view-stream" horizontal center layout class="item"
-                           on-tap="{{switchPage}}" data-page="7" data-url="/{{app.community.alias}}/feed"></core-item>
+                           on-tap="{{switchPage}}" data-page="feed" data-url="/{{app.community.alias}}/feed"></core-item>
                 <core-item label="Events" icon="event" horizontal center layout class="item"
-                           on-tap="{{switchPage}}" data-page="5" data-url="/{{app.community.alias}}/events"></core-item>
+                           on-tap="{{switchPage}}" data-page="events" data-url="/{{app.community.alias}}/events"></core-item>
                 <core-item label="Announcements" icon="announcement" horizontal center layout class="item" active
-                           on-tap="{{switchPage}}" data-page="6" data-url="/{{app.community.alias}}/announcements"></core-item>
+                           on-tap="{{switchPage}}" data-page="announcements" data-url="/{{app.community.alias}}/announcements"></core-item>
                 <core-item label="People" icon="account-circle" horizontal center layout class="item"
-                           on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>
+                           on-tap="{{switchPage}}" data-page="people" data-url="{{app.community.alias}}/people"></core-item>
                 <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->
                            <!--on-tap="{{switchPage}}" data-page="2" data-url="/saved" ></core-item>-->
                 <core-item label="Channels" icon="social:communities" horizontal center layout class="item" active
-                           on-tap="{{switchPage}}" data-page="0" data-url="/" ></core-item>
+                           on-tap="{{switchPage}}" data-page="channels" data-url="/" ></core-item>
 
               </template>
               <template if="{{app.community == null}}">
                 <core-item label="Channels" icon="social:communities" horizontal center layout class="item" active
-                           on-tap="{{switchPage}}" data-page="0" data-url="/" ></core-item>
+                           on-tap="{{switchPage}}" data-page="channels" data-url="/" ></core-item>
                 <core-item label="People" icon="account-circle" horizontal center layout class="item"
-                           on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>
+                           on-tap="{{switchPage}}" data-page="people" data-url="/people"></core-item>
                 <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->
                            <!--on-tap="{{switchPage}}" data-page="2" data-url="/saved" ></core-item>-->
                 <!--<core-item label="About Woven" icon="drive-ms-word" horizontal center layout class="item"-->
                            <!--on-tap="{{switchPage}}" data-page="3" data-url="/people"></core-item>-->
               </template>
-              <div id="button-area">
-                <template if="{{app.user != null}}">
-                  <div id="user-area" layout horizontal>
-                    <div class="user-area-photo"><user-picture app="{{app}}" username="{{app.user.username}}"></user-picture></div>
-                    <div class="user-area-text" flex start-justified layout vertical>
-                      <div>Hello, {{app.user.username}}!</div>
-                      <div class="sub-links">
-                        <span on-tap="{{signOut}}">Sign out</span>
-                      </div>
+            </core-menu>
+            <div id="bottom-area" self-stretch>
+              <template if="{{app.user == null}}">
+                <div id="button-area">
+                  <button class="button-sign-in" id="button-sign-in" on-tap="{{toggleSignIn}}">Sign in</button>
+                </div>
+              </template>
+              <template if="{{app.user != null}}">
+                <div id="user-area" layout horizontal>
+                  <div class="user-area-photo"><user-picture app="{{app}}" username="{{app.user.username}}"></user-picture></div>
+                  <div class="user-area-text" flex start-justified layout vertical>
+                    <div>Hello, {{app.user.username}}!</div>
+                    <div class="sub-links">
+                      <span on-tap="{{signOut}}">Sign out</span>
                     </div>
                   </div>
-                </template>
-                <template if="{{app.user == null}}">
-                  <button class="signin-btn" id="facebook-signin" on-tap="{{toggleSignIn}}">Sign in</button>
-                </template>
-              </div>
-
-            </core-menu>
+                </div>
+              </template>
+            </div>
           </core-header-panel>
-
         </div>
 
         <core-scroll-header-panel id="main-panel" main fixed>
@@ -122,63 +116,53 @@
           </core-toolbar>
 
           <div class="content" layout vertical>
-            <core-animated-pages id="pages" selected="{{app.selectedPage}}" fit>
-              <section>
-                <template if="{{app.community != null && app.selectedPage === 0}}">
+            <core-animated-pages id="pages" selected="{{app.selectedPage}}" valueattr="data-page" fit>
+              <section data-page="lobby">
+                <template if="{{app.community != null && app.selectedPage == 'lobby'}}">
                   <chat-view app="{{app}}" viewModel="{{app.mainViewModel.chatViewModel}}"></chat-view>
                 </template>
               </section>
-              <section layout vertical>
-                <template if="{{app.selectedPage === 1}}">
+              <section data-page="item" layout vertical>
+                <template if="{{app.selectedPage == 'item'}}">
                   <div class="page-wrapper">
                     <item-view id="item-view" app="{{app}}" viewModel="{{app.mainViewModel.itemViewModel}}"></item-view>
                     <item-activities app="{{app}}"></item-activities>
                   </div>
                 </template>
               </section>
-              <section layout vertical>
-                <template if="{{app.selectedPage === 2}}">
+              <section data-page="saved" layout vertical>
+                <template if="{{app.selectedPage == 'saved'}}">
                   <item-list app="{{app}}" viewModel="{{app.mainViewModel}}"></item-list>
                 </template>
               </section>
-              <section layout vertical>
-                <template if="{{app.selectedPage === 3}}">
+              <section data-page="people" layout vertical>
+                <template if="{{app.selectedPage == 'people'}}">
                   <people-list app="{{app}}" viewModel="{{app.mainViewModel.peopleViewModel}}"></people-list>
                 </template>
               </section>
-              <section layout vertical>
-                <template if="{{app.community == null && app.selectedPage === 4}}">
+              <section data-page="channels" layout vertical>
+                <template if="{{app.hasTriedLoadingUser && app.community == null && app.selectedPage == 'channels'}}">
                   <div>
                     <community-list id="community-list" app="{{app}}" viewModel="{{app.mainViewModel}}"></community-list>
                   </div>
                 </template>
               </section>
-              <section>
-                <template if="{{app.selectedPage === 5}}">
-                  <div cross-fade="{{app.selectedPage === 5}}">
-                    <template if="{{app.community != null && app.selectedPage === 5}}">
-                      <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></inbox-list>
-                    </template>
-                  </div>
+              <section data-page="events">
+                <template if="{{app.community != null && app.selectedPage == 'events'}}">
+                  <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></inbox-list>
                 </template>
               </section>
-              <section>
-                <template if="{{app.selectedPage === 6}}">
-                  <div cross-fade="{{app.selectedPage === 6}}">
-                    <template if="{{app.community != null && app.selectedPage === 6}}">
-                      <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.announcementViewModel}}"></inbox-list>
-                    </template>
-                  </div>
+              <section data-page="announcements">
+                <template if="{{app.community != null && app.selectedPage == 'announcements'}}">
+                  <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.announcementViewModel}}"></inbox-list>
                 </template>
               </section>
-              <section>
-                <template if="{{app.selectedPage === 7}}">
-                  <div cross-fade="{{app.selectedPage === 7}}">
-                    <template if="{{app.community != null && app.selectedPage === 7}}">
-                      <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.feedViewModel}}"></inbox-list>
-                    </template>
-                  </div>
-                </template>
+              <section data-page="feed">
+                <!--<template if="{{app.selectedPage === 7}}">-->
+                  <template if="{{app.community != null && app.selectedPage == 'feed'}}">
+                    <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.feedViewModel}}"></inbox-list>
+                  </template>
+                <!--</template>-->
               </section>
             </core-animated-pages>
           </div>

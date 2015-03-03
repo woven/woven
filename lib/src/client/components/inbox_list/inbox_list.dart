@@ -32,7 +32,7 @@ class InboxList extends PolymerElement with Observable {
 
     app.previousPage = app.selectedPage;
     app.selectedItem = item;
-    app.selectedPage = 1;
+    app.selectedPage = 'item';
 
 
     var str = target.dataset['id'];
@@ -298,6 +298,22 @@ class InboxList extends PolymerElement with Observable {
   }
 
   attached() {
+    print('DEBUGGING: ${viewModel.runtimeType.toString()}');
+    switch (viewModel.runtimeType.toString()) {
+      case 'FeedViewModel':
+      print('debug1');
+        app.pageTitle = 'Feed';
+        break;
+      case 'AnnouncementViewModel':
+        print('debug2');
+        app.pageTitle = 'Announcements';
+        break;
+      default:
+        print('debug3');
+        app.pageTitle = 'Feed';
+        break;
+    }
+
     initializeInfiniteScrolling();
 
     // Once the view is loaded, handle scroll position.
