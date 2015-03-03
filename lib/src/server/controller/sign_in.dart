@@ -14,6 +14,8 @@ import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/server/util.dart';
 
 class SignInController {
+  static signOut(App app, HttpRequest request) => app.sessionManager.deleteCookie(request);
+
   static signIn(App app, HttpRequest request) {
     HttpResponse response = request.response;
     String dataReceived;
@@ -56,12 +58,6 @@ class SignInController {
   }
 
   static Future findUserInfo(String username) => Firebase.get('/users/$username.json');
-
-  static signOut(App app, HttpRequest request) {
-    try {
-      app.sessionManager.deleteCookie(request);
-    } catch(error) { print(error); }
-  }
 
   static facebook(App app, HttpRequest request) {
     var code = Uri.encodeComponent(request.uri.queryParameters['code']);
