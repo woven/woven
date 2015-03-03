@@ -53,6 +53,11 @@
   user-select: none;
 }
 
+user-picture::shadow .user-photo {
+  position:relative;
+  top:1px;
+}
+
 .user-photo img {
   width: 40px;
   height: 40px;
