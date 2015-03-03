@@ -87,13 +87,13 @@ core-drawer-panel:not([narrow]) #menu-button {
 
 .btn.primary {
   fill: #f1f1f1 !important;
-  background-color: rgb(64, 136, 214) !important;
+  background-color: rgb(45, 104, 214) !important;
 }
 
 .btn.primary:hover {
   fill: #fff !important;
+  background-color: rgb(41, 78, 155) !important;
   color: #fff;
-  background-color: rgb(45, 104, 214) !important;
 }
 
 .menu {
@@ -260,28 +260,13 @@ core-menu core-item:hover {
   cursor: pointer;
   border: none;
   width: 220px;
-  margin: 0px 0 3px 10px;
+  margin: 0 0 3px 10px;
   color: #fff;
   background-color: #247BA1;
 }
 
-#facebook-signin {
-  color: #fff;
-  background: #3e5a9b;
-  width: 200px;
-}
-
-#facebook-signin:active {
-  background: #223E8D;
-}
-
-#facebook-signin {
-  color: #fff;
-  background: #3e5a9b;
-}
-
-#button-sign-in:active {
-  background-color: blue;
+#button-sign-in:hover {
+  background-color: #269BCF;
 }
 
 paper-toast {

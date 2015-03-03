@@ -28,7 +28,7 @@
         </template>
         <template if="{{app.user == null}}">
           <div class="message" self-center flex>Please sign in to participate.</div>
-          <button class="button-sign-in" on-tap="{{toggleSignIn}}">Sign in</button>
+          <button class="button-sign-in" self-center on-tap="{{toggleSignIn}}">Sign in</button>
         </template>
     </div>
   </template>
