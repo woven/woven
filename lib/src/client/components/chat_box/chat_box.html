@@ -36,9 +36,9 @@
         </div>
       </template>
       <template if="{{app.user == null}}">
-        <div id="signin-container">
-          <span id="message">Please sign in to participate.</span>
-          <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
+        <div class="sign-in-container">
+          <span class="message">Please sign in to participate.</span>
+          <button class="button-sign-in" on-click="{{signInWithFacebook}}">Sign in</button>
         </div>
       </template>
     </div>

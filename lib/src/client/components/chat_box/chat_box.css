@@ -75,3 +75,20 @@ user-picture {
   border: none;
   border-radius: 0;
 }
+
+.sign-in-container .message {
+  padding: 0 10px 0 10px;
+}
+
+.button-sign-in {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  width: 100px;
+  color: #fff;
+  background-color: #247BA1;
+}

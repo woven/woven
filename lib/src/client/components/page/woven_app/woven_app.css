@@ -206,24 +206,25 @@ core-menu core-item:hover {
   margin: 18px;
 }
 
-.signin-btn {
-  border-radius: 2px;
-  padding: 10px;
-  outline: none;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  border: none;
+#bottom-area {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 #button-area {
-  position: absolute;
-  bottom: 9px;
-  width: 90%;
+  /*padding: auto 5px auto 5px;*/
+  /*position: absolute;*/
+  /*bottom: 9px;*/
+  width: 100%;
+  padding: 8px;
 }
 
-#button-area button {
-  width: 100%;
+#user-area {
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-top: solid 1px #ddd;
+  /*padding: auto 5px auto 5px;*/
 }
 
 #user-area .user-area-text {
@@ -250,9 +251,36 @@ core-menu core-item:hover {
   transition: color .3s;
 }
 
+.button-sign-in {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  width: 240px;
+  color: #fff;
+  background-color: #247BA1;
+}
+
 #facebook-signin {
   color: #fff;
   background: #3e5a9b;
+  width: 200px;
+}
+
+#facebook-signin:active {
+  background: #223E8D;
+}
+
+#facebook-signin {
+  color: #fff;
+  background: #3e5a9b;
+}
+
+#button-sign-in:active {
+  background-color: blue;
 }
 
 paper-toast {
@@ -279,27 +307,6 @@ paper-toast.important {
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   width: 400px;
   min-height: 400px;
-}
-
-
-.signin-btn {
-  border-radius: 2px;
-  padding: 10px;
-  outline: none;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  border: none;
-}
-
-#facebook-signin {
-  color: #fff;
-  background: #3e5a9b;
-  width: 200px;
-}
-
-#facebook-signin:active {
-  background: #223E8D;
 }
 
 #message {
