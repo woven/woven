@@ -81,7 +81,6 @@ class MainController {
         response.data = userData;
         return response;
       });
-
     });
   }
 
@@ -165,7 +164,7 @@ class MainController {
             if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
             // Update the item with a reference to the preview.
-            ItemModel.update(item, updates);
+            ItemModel.update(item, updates, app.authToken);
 
             // Return the preview information.
             response.data = preview;
@@ -188,7 +187,7 @@ class MainController {
                   if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
                   // Update the item with a reference to the preview.
-                  ItemModel.update(item, updates);
+                  ItemModel.update(item, updates, app.authToken);
 
                   // Convert and save the image.
                   var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
