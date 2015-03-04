@@ -64,7 +64,9 @@ class MainController {
           if (username == null) return null;
           // Update the old cookie to use a newer session ID, and add it to our session index.
           var newSessionId = app.sessionManager.createSessionId();
+          print('debug1');
           app.sessionManager.addSessionCookieToRequest(request, newSessionId);
+          print('debug2: ${request.cookies}');
           app.authToken = generateFirebaseToken({'uid': username});
           app.sessionManager.addSessionToIndex(newSessionId, username, app.authToken);
           return username;

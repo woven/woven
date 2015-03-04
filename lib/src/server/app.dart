@@ -154,6 +154,7 @@ class App {
             // First, check for an existing session cookie in the request.
             // Note that we might have just added a new cookie to the request, e.g. in SignInController.
             var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+
             // If there's an existing session cookie, use it. Else, create a new session id.
             String sessionId = (sessionCookie == null || sessionCookie.value == null) ? sessionManager.createSessionId() : sessionCookie.value;
 
