@@ -64,9 +64,7 @@ class MainController {
           if (username == null) return null;
           // Update the old cookie to use a newer session ID, and add it to our session index.
           var newSessionId = app.sessionManager.createSessionId();
-          print('debug1');
           app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-          print('debug2: ${request.response.cookies}');
           app.authToken = generateFirebaseToken({'uid': username});
           app.sessionManager.addSessionToIndex(newSessionId, username, app.authToken);
           return username;
@@ -325,7 +323,7 @@ http://twitter.com/wovenco
         notificationData['itemBody'] = itemData['body'];
         notificationData['message'] = itemData['message'];
         var encodedItem = base64Encode(id);
-        notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
+        notificationData['itemLink'] = "http://${config['server']['displayDomain']}/item/$encodedItem";
 
         if (isItem) return;
 
@@ -372,7 +370,7 @@ http://twitter.com/wovenco
       return Firebase.get('/messages/$id.json').then((messageData) {
         notificationData['message'] = messageData['message'];
         notificationData['messageAuthor'] = messageData['user'];
-        notificationData['itemLink'] = "http://${config['server']['domain']}/${messageData['community']}";
+        notificationData['itemLink'] = "http://${config['server']['displayDomain']}/${messageData['community']}";
       });
     }
 
