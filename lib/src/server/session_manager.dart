@@ -18,9 +18,6 @@ class SessionManager {
    */
   addSessionCookieToRequest(HttpRequest request, String sessionId) {
     var domain = config['server']['domain'];
-    try {
-      domain = request.headers['host'].first;
-    } catch (e) {}
 
     var cookie = new Cookie('session', sessionId);
     // Set the expire date to a year from now.
@@ -36,9 +33,6 @@ class SessionManager {
 
   deleteCookie(HttpRequest request) {
     var domain = config['server']['domain'];
-    try {
-      domain = request.headers['host'].first;
-    } catch (e) {}
 
     var cookie = new Cookie('session', '');
     // Set the expire date to yesterday so we kill our cookie.
