@@ -1,3 +1,5 @@
+library regex_helper;
+
 class RegexHelper {
   static String domain = '[a-zA-Z0-9.-]+[a-zA-Z0-9-]';
   static String protocol = '[a-zA-Z]+:\\/\\/';
@@ -14,4 +16,6 @@ class RegexHelper {
   static String link = '\\b($protocol|$protocol$www|$www)$domain($port)($queryPath)*\\/?(\\/?$searchString)?($queryHash)?';
 
   static String linkOrEmail = '($email|$link)';
+
+  static String mention = r'(^|\s+)(@[a-zA-Z0-9_-]+)(\s+|$|[!?.,-])';
 }

@@ -70,7 +70,8 @@ class App {
       ..routes[Routes.starred] = MainController.serveApp
       ..routes[Routes.people] = MainController.serveApp
       ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail
-      ..routes[Routes.sendNotifications] = MainController.sendNotifications
+      ..routes[Routes.sendNotificationsForItem] = MainController.sendNotificationsForItem
+      ..routes[Routes.sendNotificationsForComment] = MainController.sendNotificationsForComment
       ..routes[Routes.getUriPreview] = MainController.getUriPreview
       ..routes[Routes.generateDigest] = AdminController.generateDigest
       ..routes[Routes.exportUsers] = AdminController.exportUsers

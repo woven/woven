@@ -16,6 +16,7 @@ import '../util/file_util.dart';
 import '../util/image_util.dart';
 import 'package:path/path.dart' as path;
 import '../util.dart';
+import 'package:woven/src/shared/regex.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -122,13 +123,23 @@ class MainController {
       data['createdDate'] = now.toString();
 
       // Do some things with the data before saving.
-      data.remove('community');
       data['.priority'] = -now.millisecondsSinceEpoch;
+      Map fullData = new Map.from(data);
+      data.remove('community');
 
+      // Add some additional stuff which we store in the main /messsages location.
+      // TODO: Later, we can add more parent communities here.
+      fullData['communities'] = {community: true};
 
       // Add the message.
       return Firebase.post('/messages_by_community/$community.json', JSON.encode(data), app.authToken).then((String name) {
         Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()}, app.authToken);
+        Firebase.put('/messages/$name.json', fullData, app.authToken).then((_) {
+          // Send a notification email to anybody mentioned in the message.
+          fullData['id'] = name;
+          _sendNotifications('message', fullData, app);
+        });
+
         // Return the data back to the client.
         var response = new Response();
         response.data = name;
@@ -267,13 +278,41 @@ http://twitter.com/wovenco
     });
   }
 
+  static sendNotificationsForItem(App app, HttpRequest request) {
+    Map data = request.requestedUri.queryParameters;
+    _sendNotifications('item', data, app);
+  }
+
+  static sendNotificationsForComment(App app, HttpRequest request) {
+    Map data = request.requestedUri.queryParameters;
+    _sendNotifications('comment', data, app);
+  }
+
+//  static sendNotificationsForMessage(App app, HttpRequest request) {
+//    Map data = request.requestedUri.queryParameters;
+//    _sendNotifications('message', data, app);
+//  }
+
+
+//  static sendNotificationsForItem(App app, HttpRequest request) {
+//    var item = request.requestedUri.queryParameters['itemid'];
+//    var comment = request.requestedUri.queryParameters['commentid'];
+//    // Sending notifications for an item itself (not a comment)?
+//    String type = (comment == null) ? 'item' : 'comment';
+//    String id = (comment == null) ? item : comment;
+//
+//    _sendNotifications(type, id);
+//  }
+
   /**
    * Send email notifications as appropriate.
    */
-  static sendNotifications(App app, HttpRequest request) {
-    var item = request.requestedUri.queryParameters['itemid'];
-    var comment = request.requestedUri.queryParameters['commentid'];
-    bool isItem = (comment == null) ? true : false; // Sending notifications for an item itself (not a comment)?
+  static _sendNotifications(type, Map data, App app) {
+    bool isItem = (type == 'item') ? true : false;
+    bool isComment = (type == 'comment') ? true : false;
+    bool isMessage = (type == 'message') ? true : false;
+    var id = data['id']; // The id of the item/comment/message we're notifying about.
+    var item = (type == 'item') ? id : data['itemid']; // If this isn't an item, we still might have/need the item id.
 
     Map notificationData = {};
 
@@ -283,7 +322,7 @@ http://twitter.com/wovenco
         notificationData['itemAuthor'] = itemData['user'];
         notificationData['itemBody'] = itemData['body'];
         notificationData['message'] = itemData['message'];
-        var encodedItem = base64Encode(item);
+        var encodedItem = base64Encode(id);
         notificationData['itemLink'] = "http://${config['server']['domain']}/item/$encodedItem";
 
         if (isItem) return;
@@ -294,23 +333,17 @@ http://twitter.com/wovenco
       });
     }
 
-    Future findAuthorInfo() {
+    Future findItemAuthorInfo(_) {
       return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
-        notificationData['itemAuthorEmail'] = userData['email'];
-        notificationData['itemAuthorFirstName'] = userData['firstName'];
-        notificationData['itemAuthorLastName'] = userData['lastName'];
+        if (isItem) {
+          notificationData['itemAuthorEmail'] = userData['email'];
+          notificationData['itemAuthorFirstName'] = userData['firstName'];
+          notificationData['itemAuthorLastName'] = userData['lastName'];
+        }
       });
     }
 
-    Future findCommentInfo() {
-      if (isItem) return null;
-      return Firebase.get('/items/$item/activities/comments/$comment.json').then((commentData) {
-        notificationData['commentBody'] = commentData['comment'];
-        notificationData['commentAuthor'] = commentData['user'];
-      });
-    }
-
-    Future findCommentAuthor(_) {
+    Future findCommentAuthorInfo(_) {
       if (isItem) return null;
       return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
         notificationData['commentAuthorFirstName'] = userData['firstName'];
@@ -318,26 +351,60 @@ http://twitter.com/wovenco
       });
     }
 
-    Future notify(_) {
-      // Order matters, as we prioritize notification of mentions over multiple notifications.
-      _notifyMentionedUsers(app, notificationData);
-
-      if (isItem) return null; // If it's an item we're notifying about, skip the comment notifications.
-
-      _notifyAuthor(app, notificationData);
-      _notifyOtherParticipants(app, notificationData);
+    Future findMessageAuthorInfo(_) {
+      return Firebase.get('/users/${notificationData['messageAuthor']}.json').then((userData) {
+        notificationData['messageAuthorFirstName'] = userData['firstName'];
+        notificationData['messageAuthorLastName'] = userData['lastName'];
+      });
     }
 
+    Future findCommentInfo() {
+      if (isItem) return null;
+      return Firebase.get('/items/$item/activities/comments/$id.json').then((commentData) {
+        notificationData['commentBody'] = commentData['comment'];
+        notificationData['commentAuthor'] = commentData['user'];
+      });
+    }
+
+    Future findMessage() {
+      return Firebase.get('/messages/$id.json').then((messageData) {
+        notificationData['message'] = messageData['message'];
+        notificationData['messageAuthor'] = messageData['user'];
+        notificationData['itemLink'] = "http://${config['server']['domain']}/${messageData['community']}";
+      });
+    }
+
+    notify(_) {
+      // Order matters, as we prioritize notification of mentions over multiple notifications.
+      _notifyMentionedUsers(type, notificationData, app);
+
+      // If it's a comment we're notifying about, notify participants on the parent item.
+      if (isComment) {
+        _notifyAuthor(app, notificationData);
+        _notifyOtherParticipants(app, notificationData);
+      };
+    }
+
+    // Logic for handling the notifications.
     if (isItem) {
       return findItem()
-      .then((_) => Future.wait([findAuthorInfo()]))
+      .then((_) => Future.wait([findItemAuthorInfo]))
       .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
       .then((success) => new Response(success))
       .catchError((error) => print("Error sending notifications: $error"));
-    } else {
+    }
+    if (isComment) {
       return findItem()
-      .then((_) => Future.wait([findAuthorInfo(),findCommentInfo()]))
-      .then(findCommentAuthor)
+      .then((_) => Future.wait([findItemAuthorInfo, findCommentInfo()]))
+      .then(findCommentAuthorInfo)
+      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
+      .then((success) => new Response(success))
+      .catchError((error) => print("Error sending notifications: $error"));
+    }
+    if (isMessage) {
+      return findMessage()
+      .then((_) => Future.wait([findMessageAuthorInfo(_)]))
+      // TODO: Get the community details, like the name.
       .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
       .then((success) => new Response(success))
       .catchError((error) => print("Error sending notifications: $error"));
@@ -433,20 +500,27 @@ http://woven.co
     });
   }
 
-  static _notifyMentionedUsers(App app, Map notificationData) {
-    RegExp regExp = new RegExp(r'\B@[a-zA-Z0-9_-]+', caseSensitive: false);
-    bool isItem = (notificationData['commentBody'] == null) ? true : false;
+  static _notifyMentionedUsers(String type, Map notificationData, App app) {
+    bool isItem = (type == 'item') ? true : false;
+    bool isComment = (type == 'comment') ? true : false;
+    bool isMessage = (type == 'message') ? true : false;
+
+    var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
 
     // Combine message and item body fields for purpose of parsing all @mentions in either.
-    String postText = (isItem) ? '${notificationData['message']}\n===\n${notificationData['itemBody']}' : notificationData['commentBody'];
+    String postText;
+    if (isItem) postText = '${notificationData['message']}\n===\n${notificationData['itemBody']}';
+    if (isComment) postText = notificationData['commentBody'];
+    if (isMessage) postText = notificationData['message'];
+
     List mentions = [];
 
     // Remember any mentions so we can special case other notifications.
     notificationData['mentions'] = mentions;
 
     for (var mention in regExp.allMatches(postText)) {
-      if (mentions.contains(mention.group(0))) return;
-      mentions.add(mention.group(0).replaceAll("@", ""));
+      if (mentions.contains(mention.group(2))) return;
+      mentions.add(mention.group(2).replaceAll("@", ""));
     }
 
     mentions.forEach((user) {
@@ -463,14 +537,26 @@ http://woven.co
         var firstName = userData['firstName'];
         var lastName = userData['lastName'];
         var email = userData['email'];
-        var postAuthorFirstName = (isItem) ? notificationData['itemAuthorFirstName'] : notificationData['commentAuthorFirstName'];
-        var postAuthorLastName = (isItem) ? notificationData['itemAuthorLastName'] : notificationData['commentAuthorLastName'];
+        var postAuthorFirstName;
+        var postAuthorLastName;
         var notificationText;
 
         if (isItem) {
           notificationText = '';
-        } else {
+          postAuthorFirstName =  notificationData['itemAuthorFirstName'];
+          postAuthorLastName =  notificationData['itemAuthorLastName'];
+        }
+
+        if (isComment) {
           notificationText = '\n${notificationData['commentBody']}\n';
+          postAuthorFirstName =  notificationData['commentAuthorFirstName'];
+          postAuthorLastName =  notificationData['commentAuthorLastName'];
+        }
+
+        if (isMessage) {
+          notificationText = '\n${notificationData['message']}\n';
+          postAuthorFirstName =  notificationData['messageAuthorFirstName'];
+          postAuthorLastName =  notificationData['messageAuthorLastName'];
         }
 
         // Send notification.

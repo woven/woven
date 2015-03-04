@@ -581,9 +581,9 @@ class InputFormatter {
   static String formatMentions(String content) {
     if (content == null) return '';
 
-    var regExp = new RegExp(r'(^|\s+)@[a-zA-Z0-9_-]+(\s+|$)', caseSensitive: false);
+    var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
 
-    content = content.replaceAllMapped(regExp, (Match m) => '<span class="mention">${m[0]}</span>');
+    content = content.replaceAllMapped(regExp, (Match m) => '${m.group(1)}<span class="mention">${m.group(2)}</span>${m.group(3)}');
 
     return content;
   }
