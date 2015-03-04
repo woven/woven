@@ -29,7 +29,7 @@ class SessionManager {
 
     cookie.expires = expireDate;
     cookie.path = '/';
-    cookie.domain = '.${domain.replaceFirst('www.', '')}';
+    cookie.domain = '.$domain';
     cookie.httpOnly = true;
     request.response.cookies.add(cookie);
   }
