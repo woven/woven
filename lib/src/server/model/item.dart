@@ -14,7 +14,7 @@ class ItemModel extends shared.ItemModel {
     var type;
 
     // Update the item in /items.
-    Firebase.patch('/items/$itemId.json', value, authToken).then((_) {
+    Firebase.patch('/items/$itemId.json', value, auth: authToken).then((res) {
       // Get the type of the item.
       Firebase.get('/items/$itemId/type.json').then((String res) {
         type = res;
@@ -32,11 +32,11 @@ class ItemModel extends shared.ItemModel {
           // For each community the item is in...
           communities.forEach((community) {
             // Update the item in items_by_community.
-            Firebase.patch('/items_by_community/$community/$itemId.json', value, authToken);
+            Firebase.patch('/items_by_community/$community/$itemId.json', value, auth: authToken);
             // Update the item in items_by_community_by_type.
-            Firebase.patch('/items_by_community_by_type/$community/$type/$itemId.json', value, authToken);
+            Firebase.patch('/items_by_community_by_type/$community/$type/$itemId.json', value, auth: authToken);
           });
-        });
+        }).catchError(print);
       });
     });
   }

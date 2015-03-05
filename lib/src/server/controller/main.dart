@@ -57,31 +57,51 @@ class MainController {
     Future findUsernameFromFacebookIndex(String facebookId) => Firebase.get('/facebook_index/$facebookId/username.json');
 
     // Check the session index for the user associated with this session id.
-    return findUsernameFromSession(sessionId).then((String username) {
-      if (username == null) {
+    return findSession(sessionId).then((Map sessionData) {
+      if (sessionData == null) {
         // The user may have an old cookie, with Facebook ID, so let's check that index.
         return findUsernameFromFacebookIndex(sessionId).then((String username) {
           if (username == null) return null;
           // Update the old cookie to use a newer session ID, and add it to our session index.
           var newSessionId = app.sessionManager.createSessionId();
           app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-          print('debug2: ${request.response.cookies}');
-          app.authToken = generateFirebaseToken({'uid': username});
-          app.sessionManager.addSessionToIndex(newSessionId, username, app.authToken);
-          return username;
+          app.sessionManager.addSessionToIndex(newSessionId, username).then((Map sessionData) {
+            return sessionData;
+          });
         });
       }
-      return username;
-    }).then((String username) {
-      if (username == null) return Response.fromError('A user associated with that session id was not found.');
-      // Generate a Firebase authentication token for this user.
-      app.authToken = generateFirebaseToken({'uid': username});
-      // Get the user data.
+      return sessionData;
+    }).then((Map sessionData) {
+      if (sessionData == null) return Response.fromError('A session with that id was not found.');
+
+      String authToken = sessionData['authToken'];
+      String username = sessionData['username'];
+
+      // If the session has no auth token, just generate a new session.
+      if (sessionData['authToken'] == null) {
+        var newSessionId = app.sessionManager.createSessionId();
+        app.sessionManager.addSessionCookieToRequest(request, newSessionId);
+        app.sessionManager.addSessionToIndex(newSessionId, sessionData['username']).then((Map sessionData) {
+          authToken = sessionData['authToken'];
+        });
+      }
+
+      // Return the user data.
       return findUser(username).then((Map userData) {
-        userData['auth_token'] = app.authToken;
         var response = new Response();
-        response.data = userData;
-        return response;
+        if (authToken == null) {
+          var newSessionId = app.sessionManager.createSessionId();
+          app.sessionManager.addSessionCookieToRequest(request, newSessionId);
+          return app.sessionManager.addSessionToIndex(newSessionId, sessionData['username']).then((Map sessionData) {
+            userData['auth_token'] = sessionData['authToken'];
+            response.data = userData;
+            return response;
+          });
+        } else {
+          userData['auth_token'] = authToken;
+          response.data = userData;
+          return response;
+        }
       });
     });
   }
@@ -118,6 +138,7 @@ class MainController {
       Map data = JSON.decode(dataReceived);
       Map message = {};
       String community = data['community'];
+      String authToken = data['authToken'];
 
       // Use the server's UTC time.
       DateTime now = new DateTime.now().toUtc();
@@ -133,9 +154,9 @@ class MainController {
       fullData['communities'] = {community: true};
 
       // Add the message.
-      return Firebase.post('/messages_by_community/$community.json', JSON.encode(data), app.authToken).then((String name) {
-        Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()}, app.authToken);
-        Firebase.put('/messages/$name.json', fullData, app.authToken).then((_) {
+      return Firebase.post('/messages_by_community/$community.json', JSON.encode(data), auth: authToken).then((String name) {
+        Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()}, auth: authToken);
+        Firebase.put('/messages/$name.json', fullData, auth: authToken).then((_) {
           // Send a notification email to anybody mentioned in the message.
           fullData['id'] = name;
           _sendNotifications('message', fullData, app);
@@ -154,75 +175,85 @@ class MainController {
    * Crawl for and get a preview for a given uri/link.
    */
   static getUriPreview(App app, HttpRequest request) {
-    var item = request.requestedUri.queryParameters['itemid'];
-    var crawler = new CrawlerUtil();
+    HttpResponse response = request.response;
+    String dataReceived;
 
-    return Firebase.get('/items/$item.json').then((Map itemMap) {
-      String uri = itemMap['url'];
-      // Crawl for some data.
-      return crawler.getPreview(Uri.parse(uri)).then((Response res) {
-        if (res.success == false) return Response.fromError('Could not fetch from that URL.');
+    return request.listen((List<int> buffer) {
+      dataReceived = new String.fromCharCodes(buffer);
+    }).asFuture().then((_) {
+      Map data = JSON.decode(dataReceived);
+      String itemId = data['itemId'];
+      String authToken = data['authToken'];
 
-        UriPreview preview = UriPreview.fromJson(res.data);
-        var response = new Response();
-        if (preview.imageOriginalUrl == null) {
-          // Save the preview.
-          return Firebase.post('/uri_previews.json', preview.toJson(), app.authToken).then((String name) {
-            Map updates = {};
-            updates['uriPreviewId'] = name;
+      var crawler = new CrawlerUtil();
 
-            // If no subject/body, use preview's title/teaser.
-            if (itemMap['subject'] == null) updates['subject'] = preview.title;
-            if (itemMap['body'] == null) updates['body'] = preview.teaser;
+      return Firebase.get('/items/$itemId.json').then((Map itemMap) {
+        String uri = itemMap['url'];
+        // Crawl for some data.
+        return crawler.getPreview(Uri.parse(uri)).then((Response res) {
+          if (res.success == false) return Response.fromError('Could not fetch from that URL.');
 
-            // Update the item with a reference to the preview.
-            ItemModel.update(item, updates, app.authToken);
+          UriPreview preview = UriPreview.fromJson(res.data);
+          var response = new Response();
+          if (preview.imageOriginalUrl == null) {
+            // Save the preview.
+            return Firebase.post('/uri_previews.json', preview.toJson(), auth: authToken).then((String name) {
+              Map updates = {};
+              updates['uriPreviewId'] = name;
 
-            // Return the preview information.
-            response.data = preview;
-            return response;
-          });
-        } else {
-          // Resize and save a small preview image.
-          ImageUtil imageUtil = new ImageUtil();
-          // Set up a temporary file to write to.
-          return createTemporaryFile().then((File file) {
-            // Download the image locally to our temporary file.
-            return downloadFileTo(preview.imageOriginalUrl, file).then((_) {
-              // Resize the image.
-              return imageUtil.resize(file, width: 225, height: 125).then((File convertedFile) {
-                // Save the preview.
-                return Firebase.post('/uri_previews.json', preview.toJson(), app.authToken).then((String name) {
-                  Map updates = {};
-                  updates['uriPreviewId'] = name;
-                  if (itemMap['subject'] == null) updates['subject'] = preview.title;
-                  if (itemMap['body'] == null) updates['body'] = preview.teaser;
+              // If no subject/body, use preview's title/teaser.
+              if (itemMap['subject'] == null) updates['subject'] = preview.title;
+              if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
-                  // Update the item with a reference to the preview.
-                  ItemModel.update(item, updates, app.authToken);
+              // Update the item with a reference to the preview.
+              ItemModel.update(itemId, updates, authToken);
 
-                  // Convert and save the image.
-                  var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
-                  var filename = 'preview_small$extension';
-                  var gsBucket = 'woven';
-                  var gsPath = 'public/images/preview/$name/$filename';
+              // Return the preview information.
+              response.data = preview;
+              return response;
+            });
+          } else {
+            // Resize and save a small preview image.
+            ImageUtil imageUtil = new ImageUtil();
+            // Set up a temporary file to write to.
+            return createTemporaryFile().then((File file) {
+              // Download the image locally to our temporary file.
+              return downloadFileTo(preview.imageOriginalUrl, file).then((_) {
+                // Resize the image.
+                return imageUtil.resize(file, width: 225, height: 125).then((File convertedFile) {
+                  // Save the preview.
+                  return Firebase.post('/uri_previews.json', preview.toJson(), auth: authToken).then((String name) {
+                    Map updates = {};
+                    updates['uriPreviewId'] = name;
+                    if (itemMap['subject'] == null) updates['subject'] = preview.title;
+                    if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
-                  // Then upload the image to our filesystem.
-                  return app.cloudStorageUtil.uploadFile(convertedFile.path, gsBucket, gsPath, public: true).then((_) {
-                    return file.delete().then((_) {
-                      // Update the preview with a reference to the cloud file.
-                      preview.imageSmallLocation = gsPath;
-                      Firebase.patch('/uri_previews/$name.json', JSON.encode(preview.toJson()), app.authToken);
-                      // Return the preview information.
-                      response.data = preview;
-                      return response;
+                    // Update the item with a reference to the preview.
+                    ItemModel.update(itemId, updates, authToken);
+
+                    // Convert and save the image.
+                    var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
+                    var filename = 'preview_small$extension';
+                    var gsBucket = 'woven';
+                    var gsPath = 'public/images/preview/$name/$filename';
+
+                    // Then upload the image to our filesystem.
+                    return app.cloudStorageUtil.uploadFile(convertedFile.path, gsBucket, gsPath, public: true).then((_) {
+                      return file.delete().then((_) {
+                        // Update the preview with a reference to the cloud file.
+                        preview.imageSmallLocation = gsPath;
+                        Firebase.patch('/uri_previews/$name.json', JSON.encode(preview.toJson()), auth: authToken);
+                        // Return the preview information.
+                        response.data = preview;
+                        return response;
+                      });
                     });
                   });
                 });
               });
             });
-          });
-        }
+          }
+        });
       });
     });
   }
@@ -389,7 +420,7 @@ http://twitter.com/wovenco
     // Logic for handling the notifications.
     if (isItem) {
       return findItem()
-      .then((_) => Future.wait([findItemAuthorInfo]))
+      .then((_) => Future.wait([findItemAuthorInfo(_)]))
       .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
       .then((success) => new Response(success))
       .catchError((error) => print("Error sending notifications: $error"));

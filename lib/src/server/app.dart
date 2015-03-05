@@ -52,9 +52,6 @@ class App {
   // Holds the client authenticated for accessing Google APIs, which we instantiate below.
   var googleApiClient;
 
-  // Holds the Firebase authentication token.
-  var authToken;
-
   App() {
     // Start the server.
     HttpServer.bind(config['server']['address'], config['server']['port']).then(onServerEstablished, onError: printError);

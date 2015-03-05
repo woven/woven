@@ -81,7 +81,12 @@ class ChatBox extends PolymerElement {
     DateTime now = new DateTime.now().toUtc();
 
     // Save the message.
-    var commentJson =  {'user': app.user.username, 'message': message, 'createdDate': now.toString(), 'community': communityId};
+    var commentJson =  {
+      'user': app.user.username,
+      'message': message,
+      'createdDate': now.toString(),
+      'community': communityId,
+      'authToken': app.authToken};
     Map messageMap = new Map.from(commentJson);
 
     // Insert the message instantly.

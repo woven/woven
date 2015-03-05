@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:async';
 import 'firebase.dart';
 import 'package:woven/config/config.dart';
+import 'package:jwt/json_web_token.dart';
 import 'package:crypto/crypto.dart';
 
 /**
@@ -49,13 +50,17 @@ class SessionManager {
   /**
    * Add the session id to the session_index.
    */
-  Future addSessionToIndex(String session, String username, String authToken) {
+  Future addSessionToIndex(String session, String username) {
+    var authToken = generateFirebaseToken({'uid': username});
     DateTime now = new DateTime.now().toUtc();
     var sessionData = {
         'username': username,
         'updatedDate': now.toString(),
+        'authToken': authToken,
         '.priority': -now.millisecondsSinceEpoch};
-    return Firebase.put('/session_index/$session.json', sessionData, authToken);
+    return Firebase.put('/session_index/$session.json', sessionData, auth: authToken).then((_) {
+      return sessionData;
+    });
   }
 
   /**
@@ -68,5 +73,31 @@ class SessionManager {
     for (int i = 0; i < _KEY_LENGTH; ++i) data[i] = _random.nextInt(256);
 
     return CryptoUtils.bytesToHex(data);
+  }
+
+  /**
+   * Finds the authentication token for a given session id.
+   */
+  Future findFirebaseTokenForSession(String session) {
+    return Firebase.get('/session_index/$session.json').then((sessionData) {
+      return sessionData['authToken'];
+    });
+  }
+
+  /**
+   * Generates a new Firebase authentication token.
+   */
+  String generateFirebaseToken(Map data) {
+    // Encode (i.e. sign) a payload into a JWT token.
+    final jwt = new JsonWebTokenCodec(secret: config['datastore']['firebaseSecret']);
+    final payload = {
+        'iss': 'woven',
+        'exp': new DateTime.now().add(new Duration(days: 365)).millisecondsSinceEpoch,
+        'v': 0,
+        'iat': new DateTime.now().millisecondsSinceEpoch*1000,
+        'd': data
+    };
+    final token = jwt.encode(payload);
+    return token;
   }
 }

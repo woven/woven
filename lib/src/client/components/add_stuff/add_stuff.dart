@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/shared/response.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
@@ -182,6 +183,17 @@ class AddStuff extends PolymerElement {
       DateTime time = DateTime.parse("$now");
       var priority = time.millisecondsSinceEpoch;
 
+//      // TODO: In progress server-side saving.
+//      var req = new HttpRequest();
+//
+//      void onData(_) {
+//        print('Server says: ' + req.responseText);
+//      }
+//
+//      req ..open('POST', Routes.addItem.toString())
+//          ..send(encodedItem)
+//          ..onReadyStateChange.listen(onData);
+
       // Update the main item, then...
       itemRef.setWithPriority(encodedItem, -priority).then((e) {
         var item = id.name;
@@ -231,17 +243,17 @@ class AddStuff extends PolymerElement {
 
     // For event and news items, let's get URL previews.
     if (item is EventModel || item is NewsModel) {
-      HttpRequest.request(Routes.getUriPreview.toString() + "?itemid=$itemId").then((HttpRequest req) {
-        Map response = JSON.decode(req.responseText);
-        UriPreview preview = UriPreview.fromJson(response['data']);
-        // TODO: Keep this on server side, why do it client side?
-//        var previewRef = root.child('/uri_previews').push();
-//        previewRef.set(preview.toJson());
-      });
+
+      var dataJson = {'itemId': itemId, 'authToken': app.authToken};
+      // Save the message to Firebase server-side.
+      HttpRequest.request(
+          Routes.getUriPreview.toString(),
+          method: 'POST',
+          sendData: JSON.encode(dataJson));
     }
 
     // Send a notification email to anybody mentioned in the item.
-    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId");
+    HttpRequest.request(Routes.sendNotificationsForItem.toString() + "?id=$itemId");
 
     overlay.toggle();
 
@@ -253,10 +265,11 @@ class AddStuff extends PolymerElement {
     // After add, jump to an appropriate page.
     // TODO: Better handle use case where channel you added to isn't the one you're in.
     if (app.community != null) {
-      app.selectedPage = 7;
-      app.pageTitle = 'Feed';
+      // TODO: Jump to the actual item...
+      app.selectedPage = 'feed';
+      app.router.dispatch(url: '/${app.community.alias}/feed');
     }
-    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}' : '/');
+    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}/feed' : '/');
     app.showMessage('Your ${selectedType == 'message' || selectedType == null ? 'message' : selectedType} was added.');
   }
 

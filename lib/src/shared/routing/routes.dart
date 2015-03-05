@@ -14,9 +14,9 @@ class Routes {
   static final sendWelcome = new UrlPattern(r'/sendwelcome');
   static final sendNotificationsForItem = new UrlPattern(r'/_notifyforitem');
   static final sendNotificationsForComment = new UrlPattern(r'/_notifyforcomment');
-  static final getUriPreview = new UrlPattern(r'/x/geturipreview');
-  static final addItem = new UrlPattern(r'/x/additem');
-  static final addMessage = new UrlPattern(r'/x/addmessage');
+  static final getUriPreview = new UrlPattern(r'/_geturipreview');
+  static final addItem = new UrlPattern(r'/_additem');
+  static final addMessage = new UrlPattern(r'/_addmessage');
   static final generateDigest = new UrlPattern(r'/admin/generatedigest');
   static final exportUsers = new UrlPattern(r'/admin/exportusers');
   static final signIn = new UrlPattern(r'/_signin');

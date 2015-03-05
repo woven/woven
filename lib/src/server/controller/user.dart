@@ -30,31 +30,23 @@ class UserController {
       data['.priority'] = -now.millisecondsSinceEpoch;
       String username = (data['username'] as String).toLowerCase();
       return findUserInfo(username).then((userData) {
-        // User already exists.
         if (userData != null) return Response.fromError('User already exists.');
-        // Generate a Firebase authentication token. TODO: Put this elsewhere?
-        app.authToken = generateFirebaseToken({'uid': username});
-        // Create the new user.
-        return Firebase.put('/users/$username.json', data, app.authToken).then((response) {
-          // Create a session cookie and add the session to the session index.
-          String newSessionId = app.sessionManager.createSessionId();
-          app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-          app.sessionManager.addSessionToIndex(newSessionId, username, app.authToken);
 
-          var response = new Response();
-          response.data = data;
-          response.success = true;
-          return response;
+        String newSessionId = app.sessionManager.createSessionId();
+        // TODO: Consider simplifying auth so just checks user == user, so we don't have to wait for session index.
+        return app.sessionManager.addSessionToIndex(newSessionId, username).then((sessionData) {
+          app.sessionManager.addSessionCookieToRequest(request, newSessionId);
+          // Create the new user.
+          return Firebase.put('/users/$username.json', data, auth: sessionData['authToken']).then((response) {
+            var response = new Response();
+            response.data = data;
+            response.success = true;
+            return response;
+          });
         });
       });
     });
   }
-
-//  static Future<bool> userExists(String user) {
-//    return Firebase.get('/users/$user.json').then((res) {
-//      return (res == null ? false : true);
-//    });
-//  }
 
   static Future findUserInfo(String username) => Firebase.get('/users/$username.json');
 }
