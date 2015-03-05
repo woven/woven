@@ -48,8 +48,10 @@ core-icon {
 .item {
   margin: 0;
   padding: 0;
-  border: 1px solid #e5e5e5;
-  background-color: white;
+  border: 1px solid #D8D8D8;
+  background-color: #FAFAFA;
+  /*border: 1px solid #e5e5e5;*/
+  /*background-color: white;*/
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -65,6 +67,7 @@ core-icon {
 }
 
 .item.compact {
+  background-color: white;
   /*padding-top: 15px;*/
 }
 
@@ -123,7 +126,7 @@ core-icon {
 
 .message {
   font-size: 15px;
-  margin-left: 10px;
+  margin-left: 2px;
   white-space: normal;
   color: #434343;
   line-height: 1.15em;
@@ -153,13 +156,9 @@ core-icon {
   margin-right: 5px;
   color: #212121;
   font-weight: bold;
-  font-size: 18px;
-  padding: 5px 0 0 0;
+  font-size: 16px;
+  padding: 2px 0 0 0;
   margin-bottom: 10px;
-}
-
-.item-subject:hover {
-  color: #666;
 }
 
 .item-body {
@@ -170,13 +169,13 @@ core-icon {
 }
 
 .item.compact .item-body {
-  color: #666;
+  color: #212121;
 }
 
-.item.compact:hover .item-body {
-  color: #212121;
-  transition: color .2s;
-}
+/*.item.compact:hover .item-body {*/
+  /*color: #212121;*/
+  /*transition: color .2s;*/
+/*}*/
 
 .item-info {
   color: rgb(102, 102, 102);
@@ -293,7 +292,7 @@ core-icon {
 }
 
 .item.compact .content-main {
-  padding: 10px 5px 0 0;
+  padding: 9px 5px 0 0;
 }
 
 .content-footer {

@@ -58,7 +58,7 @@ core-tooltip::shadow .core-tooltip {
   /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
   padding: 8px;
   border-top: solid 1px #ddd;
-  height: 40px;
+  /*height: 40px;*/
 }
 
 .user-area {
@@ -99,6 +99,9 @@ user-picture {
   font-family: 'RobotoDraft', sans-serif;
   white-space: nowrap;
   color: #333;
+  height: 40px;
+  position: relative;
+  top: 12px;
 }
 
 @media all and (min-width: 600px)  {
@@ -106,6 +109,6 @@ user-picture {
     display: none;
   }
   #post-container {
-    height: 40px;
+    /*height: 40px;*/
   }
 }
