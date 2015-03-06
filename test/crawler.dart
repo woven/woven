@@ -2,23 +2,26 @@ import 'package:woven/src/server/util/crawler_util.dart';
 import 'package:woven/src/server/util/image_util.dart';
 import 'package:woven/src/server/util/file_util.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/shared/response.dart';
 import 'dart:io';
 
 main() {
   // Test crawler functionality.
   List testUris = [
       'http://www.eventbrite.com/e/hispanicize-2015-march-16-20th-tickets-12902990191',
-      'http://bigsummit.biz/'
+      'http://www.theverge.com/'
     ];
   CrawlerUtil crawler = new CrawlerUtil();
   testUris.forEach((String uri) {
-    crawler.getPreview(Uri.parse(uri)).then((UriPreview preview) {
+    crawler.getPreview(Uri.parse(uri)).then((Response response) {
+      print(response.data);
+      UriPreview preview = UriPreview.fromJson(response.data);
       print(preview.title);
       print(preview.teaser);
-      print(preview.imageOriginalUrl);
+      print('debug:|${preview.imageOriginalUrl}|');
       print('---');
 
-      if (preview.imageOriginalUrl == null) return null;
+      if (preview.imageOriginalUrl == null || preview.imageOriginalUrl.isEmpty) return null;
 
       // Resize and save a small preview image.
       ImageUtil imageUtil = new ImageUtil();
