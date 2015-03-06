@@ -148,6 +148,7 @@ class MainController {
       data['.priority'] = -now.millisecondsSinceEpoch;
       Map fullData = new Map.from(data);
       data.remove('community');
+      data.remove('authToken');
 
       // Add some additional stuff which we store in the main /messsages location.
       // TODO: Later, we can add more parent communities here.
@@ -195,7 +196,7 @@ class MainController {
 
           UriPreview preview = UriPreview.fromJson(res.data);
           var response = new Response();
-          if (preview.imageOriginalUrl == null) {
+          if (preview.imageOriginalUrl == null || preview.imageOriginalUrl.isEmpty) {
             // Save the preview.
             return Firebase.post('/uri_previews.json', preview.toJson(), auth: authToken).then((String name) {
               Map updates = {};

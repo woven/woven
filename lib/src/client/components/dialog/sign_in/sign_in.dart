@@ -70,6 +70,10 @@ class SignInDialog extends PolymerElement {
       // Set up the response as an object.
       Response response = Response.fromJson(JSON.decode(request.responseText));
       if (response.success) {
+        // Set the auth token and remove it from the map.
+        app.authToken = response.data['authToken'];
+        // TODO: This should totally just be part of the UserModel.
+        response.data.remove('authToken');
         // Set up the user.
         UserModel user = UserModel.fromJson(response.data);
         app.user = user;

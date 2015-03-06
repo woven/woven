@@ -27,7 +27,7 @@ class CrawlerUtil {
         if (metaTag.attributes['name'] == 'description' && preview.teaser == null) preview.teaser = metaTag.attributes['content'];
       });
 
-      if (preview.title == null) preview.title = document.querySelector('title').innerHtml;
+      if (preview.title == null && document.querySelector('title') != null) preview.title = document.querySelector('title').innerHtml;
 
       response.data = preview.toJson();
       return response;

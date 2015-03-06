@@ -37,13 +37,16 @@ class SignInController {
       var password = data['password'];
       return checkCredentials(username, password).then((success) {
         if (!success) return Response.fromError('Bad credentials.');
-        app.sessionManager.addSessionToIndex(sessionId, username);
-        return findUserInfo(username).then((userData) {
-          var response = new Response();
-          response.data = userData;
-          response.success = true;
-          return response;
+        return app.sessionManager.addSessionToIndex(sessionId, username).then((sessionData) {
+          return findUserInfo(username).then((userData) {
+            var response = new Response();
+            userData['authToken'] = sessionData['authToken'];
+            response.data = userData;
+            response.success = true;
+            return response;
+          });
         });
+
       });
     });
   }
