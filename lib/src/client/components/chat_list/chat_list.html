@@ -5,7 +5,7 @@
 <polymer-element name="chat-list">
   <template>
     <link rel="stylesheet" href="chat_list.css">
-    <div id="activity-wrapper">
+    <div id="activity-wrapper" class="theme-dark">
       <!--<template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator">Fetching...</div></template>-->
       <!--<template if="{{viewModel.reachedEnd}}"><div id="loading-indicator">You've reached the beginning of all time.</div></template>-->
       <div class="loading-area">
@@ -15,22 +15,41 @@
       </div>
       <!--<div id="loading-indicator"><a on-tap="{{loadNextPage}}">Load more</a></div>-->
       <template if="{{viewModel.messages != null}}" repeat="{{message in viewModel.messages}}">
-        <div layout horizontal>
-          <div class="user-area" vertical layout>
-            <user-picture app="{{app}}" username="{{message['user']}}"></user-picture>
-          </div>
-          <div class="activity-card {{(message['highlighted']) ? 'highlight' : ''}}" flex>
-            <div id="content">
-              <div class="card-top" horizontal layout>
-                <div flex class="user">{{message['user']}}</div>
-                <div class="date-time">
-                  <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+        <template if="{{message['type'] == null}}">
+          <div layout horizontal>
+            <div class="user-area" vertical layout>
+              <user-picture app="{{app}}" username="{{message['user']}}"></user-picture>
+            </div>
+            <div class="activity-card {{(message['highlighted']) ? 'highlight' : ''}}" flex>
+              <div id="content">
+                <div class="card-top" horizontal layout>
+                  <div flex class="user">{{message['user']}}</div>
+                  <div class="date-time">
+                    <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                  </div>
                 </div>
+                <p class="{{(message['id'] == null) ? 'not-delivered' : ''}}"><safe-html><template if="{{message != null}}">{{formatText(message['message'])}}</template></safe-html></p>
               </div>
-              <p class="{{(message['id'] == null) ? 'not-delivered' : ''}}"><safe-html><template if="{{message != null}}">{{formatText(message['message'])}}</template></safe-html></p>
             </div>
           </div>
-        </div>
+        </template>
+        <template if="{{message['type'] == 'notification'}}">
+          <div layout horizontal>
+            <div class="user-area" vertical layout>
+              <user-picture app="{{app}}" username="{{message['user']}}"></user-picture>
+            </div>
+            <div class="activity-card {{(message['highlighted']) ? 'highlight' : ''}} {{message['type']}}" flex>
+              <div id="content">
+                <div class="card-top" horizontal layout>
+                  <div flex class="message notification">{{message['message']}}</div>
+                  <div class="date-time">
+                    <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
       </template>
     </div>
   </template>

@@ -9,7 +9,7 @@
 <polymer-element name="chat-box">
   <template>
     <link rel="stylesheet" href="chat_box.css">
-    <div id="post-container" layout horizontal>
+    <div id="post-container" layout horizontal class="theme-dark">
         <template if="{{app.user != null}}">
           <div class="user-area">
             <user-picture app="{{app}}" username="{{app.user.username}}"></user-picture>

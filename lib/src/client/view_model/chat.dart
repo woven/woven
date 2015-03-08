@@ -16,8 +16,6 @@ class ChatViewModel extends BaseViewModel with Observable {
   // TODO: Use this later for date separators between messages.
   final Map groupedItems = toObservable({});
 
-  final f = new Firebase(config['datastore']['firebaseLocation']);
-
   int pageSize = 50;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
@@ -31,6 +29,8 @@ class ChatViewModel extends BaseViewModel with Observable {
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
   ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
+
+  Firebase get f => app.f;
 
   ChatViewModel({this.app}) {
     loadMessagesByPage();

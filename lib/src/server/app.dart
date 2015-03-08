@@ -63,7 +63,7 @@ class App {
       ..routes[Routes.sayFoo] = HelloController.sayFoo
       ..routes[Routes.sayHello] = HelloController.sayHello
       ..routes[Routes.signInFacebook] = SignInController.facebook
-      ..routes[Routes.currentUser] = MainController.getCurrentUser
+      ..routes[Routes.currentUser] = SignInController.getCurrentUser
       ..routes[Routes.starred] = MainController.serveApp
       ..routes[Routes.people] = MainController.serveApp
       ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail

@@ -15,7 +15,6 @@ class FeedViewModel extends BaseViewModel with Observable {
   final List items = toObservable([]);
   final Map groupedItems = toObservable({});
 
-  final f = new Firebase(config['datastore']['firebaseLocation']);
   String dataLocation = '';
   @observable String typeFilter;
 
@@ -26,10 +25,11 @@ class FeedViewModel extends BaseViewModel with Observable {
   var topPriority = null;
   var secondToLastPriority = null;
 
+  Firebase get f => app.f;
+
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
   FeedViewModel({this.app, this.typeFilter}) {
-
     if (typeFilter == 'event') {
       var now = new DateTime.now();
       DateTime startOfToday = new DateTime(now.year, now.month, now.day);

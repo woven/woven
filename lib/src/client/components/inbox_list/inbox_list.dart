@@ -4,12 +4,10 @@ import 'dart:html';
 import 'dart:async';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/feed.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
-import 'package:core_elements/core_header_panel.dart';
 
 /**
  * A list of items.
@@ -24,6 +22,8 @@ class InboxList extends PolymerElement with Observable {
   InboxList.created() : super.created();
 
   InputElement get subject => $['subject'];
+
+  db.Firebase get f => app.f;
 
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
@@ -72,7 +72,6 @@ class InboxList extends PolymerElement with Observable {
   // Temporary script, about as good a place as any to put it.
 
   scriptTryPriority() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
 //    for (int i = 0; i < 30; i++) {
 //      var ref = f.child('/priority_test2').push();
 //      var now = new DateTime.now().toUtc();
@@ -89,7 +88,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   scriptAddPriorityOnItemsByCommunity() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items_by_community/' + app.community.alias);
     var item;
 
@@ -110,7 +108,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   scriptAddPriorityOnItems() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items');
     var item;
 
@@ -129,7 +126,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   scriptAddPriorityOnPeople() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/users');
     var item;
 
@@ -148,7 +144,6 @@ class InboxList extends PolymerElement with Observable {
 
 
   scriptAddPriorityOnItemsEverywhere() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items');
     var item;
 
@@ -207,7 +202,6 @@ class InboxList extends PolymerElement with Observable {
 
 
   scriptMakeItemsByCommunityByType() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items_by_community/' + app.community.alias);
     var item;
 
@@ -257,7 +251,6 @@ class InboxList extends PolymerElement with Observable {
   }
 
   scriptUpdateCommentCounts() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items');
     var item;
 

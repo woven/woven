@@ -8,7 +8,7 @@ import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
-import 'package:firebase/firebase.dart' as db;
+import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
 import 'package:core_elements/core_header_panel.dart';
@@ -35,8 +35,12 @@ class App extends Observable {
   Cache cache;
   String authToken;
   String sessionId;
+  Firebase f;
+
 
   App() {
+    f = new Firebase(config['datastore']['firebaseLocation']);
+
     mainViewModel = new MainViewModel(this);
     cache = new Cache();
     sessionId = readCookie('session');
@@ -129,9 +133,9 @@ class App extends Observable {
       String alias = Uri.parse(path).pathSegments[0];
 
       // Get the community instance.
-      var f = new db.Firebase(config['datastore']['firebaseLocation'] + '/communities/' + alias);
+      var communityRef = f.child('/communities/' + alias);
 
-      f.onValue.first.then((e) {
+      communityRef.onValue.first.then((e) {
         var communityData = e.snapshot.val();
 
         if (communityData != null) {
@@ -175,6 +179,7 @@ class App extends Observable {
    * Get the main scrolling element on app.
    */
   HtmlElement get scroller {
+    //TODO: Get this working for chat view, which has its own scroller.
     CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
     HtmlElement scroller = el.scroller;
     return scroller;

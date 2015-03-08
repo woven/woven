@@ -10,7 +10,6 @@ import 'dart:async';
 class PeopleViewModel extends BaseViewModel with Observable {
   final App app;
   final List users = toObservable([]);
-  final f = new Firebase(config['datastore']['firebaseLocation']);
   int pageSize = 40;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
@@ -19,6 +18,8 @@ class PeopleViewModel extends BaseViewModel with Observable {
   var secondToLastPriority = null;
 
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
+
+  Firebase get f => app.f;
 
   PeopleViewModel({this.app}) {
     loadUsersByPage();

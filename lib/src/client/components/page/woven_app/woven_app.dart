@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_drawer_panel.dart';
-import 'package:firebase/firebase.dart' as db;
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
@@ -22,7 +21,6 @@ class WovenApp extends PolymerElement with Observable {
   @observable var responsiveWidth = "600px";
 
   List<StreamSubscription> subscriptions = [];
-  var f = new db.Firebase(config['datastore']['firebaseLocation']);
 
   WovenApp.created() : super.created();
 
@@ -104,7 +102,7 @@ class WovenApp extends PolymerElement with Observable {
       var response = Response.fromJson(JSON.decode(contents));
       if (response.success && response.data != null) {
         app.authToken = response.data['auth_token'];
-        f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
 
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);

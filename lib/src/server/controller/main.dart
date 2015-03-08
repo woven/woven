@@ -44,68 +44,6 @@ class MainController {
     return new File(config['server']['directory'] + '/index.html');
   }
 
-  static getCurrentUser(App app, HttpRequest request) {
-    var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
-    if (sessionCookie == null) return Response.fromError('No session cookie found.');
-    if (sessionCookie.value == null) return Response.fromError('The id in the session cookie was null.');
-
-    var sessionId = sessionCookie.value;
-
-    Future findUser(String username) => Firebase.get('/users/$username.json');
-    Future findSession(String sessionId) => Firebase.get('/session_index/$sessionId.json');
-    Future findUsernameFromSession(String sessionId) => Firebase.get('/session_index/$sessionId/username.json');
-    Future findUsernameFromFacebookIndex(String facebookId) => Firebase.get('/facebook_index/$facebookId/username.json');
-
-    // Check the session index for the user associated with this session id.
-    return findSession(sessionId).then((Map sessionData) {
-      if (sessionData == null) {
-        // The user may have an old cookie, with Facebook ID, so let's check that index.
-        return findUsernameFromFacebookIndex(sessionId).then((String username) {
-          if (username == null) return null;
-          // Update the old cookie to use a newer session ID, and add it to our session index.
-          var newSessionId = app.sessionManager.createSessionId();
-          app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-          app.sessionManager.addSessionToIndex(newSessionId, username).then((Map sessionData) {
-            return sessionData;
-          });
-        });
-      }
-      return sessionData;
-    }).then((Map sessionData) {
-      if (sessionData == null) return Response.fromError('A session with that id was not found.');
-
-      String authToken = sessionData['authToken'];
-      String username = sessionData['username'];
-
-      // If the session has no auth token, just generate a new session.
-      if (sessionData['authToken'] == null) {
-        var newSessionId = app.sessionManager.createSessionId();
-        app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-        app.sessionManager.addSessionToIndex(newSessionId, sessionData['username']).then((Map sessionData) {
-          authToken = sessionData['authToken'];
-        });
-      }
-
-      // Return the user data.
-      return findUser(username).then((Map userData) {
-        var response = new Response();
-        if (authToken == null) {
-          var newSessionId = app.sessionManager.createSessionId();
-          app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-          return app.sessionManager.addSessionToIndex(newSessionId, sessionData['username']).then((Map sessionData) {
-            userData['auth_token'] = sessionData['authToken'];
-            response.data = userData;
-            return response;
-          });
-        } else {
-          userData['auth_token'] = authToken;
-          response.data = userData;
-          return response;
-        }
-      });
-    });
-  }
-
   static aliasExists(String alias) {
     Firebase.get('/alias_index/$alias.json').then((res) {
       return (res == null ? false : true);
@@ -116,13 +54,17 @@ class MainController {
    * Crawl for and get a preview for a given uri/link.
    */
   static addItem(App app, HttpRequest req) {
-//    HttpResponse res = req.response;
-//    req.listen((List<int> buffer) {
-//      // Return the data back to the client.
-//      var response = new Response();
-//      response.data = new String.fromCharCodes(buffer);
-//      return 'Here it is: ' + response;
-//    });
+    HttpResponse res = req.response;
+    String dataReceived;
+
+    return req.listen((List<int> buffer) {
+      dataReceived = new String.fromCharCodes(buffer);
+    }).asFuture().then((_) {
+      Map data = JSON.decode(dataReceived);
+      Map item = {};
+      String community = data['community'];
+      String authToken = data['authToken'];
+    });
   }
 
   /**

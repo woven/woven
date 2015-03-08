@@ -2,7 +2,7 @@ import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
-import 'package:firebase/firebase.dart' as f;
+import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
@@ -27,7 +27,7 @@ class SignInDialog extends PolymerElement {
   var processing = false;
 
 
-  final fRoot = new f.Firebase(config['datastore']['firebaseLocation']);
+  db.Firebase get f => app.f;
 
   CoreOverlay get overlay => $['dialog-overlay'];
   CoreInput get username => $['username'];

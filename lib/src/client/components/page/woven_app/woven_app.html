@@ -33,11 +33,11 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <template if="{{app.showHomePage}}">
-      <x-home app="{{app}}"></x-home>
-    </template>
+    <!--<template if="{{app.showHomePage}}">-->
+      <!--<x-home app="{{app}}"></x-home>-->
+    <!--</template>-->
     <template if="{{!app.showHomePage}}">
-      <core-drawer-panel responsiveWidth="{{responsiveWidth}}">
+      <core-drawer-panel responsiveWidth="{{responsiveWidth}}" class="theme-dark">
 
         <div vertical layout drawer>
           <core-header-panel id="side-panel" navigation flex mode="seamed">
@@ -53,7 +53,7 @@
               </span>
             </core-toolbar>
 
-            <core-menu valueattr="data-page" selected="{{app.selectedPage}}" class="menu" theme="core-dark-theme">
+            <core-menu valueattr="data-page" selected="{{app.selectedPage}}" class="menu">
               <template if="{{app.community != null}}">
                 <core-item label="Lobby" icon="communication:forum" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="lobby" data-url="/{{app.community.alias}}"></core-item>

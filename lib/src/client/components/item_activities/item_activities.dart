@@ -17,7 +17,7 @@ class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
 
-  final f = new db.Firebase(config['datastore']['firebaseLocation']);
+  db.Firebase get f => app.f;
 
   //TODO: Further explore this ViewModel stuff.
   //@observable ActivityCommentModel activity = new ActivityCommentModel();

@@ -16,6 +16,7 @@ import 'package:woven/src/shared/model/news.dart';
 import 'package:intl/intl.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/shared/routing/routes.dart';
+import 'package:woven/src/client/model/message.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/shared/response.dart';
 
@@ -27,7 +28,9 @@ class AddStuff extends PolymerElement {
   @published bool opened = false;
   @observable var selectedType;
   @observable Map formData = toObservable({});
-  List validShareToOptions = ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode', 'ideagarden', 'fiu']; // TODO: Fixed for now, change later.
+  List validShareToOptions = config['appSettings']['validShareToOptions']; // TODO: Fixed for now, change later.
+
+  db.Firebase get f => app.f;
 
   CoreOverlay get overlay => $['overlay'];
 
@@ -170,14 +173,11 @@ class AddStuff extends PolymerElement {
 
     var encodedItem = item.encode();
 
-    var root = new db.Firebase(config['datastore']['firebaseLocation']);
-
     // Save the item, and we'll have a reference to it.
-    var id = root.child('/items').push();
+    var itemRef = f.child('/items').push();
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
-    setItem(db.Firebase itemRef) {
       // Use a priority so Firebase sorts. Use a negative so latest is at top.
       // TODO: Beef this up in case items have same exact timestamp.
       DateTime time = DateTime.parse("$now");
@@ -196,26 +196,26 @@ class AddStuff extends PolymerElement {
 
       // Update the main item, then...
       itemRef.setWithPriority(encodedItem, -priority).then((e) {
-        var item = id.name;
+        var itemId = itemRef.name;
 
         // Loop over all communities shared to.
         shareTos.forEach((e) {
           var community = e.trim();
           // Add to items_by_community.
-          root.child('/items_by_community/' + community + '/' + item)
+          f.child('/items_by_community/' + community + '/' + itemId)
             ..setWithPriority(encodedItem, -priority);
 
           // Only in the main /items location, store a simple list of its parent communities.
-          root.child('/items/' + item + '/communities/' + community)
+          f.child('/items/' + itemId + '/communities/' + community)
             ..set(true);
 
           // Update the community itself.
-          root.child('/communities/' + community).update({
+          f.child('/communities/' + community).update({
               'updatedDate': '$now'
           });
 
           // Add to items_by_community_by_type.
-          var itemsByTypeRef = root.child('/items_by_community_by_type/' + community + '/$selectedType/' + item);
+          var itemsByTypeRef = f.child('/items_by_community_by_type/' + community + '/$selectedType/' + itemId);
 
           // Use a priority based on the start date/time when storing the event in items_by_community_by_type.
           if (selectedType == 'event') {
@@ -231,21 +231,26 @@ class AddStuff extends PolymerElement {
           } else {
             itemsByTypeRef.setWithPriority(encodedItem, -priority);
           }
+
+          // Notify lobby about new item.
+          var message = new MessageModel()
+            ..message = '@${item.user} added a new ${item.type} to the feed.'
+            ..type = 'notification'
+            ..community = app.community.alias
+            ..user = app.user.username;
+
+          MessageModel.add(message, f);
         });
       });
-    }
-
-    // Run the above Future using the reference from the initial save above.
-    setItem(id);
 
     // Reference to the item.
-    var itemId = id.name;
+    var itemId = itemRef.name;
 
     // For event and news items, let's get URL previews.
     if (item is EventModel || item is NewsModel) {
 
       var dataJson = {'itemId': itemId, 'authToken': app.authToken};
-      // Save the message to Firebase server-side.
+      // Start a crawl for a URI preview. The return is handled in onChildChanged.
       HttpRequest.request(
           Routes.getUriPreview.toString(),
           method: 'POST',

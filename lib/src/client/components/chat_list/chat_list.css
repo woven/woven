@@ -6,6 +6,13 @@
   border-radius: 4px;
   border: 1px solid #e5e5e5;
   transition: background-color 2s;
+  font-size: 14px;
+}
+
+.theme-dark .activity-card {
+  background-color: rgba(45, 45, 45, 0.5);
+  color: white;
+  border: none;
 }
 
 .activity-card #content {
@@ -27,6 +34,21 @@
 .activity-card.highlight {
   background-color: #FFEDC2;
   transition: background-color 1s;
+}
+
+.theme-dark .activity-card.highlight {
+  background-color: #28402c;
+  /*background-color: #26271C;*/
+}
+
+.activity-card.notification {
+  background-color: transparent;
+  border: none;
+  padding-top: 5px;
+}
+
+.message.notification {
+  font-weight: normal;
 }
 
 .user-area {
@@ -72,6 +94,10 @@ user-picture::shadow .user-photo {
   font-size: 90%;
 }
 
+.theme-dark .date-time {
+  color: #ddd;
+}
+
 #activity-wrapper {
   margin: 20px;
 }
@@ -93,93 +119,6 @@ user-picture::shadow .user-photo {
 
 .loading-area a:hover {
   color: #0061BB;
-}
-
-
-#comment-message {
-  align-self: center;
-  text-align: right;
-  margin-right: 11px;
-  color: #888;
-  font-size: 11px;
-  opacity: 0;
-  transition: opacity 1s;
-}
-
-#footer {
-  background-color: #F5F5F5;
-  padding: 3px;
-  border: 1px solid #e6e6e6;
-  border-top-width: 0;
-  text-align: right;
-}
-
-/*#footer .btn {*/
-  /*float: right;*/
-  /*vertical-align: middle;*/
-/*}*/
-
-/* Odd how woven-app.css btn.primary bleeds to here, only in Safari. */
-/* Therefore using .btn.action instead. */
-
-.btn {
-  background-color: white;
-}
-
-.btn.action {
-  background-color: rgb(64, 136, 214);
-  color: white;
-}
-
-.btn.action:hover {
-  background-color: rgb(45, 104, 214);
-  cursor: pointer;
-}
-
-.btn.action:focus {
-  background-color: rgb(45, 104, 214);
-  cursor: pointer;
-  outline: none;
-}
-
-.signin-btn {
-  border-radius: 2px;
-  padding: 10px;
-  outline: none;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  border: none;
-}
-
-#facebook-signin {
-  color: #fff;
-  background: #3e5a9b;
-  width: 200px;
-}
-
-#facebook-signin:active {
-  background: #223E8D;
-}
-
-#message {
-  opacity: 1;
-  transition: opacity 2s;
-  font-size: 13px;
-  display: inline;
-  margin-bottom: 8px;
-}
-
-#signin-container {
-  padding: 10px;
-  background: #fff;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: column;
-  -webkit-flex-flow: column;
 }
 
 safe-html::shadow a {

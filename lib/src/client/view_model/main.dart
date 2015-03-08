@@ -17,7 +17,6 @@ class MainViewModel extends BaseViewModel with Observable {
   final App app;
   final List communities = toObservable([]);
   final List users = toObservable([]);
-  final f = new Firebase(config['datastore']['firebaseLocation']);
   final Map feedViewModels = {};
   final Map itemViewModels = {};
   final Map peopleViewModels = {};
@@ -27,6 +26,8 @@ class MainViewModel extends BaseViewModel with Observable {
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
+
+  Firebase get f => app.f;
 
   MainViewModel(this.app) {
     loadCommunities();

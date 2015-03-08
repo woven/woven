@@ -1,35 +1,42 @@
-library item_model;
+library message_model;
 
-class ItemModel {
+class MessageModel {
   String id;
   String user;
   String message; // The user's message.
-  String subject; // The attached content's subject.
   String type;
-  String body;
+  String community;
   DateTime createdDate = new DateTime.now().toUtc();
   DateTime updatedDate = new DateTime.now().toUtc();
 
-  Map encode() {
+  MessageModel();
+
+  Map toJson() {
     return {
         "user": user,
         "message": message,
-        "subject": subject,
         "type": type,
-        "body": body,
+        "community": community,
         "createdDate": createdDate.toString(),
         "updatedDate": updatedDate.toString()
     };
   }
 
-  static ItemModel decode(Map data) {
-    return new ItemModel()
+  static MessageModel fromJson(Map data) {
+    if (data == null) return null;
+    return new MessageModel()
       ..user = data['user']
       ..message = data['message']
-      ..subject = data['subject']
       ..type = data['type']
-      ..body = data['body']
+      ..type = data['community']
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate'];
   }
+
+//  static MessageModel fromMessage(String message, {String type, String username}) {
+//    return new MessageModel()
+//      ..message = message
+//      ..type = type
+//      ..user = username;
+//  }
 }

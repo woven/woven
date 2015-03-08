@@ -6,13 +6,16 @@ import "dart:html";
 import "package:polymer/polymer.dart";
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
+import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 
 @CustomTag("uri-preview")
 class UriPreviewElement extends PolymerElement  {
   @published String previewId = '';
+  @published App app;
   @observable Map preview;
-  var f = new db.Firebase(config['datastore']['firebaseLocation']);
+
+  db.Firebase get f => app.f;
 
   UriPreviewElement.created() : super.created();
 

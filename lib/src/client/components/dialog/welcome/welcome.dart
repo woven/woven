@@ -3,7 +3,7 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:math';
 import 'dart:convert';
-import 'package:firebase/firebase.dart' as f;
+import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
@@ -23,7 +23,7 @@ class WelcomeDialog extends PolymerElement {
   @published App app;
   @published bool opened = false;
 
-  final fRoot = new f.Firebase(config['datastore']['firebaseLocation']);
+  db.Firebase get f => app.f;
 
   CoreOverlay get overlay => $['welcome-overlay'];
 
@@ -135,10 +135,10 @@ class WelcomeDialog extends PolymerElement {
    * Updates the Facebook index and removes the old user record.
    */
   updateTemporaryUser() {
-    final userRef = fRoot.child('/users/${username.value}');
-    final facebookIndexRef = fRoot.child('/facebook_index/${app.user.facebookId}');
-    final sessionIndexRef = fRoot.child('/session_index/${app.sessionId}');
-    final tempUserRef = fRoot.child('/users/${app.user.username}');
+    final userRef = f.child('/users/${username.value}');
+    final facebookIndexRef = f.child('/facebook_index/${app.user.facebookId}');
+    final sessionIndexRef = f.child('/session_index/${app.sessionId}');
+    final tempUserRef = f.child('/users/${app.user.username}');
     var epochTime = DateTime.parse(now.toString()).millisecondsSinceEpoch;
 
     // Move the old user data to its new location and update it.
@@ -181,7 +181,7 @@ class WelcomeDialog extends PolymerElement {
    * Updates an existing user.
    */
   updateExistingUser() {
-    final userRef = fRoot.child('/users/${username.value}');
+    final userRef = f.child('/users/${username.value}');
 
     var user = new UserModel()
       ..username = username.value

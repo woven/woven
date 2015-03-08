@@ -16,6 +16,18 @@ core-field input {
   border-radius: 2px;
 }
 
+.theme-dark #message-box {
+  border: solid 1px #383838;
+}
+
+#message-box.active {
+  border: solid 1px rgb(39, 178, 1);
+}
+
+.theme-dark #message-box.active {
+  border: solid 1px rgb(32, 102, 1);
+}
+
 .field-wrapper {
   padding: 12px 10px 6px 10px;
   border: solid 1px #e6e6e6;
@@ -31,6 +43,10 @@ core-field input {
   border: none;
 }
 
+.theme-dark .field-wrapper {
+  background-color: transparent;
+}
+
 #comment {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
@@ -41,6 +57,11 @@ core-field input {
 
 #comment-textarea {
   font: inherit;
+  background: transparent;
+}
+
+.theme-dark #comment-textarea {
+  color: white;
 }
 
 core-tooltip::shadow .core-tooltip {
@@ -59,6 +80,11 @@ core-tooltip::shadow .core-tooltip {
   padding: 8px;
   border-top: solid 1px #ddd;
   /*height: 40px;*/
+}
+
+#post-container.theme-dark  {
+  background: transparent;
+  border-top: solid 1px #383838;
 }
 
 .user-area {

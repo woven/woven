@@ -113,6 +113,8 @@ class DailyDigestTask extends Task {
           // Convert the UTC start date to EST (UTC-5) for the newsletter.
           // TODO: Later, consider more timezones.
           DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 5));
+          // TODO: Revisit this, it was causing exception as News don't have subjects now.
+          if (i['subject'] == null) i['subject'] = '';
           i['body'] = teaser;
           i['startDateTime'] = InputFormatter.formatDate(startDateTime);
           i['encodedId'] = base64Encode(i['id']);
@@ -142,6 +144,9 @@ class DailyDigestTask extends Task {
           String teaser = InputFormatter.createTeaser(i['body'], 200);
           // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
           DateTime createdDate = DateTime.parse(i['createdDate']).subtract(new Duration(hours: 5));
+          // TODO: Revisit this, it was causing exception as News don't have subjects now.
+          if (i['subject'] == null) i['subject'] = '';
+
           i['body'] = teaser;
           i['createdDate'] = InputFormatter.formatDate(createdDate);
           i['encodedId'] = base64Encode(i['id']);
