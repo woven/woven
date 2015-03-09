@@ -136,8 +136,16 @@ class ChatViewModel extends BaseViewModel with Observable {
       if (existingItem != null) {
         // Pass the ID to the existing item as we might not have it.
         existingItem['id'] = newItem['id'];
+
         existingItem['createdDate'] = DateTime.parse(newItem['createdDate']);
         existingItem['updatedDate'] = DateTime.parse(newItem['updatedDate']);
+
+        // If the message timestamp is after our local time,
+        // change it to now so messages aren't in the future.
+        DateTime messageTime = DateTime.parse(existingItem['updatedDate']);
+        DateTime localTime = new DateTime.now().toUtc();
+        if (messageTime.isAfter(localTime)) existingItem['updatedDate'] = localTime;
+
       } else {
         // Insert each new item into the list.
         insertMessage(newItem);
@@ -157,11 +165,10 @@ class ChatViewModel extends BaseViewModel with Observable {
         if (newData['createdDate'] != null) newData['createdDate'] = DateTime.parse(newData['createdDate']);
         if (newData['updatedDate'] != null) newData['updatedDate'] = DateTime.parse(newData['updatedDate']);
 
-        DateTime messageTime = DateTime.parse(newData['updatedDate']);
-        DateTime localTime = new DateTime.now().toUtc();
-
         // If the message timestamp is after our local time,
         // change it to now so messages aren't in the future.
+        DateTime messageTime = DateTime.parse(newData['updatedDate']);
+        DateTime localTime = new DateTime.now().toUtc();
         if (messageTime.isAfter(localTime)) newData['updatedDate'] = localTime;
 
       }).then((_) {
@@ -201,6 +208,12 @@ class ChatViewModel extends BaseViewModel with Observable {
     // The live-date-time element needs parsed dates.
     message['updatedDate'] = DateTime.parse(message['updatedDate']);
     message['createdDate'] = DateTime.parse(message['createdDate']);
+
+    // If the message timestamp is after our local time,
+    // change it to now so messages aren't in the future.
+    DateTime messageTime = DateTime.parse(message['updatedDate']);
+    DateTime localTime = new DateTime.now().toUtc();
+    if (messageTime.isAfter(localTime)) message['updatedDate'] = localTime;
 
     var index = indexOfClosestItemByDate(message['updatedDate']);
 
