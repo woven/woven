@@ -85,6 +85,7 @@ class MainController {
       // Use the server's UTC time.
       DateTime now = new DateTime.now().toUtc();
       message['createdDate'] = now.toString();
+      message['updatedDate'] = now.toString();
 
       // Do some things with the data before saving.
       message['.priority'] = -now.millisecondsSinceEpoch;
