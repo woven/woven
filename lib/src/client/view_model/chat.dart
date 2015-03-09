@@ -156,11 +156,19 @@ class ChatViewModel extends BaseViewModel with Observable {
         // First pre-process some things.
         if (newData['createdDate'] != null) newData['createdDate'] = DateTime.parse(newData['createdDate']);
         if (newData['updatedDate'] != null) newData['updatedDate'] = DateTime.parse(newData['updatedDate']);
+
+        DateTime messageTime = DateTime.parse(newData['updatedDate']);
+        DateTime localTime = new DateTime.now().toUtc();
+
+        // If the message timestamp is after our local time,
+        // change it to now so messages aren't in the future.
+        if (messageTime.isAfter(localTime)) newData['updatedDate'] = localTime;
+
       }).then((_) {
         // Now that new data is pre-processed, update current data.
         newData.forEach((k, v) => currentData[k] = v);
         // TODO: Ugh, I'd like to avoid this re-sort.
-        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
+//        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
       });
     });
   }
