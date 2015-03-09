@@ -136,6 +136,8 @@ class ChatViewModel extends BaseViewModel with Observable {
       if (existingItem != null) {
         // Pass the ID to the existing item as we might not have it.
         existingItem['id'] = newItem['id'];
+        existingItem['createdDate'] = newItem['createdData'];
+        existingItem['updatedDate'] = newItem['updatedData'];
       } else {
         // Insert each new item into the list.
         insertMessage(newItem);
