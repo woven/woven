@@ -159,6 +159,8 @@ class ChatViewModel extends BaseViewModel with Observable {
       }).then((_) {
         // Now that new data is pre-processed, update current data.
         newData.forEach((k, v) => currentData[k] = v);
+        // TODO: Ugh, I'd like to avoid this re-sort.
+        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
       });
     });
   }
