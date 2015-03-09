@@ -29,7 +29,7 @@ class ChatList extends PolymerElement {
    * Format line breaks, links, @mentions.
    */
   formatText(String text) {
-    if (text.trim().isEmpty) return 'Loading...';
+    if (text == null) return '';
     String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
     return formattedText;
   }

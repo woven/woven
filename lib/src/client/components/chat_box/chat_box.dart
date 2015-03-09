@@ -58,15 +58,15 @@ class ChatBox extends PolymerElement {
     String messageText = textarea.value;
     var communityId = app.community.alias;
 
+    if (messageText.trim().isEmpty) {
+      resetCommentInput();
+      return;
+    }
+
     var message = new MessageModel()
       ..message = messageText
       ..community = app.community.alias
       ..user = app.user.username;
-
-    if (message..message.trim().isEmpty) {
-      resetCommentInput();
-      return;
-    }
 
     // Handle commands.
     if (message.message.trim().startsWith(('/'))) {
