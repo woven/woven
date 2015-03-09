@@ -106,7 +106,9 @@ class WovenApp extends PolymerElement with Observable {
 
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);
+        if (app.user.settings == null) app.user.settings = {};
         app.user.settings = toObservable(app.user.settings);
+
         app.cache.users[app.user.username] = app.user;
 
         // Trigger changes to app state in response to user sign in/out.

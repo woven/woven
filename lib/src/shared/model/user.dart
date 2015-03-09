@@ -15,7 +15,7 @@ class UserModel {
   String pictureSmall;
   String facebookId;
   String email;
-  Map settings;
+  Map settings = {};
   String createdDate;
   bool isNew = false;
   bool disabled = false;
