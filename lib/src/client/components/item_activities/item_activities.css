@@ -18,6 +18,12 @@ core-field input {
   border: 1px solid #e5e5e5;
 }
 
+.theme-dark .activity-card  {
+  background: rgba(45, 45, 45, 0.5);
+  border: none;
+  color: white;
+}
+
 .activity-card #content {
   padding: 10px 10px 3px 10px;
   white-space: inherit;
@@ -73,6 +79,11 @@ core-field input {
   background-color: #fff;
 }
 
+.theme-dark .field-wrapper {
+  background-color: transparent;
+  border-color: #383838;
+}
+
 .field-wrapper.first {
   border-top: none;
 }
@@ -92,6 +103,11 @@ core-field input {
 
 #comment-textarea {
   font: inherit;
+  background-color: transparent;
+}
+
+.theme-dark #comment-textarea {
+  color: white;
 }
 
 core-tooltip::shadow .core-tooltip {

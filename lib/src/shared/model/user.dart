@@ -15,6 +15,7 @@ class UserModel {
   String pictureSmall;
   String facebookId;
   String email;
+  Map settings;
   String createdDate;
   bool isNew = false;
   bool disabled = false;
@@ -34,6 +35,7 @@ class UserModel {
       "gender": gender,
       "picture": picture,
       "pictureSmall": pictureSmall,
+      "settings": settings,
       "createdDate": createdDate,
       "disabled": disabled
     };
@@ -52,6 +54,7 @@ class UserModel {
       ..gender = data['gender']
       ..picture = data['picture']
       ..pictureSmall = data['pictureSmall']
+      ..settings = data['settings']
       ..createdDate = data['createdDate']
       ..disabled = data['disabled'];
   }

@@ -9,6 +9,7 @@ import 'package:woven/config/config.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/client/view_model/chat.dart';
+import 'package:woven/src/shared/model/message.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 
@@ -53,43 +54,40 @@ class ChatBox extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-//    new Timer(new Duration(milliseconds: 500), () {
-//      chatViewEl.scroller.scrollTop = chatViewEl.scroller.scrollHeight + 1000;
-//    });
-
-//    print(chatViewEl.scroller.scrollHeight);
-
     TextAreaElement textarea = this.shadowRoot.querySelector('#comment-textarea');
-    String message = textarea.value;
-    if (message.trim() == "") {
-//      window.alert("Your comment is empty.");
+    String messageText = textarea.value;
+    var communityId = app.community.alias;
+
+    var message = new MessageModel()
+      ..message = messageText
+      ..community = app.community.alias
+      ..user = app.user.username;
+
+    if (message..message.trim().isEmpty) {
       resetCommentInput();
       return;
     }
 
-    // TODO: Testing notifications.
+    // Handle commands.
+    if (message.message.trim().startsWith(('/'))) {
+      message.type = 'notification';
+      commandRouter(message);
+      Timer.run(() => chatView.scrollToBottom());
+      resetCommentInput();
+      return;
+    }
+
+    // TODO: Testing desktop notifications.
 //    Notification.requestPermission().then((res) {
 //      Notification notification = new Notification('New message, dude',
 //      body: message, iconUrl: 'http://woven.app/static/images/favicon-32x32.png');
 //      new Timer(new Duration(seconds: 4), () {
-//        notification.close();
+//        notification.close()
 //      });
 //    });
 
-    var communityId = app.community.alias;
-
-    DateTime now = new DateTime.now().toUtc();
-
-    // Save the message.
-    var commentJson =  {
-      'user': app.user.username,
-      'message': message,
-      'createdDate': now.toString(),
-      'community': communityId,
-      'authToken': app.authToken};
-    Map messageMap = new Map.from(commentJson);
-
     // Insert the message instantly.
+    Map messageMap = new Map.from(message.toJson());
     viewModel.insertMessage(messageMap);
     Timer.run(() => chatView.scrollToBottom());
 
@@ -97,7 +95,7 @@ class ChatBox extends PolymerElement {
     HttpRequest.request(
         Routes.addMessage.toString(),
         method: 'POST',
-        sendData: JSON.encode(commentJson))
+        sendData: JSON.encode({'model': message, 'authToken': app.authToken}))
     .then((HttpRequest res) {
       // Set up the response as an object.
       var response = Response.fromJson(JSON.decode(res.responseText));
@@ -114,9 +112,6 @@ class ChatBox extends PolymerElement {
           return currentCount + 1;
         }
       });
-
-      // TODO: Handle notifications for chat messages.
-//    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$messageId");
     });
 
     // Reset the fields.
@@ -127,6 +122,37 @@ class ChatBox extends PolymerElement {
     PaperAutogrowTextarea commentInput = this.shadowRoot.querySelector('#comment');
     textarea.focus();
     commentInput.update();
+  }
+
+  /**
+   * Handle commands.
+   */
+  commandRouter(MessageModel message) {
+    // TODO: Refactor all this later.
+    switch (message.message) {
+      case '/theme dark':
+        message.message = 'You went dark. I\'ve saved your preference.';
+        if (app.user.settings['theme'] == 'dark') message.message = 'You\'ve already gone dark.';
+        ElementList activityCards = chatView.shadowRoot.querySelector('chat-list').shadowRoot.querySelectorAll('.activity-card');
+        activityCards.forEach((HtmlElement activityCard) => activityCard.classes.add('no-transition'));
+        viewModel.insertMessage(message.toJson());
+        app.user.settings['theme'] = 'dark';
+        Timer.run(() => activityCards.forEach((HtmlElement activityCard) => activityCard.classes.remove('no-transition')));
+        break;
+      case '/theme light':
+        if (app.user.settings['theme'] == 'dark') message.message = 'You\'re already lit up.';
+        message.message = 'Let there be light. I\'ve saved your preference.';
+        ElementList activityCards = chatView.shadowRoot.querySelector('chat-list').shadowRoot.querySelectorAll('.activity-card');
+        activityCards.forEach((HtmlElement activityCard) => activityCard.classes.add('no-transition'));
+        viewModel.insertMessage(message.toJson());
+        app.user.settings['theme'] = 'light';
+        Timer.run(() => activityCards.forEach((HtmlElement activityCard) => activityCard.classes.remove('no-transition')));
+        break;
+      default:
+        message.message = 'I don\'t recognize that command.';
+        viewModel.insertMessage(message.toJson());
+      break;
+    }
   }
 
   attached() {

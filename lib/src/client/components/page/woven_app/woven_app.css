@@ -36,6 +36,7 @@
 
 .theme-dark .toolbar {
   background-color: #0B0B0B;
+  transition: background-color .2s;
 }
 
 .toolbar span {
@@ -150,6 +151,7 @@ core-drawer-panel:not([narrow]) #menu-button {
 
 .theme-dark #toolbar-main {
   background-color: #171717;
+  transition: background-color .2s;
 }
 
 core-item {
@@ -194,7 +196,8 @@ core-menu core-item:hover {
 }
 
 .theme-dark #side-panel {
-  background: #222;
+  background-color: #222;
+  transition: background-color .2s;
 }
 
 #main-panel {
@@ -202,7 +205,8 @@ core-menu core-item:hover {
 }
 
 .theme-dark #main-panel {
-  background: #1F1F1F
+  background-color: #1F1F1F;
+  transition: background-color .2s;
 }
 
 #rightPanel {

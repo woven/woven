@@ -56,10 +56,23 @@ core-icon {
   max-width: 640px;
 }
 
+.theme-dark .item {
+  background: rgba(45, 45, 45, 0.5);
+  border: none;
+  color: white;
+}
+
 .item.compact {
   width: 100%;
   /*padding-top: 15px;*/
 }
+
+.theme-dark .item.compact {
+  background-color: transparent;
+  border: solid 1px #1d1d1d;
+}
+
+
 
 /*.item.event {*/
 /*border-left-color: #03a9f4;*/
@@ -101,12 +114,20 @@ core-icon {
   text-align: center;
 }
 
+.theme-dark .item-photo-area .item-photo-wrapper {
+  border-color: #1D1D1D;
+}
+
 .item-message {
   font-size: 15px;
   margin-left: 2px;
   white-space: normal;
   color: #434343;
   line-height: 1.15em;
+}
+
+.theme-dark .item-message {
+  color: white;
 }
 
 .item-message.with-type {
@@ -142,6 +163,10 @@ core-icon {
   color: #666;
 }
 
+.theme-dark .item-subject, .theme-dark .item-body {
+  color: white;
+}
+
 .item-body {
   color: #212121;
   font-size: 14px;
@@ -151,6 +176,10 @@ core-icon {
 
 .item.compact .item-body {
   color: #212121;
+}
+
+.theme-dark .item.compact .item-body {
+  color: white;
 }
 
 .item-info {
@@ -277,6 +306,11 @@ core-icon {
   border-bottom-right-radius: 4px;
 }
 
+.theme-dark .content-footer {
+  background: transparent;
+  border-top: 1px solid #1d1d1d;
+}
+
 .item.compact .content-footer {
   margin-top: 0;
 }
@@ -303,6 +337,11 @@ core-icon {
   transition: background-color .2s;
 }
 
+.theme-dark .action-button {
+  border: none;
+  background-color: transparent;
+}
+
 .action-button::shadow core-icon {
   height:20px;
 }
@@ -310,6 +349,13 @@ core-icon {
 .action-button:hover {
   background-color:#fff;
   transition: background-color .2s;
+}
+
+.theme-dark .action-button:hover,
+.theme-dark .action-button:active {
+  background-color: transparent;
+  fill: white;
+  color: white;
 }
 
 .action-button:active {
@@ -378,6 +424,10 @@ core-icon {
   color: #ff1706;
 }
 
+.theme-dark .like-button.selected:not([disabled]) {
+  background-color: transparent;
+}
+
 safe-html::shadow a {
   text-decoration: none;
   color: rgb(34, 110, 223);
@@ -409,6 +459,10 @@ safe-html::shadow .mention {
     width: 80px;
     height: 80px;
     overflow: hidden;
+  }
+
+  .theme-dark .item-photo-area .item-photo-wrapper {
+    border-color: #1D1D1D;
   }
 
   .item-photo-area .item-photo {

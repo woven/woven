@@ -37,7 +37,7 @@
       <!--<x-home app="{{app}}"></x-home>-->
     <!--</template>-->
     <template if="{{!app.showHomePage}}">
-      <core-drawer-panel responsiveWidth="{{responsiveWidth}}" class="theme-dark">
+      <core-drawer-panel responsiveWidth="{{responsiveWidth}}" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
 
         <div vertical layout drawer>
           <core-header-panel id="side-panel" navigation flex mode="seamed">

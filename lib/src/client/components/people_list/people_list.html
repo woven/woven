@@ -6,7 +6,7 @@
 <polymer-element name="people-list">
   <template>
     <link rel="stylesheet" href="people_list.css">
-    <div id="content-container">
+    <div id="content-container" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <template repeat="{{user in viewModel.users}}">
         <core-item class="item" on-tap="{{selectUser}}" data-user="{{user['username']}}">
           <div class="item-container" horizontal layout>

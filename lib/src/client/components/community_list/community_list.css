@@ -44,10 +44,20 @@
   border-bottom: solid 1px #f2f2f2;;
 }
 
+.item.theme-dark   {
+  background: rgba(45, 45, 45, 0.5);
+  border: none;
+  color: white;
+}
+
 .item:hover {
   cursor: pointer;
   overflow: hidden;
   background-color: rgb(244, 244, 244);
+}
+
+.item.theme-dark:hover {
+  background: rgba(37, 37, 37, 0.50);
 }
 
 .community-alias {
@@ -59,11 +69,17 @@
   font-weight: bold;
   padding: 5px 0 0 0;
 }
+
 .item-body {
   color: #5c5c5c;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
+
+.theme-dark .item-body {
+  color: #e0e0e0;
+}
+
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
@@ -91,22 +107,28 @@
 
 .join-button {
   fill: #eee;
-  color: #eee;
   box-shadow: none;
   border: 1px solid #e6e6e6;
   display: inline-block;
   cursor: pointer;
   color: #2e2e2e;
-  font-family: arial;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   font-weight: bold;
   padding: 3px 5px;
   text-decoration: none;
   width: 90px;
 }
+
+.theme-dark .join-button {
+  border: none;
+  color: #e0e0e0;
+}
+
 .join-button:hover {
   /*background-color:#fff;*/
 }
+
 .join-button:active {
   /*position:relative;*/
   /*top:2px;*/
@@ -123,12 +145,26 @@
   color: #f99b15;
 }
 
+.theme-dark .join-button.selected:not([disabled]) {
+  background-color: transparent;
+}
+
+.join-button span {
+  position: relative;
+  top: 2px;
+}
+
 span.item-count {
   font-size: 13px;
   color: #3F3F3F;
   outline: none;
   margin-left: 12px;
 }
+
+.theme-dark span.item-count {
+  color: #e0e0e0;
+}
+
 .item-col2 {
   margin-right: 5px;
 }

@@ -14,7 +14,7 @@
   <template>
     <link rel="stylesheet" href="item.css">
     <custom-icons></custom-icons>
-    <div class="item-wrapper">
+    <div class="item-wrapper {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <template if="{{viewModel.typeFilter == null}}">
         <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-tap="{{selectItem}}" data-id="{{item['id']}}">
           <div class="item-container" vertical layout>

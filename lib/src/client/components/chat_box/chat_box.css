@@ -18,6 +18,7 @@ core-field input {
 
 .theme-dark #message-box {
   border: solid 1px #383838;
+  transition: border .2s;
 }
 
 #message-box.active {
@@ -26,6 +27,7 @@ core-field input {
 
 .theme-dark #message-box.active {
   border: solid 1px rgb(32, 102, 1);
+  transition: border .2s;
 }
 
 .field-wrapper {
@@ -45,6 +47,7 @@ core-field input {
 
 .theme-dark .field-wrapper {
   background-color: transparent;
+  transition: background-color .2s;
 }
 
 #comment {
@@ -62,6 +65,7 @@ core-field input {
 
 .theme-dark #comment-textarea {
   color: white;
+  transition: color .2s;
 }
 
 core-tooltip::shadow .core-tooltip {

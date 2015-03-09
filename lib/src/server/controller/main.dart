@@ -78,26 +78,25 @@ class MainController {
       dataReceived = new String.fromCharCodes(buffer);
     }).asFuture().then((_) {
       Map data = JSON.decode(dataReceived);
-      Map message = {};
-      String community = data['community'];
       String authToken = data['authToken'];
+      Map message = data['model'];
+      String community = message['community'];
 
       // Use the server's UTC time.
       DateTime now = new DateTime.now().toUtc();
-      data['createdDate'] = now.toString();
+      message['createdDate'] = now.toString();
 
       // Do some things with the data before saving.
-      data['.priority'] = -now.millisecondsSinceEpoch;
-      Map fullData = new Map.from(data);
-      data.remove('community');
-      data.remove('authToken');
+      message['.priority'] = -now.millisecondsSinceEpoch;
+      Map fullData = new Map.from(message);
+      message.remove('community');
 
       // Add some additional stuff which we store in the main /messsages location.
       // TODO: Later, we can add more parent communities here.
       fullData['communities'] = {community: true};
 
       // Add the message.
-      return Firebase.post('/messages_by_community/$community.json', JSON.encode(data), auth: authToken).then((String name) {
+      return Firebase.post('/messages_by_community/$community.json', JSON.encode(message), auth: authToken).then((String name) {
         Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()}, auth: authToken);
         Firebase.put('/messages/$name.json', fullData, auth: authToken).then((_) {
           // Send a notification email to anybody mentioned in the message.

@@ -5,7 +5,7 @@
 <polymer-element name="chat-list">
   <template>
     <link rel="stylesheet" href="chat_list.css">
-    <div id="activity-wrapper" class="theme-dark">
+    <div id="activity-wrapper" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <!--<template if="{{viewModel.reloadingContent && !viewModel.reachedEnd}}"><div id="loading-indicator">Fetching...</div></template>-->
       <!--<template if="{{viewModel.reachedEnd}}"><div id="loading-indicator">You've reached the beginning of all time.</div></template>-->
       <div class="loading-area">
@@ -36,7 +36,7 @@
         <template if="{{message['type'] == 'notification'}}">
           <div layout horizontal>
             <div class="user-area" vertical layout>
-              <user-picture app="{{app}}" username="{{message['user']}}"></user-picture>
+              <div class="no-photo"></div>
             </div>
             <div class="activity-card {{(message['highlighted']) ? 'highlight' : ''}} {{message['type']}}" flex>
               <div id="content">

@@ -4,6 +4,10 @@
   background: #F5F5F5;
 }
 
+.user-photo.theme-dark core-image {
+  background: #2d2d2d;
+}
+
 .user-photo {
   width: 40px;
   height: 40px;
@@ -22,6 +26,11 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.user-photo.theme-dark  {
+  background: #2d2d2d;
+  border: none;
 }
 
 .user {

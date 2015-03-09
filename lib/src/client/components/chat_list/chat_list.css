@@ -10,9 +10,13 @@
 }
 
 .theme-dark .activity-card {
-  background-color: rgba(45, 45, 45, 0.5);
+  background-color: rgb(45, 45, 45);
   color: white;
   border: none;
+}
+
+.no-transition {
+  transition: none;
 }
 
 .activity-card #content {
@@ -38,7 +42,6 @@
 
 .theme-dark .activity-card.highlight {
   background-color: #28402c;
-  /*background-color: #26271C;*/
 }
 
 .activity-card.notification {
@@ -49,40 +52,16 @@
 
 .message.notification {
   font-weight: normal;
+  color: #2FA300;
 }
 
 .user-area {
   margin-right: 10px;
 }
 
-.user-photo {
-  width: 40px;
-  height: 40px;
-  background: #F5F5F5;
-  border: solid 1px #E6E6E6;
-  overflow:hidden;
-  border-radius: 3px;
-
-  /* Disable iOS highlighting the element on tap. */
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-tap-highlight-color: transparent;
-
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 user-picture::shadow .user-photo {
   position:relative;
   top:1px;
-}
-
-.user-photo img {
-  width: 40px;
-  height: 40px;
 }
 
 .user {
@@ -137,6 +116,11 @@ safe-html::shadow a:visited {
 safe-html::shadow .mention {
   color: rgb(245, 108, 0);
   font-weight: bold;
+}
+
+.no-photo {
+  width: 40px;
+  height: 40px;
 }
 
 @media all and (max-width: 800px)  {
