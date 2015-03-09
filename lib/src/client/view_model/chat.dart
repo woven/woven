@@ -142,7 +142,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
         // If the message timestamp is after our local time,
         // change it to now so messages aren't in the future.
-        DateTime messageTime = DateTime.parse(existingItem['updatedDate']);
+        DateTime messageTime = existingItem['updatedDate'];
         DateTime localTime = new DateTime.now().toUtc();
         if (messageTime.isAfter(localTime)) existingItem['updatedDate'] = localTime;
 
@@ -167,7 +167,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
         // If the message timestamp is after our local time,
         // change it to now so messages aren't in the future.
-        DateTime messageTime = DateTime.parse(newData['updatedDate']);
+        DateTime messageTime = newData['updatedDate'];
         DateTime localTime = new DateTime.now().toUtc();
         if (messageTime.isAfter(localTime)) newData['updatedDate'] = localTime;
 
@@ -211,7 +211,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     // If the message timestamp is after our local time,
     // change it to now so messages aren't in the future.
-    DateTime messageTime = DateTime.parse(message['updatedDate']);
+    DateTime messageTime = message['updatedDate'];
     DateTime localTime = new DateTime.now().toUtc();
     if (messageTime.isAfter(localTime)) message['updatedDate'] = localTime;
 
