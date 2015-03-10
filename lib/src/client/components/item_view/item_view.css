@@ -2,12 +2,6 @@ core-item core-icon {
   margin: 0 !important;
 }
 
-core-icon {
-  fill: #999;
-  color: #999;
-  /*margin-right: 2px;*/
-}
-
 #icons {
   margin-right: 4px;
 }

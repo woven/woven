@@ -11,12 +11,6 @@ core-item core-icon {
   margin: 0 !important;
 }
 
-core-icon {
-  fill: #999;
-  color: #999;
-  /*margin-right: 2px;*/
-}
-
 #icons {
   margin-right: 4px;
 }
@@ -397,7 +391,7 @@ core-icon {
 
 .like-button.selected:not([disabled]) {
   box-shadow: none;
-  background-color:#ffffff;
+  background-color: #fff;
   fill: #ff1706;
   color: #ff1706;
 }
