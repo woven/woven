@@ -63,7 +63,7 @@ core-item core-icon {
 
 .theme-dark .item.compact {
   background-color: transparent;
-  border: solid 1px #1d1d1d;
+  border: solid 1px #444;
 }
 
 
@@ -196,7 +196,6 @@ core-item core-icon {
 
 .item-count {
   color: #999;
-  margin: auto 18px;
 }
 
 .item-user {
@@ -391,6 +390,11 @@ core-item core-icon {
   background: #fff;
   /*position:relative;*/
   /*top:2px;*/
+}
+
+.theme-dark .link-button, .theme-dark .link-button:hover, .theme-dark .link-button:active {
+  background-color: #2d2d2d;
+  border-color: #444;
 }
 
 .link-button span {

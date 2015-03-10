@@ -73,7 +73,7 @@ core-item core-icon {
 
 .theme-dark .item.compact {
   background-color: transparent;
-  border: solid 1px #1d1d1d;
+  border: solid 1px #444;
 }
 
 .item:hover {
