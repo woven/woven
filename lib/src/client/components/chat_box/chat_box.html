@@ -27,7 +27,7 @@
           <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
         </template>
         <template if="{{app.user == null}}">
-          <div class="message" self-center flex>Please sign in to participate.</div>
+          <div class="message" self-center flex><template if="{{!app.isMobile}}">Please sign in to participate.</template></div>
           <button class="button-sign-in" self-center on-tap="{{toggleSignIn}}">Sign in</button>
         </template>
     </div>
