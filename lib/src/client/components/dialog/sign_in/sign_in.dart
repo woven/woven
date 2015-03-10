@@ -128,7 +128,7 @@ class SignInDialog extends PolymerElement {
 
   focusMessageInput() {
     CoreInput usernameInput = $['username'];
-//    usernameInput.focus();
+    usernameInput.focus();
   }
 
   signInWithFacebook() {

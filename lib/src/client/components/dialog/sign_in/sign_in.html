@@ -9,7 +9,8 @@
 <link rel="import" href="../../widgets/dialog/dialog.html">
 <polymer-element name="sign-in-dialog">
   <template>
-    <x-dialog id="dialog-overlay" class="dialog" opened="{{opened}}" autoclosedisabled="true">
+    <x-dialog id="dialog-overlay" class="dialog" opened="{{opened}}"
+              autoclosedisabled="true" autofocusdisabled="{{(app.isMobile ? true : false)}}">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
         <div flex horizontal center-justified layout>

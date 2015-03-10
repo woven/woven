@@ -4,7 +4,8 @@
 <polymer-element name="x-dialog">
   <template>
     <link rel="stylesheet" href="dialog.css">
-    <core-overlay id="overlay" layered backdrop opened="{{opened}}" autoCloseDisabled="{{autoCloseDisabled}}"  transition="core-transition-center">
+    <core-overlay id="overlay" layered backdrop opened="{{opened}}" transition="core-transition-center"
+                  autoCloseDisabled="{{autoCloseDisabled}}" autoFocusDisabled="{{autoFocusDisabled}}">
       <content></content>
     </core-overlay>
   </template>
