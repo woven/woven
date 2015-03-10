@@ -127,7 +127,10 @@ class WelcomeDialog extends PolymerElement {
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);
         if (app.user.settings == null) app.user.settings = {};
+
+        document.body.classes.add('no-transition');
         app.user.settings = toObservable(app.user.settings);
+        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
 
         app.cache.users[app.user.username] = app.user;
 
