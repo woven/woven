@@ -430,7 +430,6 @@ core-item core-icon {
     margin-bottom: 5px;
   }
   .item.compact .item-subject {
-    white-space: nowrap;
     margin-bottom: 0;
   }
 
