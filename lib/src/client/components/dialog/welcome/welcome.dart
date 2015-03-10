@@ -115,13 +115,25 @@ class WelcomeDialog extends PolymerElement {
             'email': email.value
               }))
     .then((HttpRequest request) {
-      print(request.responseText);
       // Set up the response as an object.
       Response response = Response.fromJson(JSON.decode(request.responseText));
       if (response.success) {
-        // Set up the user.
-        UserModel user = UserModel.fromJson(response.data);
-        app.user = user;
+        // Set the auth token and remove it from the map.
+        app.authToken = response.data['authToken'];
+        // TODO: This should totally just be part of the UserModel.
+        response.data.remove('authToken');
+        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+
+        // Set up the user object.
+        app.user = UserModel.fromJson(response.data);
+        if (app.user.settings == null) app.user.settings = {};
+        app.user.settings = toObservable(app.user.settings);
+
+        app.cache.users[app.user.username] = app.user;
+
+        // Trigger changes to app state in response to user sign in/out.
+        //TODO: Aha! This triggers a feedViewModel load.
+        app.mainViewModel.invalidateUserState();
         // Mark as new so the welcome pops up.
         app.showMessage('Welcome to Woven, ${app.user.firstName}!');
         overlay.toggle();

@@ -58,7 +58,11 @@ class SignInController {
 
       // Return the user data.
       return findUser(username).then((Map userData) {
+        if (userData['password'] == null) userData['needsPassword'] = true;
+        userData.remove('password');
+
         var response = new Response();
+
         if (authToken == null) {
           var newSessionId = app.sessionManager.createSessionId();
           app.sessionManager.addSessionCookieToRequest(request, newSessionId);
@@ -100,9 +104,10 @@ class SignInController {
       return checkCredentials(username, password).then((success) {
         if (!success) return Response.fromError('Bad credentials.');
         return app.sessionManager.addSessionToIndex(sessionId, username).then((sessionData) {
-          return findUserInfo(username).then((userData) {
+          return findUserInfo(username).then((Map userData) {
             var response = new Response();
             userData['authToken'] = sessionData['authToken'];
+            userData.remove('password');
             response.data = userData;
             response.success = true;
             return response;

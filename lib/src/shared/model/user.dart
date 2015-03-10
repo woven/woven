@@ -19,6 +19,7 @@ class UserModel {
   String createdDate;
   bool isNew = false;
   bool disabled = false;
+  bool needsPassword = false;
 
   // Return the path to the small picture if we have it, otherwise the original picture.
   String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}" : null;
@@ -37,7 +38,8 @@ class UserModel {
       "pictureSmall": pictureSmall,
       "settings": settings,
       "createdDate": createdDate,
-      "disabled": disabled
+      "disabled": disabled,
+      "needsPassword": needsPassword
     };
   }
 
@@ -56,6 +58,7 @@ class UserModel {
       ..pictureSmall = data['pictureSmall']
       ..settings = data['settings']
       ..createdDate = data['createdDate']
-      ..disabled = data['disabled'];
+      ..disabled = data['disabled']
+      ..needsPassword = data['needsPassword'];
   }
 }

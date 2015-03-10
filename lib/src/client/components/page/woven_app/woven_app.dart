@@ -11,7 +11,6 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
-import 'package:woven/src/client/util.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 

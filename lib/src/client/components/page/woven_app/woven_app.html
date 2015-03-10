@@ -182,7 +182,7 @@
       <!--</template>-->
       <paper-toast id="toast-message" duration="4000"></paper-toast>
         <welcome-dialog app="{{app}}"
-                        opened="{{(app.user != null && (app.user.disabled || app.user.password == null))}}">
+                        opened="{{(app.user != null && (app.user.disabled || app.user.needsPassword))}}">
         </welcome-dialog>
     </template>
   </template>

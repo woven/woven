@@ -74,11 +74,22 @@ class SignInDialog extends PolymerElement {
         app.authToken = response.data['authToken'];
         // TODO: This should totally just be part of the UserModel.
         response.data.remove('authToken');
-        // Set up the user.
-        UserModel user = UserModel.fromJson(response.data);
-        app.user = user;
+        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+
+        // Set up the user object.
+        app.user = UserModel.fromJson(response.data);
+        if (app.user.settings == null) app.user.settings = {};
+        app.user.settings = toObservable(app.user.settings);
+
+        app.cache.users[app.user.username] = app.user;
+
         // Mark as new so the welcome pops up.
         app.user.isNew = true;
+
+        // Trigger changes to app state in response to user sign in/out.
+        //TODO: Aha! This triggers a feedViewModel load.
+        app.mainViewModel.invalidateUserState();
+
         toggleProcessingIndicator();
         overlay.toggle();
       } else {
