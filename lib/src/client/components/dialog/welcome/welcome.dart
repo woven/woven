@@ -211,7 +211,7 @@ class WelcomeDialog extends PolymerElement {
   }
 
   attached() {
-    //
+    if (!app.isMobile) $['email'].autofocus = true;
   }
 }
 

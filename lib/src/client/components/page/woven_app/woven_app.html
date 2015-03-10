@@ -181,9 +181,9 @@
         <!--</core-overlay>-->
       <!--</template>-->
       <paper-toast id="toast-message" duration="4000"></paper-toast>
-        <welcome-dialog app="{{app}}"
-                        opened="{{(app.user != null && (app.user.disabled || app.user.needsPassword))}}">
-        </welcome-dialog>
+      <welcome-dialog app="{{app}}"
+                      opened="{{(app.user != null && (app.user.disabled || app.user.needsPassword))}}">
+      </welcome-dialog>
     </template>
   </template>
   <script type="application/dart" src="woven_app.dart"></script>
