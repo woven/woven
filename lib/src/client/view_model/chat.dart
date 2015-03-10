@@ -234,7 +234,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         document.body.classes.add('no-transition');
         insertMessage(message.toJson());
         Timer.run(() => app.user.settings['theme'] = 'dark');
-//        f.child('/users/${app.user.username}/')
+        f.child('/users/${app.user.username}/settings/theme').set('dark');
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       case '/theme light':
@@ -243,6 +243,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         document.body.classes.add('no-transition');
         insertMessage(message.toJson());
         Timer.run(() => app.user.settings['theme'] = 'light');
+        f.child('/users/${app.user.username}/settings/theme').set('light');
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       default:
