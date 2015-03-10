@@ -139,7 +139,9 @@ class ChatViewModel extends BaseViewModel with Observable {
         existingItem['id'] = newItem['id'];
 
         existingItem['createdDate'] = DateTime.parse(newItem['createdDate']);
-        existingItem['updatedDate'] = DateTime.parse(newItem['updatedDate']);
+        existingItem['updatedDate'] = (newItem['updatedDate'] != null)
+                                      ? DateTime.parse(newItem['updatedDate'])
+                                      : existingItem['createdDate'];
 
         // If the message timestamp is after our local time,
         // change it to now so messages aren't in the future.
@@ -232,6 +234,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         document.body.classes.add('no-transition');
         insertMessage(message.toJson());
         Timer.run(() => app.user.settings['theme'] = 'dark');
+//        f.child('/users/${app.user.username}/')
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       case '/theme light':
