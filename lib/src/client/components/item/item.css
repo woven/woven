@@ -61,7 +61,7 @@ core-item core-icon {
 }
 
 .theme-dark .item {
-  background: rgba(45, 45, 45, 0.5);
+  background: #2D2D2D;
   border: none;
   color: white;
 }
