@@ -171,7 +171,7 @@
       </core-drawer-panel>
 
       <template if="{{app.user != null}}"><add-stuff app="{{app}}"></add-stuff></template>
-      <!--<template if="{{app.hasTriedLoadingUser && app.user == null}}"><sign-in-dialog app="{{app}}"></sign-in-dialog></template>-->
+      <template if="{{app.hasTriedLoadingUser && app.user == null}}"><sign-in-dialog app="{{app}}"></sign-in-dialog></template>
 
       <!--<template if="{{app.user == null}}">-->
         <!--<sign-in app="{{app}}"></sign-in>-->
