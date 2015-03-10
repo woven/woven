@@ -138,7 +138,7 @@ class SignInDialog extends PolymerElement {
 
   attached() {
     if (config['debug_mode']) print('+signin');
-    Timer.run(focusMessageInput);
+    if (!app.isMobile) Timer.run(focusMessageInput);
   }
 
   detached() {
