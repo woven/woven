@@ -126,11 +126,6 @@ class SignInDialog extends PolymerElement {
     welcome.toggleOverlay();
   }
 
-  focusMessageInput() {
-    CoreInput usernameInput = $['username'];
-    usernameInput.focus();
-  }
-
   signInWithFacebook() {
     toggleProcessingIndicator();
     app.signInWithFacebook();
@@ -138,7 +133,7 @@ class SignInDialog extends PolymerElement {
 
   attached() {
     if (config['debug_mode']) print('+signin');
-    if (!app.isMobile) Timer.run(focusMessageInput);
+    if (!app.isMobile) $['username'].autofocus = true;
   }
 
   detached() {
