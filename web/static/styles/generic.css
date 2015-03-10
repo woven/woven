@@ -9,6 +9,8 @@ body {
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
   margin: 0;
+  -ms-touch-action: none;
+  touch-action: none;
 }
 
 /* This somehow fixes the disappearing dialog. */
