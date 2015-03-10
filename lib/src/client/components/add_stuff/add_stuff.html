@@ -14,7 +14,7 @@
   <template>
     <link rel="stylesheet" href="add_stuff.css">
     <core-overlay id="overlay" class="dialog" opened="{{opened}}" transition="core-transition-bottom"
-                  autoclosedisabled="true" autofocusdisabled="{{(app.isMobile ? true : false)}}"
+                  autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}"
                   on-core-overlay-open-completed="{{handleOpen}}">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>

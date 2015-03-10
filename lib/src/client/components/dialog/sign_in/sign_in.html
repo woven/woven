@@ -10,7 +10,7 @@
 <polymer-element name="sign-in-dialog">
   <template>
     <x-dialog id="dialog-overlay" class="dialog" opened="{{opened}}"
-              autoclosedisabled="true" autofocusdisabled="{{(app.isMobile ? true : false)}}">
+              autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
         <div flex horizontal center-justified layout>
@@ -23,7 +23,7 @@
           <p>Please sign in.</p>
           <div class="field-wrapper first">
             <input is="core-input" id="username" placeholder="Your username"
-                   autocomplete="off" autocorrect="off" autocapitalize="off" autofocus="{{(app.isMobile ? false : true)}}">
+                   autocomplete="off" autocorrect="off" autocapitalize="off" autofocus="{{(app.isMobile) ? false : true}}">
           </div>
           <div class="field-wrapper">
             <input is="core-input" id="password" placeholder="Your password"

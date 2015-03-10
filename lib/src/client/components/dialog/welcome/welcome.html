@@ -13,7 +13,7 @@
     <!--<core-icon-button id="add-button" icon="create" on-tap="{{toggleOverlay}}"></core-icon-button>-->
 
     <x-dialog id="welcome-overlay" class="dialog" opened="{{opened}}"
-              autoclosedisabled="true" autofocusdisabled="{{(app.isMobile ? true : false)}}">
+              autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{close}}"></core-icon-button>
         <div flex horizontal center-justified layout>
