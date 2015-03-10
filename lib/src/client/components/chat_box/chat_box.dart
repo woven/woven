@@ -126,12 +126,12 @@ class ChatBox extends PolymerElement {
 
   attached() {
     // If we're signed in on attached, focus the message input.
-    if (app.user != null) Timer.run(focusMessageInput);
+    if (app.user != null && !app.isMobile) Timer.run(focusMessageInput);
     // If we later get signed in user, focus the message input.
     subscriptions.add(app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
       if (record.name == new Symbol('user')) {
-        if (app.user != null) Timer.run(focusMessageInput);
+        if (app.user != null && !app.isMobile) Timer.run(focusMessageInput);
       }
     }));
   }

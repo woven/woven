@@ -246,6 +246,10 @@ class ChatViewModel extends BaseViewModel with Observable {
         f.child('/users/${app.user.username}/settings/theme').set('light');
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
+      case '/print isMobile':
+        message.message = app.isMobile.toString() + ' ' + window.screen.width.toString();
+        insertMessage(message.toJson());
+        break;
       default:
         message.message = 'I don\'t recognize that command.';
         insertMessage(message.toJson());

@@ -150,31 +150,6 @@ class App extends Observable {
     }
   }
 
-   @observable bool get isMobile {
-    if (isMobile == null) {
-      //http://stackoverflow.com/questions/11381673/javascript-solution-to-detect-mobile-browser
-      var a = window.navigator.userAgent;
-
-      if (window.screen.width < 640 ||
-      a.contains('Android') ||
-      a.contains('webOS') ||
-      a.contains('iPhone') ||
-      a.contains('iPad') ||
-      a.contains('iPod') ||
-      a.contains('BlackBerry') ||
-      a.contains('Windows Phone')
-      ) {
-        isMobile = true;
-      } else {
-        isMobile = false;
-      }
-    }
-
-    return isMobile;
-  }
-
-  set isMobile(bool value) => isMobile = value;
-
   /**
    * Get the main scrolling element on app.
    */
@@ -227,9 +202,25 @@ class App extends Observable {
     window.location.assign(signInUrl);
   }
 
-  void signInWithEmail() {
-//    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
-//    window.location.assign(signInUrl);
-  }
+  @observable bool get isMobile {
+    //http://stackoverflow.com/questions/11381673/javascript-solution-to-detect-mobile-browser
+    var a = window.navigator.userAgent;
+    bool _isMobile;
 
+    if (window.screen.width < 640 ||
+    a.contains('Android') ||
+    a.contains('webOS') ||
+    a.contains('iPhone') ||
+    a.contains('iPad') ||
+    a.contains('iPod') ||
+    a.contains('BlackBerry') ||
+    a.contains('Windows Phone')
+    ) {
+      _isMobile = true;
+    } else {
+      _isMobile = false;
+    }
+
+    return _isMobile;
+  }
 }
