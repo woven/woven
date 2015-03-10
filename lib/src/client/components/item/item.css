@@ -328,7 +328,7 @@ core-item core-icon {
 
 .theme-dark .content-footer {
   background: transparent;
-  border-top: 1px solid #1d1d1d;
+  border-top: 1px solid #444;
 }
 
 .item.compact .content-footer {

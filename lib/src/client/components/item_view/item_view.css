@@ -6,18 +6,27 @@ core-item core-icon {
   margin-right: 4px;
 }
 
-#icon-fav svg {
+#button-fav svg {
   height: 24px !important;
   width: 22px !important;
 }
 
-#icon-fav.selected {
+#button-fav.selected {
   fill: red;
 }
-#icon-fav.clicked {
+#button-fav.clicked {
   -webkit-animation: pulsate 1s ease-out;
   -webkit-animation-iteration-count: 1;
   /*opacity: 0.0;*/
+}
+
+#button-comment {
+  cursor: default;
+}
+
+#button-comment:hover {
+  fill: #bbb;
+  color: #bbb;
 }
 
 @-webkit-keyframes pulsate {
@@ -301,7 +310,7 @@ core-item core-icon {
 
 .theme-dark .content-footer {
   background: transparent;
-  border-top: 1px solid #1d1d1d;
+  border-top: 1px solid #444;
 }
 
 .item.compact .content-footer {

@@ -86,22 +86,22 @@
               <div class="content-footer">
                 <div class="item-col1" horizontal layout>
                   <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                                    on-tap="{{toggleLike}}"
+                                    id="button-fav" on-tap="{{toggleLike}}"
                                     class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
                                     data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
                     <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
                   </core-icon-button>
-                  <!--<core-icon icon="communication:comment"-->
-                                    <!--id="icon-fav"-->
-                                    <!--class="action-button"-->
-                                    <!--data-id="{{item['id']}}">-->
-                  <span class="item-count">
-                    <!--<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Be the first to comment</strong></template>-->
-                    <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
-                    <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
-                  </span>
+                  <core-icon-button icon="communication:comment"
+                                    id="button-comment"
+                                    class="action-button"
+                                    data-id="{{item['id']}}">
+                <span class="item-count">
+                  <template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Comment</strong></template>
+                  <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
+                  <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
+                </span>
                     <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
-                  <!--</core-icon>-->
+                  </core-icon-button>
                 </div>
               </div>
             </div>
