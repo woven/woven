@@ -96,7 +96,7 @@ core-item core-icon {
 }
 
 .theme-dark .item.compact:hover {
-  border: solid 1px #1d1d1d;
+  border-color: #444;
 }
 
 .item.inside:hover {
