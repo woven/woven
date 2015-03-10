@@ -25,7 +25,8 @@ class UserController {
       String username = (data['username'] as String).toLowerCase();
 
       return findUserInfo(username).then((userData) {
-        if (userData != null) return Response.fromError('User already exists.');
+        if (userData != null) return Response.fromError('That username is not available.'); // User already exists.
+
         String newSessionId = app.sessionManager.createSessionId();
 
         // TODO: Consider simplifying auth so just checks user == user, so we don't have to wait for session index.

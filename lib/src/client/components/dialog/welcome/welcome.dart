@@ -140,6 +140,8 @@ class WelcomeDialog extends PolymerElement {
         // Mark as new so the welcome pops up.
         app.showMessage('Welcome to Woven, ${app.user.firstName}!');
         overlay.toggle();
+      } else {
+        window.alert(response.message);
       }
     });
   }
