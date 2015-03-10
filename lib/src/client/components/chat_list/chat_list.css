@@ -15,7 +15,7 @@
   border: none;
 }
 
-.no-transition {
+:host-context(.no-transition) .activity-card {
   transition: none;
 }
 

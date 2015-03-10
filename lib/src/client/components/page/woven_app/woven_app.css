@@ -206,7 +206,7 @@ core-menu core-item:hover {
 
 .theme-dark #main-panel {
   background-color: #1F1F1F;
-  transition: background-color .2s;
+  /*transition: background-color .2s;*/
 }
 
 #rightPanel {

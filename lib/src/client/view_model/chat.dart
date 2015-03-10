@@ -229,20 +229,18 @@ class ChatViewModel extends BaseViewModel with Observable {
       case '/theme dark':
         message.message = 'You went dark. I\'ve saved your preference.';
         if (app.user.settings['theme'] == 'dark') message.message = 'You\'ve already gone dark.';
-        ElementList activityCards = chatView.shadowRoot.querySelector('chat-list').shadowRoot.querySelectorAll('.activity-card');
-        activityCards.forEach((HtmlElement activityCard) => activityCard.classes.add('no-transition'));
+        document.body.classes.add('no-transition');
         insertMessage(message.toJson());
-        app.user.settings['theme'] = 'dark';
-        Timer.run(() => activityCards.forEach((HtmlElement activityCard) => activityCard.classes.remove('no-transition')));
+        Timer.run(() => app.user.settings['theme'] = 'dark');
+        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       case '/theme light':
         message.message = 'Let there be light. I\'ve saved your preference.';
         if (app.user.settings['theme'] == 'light') message.message = 'You\'re already lit up.';
-        ElementList activityCards = chatView.shadowRoot.querySelector('chat-list').shadowRoot.querySelectorAll('.activity-card');
-        activityCards.forEach((HtmlElement activityCard) => activityCard.classes.add('no-transition'));
+        document.body.classes.add('no-transition');
         insertMessage(message.toJson());
-        app.user.settings['theme'] = 'light';
-        Timer.run(() => activityCards.forEach((HtmlElement activityCard) => activityCard.classes.remove('no-transition')));
+        Timer.run(() => app.user.settings['theme'] = 'light');
+        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       default:
         message.message = 'I don\'t recognize that command.';
