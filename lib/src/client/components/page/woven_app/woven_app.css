@@ -147,6 +147,7 @@ core-drawer-panel:not([narrow]) #menu-button {
   color: white;
   text-align: center;
   width: 100%;
+  position: fixed;
 }
 
 .theme-dark #toolbar-main {
