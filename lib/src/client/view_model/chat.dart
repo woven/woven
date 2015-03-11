@@ -250,6 +250,15 @@ class ChatViewModel extends BaseViewModel with Observable {
         message.message = app.isMobile.toString() + ' ' + window.screen.width.toString();
         insertMessage(message.toJson());
         break;
+      case '/notify':
+      //    TODO: Testing web notifications.
+        Notification.requestPermission().then((res) {
+          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: 'http://woven.app/static/images/favicon-32x32.png');
+          new Timer(new Duration(seconds: 4), () {
+            notification.close();
+          });
+        });
+        break;
       default:
         message.message = 'I don\'t recognize that command.';
         insertMessage(message.toJson());

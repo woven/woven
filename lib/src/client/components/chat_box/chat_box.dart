@@ -77,15 +77,6 @@ class ChatBox extends PolymerElement {
       return;
     }
 
-    // TODO: Testing desktop notifications.
-//    Notification.requestPermission().then((res) {
-//      Notification notification = new Notification('New message, dude',
-//      body: message, iconUrl: 'http://woven.app/static/images/favicon-32x32.png');
-//      new Timer(new Duration(seconds: 4), () {
-//        notification.close()
-//      });
-//    });
-
     // Insert the message instantly.
     Map messageMap = new Map.from(message.toJson());
     viewModel.insertMessage(messageMap);
