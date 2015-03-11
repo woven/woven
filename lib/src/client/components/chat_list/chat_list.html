@@ -42,6 +42,7 @@
               <div id="content">
                 <div class="card-top" horizontal layout>
                   <div flex class="message notification">{{message['message']}}</div>
+                  <div><a href="/woven" title="Foo page" on-click="{{changePage}}">click here</a></div>
                   <div class="date-time">
                     <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                   </div>

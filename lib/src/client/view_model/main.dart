@@ -27,6 +27,9 @@ class MainViewModel extends BaseViewModel with Observable {
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
 
+  // Experimental.
+  @observable var chatViewModel;
+
   Firebase get f => app.f;
 
   MainViewModel(this.app) {
@@ -122,13 +125,24 @@ class MainViewModel extends BaseViewModel with Observable {
     return feedViewModels[id];
   }
 
+  void getUpdatedViewModels() {
+    getChatViewModel();
+  }
+
   // Get the view model for the current inbox.
-  @observable ChatViewModel get chatViewModel {
-    if (app.community == null) return null;
+  void getChatViewModel() {
+    print('called chatViewModel');
+    if (app.community == null) {
+      this.chatViewModel = null;
+      return;
+    }
 
     var id = app.community.alias;
 
-    if (id == null) return null; // No item, no view model to use.
+    if (id == null) {
+      this.chatViewModel = null; // No item, no view model to use.
+      return;
+    }
 
     if (!chatViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
@@ -136,7 +150,7 @@ class MainViewModel extends BaseViewModel with Observable {
       chatViewModels[id] = vm; // Store it.
     }
 
-    return chatViewModels[id];
+    this.chatViewModel = chatViewModels[id];
   }
 
   // Get the view model for the user's starred items.

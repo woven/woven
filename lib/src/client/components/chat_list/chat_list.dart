@@ -34,6 +34,10 @@ class ChatList extends PolymerElement {
     return formattedText;
   }
 
+  changePage(MouseEvent e) {
+    app.router.changePage(e);
+  }
+
   /**
    * Initializes the infinite scrolling ability.
    */

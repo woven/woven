@@ -18,7 +18,7 @@ import 'util.dart';
 
 class App extends Observable {
   @observable var selectedItem;
-  @observable var selectedPage = 'lobby';
+  @observable var selectedPage;
   @observable var previousPage = null;
   @observable String pageTitle = "";
   @observable UserModel user;
@@ -56,98 +56,135 @@ class App extends Observable {
       this.timeOfLastFocus = new DateTime.now().toUtc();
     });
 
-    void home(String path) {
-      // Home goes to the community list for now.
-      selectedPage = 'channels';
-      community = null;
-      if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
-    }
-
-    void starred(String path) {
-      selectedPage = 'starred';
-      pageTitle = "Starred";
-    }
-
-    void people(String path) {
-      selectedPage = 'people';
-    }
-
-    // We're using this as a kind of placeholder for various routes.
-    void notFound(String path) {
-      var pathUri = Uri.parse(path);
-      if (pathUri.pathSegments.length == 1) {
-        selectedPage = 'lobby';
-      } else {
-        // If we're at <community>/<something>, see if <something> is a valid page.
-        switch (pathUri.pathSegments[1]) {
-          case 'people':
-            pageTitle = "People";
-            selectedPage = 'people';
-            break;
-          case 'events':
-            selectedPage = 'events';
-            break;
-          case 'feed':
-            selectedPage = 'feed';
-            break;
-          case 'announcements':
-            selectedPage = 'announcements';
-            break;
-          default:
-            pageTitle = "default";
-//            selectedPage = 0;
-            print('404: ' + path);
-        }
-      }
-    }
-
-    void showItem(String path) {
-      selectedPage = 'item';
-    }
-
-    void globalHandler(String path) {
-      if (config['debug_mode']) print("Global handler fired at: $path");
-
-      /* TODO: Things like G tracking could be handled here. */
-//      if (js.context['_gaq'] != null) {
-//        js.context._gaq.push(js.array(['_trackPageview', path]));
-//        js.context._gaq.push(js.array(['b._trackPageview', path]));
-//      }
-
-    }
-
+    // Set up the router.
     router = new Router()
-    // Every route has to be registered... but if you don't need a handler, pass null.
+    // Every route has to be registered... but if we don't need a handler, pass null.
       ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
       ..routes[Routes.people] = people
-//      ..routes[Routes.anyAlias] = home
       ..routes[Routes.showItem] = showItem;
 
     router.onNotFound.listen(notFound);
     router.onDispatch.listen(globalHandler);
 
+    // On load, check to see if there's a community in the URL.
     // Use the first part of the path as the alias.
     var path = window.location.toString();
     if (Uri.parse(path).pathSegments.length > 0) {
       String alias = Uri.parse(path).pathSegments[0];
-
-      // Get the community instance.
-      var communityRef = f.child('/communities/' + alias);
-
-      communityRef.onValue.first.then((e) {
-        var communityData = e.snapshot.val();
-
-        if (communityData != null) {
-          community = new CommunityModel()
-            ..createdDate = communityData['createdDate']
-            ..alias = communityData['alias']
-            ..name = communityData['name']
-            ..shortDescription = communityData['shortDescription'];
-        }
-
+      f.child('/communities/$alias').once('value').then((res) {
+        if (res == null) return;
+        // If so, create a community object and add it to our cache.
+        community = CommunityModel.fromJson(res.val());
+        cache.communities[alias] = community;
+        mainViewModel.getUpdatedViewModels();
       });
     }
+  }
+
+  void home(String path) {
+    // Home goes to the community list for now.
+    selectedPage = 'channels';
+    community = null;
+    mainViewModel.getUpdatedViewModels();
+    if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
+  }
+
+  void starred(String path) {
+    selectedPage = 'starred';
+    pageTitle = "Starred";
+  }
+
+  void people(String path) {
+    selectedPage = 'people';
+  }
+
+  // We're using this as a kind of placeholder for various routes.
+  void notFound(String path) {
+    print('not found');
+    var pathUri = Uri.parse(path);
+    if (Uri.parse(path).pathSegments.length > 0) {
+      String alias = Uri.parse(path).pathSegments[0];
+      // Check the app cache for the community.
+      if (cache.communities.containsKey(alias)) {
+        community = cache.communities[alias];
+        mainViewModel.getUpdatedViewModels();
+
+        if (pathUri.pathSegments.length == 1) {
+          selectedPage = 'lobby';
+        } else {
+          // If we're at <community>/<something>, see if <something> is a valid page.
+          switch (pathUri.pathSegments[1]) {
+            case 'people':
+              pageTitle = "People";
+              selectedPage = 'people';
+              break;
+            case 'events':
+              print('debug events');
+              selectedPage = 'events';
+              break;
+            case 'feed':
+              selectedPage = 'feed';
+              break;
+            case 'announcements':
+              selectedPage = 'announcements';
+              break;
+            default:
+              pageTitle = "default";
+//            selectedPage = 0;
+              print('404: ' + path);
+          }
+        }
+      } else {
+        f.child('/communities/$alias').once('value').then((res) {
+          if (res != null) {
+            community = CommunityModel.fromJson(res.val());
+            mainViewModel.getUpdatedViewModels();
+            cache.communities[alias] = community;
+
+            if (pathUri.pathSegments.length == 1) {
+              selectedPage = 'lobby';
+            } else {
+              // If we're at <community>/<something>, see if <something> is a valid page.
+              switch (pathUri.pathSegments[1]) {
+                case 'people':
+                  pageTitle = "People";
+                  selectedPage = 'people';
+                  break;
+                case 'events':
+                  print('debug events2');
+                  selectedPage = 'events';
+                  break;
+                case 'feed':
+                  selectedPage = 'feed';
+                  break;
+                case 'announcements':
+                  selectedPage = 'announcements';
+                  break;
+                default:
+                  pageTitle = "default";
+//            selectedPage = 0;
+                  print('404: ' + path);
+              }
+            }
+          }
+        });
+      };
+    }
+  }
+
+  void showItem(String path) {
+    selectedPage = 'item';
+  }
+
+  void globalHandler(String path) {
+    if (config['debug_mode']) print("Global handler fired at: $path");
+
+    /* TODO: Things like G tracking could be handled here. */
+//      if (js.context['_gaq'] != null) {
+//        js.context._gaq.push(js.array(['_trackPageview', path]));
+//        js.context._gaq.push(js.array(['b._trackPageview', path]));
+//      }
   }
 
   /**

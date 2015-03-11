@@ -118,7 +118,7 @@
           <div class="content" layout vertical>
             <core-animated-pages id="pages" selected="{{app.selectedPage}}" valueattr="data-page" fit>
               <section data-page="lobby">
-                <template if="{{app.community != null && app.selectedPage == 'lobby'}}">
+                <template if="{{app.community != null && app.selectedPage == 'lobby' && app.mainViewModel.chatViewModel != null}}">
                   <chat-view app="{{app}}" viewModel="{{app.mainViewModel.chatViewModel}}"></chat-view>
                 </template>
               </section>

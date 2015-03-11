@@ -147,6 +147,8 @@ class WovenApp extends PolymerElement with Observable {
         }
       }
 
+      if (record.name == new Symbol("community")) app.mainViewModel.getUpdatedViewModels();
+
       // If brand new user, greet them.
       if (app.user != null && app.user.isNew == true) {
         greetUser();

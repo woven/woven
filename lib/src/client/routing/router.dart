@@ -80,16 +80,16 @@ class Router extends Observable {
 //  <a href="/foo" title="Foo page" on-click="{{app.router.changePage}}">click here</a>
 //  And it would automatically look into the event target's (<a>) title and href attributes
 //  and do the rest to switch the URL.
-  bool changePage(e) {
+  bool changePage(MouseEvent e) {
     if (e.button == 1) return true;
 
     // Find the anchor element.
-    var target = e.target;
+    AnchorElement target = e.target;
     while (target != document.body && target is! AnchorElement) {
       target = target.parent;
     }
 
-    var url = target.attributes['href'];
+    var url = Uri.parse(target.attributes['href']).toString();
     var title = target.attributes['title'];
 
     if (url.startsWith('http') == true) return true;

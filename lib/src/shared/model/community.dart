@@ -10,7 +10,7 @@ class CommunityModel {
   int starCount;
   bool disabled;
 
-  static Map encode(CommunityModel community) {
+  static Map toJson(CommunityModel community) {
     return {
         "alias": community.alias,
         "name": community.name,
@@ -22,7 +22,7 @@ class CommunityModel {
     };
   }
 
-  static CommunityModel decode(Map data) {
+  static CommunityModel fromJson(Map data) {
     return new CommunityModel()
       ..alias = data['alias']
       ..name = data['name']
