@@ -370,7 +370,7 @@ http://twitter.com/wovenco
     }
     if (isComment) {
       return findItem()
-      .then((_) => Future.wait([findItemAuthorInfo, findCommentInfo()]))
+      .then((_) => Future.wait([findItemAuthorInfo(_), findCommentInfo()]))
       .then(findCommentAuthorInfo)
       .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
       .then((success) => new Response(success))
