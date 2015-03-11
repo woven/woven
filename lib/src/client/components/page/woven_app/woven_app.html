@@ -103,7 +103,7 @@
           </core-header-panel>
         </div>
 
-        <core-scroll-header-panel id="main-panel" main fixed>
+        <core-scroll-header-panel id="main-panel" main>
           <core-toolbar id="toolbar-main">
             <template if="{{app.selectedPage != 'item' || (app.previousPage != 'feed' && app.previousPage != 'events')}}">
               <core-icon-button class="btn flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
