@@ -40,7 +40,7 @@
       <core-drawer-panel responsiveWidth="{{responsiveWidth}}" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
 
         <div vertical layout drawer>
-          <core-header-panel id="side-panel" navigation flex mode="seamed">
+          <core-header-panel id="side-panel" navigation flex>
             <core-toolbar id="toolbar-drawer" class="toolbar {{app.community == null ? 'has-logo' : ''}}">
               <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
                     data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
