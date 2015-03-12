@@ -128,14 +128,13 @@ class MainViewModel extends BaseViewModel with Observable {
   }
 
   void getUpdatedViewModels() {
-    getChatViewModel();
-//    switch (app.selectedPage) {
-//      case 'lobby':
-//        getChatViewModel();
-//        break;
-//      default:
-//        break;
-//    }
+    switch (app.selectedPage) {
+      case 'lobby':
+        getChatViewModel();
+        break;
+      default:
+        break;
+    }
   }
 
   // Get the view model for the current inbox.
