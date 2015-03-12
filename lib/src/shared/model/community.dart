@@ -5,18 +5,19 @@ class CommunityModel {
   String alias;
   String name;
   String shortDescription;
-  String createdDate;
-  String updatedDate;
+  DateTime createdDate;
+  DateTime updatedDate;
   int starCount;
   bool disabled;
+  bool starred = false;
 
   static Map toJson(CommunityModel community) {
     return {
         "alias": community.alias,
         "name": community.name,
         "shortDescription": community.shortDescription,
-        "createdDate": community.createdDate,
-        "updatedDate": community.updatedDate,
+        "createdDate": community.createdDate.toString(),
+        "updatedDate": community.updatedDate.toString(),
         "star_count": community.starCount,
         "disabled": community.disabled
     };
@@ -27,8 +28,8 @@ class CommunityModel {
       ..alias = data['alias']
       ..name = data['name']
       ..shortDescription = data['shortDescription']
-      ..createdDate = data['createdDate']
-      ..updatedDate = data['updatedDate']
+      ..createdDate = DateTime.parse(data['createdDate'])
+      ..updatedDate = DateTime.parse(data['updatedDate'])
       ..starCount = data['star_count']
       ..disabled = data['disabled'];
   }

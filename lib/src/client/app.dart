@@ -28,6 +28,7 @@ class App extends Observable {
   @observable bool skippedHomePage = false;
   DateTime timeOfLastFocus = new DateTime.now().toUtc();
   bool isFocused = true;
+  List reservedPaths = ['people', 'events', 'item'];
 //  @observable bool isNewUser = false;
 
   Router router;
@@ -70,14 +71,13 @@ class App extends Observable {
     // On load, check to see if there's a community in the URL.
     // Use the first part of the path as the alias.
     var path = window.location.toString();
-    if (Uri.parse(path).pathSegments.length > 0) {
+    if (Uri.parse(path).pathSegments.length > 0 && !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
       String alias = Uri.parse(path).pathSegments[0];
       f.child('/communities/$alias').once('value').then((res) {
         if (res == null) return;
         // If so, create a community object and add it to our cache.
         community = CommunityModel.fromJson(res.val());
         cache.communities[alias] = community;
-        mainViewModel.getUpdatedViewModels();
       });
     }
   }
@@ -85,8 +85,7 @@ class App extends Observable {
   void home(String path) {
     // Home goes to the community list for now.
     selectedPage = 'channels';
-    community = null;
-    mainViewModel.getUpdatedViewModels();
+    changeCommunity(null);
     if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
   }
 
@@ -103,16 +102,14 @@ class App extends Observable {
   void notFound(String path) {
     print('not found');
     var pathUri = Uri.parse(path);
-    if (Uri.parse(path).pathSegments.length > 0) {
+    if (pathUri.pathSegments.length > 0 && !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
       String alias = Uri.parse(path).pathSegments[0];
       // Check the app cache for the community.
-      if (cache.communities.containsKey(alias)) {
-        community = cache.communities[alias];
-        mainViewModel.getUpdatedViewModels();
-
+      changeCommunity(alias).then((bool success) {
         if (pathUri.pathSegments.length == 1) {
           selectedPage = 'lobby';
         } else {
+          print('debug3 ${pathUri.pathSegments[1]}');
           // If we're at <community>/<something>, see if <something> is a valid page.
           switch (pathUri.pathSegments[1]) {
             case 'people':
@@ -121,55 +118,23 @@ class App extends Observable {
               break;
             case 'events':
               print('debug events');
+              pageTitle = 'Events';
               selectedPage = 'events';
               break;
             case 'feed':
+              pageTitle = 'Feed';
               selectedPage = 'feed';
               break;
             case 'announcements':
+              pageTitle = 'Announcements';
               selectedPage = 'announcements';
               break;
             default:
               pageTitle = "default";
-//            selectedPage = 0;
               print('404: ' + path);
           }
         }
-      } else {
-        f.child('/communities/$alias').once('value').then((res) {
-          if (res != null) {
-            community = CommunityModel.fromJson(res.val());
-            mainViewModel.getUpdatedViewModels();
-            cache.communities[alias] = community;
-
-            if (pathUri.pathSegments.length == 1) {
-              selectedPage = 'lobby';
-            } else {
-              // If we're at <community>/<something>, see if <something> is a valid page.
-              switch (pathUri.pathSegments[1]) {
-                case 'people':
-                  pageTitle = "People";
-                  selectedPage = 'people';
-                  break;
-                case 'events':
-                  print('debug events2');
-                  selectedPage = 'events';
-                  break;
-                case 'feed':
-                  selectedPage = 'feed';
-                  break;
-                case 'announcements':
-                  selectedPage = 'announcements';
-                  break;
-                default:
-                  pageTitle = "default";
-//            selectedPage = 0;
-                  print('404: ' + path);
-              }
-            }
-          }
-        });
-      };
+      });
     }
   }
 
@@ -208,6 +173,42 @@ class App extends Observable {
         sidebarTitleElement.style.opacity = '1';
 //      });
     }
+  }
+
+  /**
+   * Change the community.
+   *
+   * Set the community to null so we trigger an re-attach
+   * for certain components that need to refresh their view model.
+   */
+  Future<bool> changeCommunity(String alias) {
+    print('Changing comm...');
+    if (community != null && community.alias == alias) return new Future.value(true);
+
+    if (alias == null) {
+      community = null;
+      return new Future.value(true);
+    }
+
+    // Check the app cache for the community...
+    if (cache.communities.containsKey(alias)) {
+      print('debug 1');
+      community = null;
+      Timer.run(() => community = cache.communities[alias]);
+      mainViewModel.getUpdatedViewModels();
+    } else {
+      print('debug 2');
+      // ...or query for the community.
+      return f.child('/communities/$alias').once('value').then((res) {
+        if (res == null) return false;
+        cache.communities[alias] = CommunityModel.fromJson(res.val());
+        community = null;
+        Timer.run(() => community = cache.communities[alias]);
+        mainViewModel.getUpdatedViewModels();
+        return true;
+      });
+    }
+    return new Future.value(true);
   }
 
   void showMessage(String message, [String severity]) {

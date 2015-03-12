@@ -13,6 +13,8 @@ import 'item.dart';
 import 'list.dart';
 import 'base.dart';
 
+import 'package:woven/src/shared/model/community.dart';
+
 class MainViewModel extends BaseViewModel with Observable {
   final App app;
   final List communities = toObservable([]);
@@ -127,6 +129,13 @@ class MainViewModel extends BaseViewModel with Observable {
 
   void getUpdatedViewModels() {
     getChatViewModel();
+//    switch (app.selectedPage) {
+//      case 'lobby':
+//        getChatViewModel();
+//        break;
+//      default:
+//        break;
+//    }
   }
 
   // Get the view model for the current inbox.
@@ -181,6 +190,9 @@ class MainViewModel extends BaseViewModel with Observable {
 
       // Use the ID from Firebase as our ID.
       community['id'] = e.snapshot.name;
+
+      // Add the community to the app cache, so we have it elsewhere.
+      app.cache.communities[community['id']] = CommunityModel.fromJson(community);
 
       // Set some defaults.
       if (community['updatedDate'] == null) community['updatedDate'] = community['createdDate'];
