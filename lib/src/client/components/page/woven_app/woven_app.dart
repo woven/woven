@@ -26,8 +26,6 @@ class WovenApp extends PolymerElement with Observable {
   void switchPage(Event e, var detail, Element target) {
     togglePanel();
     app.router.dispatch(url: target.dataset['url']);
-//    app.selectedPage = target.dataset['page'];
-//    app.pageTitle = target.dataset['label'];
   }
 
   void scrollToTop() {
@@ -132,7 +130,7 @@ class WovenApp extends PolymerElement with Observable {
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
 
-      if (config['debug_mode']) print("${record.name} changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
+      if (app.debugMode) print("${record.name} changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
       if (record.name == new Symbol("pageTitle")) {
@@ -146,8 +144,6 @@ class WovenApp extends PolymerElement with Observable {
           });
         }
       }
-
-      if (record.name == new Symbol("community")) app.mainViewModel.getUpdatedViewModels();
 
       // If brand new user, greet them.
       if (app.user != null && app.user.isNew == true) {

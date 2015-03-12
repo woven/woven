@@ -80,7 +80,8 @@ class ChatList extends PolymerElement {
 
 
   attached() {
-    print('+chat-list');
+    if (app.debugMode) print('+ChatList');
+    // TODO: Bring back infinite scrolling on chat.
 //    initializeInfiniteScrolling();
 
     // Once the view is loaded, handle scroll position.
@@ -101,7 +102,7 @@ class ChatList extends PolymerElement {
 
   detached() {
     subscriptions.forEach((subscription) => subscription.cancel());
-    print('-chat-list');
+    if (app.debugMode) print('-ChatList');
   }
 
   ChatList.created() : super.created();

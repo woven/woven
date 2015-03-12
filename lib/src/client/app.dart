@@ -28,6 +28,7 @@ class App extends Observable {
   @observable bool skippedHomePage = false;
   DateTime timeOfLastFocus = new DateTime.now().toUtc();
   bool isFocused = true;
+  bool debugMode;
   List reservedPaths = ['people', 'events', 'item'];
 //  @observable bool isNewUser = false;
 
@@ -45,6 +46,7 @@ class App extends Observable {
     mainViewModel = new MainViewModel(this);
     cache = new Cache();
     sessionId = readCookie('session');
+    debugMode = (config['debug_mode'] != null ? config['debug_mode'] : false);
 
     // Track when app gets focus.
     window.onFocus.listen((_) {
@@ -100,7 +102,6 @@ class App extends Observable {
 
   // We're using this as a kind of placeholder for various routes.
   void notFound(String path) {
-    print('not found');
     var pathUri = Uri.parse(path);
     if (pathUri.pathSegments.length > 0 && !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
       String alias = Uri.parse(path).pathSegments[0];
@@ -109,7 +110,6 @@ class App extends Observable {
         if (pathUri.pathSegments.length == 1) {
           selectedPage = 'lobby';
         } else {
-          print('debug3 ${pathUri.pathSegments[1]}');
           // If we're at <community>/<something>, see if <something> is a valid page.
           switch (pathUri.pathSegments[1]) {
             case 'people':
@@ -117,7 +117,6 @@ class App extends Observable {
               selectedPage = 'people';
               break;
             case 'events':
-              print('debug events');
               pageTitle = 'Events';
               selectedPage = 'events';
               break;
@@ -143,7 +142,7 @@ class App extends Observable {
   }
 
   void globalHandler(String path) {
-    if (config['debug_mode']) print("Global handler fired at: $path");
+    if (this.debugMode) print("Global handler fired at: $path");
 
     /* TODO: Things like G tracking could be handled here. */
 //      if (js.context['_gaq'] != null) {
@@ -175,6 +174,10 @@ class App extends Observable {
     }
   }
 
+  void getUpdatedViewModels() {
+    //
+  }
+
   /**
    * Change the community.
    *
@@ -182,7 +185,6 @@ class App extends Observable {
    * for certain components that need to refresh their view model.
    */
   Future<bool> changeCommunity(String alias) {
-    print('Changing comm...');
     if (community != null && community.alias == alias) return new Future.value(true);
 
     if (alias == null) {
@@ -192,19 +194,15 @@ class App extends Observable {
 
     // Check the app cache for the community...
     if (cache.communities.containsKey(alias)) {
-      print('debug 1');
       community = null;
       Timer.run(() => community = cache.communities[alias]);
-      mainViewModel.getUpdatedViewModels();
     } else {
-      print('debug 2');
       // ...or query for the community.
       return f.child('/communities/$alias').once('value').then((res) {
         if (res == null) return false;
         cache.communities[alias] = CommunityModel.fromJson(res.val());
         community = null;
         Timer.run(() => community = cache.communities[alias]);
-        mainViewModel.getUpdatedViewModels();
         return true;
       });
     }
@@ -213,7 +211,6 @@ class App extends Observable {
 
   void showMessage(String message, [String severity]) {
     PaperToast toastElement = document.querySelector('woven-app').shadowRoot.querySelector('#toast-message');
-//    PaperToast toastElement = document.querySelector('woven-app::shadow #toast-message');
     if (severity == "important") {
       toastElement.classes.add("important");
     }

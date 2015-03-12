@@ -5,11 +5,8 @@ import 'dart:convert';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:woven/src/shared/model/user.dart';
-import 'package:woven/src/shared/shared_util.dart';
-import 'package:woven/src/client/util.dart';
 import '../welcome/welcome.dart';
 import 'package:core_elements/core_icon_button.dart';
 import 'package:core_elements/core_animation.dart';
@@ -135,12 +132,12 @@ class SignInDialog extends PolymerElement {
   }
 
   attached() {
-    if (config['debug_mode']) print('+signin');
+    if (app.debugMode) print('+SignIn');
     if (!app.isMobile) $['username'].autofocus = true;
   }
 
   detached() {
-    if (config['debug_mode']) print('-signin');
+    if (app.debugMode) print('-SignIn');
   }
 }
 

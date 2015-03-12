@@ -3,7 +3,6 @@ library main_view_model;
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'feed.dart';
@@ -28,9 +27,6 @@ class MainViewModel extends BaseViewModel with Observable {
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
-
-  // Experimental.
-  @observable var chatViewModel;
 
   Firebase get f => app.f;
 
@@ -127,30 +123,13 @@ class MainViewModel extends BaseViewModel with Observable {
     return feedViewModels[id];
   }
 
-  void getUpdatedViewModels() {
-    switch (app.selectedPage) {
-      case 'lobby':
-        getChatViewModel();
-        break;
-      default:
-        break;
-    }
-  }
-
   // Get the view model for the current inbox.
-  void getChatViewModel() {
-    print('called chatViewModel');
-    if (app.community == null) {
-      this.chatViewModel = null;
-      return;
-    }
+  ChatViewModel get chatViewModel {
+    if (app.community == null) return null;
 
     var id = app.community.alias;
 
-    if (id == null) {
-      this.chatViewModel = null; // No item, no view model to use.
-      return;
-    }
+    if (id == null) return null; // No item, no view model to use.
 
     if (!chatViewModels.containsKey(id)) {
       // Item not stored yet, let's create it and store it.
@@ -158,7 +137,7 @@ class MainViewModel extends BaseViewModel with Observable {
       chatViewModels[id] = vm; // Store it.
     }
 
-    this.chatViewModel = chatViewModels[id];
+    return chatViewModels[id];
   }
 
   // Get the view model for the user's starred items.

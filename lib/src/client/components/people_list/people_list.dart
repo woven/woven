@@ -47,7 +47,7 @@ class PeopleList extends PolymerElement with Observable {
   }
 
   attached() {
-    if (config['debug_mode']) print('+people');
+    if (app.debugMode) print('+PeopleList');
     app.pageTitle = "People";
 
     initializeInfiniteScrolling();
@@ -68,6 +68,6 @@ class PeopleList extends PolymerElement with Observable {
 
   detached() {
     subscriptions.forEach((subscription) => subscription.cancel());
-    if (config['debug_mode']) print('-people');
+    if (app.debugMode) print('-PeopleList');
   }
 }
