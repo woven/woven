@@ -17,5 +17,5 @@ class RegexHelper {
 
   static String linkOrEmail = '($email|$link)';
 
-  static String mention = r'(^|\s+)(@[a-zA-Z0-9_-]+)(\s+|$|[!?.,-])';
+  static String mention = r'(^|\s+)(@[a-zA-Z0-9_-]+)((?=\s+)|$|[!?.,-])';
 }
