@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
+<link rel="import" href="../widgets/linkify_text/linkify_text.html">
 <link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="chat-list">
   <template>
@@ -28,7 +29,15 @@
                     <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                   </div>
                 </div>
-                <p class="{{(message['id'] == null) ? 'not-delivered' : ''}}"><safe-html><template if="{{message != null}}">{{formatText(message['message'])}}</template></safe-html></p>
+                <p class="{{(message['id'] == null) ? 'not-delivered' : ''}}">
+                  <linkify-text router="{{app.router}}">
+                    <safe-html>
+                      <template if="{{message != null}}">
+                        {{formatText(message['message'])}}
+                      </template>
+                    </safe-html>
+                  </linkify-text>
+                </p>
               </div>
             </div>
           </div>
@@ -42,7 +51,6 @@
               <div id="content">
                 <div class="card-top" horizontal layout>
                   <div flex class="message notification">{{message['message']}}</div>
-                  <div><a href="/woven" title="Foo page" on-click="{{changePage}}">click here</a></div>
                   <div class="date-time">
                     <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                   </div>

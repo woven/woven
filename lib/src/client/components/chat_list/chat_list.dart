@@ -15,9 +15,6 @@ class ChatList extends PolymerElement {
   @published App app;
   List<StreamSubscription> subscriptions = [];
 
-  NodeValidator get nodeValidator => new NodeValidatorBuilder()
-  ..allowHtml5(uriPolicy: new ItemUrlPolicy());
-
   String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
 
   ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
@@ -30,12 +27,9 @@ class ChatList extends PolymerElement {
    */
   formatText(String text) {
     if (text == null) return '';
-    String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
-    return formattedText;
-  }
+    String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(text.trim()));
 
-  changePage(MouseEvent e) {
-    app.router.changePage(e);
+    return formattedText;
   }
 
   /**

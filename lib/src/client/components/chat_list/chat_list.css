@@ -100,20 +100,29 @@ user-picture::shadow .user-photo {
   color: #0061BB;
 }
 
-safe-html::shadow a {
+linkify-text::shadow a {
   text-decoration: none;
   color: rgb(34, 110, 223);
 }
 
-safe-html::shadow a:hover {
+linkify-text::shadow a.internal,
+linkify-text::shadow a.internal:visited {
+  color: rgb(12, 171, 0);
+}
+
+linkify-text::shadow a:hover {
   text-decoration: underline;
 }
 
-safe-html::shadow a:visited {
+linkify-text::shadow a:visited:not(.internal) {
   color: rgb(83, 53, 163);
 }
 
-safe-html::shadow .mention {
+.theme-dark linkify-text::shadow a:visited:not(.internal) {
+  color: rgb(174, 149, 242);
+}
+
+linkify-text::shadow .mention {
   color: rgb(245, 108, 0);
   font-weight: bold;
 }
