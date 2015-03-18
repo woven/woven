@@ -38,12 +38,12 @@ class ItemActivities extends PolymerElement {
     var itemId;
     // If there's no app.selectedItem, we probably
     // came here directly, so let's use itemId from the URL.
-    if (app.selectedItem == null) {
+    if (app.router.selectedItem == null) {
       // Decode the base64 URL and determine the item.
       var encodedItemId = Uri.parse(window.location.toString()).pathSegments[1];
       itemId = base64Decode(encodedItemId);
     } else {
-      itemId = app.selectedItem['id'];
+      itemId = app.router.selectedItem['id'];
     }
 
     var commentsRef = f.child('/items/' + itemId + '/activities/comments');
@@ -120,7 +120,7 @@ class ItemActivities extends PolymerElement {
       return;
     }
 
-    var itemId = app.selectedItem['id'];
+    var itemId = app.router.selectedItem['id'];
 
     DateTime now = new DateTime.now().toUtc();
 
@@ -228,7 +228,7 @@ class ItemActivities extends PolymerElement {
   fixItemCommunities() {
       if (app.community != null) {
           // Update the community's copy of the item.
-        f.child('/items/' + app.selectedItem['id'] + '/communities/' + app.community.alias)
+        f.child('/items/' + app.router.selectedItem['id'] + '/communities/' + app.community.alias)
           ..set(true);
       }
   }

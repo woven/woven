@@ -15,6 +15,7 @@ import 'package:woven/src/shared/model/event.dart';
 import 'package:woven/src/shared/model/news.dart';
 import 'package:intl/intl.dart';
 import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/model/message.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
@@ -199,8 +200,8 @@ class AddStuff extends PolymerElement {
         var itemId = itemRef.name;
 
         // Loop over all communities shared to.
-        shareTos.forEach((e) {
-          var community = e.trim();
+        shareTos.forEach((community) {
+          community = community.trim();
           // Add to items_by_community.
           f.child('/items_by_community/' + community + '/' + itemId)
             ..setWithPriority(encodedItem, -priority);
@@ -234,9 +235,13 @@ class AddStuff extends PolymerElement {
 
           // Notify lobby about new item.
           var message = new MessageModel()
-            ..message = '@${item.user} added a new ${item.type} to the feed.'
             ..type = 'notification'
-            ..community = app.community.alias
+            ..data = {
+              'event': 'added',
+              'type': '${item.type}',
+              'id': '$itemId'
+            }
+            ..community = community
             ..user = app.user.username;
 
           MessageModel.add(message, f);
@@ -271,7 +276,7 @@ class AddStuff extends PolymerElement {
     // TODO: Better handle use case where channel you added to isn't the one you're in.
     if (app.community != null) {
       // TODO: Jump to the actual item...
-      app.selectedPage = 'feed';
+      app.router.selectedPage = 'feed';
       app.router.dispatch(url: '/${app.community.alias}/feed');
     }
     app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}/feed' : '/');

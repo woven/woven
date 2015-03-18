@@ -32,8 +32,8 @@ class ItemViewModel extends BaseViewModel with Observable {
   void getItem() {
     if (item.length == 0) onLoadCompleter.complete(true);
 
-    if (app.selectedItem != null) {
-      item = app.selectedItem;
+    if (app.router.selectedItem != null) {
+      item = app.router.selectedItem;
 
     } else {
       // If there's no app.selectedItem, we probably
@@ -110,7 +110,7 @@ class ItemViewModel extends BaseViewModel with Observable {
           item['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
         });
 
-        app.selectedItem = item;
+        app.router.selectedItem = item;
 
       }).then((e) {
         loadItemUserStarredLikedInformation();

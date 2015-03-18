@@ -30,9 +30,9 @@ class InboxList extends PolymerElement with Observable {
     // id passed in the data-id attribute on the element.
     var item = viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
-    app.previousPage = app.selectedPage;
-    app.selectedItem = item;
-    app.selectedPage = 'item';
+    app.router.previousPage = app.router.selectedPage;
+    app.router.selectedItem = item;
+    app.router.selectedPage = 'item';
 
 
     var str = target.dataset['id'];
@@ -291,7 +291,7 @@ class InboxList extends PolymerElement with Observable {
   }
 
   attached() {
-    switch (app.selectedPage) {
+    switch (app.router.selectedPage) {
       case 'events':
         app.pageTitle = 'Events';
         break;

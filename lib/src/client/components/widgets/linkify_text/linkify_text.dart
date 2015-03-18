@@ -52,7 +52,7 @@ class LinkifyText extends PolymerElement {
 
   changePage(MouseEvent e) {
     e.stopPropagation();
-    print("Got it!");
+    router.previousPage = 'lobby';
     router.changePage(e);
   }
 }

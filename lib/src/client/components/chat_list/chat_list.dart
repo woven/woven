@@ -1,13 +1,13 @@
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
-import 'package:woven/src/shared/input_formatter.dart';
 
-import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/client/view_model/chat.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
+import 'package:woven/src/shared/input_formatter.dart';
+import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
 
 @CustomTag('chat-list')
 class ChatList extends PolymerElement {
@@ -30,6 +30,24 @@ class ChatList extends PolymerElement {
     String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(text.trim()));
 
     return formattedText;
+  }
+
+  /**
+   * Format the given string with "a" or "an" or none.
+   */
+  formatWordArticle(String content) {
+    return InputFormatter.formatWordArticle(content);
+  }
+
+  formatItemUrl(String itemId) {
+    if (itemId == null) '';
+    return '/item/' + sharedUtil.base64Encode(itemId);
+  }
+
+  changePage(MouseEvent e) {
+    e.stopPropagation();
+    app.router.previousPage = 'lobby';
+    app.router.changePage(e);
   }
 
   /**

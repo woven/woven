@@ -23,8 +23,8 @@ class ItemList extends PolymerElement with Observable {
     var item = viewModel.starredViewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
 //    app.userCameFromInbox = true;
-    app.selectedItem = item;
-    app.selectedPage = 'item';
+    app.router.selectedItem = item;
+    app.router.selectedPage = 'item';
 
 
     var encodedItemId =  base64Encode(target.dataset['id']);

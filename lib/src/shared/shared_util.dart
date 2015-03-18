@@ -102,7 +102,7 @@ base64Encode(String text) {
 }
 
 /**
- * Decode some string to base64, e.g. for an item ID in a URL.
+ * Decode some string from base64, e.g. for an item ID in a URL.
  */
 base64Decode(String encodedText) {
   var base64 = encodedText;
@@ -125,6 +125,16 @@ formatPossessive(String text) {
   } else {
     return '$text\'s';
   }
+}
+
+/**
+ * Tries to choose the proper article ("a" or "an" or none) for a given string.
+ */
+String formatWordArticle(String word) {
+  if (word == null) return null;
+  if (word.endsWith('s')) return null;
+  if (word.startsWith(new RegExp('[aeiou]'))) return 'an ';
+  return 'a ';
 }
 
 /**

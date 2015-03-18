@@ -107,24 +107,36 @@ linkify-text::shadow a {
 
 linkify-text::shadow a.internal,
 linkify-text::shadow a.internal:visited {
-  color: rgb(12, 171, 0);
+  color: #2FA300;
 }
 
-linkify-text::shadow a:hover {
+.notification linkify-text::shadow a.internal,
+linkify-text::shadow a.internal:visited,
+.notification a.internal,
+.notification a.internal:visited {
+  text-decoration: none;
+  color: rgb(245, 108, 0);
+}
+
+linkify-text::shadow a:hover,
+.notification a:hover, {
   text-decoration: underline;
 }
 
 linkify-text::shadow a:visited:not(.internal) {
-  color: rgb(83, 53, 163);
+  color: #8055C8;
 }
 
 .theme-dark linkify-text::shadow a:visited:not(.internal) {
-  color: rgb(174, 149, 242);
+  color: #8055C8;
 }
 
 linkify-text::shadow .mention {
   color: rgb(245, 108, 0);
-  font-weight: bold;
+}
+
+safe-html::shadow .mention {
+  color: rgb(245, 108, 0);
 }
 
 .no-photo {

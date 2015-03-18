@@ -38,7 +38,7 @@ class CommunityList extends PolymerElement with Observable {
       ..updatedDate = communityMap['updatedDate'];
 
     app.changeCommunity(community.alias);
-    app.selectedPage = 'lobby';
+    app.router.selectedPage = 'lobby';
 
     app.router.dispatch(url: "/" + community.alias);
   }

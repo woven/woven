@@ -11,7 +11,7 @@
   <template>
     <link rel="stylesheet" href="item_activities.css">
     <div id="activity-wrapper" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
-      <template if="{{app.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
+      <template if="{{app.router.selectedItem != null && comments != null}}" repeat="{{comment in comments}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
             <user-picture app="{{app}}" username="{{comment['user']}}"></user-picture>

@@ -17,6 +17,9 @@ class Router extends Observable {
   String get currentPath => window.location.pathname;
 
   @observable UrlPattern route;
+  @observable var selectedItem;
+  @observable var selectedPage;
+  @observable var previousPage = null;
 
   Router() {
     // This is fired when the browser goes back or forward through the URL history.

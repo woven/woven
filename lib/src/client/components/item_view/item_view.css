@@ -143,6 +143,10 @@ core-item core-icon {
   background: #fff;
 }
 
+.theme-dark .item-photo-area .item-photo {
+  background: #000;
+}
+
 .item-photo-area .item-photo-icon-none {
   width: 80px;
   height: 80px;
@@ -358,6 +362,13 @@ core-item core-icon {
   background-color: transparent;
   fill: white;
   color: white;
+}
+
+.action-button.comment-button, .action-button.comment-button:hover {
+  border: none;
+  background-color: transparent;
+  position:relative;
+  top:1px;
 }
 
 .action-button:active {

@@ -17,9 +17,6 @@ import 'cache.dart';
 import 'util.dart';
 
 class App extends Observable {
-  @observable var selectedItem;
-  @observable var selectedPage;
-  @observable var previousPage = null;
   @observable String pageTitle = "";
   @observable UserModel user;
   @observable CommunityModel community;
@@ -86,18 +83,18 @@ class App extends Observable {
 
   void home(String path) {
     // Home goes to the community list for now.
-    selectedPage = 'channels';
+    router.selectedPage = 'channels';
     changeCommunity(null);
     if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
   }
 
   void starred(String path) {
-    selectedPage = 'starred';
+    router.selectedPage = 'starred';
     pageTitle = "Starred";
   }
 
   void people(String path) {
-    selectedPage = 'people';
+    router.selectedPage = 'people';
   }
 
   // We're using this as a kind of placeholder for various routes.
@@ -108,25 +105,25 @@ class App extends Observable {
       // Check the app cache for the community.
       changeCommunity(alias).then((bool success) {
         if (pathUri.pathSegments.length == 1) {
-          selectedPage = 'lobby';
+          router.selectedPage = 'lobby';
         } else {
           // If we're at <community>/<something>, see if <something> is a valid page.
           switch (pathUri.pathSegments[1]) {
             case 'people':
               pageTitle = "People";
-              selectedPage = 'people';
+              router.selectedPage = 'people';
               break;
             case 'events':
               pageTitle = 'Events';
-              selectedPage = 'events';
+              router.selectedPage = 'events';
               break;
             case 'feed':
               pageTitle = 'Feed';
-              selectedPage = 'feed';
+              router.selectedPage = 'feed';
               break;
             case 'announcements':
               pageTitle = 'Announcements';
-              selectedPage = 'announcements';
+              router.selectedPage = 'announcements';
               break;
             default:
               pageTitle = "default";
@@ -138,7 +135,9 @@ class App extends Observable {
   }
 
   void showItem(String path) {
-    selectedPage = 'item';
+    print('debug');
+//    router.previousPage = router.selectedPage;
+    router.selectedPage = 'item';
   }
 
   void globalHandler(String path) {

@@ -86,7 +86,7 @@ core-item core-icon {
 
 .theme-dark .item:hover {
   border: none;
-  background: rgba(37, 37, 37, 0.50);
+  background: #2A2A2A;
 }
 
 .item.compact:hover {
@@ -139,6 +139,10 @@ core-item core-icon {
   width:225px;
   height:125px;
   background: #fff;
+}
+
+.theme-dark .item-photo-area .item-photo {
+  background: #000;
 }
 
 .item-photo-area .item-photo-icon-none {
