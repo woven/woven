@@ -1,76 +1,67 @@
-.page-wrapper {
-  position: absolute;
-  height: 100%;
+@import url(http://fonts.googleapis.com/css?family=RobotoDraft);
+
+body {
+  margin: 0;
+}
+
+.cover {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url('http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg');
+}
+
+.overlay {
+  height: 70px;
+  background: rgba(0,0,0,0.75);
+  color: white;
   width: 100%;
-  /*background: #15384B;*/
-  /*border-left: solid 10px #FFA944;*/
+  position: absolute;
+  bottom: 0;
 }
 
-#content-header-wrapper {
-  /*text-align: center;*/
+.logo {
+  background: url('http://storage.googleapis.com/woven/public/images/app/woven-logo-white.png') no-repeat right;
+  height: 60px;
+  background-size: contain;
+  position: relative;
 }
 
-#content-header-wrapper img {
-  height: 35px;
+.logo-small {
+  background: url('http://storage.googleapis.com/woven/public/images/app/woven-logo-small.png') no-repeat right;
+  height: 60px;
+  background-size: contain;
 }
 
-#content-wrapper {
-  max-width: 560px;
-  padding: 25px 20px 25px 25px;
+.position-1 {
+  top: 50px;
+  right: 150px;
 }
 
-#home-text {
-  /*color: #fff;*/
-  font-size: 24px;
+ul.menu {
+  list-style-type: none;
   font-family: Georgia, serif;
-  font-style: oblique;
+  font-style: italic;
+  text-transform: lowercase;
+  font-size: 26px;
+  color: #ddd;
+  margin-top: 22px;
+  transition: color .2s;
 }
 
-#skip {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
+ul.menu > * {
+  display: inline;
+}
+
+ul.menu > li {
+  margin-right: 55px;
   cursor: pointer;
-  color: black;
 }
 
-#skip:hover {
-  color: dodgerblue;
+ul.menu > li.first {
+  margin-left: 50px;
 }
 
-#random-word {
-  opacity: 1;
-  transition: opacity 0.5s;
-}
-
-.signin-btn {
-  border-radius: 2px;
-  padding: 10px;
-  outline: none;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  border: none;
-}
-
-#facebook-signin {
+ul.menu > li:hover {
   color: #fff;
-  background: #3e5a9b;
-  width: 200px;
-}
-
-#facebook-signin:hover {
-  background: #223E8D;
-}
-
-#message {
-  opacity: 1;
-  transition: opacity 2s;
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
-@media all and (max-width: 350px)  {
-  #random-word {
-    display: block;
-  }
+  transition: color .2s;
 }

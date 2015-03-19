@@ -1,37 +1,22 @@
 <link rel="import" href="../../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_animation.html">
 
 <polymer-element name="x-home">
   <template>
     <link rel="stylesheet" href="home.css">
-    <div class="page-wrapper">
-      <div id="content-wrapper">
-        <div id="content-header-wrapper">
-          <img src="/static/images/woven_logo_solo_35.png">
+    <div layout vertical>
+      <section class="cover" fit>
+        <div class="logo position-1"></div>
+        <div class="overlay">
+          <div flex layout horizontal>
+            <div class="logo-small"></div>
+            <ul class="menu" flex>
+              <li class="first" on-click="{{toggleOverlay}}">Why</li>
+              <li>What</li>
+            </ul>
+          </div>
         </div>
-        <div id="home-text">
-          <p>Woven is for people improving the world.</p>
-
-          <button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>
-
-          <p>We're making it easier for us to assemble, discover and share resources, and coordinate our efforts to affect real world
-          change.</p>
-
-          <p>We are a collaborative generation, presiding over massive shifts in how humanity works together, but the tools we use are still
-          not optimized to support us. Social networks were built for sharing, not for coordinating our efforts and
-          getting things done.</p>
-
-          <p>Imagine how much more effective we can be when our tools are consciously designed to
-          support collaboration and encourage action.</p>
-
-          <p>We call it collaborative networking. Join us.</p>
-
-          <button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Join with Facebook</button>
-
-          <p style="height: 90px">Woven is for <span id="random-word">{{randomWord}}.</span></p>
-
-          <p id="skip" on-tap="{{close}}">Skip &raquo;</p>
-        </div>
-      </div>
+      </section>
     </div>
   </template>
   <script type="application/dart" src="home.dart"></script>
