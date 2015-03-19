@@ -35,10 +35,12 @@ class App extends Observable {
   String authToken;
   String sessionId;
   Firebase f;
+  String cloudStoragePath;
 
 
   App() {
     f = new Firebase(config['datastore']['firebaseLocation']);
+    cloudStoragePath = config['google']['cloudStoragePath'];
 
     mainViewModel = new MainViewModel(this);
     cache = new Cache();
@@ -136,7 +138,7 @@ class App extends Observable {
 
   void showItem(String path) {
     print('debug');
-//    router.previousPage = router.selectedPage;
+    router.previousPage = router.selectedPage;
     router.selectedPage = 'item';
   }
 

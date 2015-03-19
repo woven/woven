@@ -56,7 +56,7 @@ class ItemActivities extends PolymerElement {
         Map user = snapshot.val();
         if (user == null) return;
         if (user['picture'] != null) {
-          comment['user_picture'] = "${config['google']['cloudStoragePath']}/${user['picture']}";
+          comment['user_picture'] = "${app.cloudStoragePath}/${user['picture']}";
         } else {
           comment['user_picture'] = null;
         }
