@@ -82,10 +82,11 @@ class MainController {
       Map message = data['model'];
       String community = message['community'];
 
-      // Use the server's UTC time.
-      DateTime now = new DateTime.now().toUtc();
+      // Do some pre-processing of the data.
+      DateTime now = new DateTime.now().toUtc(); // Use the server's UTC time.
       message['createdDate'] = now.toString();
       message['updatedDate'] = now.toString();
+      message['user'] = (message['user'] as String).toLowerCase();
 
       // Do some things with the data before saving.
       message['.priority'] = -now.millisecondsSinceEpoch;
@@ -212,7 +213,7 @@ class MainController {
     // Find the username associated with the Facebook ID
     // that's in session.id, then get that user data.
     return Firebase.get('/facebook_index/$id.json').then((indexData) {
-      var username = indexData['username'];
+      var username = (indexData['username'] as String).toLowerCase();
       return Firebase.get('/users/$username.json').then((userData) {
         // Send the welcome email.
         var envelope = new Envelope()
@@ -294,7 +295,7 @@ http://twitter.com/wovenco
     Future findItem() {
       return Firebase.get('/items/$item.json').then((itemData) {
         notificationData['itemSubject'] = itemData['subject'];
-        notificationData['itemAuthor'] = itemData['user'];
+        notificationData['itemAuthor'] = (itemData['user'] as String).toLowerCase();
         notificationData['itemBody'] = itemData['body'];
         notificationData['message'] = itemData['message'];
         var encodedItem = base64Encode(id);
@@ -337,14 +338,14 @@ http://twitter.com/wovenco
       if (isItem) return null;
       return Firebase.get('/items/$item/activities/comments/$id.json').then((commentData) {
         notificationData['commentBody'] = commentData['comment'];
-        notificationData['commentAuthor'] = commentData['user'];
+        notificationData['commentAuthor'] = (commentData['user'] as String).toLowerCase();
       });
     }
 
     Future findMessage() {
       return Firebase.get('/messages/$id.json').then((messageData) {
         notificationData['message'] = messageData['message'];
-        notificationData['messageAuthor'] = messageData['user'];
+        notificationData['messageAuthor'] = (messageData['user'] as String).toLowerCase();
         notificationData['itemLink'] = "http://${config['server']['displayDomain']}/${messageData['community']}";
       });
     }
@@ -498,7 +499,8 @@ http://woven.co
       mentions.add(mention.group(2).replaceAll("@", ""));
     }
 
-    mentions.forEach((user) {
+    mentions.forEach((String user) {
+      user = user.toLowerCase();
       // Don't notify when you mention yourself.
       if (user == notificationData['commentAuthor']) return;
 

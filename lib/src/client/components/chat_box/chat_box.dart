@@ -66,7 +66,7 @@ class ChatBox extends PolymerElement {
     var message = new MessageModel()
       ..message = messageText
       ..community = app.community.alias
-      ..user = app.user.username;
+      ..user = app.user.username.toLowerCase();
 
     // Handle commands.
     if (message.message.trim().startsWith(('/'))) {

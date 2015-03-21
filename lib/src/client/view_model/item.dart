@@ -91,6 +91,16 @@ class ItemViewModel extends BaseViewModel with Observable {
           item['uriHost'] = uriHostShortened;
         }
 
+        // Find the case-ified username, from app cache or directly.
+        if (app.cache.users.containsKey((item['user'] as String).toLowerCase())) {
+          item['user'] = app.cache.users[item['user']].username;
+        } else {
+          app.f.child('/users/${item['user']}/username').once('value').then((res) {
+            if (res == null) return;
+            item['user'] = res;
+          });
+        }
+
         // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
         // So we'll add that to our local item list.
         item['id'] = e.snapshot.name;

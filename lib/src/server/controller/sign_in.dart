@@ -35,7 +35,7 @@ class SignInController {
           // Update the old cookie to use a newer session ID, and add it to our session index.
           var newSessionId = app.sessionManager.createSessionId();
           app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-          app.sessionManager.addSessionToIndex(newSessionId, username).then((Map sessionData) {
+          app.sessionManager.addSessionToIndex(newSessionId, username.toLowerCase()).then((Map sessionData) {
             return sessionData;
           });
         });
@@ -45,13 +45,13 @@ class SignInController {
       if (sessionData == null) return Response.fromError('A session with that id was not found.');
 
       String authToken = sessionData['authToken'];
-      String username = sessionData['username'];
+      String username = (sessionData['username'] as String).toLowerCase();
 
       // If the session has no auth token, just generate a new session.
       if (sessionData['authToken'] == null) {
         var newSessionId = app.sessionManager.createSessionId();
         app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-        app.sessionManager.addSessionToIndex(newSessionId, sessionData['username']).then((Map sessionData) {
+        app.sessionManager.addSessionToIndex(newSessionId, username).then((Map sessionData) {
           authToken = sessionData['authToken'];
         });
       }
@@ -66,7 +66,7 @@ class SignInController {
         if (authToken == null) {
           var newSessionId = app.sessionManager.createSessionId();
           app.sessionManager.addSessionCookieToRequest(request, newSessionId);
-          return app.sessionManager.addSessionToIndex(newSessionId, sessionData['username']).then((Map sessionData) {
+          return app.sessionManager.addSessionToIndex(newSessionId, username).then((Map sessionData) {
             userData['auth_token'] = sessionData['authToken'];
             response.data = userData;
             return response;
@@ -99,7 +99,7 @@ class SignInController {
       dataReceived = new String.fromCharCodes(buffer);
     }).asFuture().then((_) {
       Map data = JSON.decode(dataReceived);
-      var username = data['username'];
+      String username = (data['username'] as String).toLowerCase();
       var password = data['password'];
       return checkCredentials(username, password).then((success) {
         if (!success) return Response.fromError('Bad credentials.');

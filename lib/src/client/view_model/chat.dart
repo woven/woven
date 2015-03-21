@@ -10,6 +10,7 @@ import 'dart:js';
 import 'base.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/shared/model/message.dart';
+import 'package:woven/src/client/model/user.dart';
 
 class ChatViewModel extends BaseViewModel with Observable {
   final App app;
@@ -155,7 +156,7 @@ class ChatViewModel extends BaseViewModel with Observable {
       }
 
       // If user is scrolled to bottom, keep it that way.
-      if (isScrollPosAtBottom || isFirstLoad) Timer.run(() => chatView.scrollToBottom());
+      if (isScrollPosAtBottom || isFirstLoad && chatView != null) Timer.run(() => chatView.scrollToBottom());
     });
 
     // Listen for changed items.
@@ -192,6 +193,11 @@ class ChatViewModel extends BaseViewModel with Observable {
     }
   }
 
+  usernameForDisplay(String username) {
+    UserModel.usernameForDisplay(username.toLowerCase(), f, app.cache)
+    .then((String usernameForDisplay) => usernameForDisplay);
+  }
+
   /**
    * Prepare the message and insert it into the observed list.
    */
@@ -218,7 +224,6 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     var index = indexOfClosestItemByDate(message['updatedDate']);
 
-    // Insert the message at the bottom of the current list, or at a given index.
     messages.insert(index == null ? messages.length : index, toObservable(message));
   }
 
@@ -234,7 +239,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         document.body.classes.add('no-transition');
         insertMessage(message.toJson());
         Timer.run(() => app.user.settings['theme'] = 'dark');
-        f.child('/users/${app.user.username}/settings/theme').set('dark');
+        f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('dark');
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       case '/theme light':
@@ -243,7 +248,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         document.body.classes.add('no-transition');
         insertMessage(message.toJson());
         Timer.run(() => app.user.settings['theme'] = 'light');
-        f.child('/users/${app.user.username}/settings/theme').set('light');
+        f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('light');
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       case '/print isMobile':

@@ -126,7 +126,7 @@ class ItemActivities extends PolymerElement {
 
     // Save the comment
     var id = f.child('/items/' + itemId + '/activities/comments').push();
-    var commentJson =  {'user': app.user.username, 'comment': comment, 'createdDate': '$now'};
+    var commentJson =  {'user': app.user.username.toLowerCase(), 'comment': comment, 'createdDate': '$now'};
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.

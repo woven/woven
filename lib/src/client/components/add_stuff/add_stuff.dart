@@ -147,7 +147,7 @@ class AddStuff extends PolymerElement {
     else item = new ItemModel();
 
     item
-      ..user = app.user.username
+      ..user = app.user.username.toLowerCase()
       ..message = (messageInput != null && !messageInput.value.trim().isEmpty) ? messageInput.value : null
       ..subject = (subjectInput != null && !subjectInput.value.trim().isEmpty) ? subjectInput.value : null
       ..type = (selectedType != null) ? selectedType : 'message'
@@ -242,7 +242,7 @@ class AddStuff extends PolymerElement {
               'id': '$itemId'
             }
             ..community = community
-            ..user = app.user.username;
+            ..user = app.user.username.toLowerCase();
 
           MessageModel.add(message, f);
         });

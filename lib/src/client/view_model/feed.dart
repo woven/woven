@@ -9,6 +9,7 @@ import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'dart:async';
 import 'base.dart';
+import 'package:woven/src/client/model/user.dart';
 
 class FeedViewModel extends BaseViewModel with Observable {
   final App app;
@@ -221,6 +222,9 @@ class FeedViewModel extends BaseViewModel with Observable {
 
   processItem(DataSnapshot snapshot) {
     var item = toObservable(snapshot.val());
+
+    UserModel.usernameForDisplay(item['user'], f, app.cache)
+      .then((String usernameForDisplay) => item['usernameForDisplay'] = usernameForDisplay);
 
     // If no updated date, use the created date.
     // TODO: We assume createdDate is never null!
