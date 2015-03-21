@@ -51,7 +51,7 @@
               <div id="content">
                 <div class="card-top" horizontal layout>
                   <div flex class="message notification">
-                        @{{message['usernameForDisplay']}} {{message['data']['event']}} <a class="internal" href="{{formatItemUrl(message['data']['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message['data']['type'])}} {{message['data']['type']}}</a> to the feed.
+                        @{{message['usernameForDisplay']}} {{message['data']['event']}} <a class="internal" _href="{{formatItemUrl(message['data']['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message['data']['type'])}} {{message['data']['type']}}</a> to the feed.
                   </div>
                   <div class="date-time">
                     <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
