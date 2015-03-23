@@ -33,10 +33,10 @@
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
-    <!--<template if="{{app.showHomePage}}">-->
-      <!--<x-home app="{{app}}"></x-home>-->
-    <!--</template>-->
-    <template if="{{!app.showHomePage}}">
+    <template if="{{app.hasTriedLoadingUser && app.showHomePage}}">
+      <x-home app="{{app}}"></x-home>
+    </template>
+    <template if="{{app.hasTriedLoadingUser && !app.showHomePage}}">
       <core-drawer-panel responsiveWidth="{{responsiveWidth}}" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
 
         <div vertical layout drawer>

@@ -11,6 +11,7 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
+import 'package:woven/src/client/util.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 
@@ -99,6 +100,7 @@ class WovenApp extends PolymerElement with Observable {
 
   attached() {
     // Whenever we load the app, try to see what's the current user (i.e. have we signed in?).
+//    Timer.run(() => app.showMessage('Signing you in...'));
     HttpRequest.getString(Routes.currentUser.reverse([])).then((String contents) {
       var response = Response.fromJson(JSON.decode(contents));
       if (response.success && response.data != null) {
@@ -120,7 +122,7 @@ class WovenApp extends PolymerElement with Observable {
         app.mainViewModel.invalidateUserState();
 
         // On sign in, greet the user.
-        if (app.user.isNew != true) greetUser();
+        if (app.user.isNew != true) Timer.run(() => greetUser());
       }
 
       app.hasTriedLoadingUser = true;

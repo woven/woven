@@ -17,10 +17,14 @@ class Home extends PolymerElement with Observable {
   var overlayAnimation = new CoreAnimation();
   var logoAnimation = new CoreAnimation();
   var menuAnimation = new CoreAnimation();
+  var mainAnimation = new CoreAnimation();
+  var ctaAnimation = new CoreAnimation();
 
   Element get overlay => this.shadowRoot.querySelector('div.overlay');
   Element get logo => this.shadowRoot.querySelector('div.logo');
   Element get menu => this.shadowRoot.querySelector('ul.menu');
+  Element get main => this.shadowRoot.querySelector('div.cover');
+  Element get cta => this.shadowRoot.querySelector('div.cta');
 
   Home.created() : super.created();
 
@@ -46,16 +50,63 @@ class Home extends PolymerElement with Observable {
     }
   }
 
+  toggleMain() {
+    mainAnimation.target = main;
+    mainAnimation.duration = 200;
+    mainAnimation.iterations = 'auto';
+    mainAnimation.easing = 'ease-out';
+    mainAnimation.composite = 'add';
+    mainAnimation.fill = 'both';
+    mainAnimation.keyframes = [
+        {'opacity': '0'},
+        {'opacity': '1'}
+    ];
+    mainAnimation.play();
+    new Timer(new Duration(milliseconds: 500), () {
+      toggleLogo();
+      new Timer(new Duration(milliseconds: 800), () {
+        toggleCta();
+      });
+      toggleMenu();
+    });
+
+    if (mainAnimation.direction == 'reverse') {
+      mainAnimation.direction = 'forward';
+    } else {
+      mainAnimation.direction = 'reverse';
+    }
+  }
+
+  toggleCta() {
+    ctaAnimation.target = cta;
+    ctaAnimation.duration = 500;
+    ctaAnimation.iterations = 'auto';
+    ctaAnimation.easing = 'ease-out';
+    ctaAnimation.composite = 'add';
+    ctaAnimation.fill = 'both';
+    ctaAnimation.keyframes = [
+        {'opacity': '0', 'top': '300px'},
+        {'opacity': '1', 'top': '60px'}
+    ];
+    ctaAnimation.play();
+
+    if (ctaAnimation.direction == 'reverse') {
+      ctaAnimation.direction = 'forward';
+    } else {
+      ctaAnimation.direction = 'reverse';
+    }
+  }
+
   toggleLogo() {
     logoAnimation.target = logo;
-    logoAnimation.duration = 200;
+    logoAnimation.duration = 600;
     logoAnimation.iterations = 'auto';
     logoAnimation.easing = 'ease-out';
     logoAnimation.composite = 'add';
     logoAnimation.fill = 'both';
     logoAnimation.keyframes = [
-        {'opacity': '1'},
-        {'opacity': '0'}
+        {'opacity': '0'},
+        {'opacity': '1'}
     ];
 
     logoAnimation.play();
@@ -69,7 +120,7 @@ class Home extends PolymerElement with Observable {
 
   toggleMenu() {
     menuAnimation.target = menu;
-    menuAnimation.duration = 200;
+    menuAnimation.duration = 300;
     menuAnimation.iterations = 'auto';
     menuAnimation.easing = 'ease-out';
     menuAnimation.composite = 'add';
@@ -123,5 +174,6 @@ class Home extends PolymerElement with Observable {
   }
 
   attached() {
+    Timer.run(() => toggleMain());
   }
 }

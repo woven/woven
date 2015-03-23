@@ -37,7 +37,6 @@ class App extends Observable {
   Firebase f;
   String cloudStoragePath;
 
-
   App() {
     f = new Firebase(config['datastore']['firebaseLocation']);
     cloudStoragePath = config['google']['cloudStoragePath'];
@@ -102,6 +101,7 @@ class App extends Observable {
   // We're using this as a kind of placeholder for various routes.
   void notFound(String path) {
     var pathUri = Uri.parse(path);
+    if (pathUri.pathSegments.length > 0) showHomePage = false;
     if (pathUri.pathSegments.length > 0 && !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
       String alias = Uri.parse(path).pathSegments[0];
       // Check the app cache for the community.
@@ -142,6 +142,8 @@ class App extends Observable {
   }
 
   void globalHandler(String path) {
+    if (router.selectedPage != 'channels') showHomePage = false;
+
     if (this.debugMode) print("Global handler fired at: $path");
 
     /* TODO: Things like G tracking could be handled here. */

@@ -23,6 +23,23 @@ class MainController {
     return new File(config['server']['directory'] + '/index.html');
   }
 
+  static serveHome(App app, HttpRequest request, [String path]) {
+    // If there's an existing session cookie, use it. Else, create a new session id.
+    var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+    String sessionId = (sessionCookie == null || sessionCookie.value == null) ? null : sessionCookie.value;
+
+    if (sessionId != null) {
+      Future checkIfSessionExists = sessionExists(sessionId);
+      return checkIfSessionExists.then((res) {
+        if (res == false) request.response.headers.add(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
+        return new File(config['server']['directory'] + (res == true ? '/index.html' : '/home.html'));
+      });
+    } else {
+      request.response.headers.add(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
+      return new File(config['server']['directory'] + '/home.html');
+    }
+  }
+
   static showCommunity(App app, HttpRequest request, String community) {
     if (Uri.parse(community).pathSegments[0].length > 0) {
       community = Uri.parse(community).pathSegments[0];
@@ -46,6 +63,14 @@ class MainController {
 
   static aliasExists(String alias) {
     Firebase.get('/alias_index/$alias.json').then((res) {
+      return (res == null ? false : true);
+    });
+  }
+
+  static sessionExists(String sessionId) {
+    if (sessionId == null) return false;
+
+    return Firebase.get('/session_index/$sessionId.json').then((res) {
       return (res == null ? false : true);
     });
   }
