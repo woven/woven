@@ -15,13 +15,16 @@
 
           <div self-center>
             <div class="field-wrapper first">
-              <input id="email" is="core-input" placeholder="Email">
+              <input id="email" is="core-input" placeholder="Email"
+                     autocomplete="off" autocorrect="off" autocapitalize="off">
             </div>
             <div class="field-wrapper">
-              <input id="password" is="core-input" type="password" placeholder="Password">
+              <input id="password" is="core-input" type="password" placeholder="Password"
+                     autocomplete="off" autocorrect="off" autocapitalize="off">
             </div>
             <div class="field-wrapper last">
-              <input id="username" is="core-input" placeholder="Username">
+              <input id="username" is="core-input" placeholder="Username"
+                     autocomplete="off" autocorrect="off" autocapitalize="off">
             </div>
             <div id="submit" class="button" on-tap="{{submit}}">Sign up</div>
             <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
