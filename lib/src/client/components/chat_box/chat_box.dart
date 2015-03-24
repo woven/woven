@@ -79,6 +79,7 @@ class ChatBox extends PolymerElement {
 
     // Insert the message instantly.
     Map messageMap = new Map.from(message.toJson());
+    messageMap['usernameForDisplay'] = app.user.username;
     viewModel.insertMessage(messageMap);
     Timer.run(() => chatView.scrollToBottom());
 
