@@ -167,7 +167,7 @@ ul.menu > li:hover {
 @media (max-width: 500px) {
   div.cta {
     width: 100%;
-    min-height: 410px;
+    border-radius: 0;
   }
 
   .cta .content-container {
@@ -186,5 +186,20 @@ ul.menu > li:hover {
 
   .cta .footer {
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cta .content-container {
+    width: 300px;
+    margin: 20px auto;
+  }
+  .cta h2 {
+    font-size: 32px;
+  }
+
+  .cta h3 {
+    font-size: 22px;
+    margin-top: 25px;
   }
 }
