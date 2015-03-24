@@ -18,12 +18,16 @@ import 'package:woven/src/shared/response.dart';
 class Home extends PolymerElement with Observable {
   @published App app;
   @observable String randomWord = '';
+  @observable Map formData = toObservable({});
 
   var overlayAnimation = new CoreAnimation();
   var logoAnimation = new CoreAnimation();
   var menuAnimation = new CoreAnimation();
   var mainAnimation = new CoreAnimation();
   var ctaAnimation = new CoreAnimation();
+
+  var processing = false;
+  var processingAnimation = new CoreAnimation();
 
   Element get overlay => this.shadowRoot.querySelector('div.overlay');
   Element get logo => this.shadowRoot.querySelector('div.logo');
@@ -33,11 +37,10 @@ class Home extends PolymerElement with Observable {
 
   CoreInput get username => $['username'];
   CoreInput get password => $['password'];
+  CoreInput get email => $['email'];
   Element get submitButton => $['submit'];
 
   Home.created() : super.created();
-
-
 
   toggleOverlay() {
     overlayAnimation.target = overlay;
@@ -87,7 +90,7 @@ class Home extends PolymerElement with Observable {
       new Timer(new Duration(milliseconds: 800), () {
         toggleCta();
       });
-      toggleMenu();
+//      toggleMenu();
     });
   }
 
@@ -158,8 +161,135 @@ class Home extends PolymerElement with Observable {
   }
 
   close() {
-    app.showHomePage = false;
-    app.skippedHomePage = true;
+    toggleCta();
+    new Timer(new Duration(milliseconds: 400), () {
+      toggleLogo();
+      new Timer(new Duration(milliseconds: 400), () {
+        toggleCover();
+        new Timer(new Duration(milliseconds: 400), () {
+          app.showHomePage = false;
+          app.skippedHomePage = true;
+        });
+      });
+    });
+
+  }
+
+  /**
+   * Submit the form and choose what to do.
+   */
+  submit(Event e) {
+    e.preventDefault();
+
+    if (email.value.trim().isEmpty) {
+      window.alert("Please provide your email.");
+      return false;
+    }
+
+    if (username.value.trim().isEmpty) {
+      window.alert("Please choose a username.");
+      return false;
+    }
+
+    //TODO: Regex this for all disallowed cases.
+    if (username.value.trim().contains(" ")) {
+      window.alert("Your username may not contain spaces.");
+      return false;
+    }
+
+    if (password.value.trim().isEmpty || password.value.trim().length < 6) {
+      window.alert("Please choose a password at least 6 characters long.");
+      return false;
+    }
+
+//    if (firstname.value.trim().isEmpty || lastname.value.trim().isEmpty) {
+//      window.alert("Please give us your full name so we can be cordial.");
+//      return false;
+//    }
+
+    createNewUser();
+  }
+
+  /**
+   * Create a new user.
+   */
+  createNewUser() {
+    toggleProcessingIndicator();
+
+    // Check credentials and sign the user in server side.
+    HttpRequest.request(
+        Routes.createNewUser.toString(),
+        method: 'POST',
+        sendData: JSON.encode({
+            'username': username.value,
+            'password': password.value,
+//            'firstName': firstname.value,
+//            'lastName': lastname.value,
+            'email': email.value
+        }))
+    .then((HttpRequest request) {
+      // Set up the response as an object.
+      Response response = Response.fromJson(JSON.decode(request.responseText));
+      if (response.success) {
+        // Set the auth token and remove it from the map.
+        app.authToken = response.data['authToken'];
+        // TODO: This should totally just be part of the UserModel.
+        response.data.remove('authToken');
+        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+
+        // Set up the user object.
+        app.user = UserModel.fromJson(response.data);
+        if (app.user.settings == null) app.user.settings = {};
+
+        document.body.classes.add('no-transition');
+        app.user.settings = toObservable(app.user.settings);
+        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+
+        app.cache.users[app.user.username] = app.user;
+
+        // Trigger changes to app state in response to user sign in/out.
+        //TODO: Aha! This triggers a feedViewModel load.
+        app.mainViewModel.invalidateUserState();
+
+        // Hide the homepage and show the app.
+        app.showHomePage = false;
+        app.skippedHomePage = true;
+
+        // When the user completes the welcome dialog, send them a welcome email.
+//    HttpRequest.request(Routes.sendWelcome.toString());
+
+        Timer.run(() => app.showMessage('Welcome to Woven, ${app.user.username}!'));
+      } else {
+        window.alert(response.message);
+      }
+    });
+  }
+
+  toggleProcessingIndicator() {
+    if (processing) {
+      submitButton.classes.remove('disabled');
+      processingAnimation.cancel();
+      processing = false;
+    } else {
+      submitButton.classes.add('disabled');
+      processingAnimation.duration = 600;
+      processingAnimation.iterations = 'Infinity';
+      processingAnimation.easing = 'ease-in';
+      processingAnimation.keyframes = [
+          {
+              'background-color': 'rgb(64, 136, 214)'
+          },
+          {
+              'background-color': 'rgb(73, 168, 255)'
+          },
+          {
+              'background-color': 'rgb(64, 136, 214)'
+          }
+      ];
+      processingAnimation.target = submitButton;
+      processingAnimation.play();
+      processing = true;
+    }
   }
 
   animateRandomWords() {
