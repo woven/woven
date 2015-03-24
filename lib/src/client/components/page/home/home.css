@@ -3,7 +3,6 @@
 .cover {
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg');
   opacity: 0;
 }
 

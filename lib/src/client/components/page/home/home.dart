@@ -1,13 +1,18 @@
 import 'dart:html';
 import 'dart:async';
 import 'dart:math';
+import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_animation.dart';
+import 'package:core_elements/core_overlay.dart';
+import 'package:core_elements/core_input.dart';
 
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-
+import 'package:woven/src/shared/model/user.dart';
+import 'package:woven/src/shared/routing/routes.dart';
+import 'package:woven/src/shared/response.dart';
 
 @CustomTag('x-home')
 class Home extends PolymerElement with Observable {
@@ -26,7 +31,13 @@ class Home extends PolymerElement with Observable {
   Element get main => this.shadowRoot.querySelector('div.cover');
   Element get cta => this.shadowRoot.querySelector('div.cta');
 
+  CoreInput get username => $['username'];
+  CoreInput get password => $['password'];
+  Element get submitButton => $['submit'];
+
   Home.created() : super.created();
+
+
 
   toggleOverlay() {
     overlayAnimation.target = overlay;
@@ -50,9 +61,9 @@ class Home extends PolymerElement with Observable {
     }
   }
 
-  toggleMain() {
+  toggleCover() {
     mainAnimation.target = main;
-    mainAnimation.duration = 200;
+    mainAnimation.duration = 400;
     mainAnimation.iterations = 'auto';
     mainAnimation.easing = 'ease-out';
     mainAnimation.composite = 'add';
@@ -62,6 +73,15 @@ class Home extends PolymerElement with Observable {
         {'opacity': '1'}
     ];
     mainAnimation.play();
+
+    if (mainAnimation.direction == 'reverse') {
+      mainAnimation.direction = 'forward';
+    } else {
+      mainAnimation.direction = 'reverse';
+    }
+  }
+
+  toggleMain() {
     new Timer(new Duration(milliseconds: 500), () {
       toggleLogo();
       new Timer(new Duration(milliseconds: 800), () {
@@ -69,12 +89,6 @@ class Home extends PolymerElement with Observable {
       });
       toggleMenu();
     });
-
-    if (mainAnimation.direction == 'reverse') {
-      mainAnimation.direction = 'forward';
-    } else {
-      mainAnimation.direction = 'reverse';
-    }
   }
 
   toggleCta() {
@@ -174,6 +188,11 @@ class Home extends PolymerElement with Observable {
   }
 
   attached() {
-    Timer.run(() => toggleMain());
+    ImageElement coverImage = new ImageElement(src: 'http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg');
+    coverImage.onLoad.listen((e) {
+      main.style.backgroundImage = 'url(http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg)';
+      Timer.run(() => toggleCover());
+      toggleMain();
+    });
   }
 }
