@@ -92,7 +92,7 @@ core-item core-icon {
 .item.compact:hover {
   transition: border 0s;
   border: 1px solid #e5e5e5;
-  background-color: transparent;
+  /*background-color: transparent;*/
 }
 
 .theme-dark .item.compact:hover {
