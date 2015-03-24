@@ -1,7 +1,7 @@
 library chat_view_model;
 
 import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'dart:async';
@@ -11,10 +11,12 @@ import 'base.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/shared/model/message.dart';
 import 'package:woven/src/client/model/user.dart';
+import 'package:woven/src/shared/input_formatter.dart';
 
 class ChatViewModel extends BaseViewModel with Observable {
   final App app;
   final List messages = toObservable([]);
+  List queuedMessages = [];
   // TODO: Use this later for date separators between messages.
   final Map groupedItems = toObservable({});
 
@@ -32,7 +34,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
 
-  Firebase get f => app.f;
+  db.Firebase get f => app.f;
 
   ChatViewModel({this.app}) {
     loadMessagesByPage();
@@ -53,42 +55,47 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     // Get the list of items, and listen for new ones.
     return messagesRef.once('value').then((snapshot) {
-      snapshot.forEach((itemSnapshot) {
-        Map message = itemSnapshot.val();
+      Map messages = snapshot.exportVal();
+      List messagesAsList = [];
+      messages.forEach((k,v) {
+        Map message = v;
+        message['id'] = k;
+        messagesAsList.add(message);
+      });
 
-        // Use the Firebase snapshot ID as our ID.
-        message['id'] = itemSnapshot.name;
-
+      return Future.forEach(messagesAsList, (message) {
         count++;
         totalCount++;
 
         // Track the snapshot's priority so we can paginate from the last one.
-        lastPriority = itemSnapshot.getPriority();
+        lastPriority = message['.priority'];
 
         // Don't process the extra item we tacked onto pageSize in the limit() above.
         if (count > pageSize) return null;
 
         // Remember the priority of the last item, excluding the extra item which we ignore above.
-        secondToLastPriority = itemSnapshot.getPriority();
+        secondToLastPriority = message['.priority'];
 
-        // Insert each new item into the list.
-        insertMessage(message);
+        return usernameForDisplay(message['user']).then((String usernameForDisplay) {
+          message['usernameForDisplay'] = usernameForDisplay;
+          queuedMessages.add(message);
+        });
 
-//        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
+      }).then((_) {
+        queuedMessages.forEach(insertMessage);
+        queuedMessages.clear();
+        relistenForItems();
 
-      });
+        // If we received less than we tried to load, we've reached the end.
+        if (count <= pageSize) reachedEnd = true;
 
-      // Wait until the view is loaded, then scroll to bottom.
-      if (isScrollPosAtBottom || isFirstLoad) Timer.run(() => chatView.scrollToBottom());
+        // Wait until the view is loaded, then scroll to bottom.
+        if (isScrollPosAtBottom || isFirstLoad) Timer.run(() => chatView.scrollToBottom());
+        isFirstLoad = false;
 
-      relistenForItems();
-
-      // If we received less than we tried to load, we've reached the end.
-      if (count <= pageSize) reachedEnd = true;
-      isFirstLoad = false;
-
-      new Timer(new Duration(seconds: 1), () {
-        reloadingContent = false;
+        new Timer(new Duration(seconds: 1), () {
+          reloadingContent = false;
+        });
       });
     });
   }
@@ -119,7 +126,6 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   listenForNewItems({startAt, endAt}) {
-
     // If this is the first item loaded, start listening for new items.
     var itemsRef = f.child('/messages_by_community/${app.community.alias}')
     .startAt(priority: startAt)
@@ -152,7 +158,10 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       } else {
         // Insert each new item into the list.
-        insertMessage(newItem);
+        usernameForDisplay(newItem['user']).then((String usernameForDisplay) {
+          newItem['usernameForDisplay'] = usernameForDisplay;
+          insertMessage(newItem);
+        });
       }
 
       // If user is scrolled to bottom, keep it that way.
@@ -193,15 +202,15 @@ class ChatViewModel extends BaseViewModel with Observable {
     }
   }
 
-  usernameForDisplay(String username) {
-    UserModel.usernameForDisplay(username.toLowerCase(), f, app.cache)
+  Future<String> usernameForDisplay(String username) {
+    return UserModel.usernameForDisplay(username.toLowerCase(), f, app.cache)
     .then((String usernameForDisplay) => usernameForDisplay);
   }
 
   /**
    * Prepare the message and insert it into the observed list.
    */
-  void insertMessage(Map message) {
+  insertMessage(Map message) {
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
 
@@ -226,6 +235,12 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     messages.insert(index == null ? messages.length : index, toObservable(message));
   }
+
+
+  /**
+   * Handle clicks on web notifications.
+   */
+  notificationClicked(Event e) => context.callMethod('focus');
 
   /**
    * Handle commands.
@@ -256,13 +271,27 @@ class ChatViewModel extends BaseViewModel with Observable {
         insertMessage(message.toJson());
         break;
       case '/notify':
-      //    TODO: Testing web notifications.
-        Notification.requestPermission().then((res) {
-          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: 'http://woven.app/static/images/favicon-32x32.png');
-          new Timer(new Duration(seconds: 4), () {
-            notification.close();
-          });
+        // JS interop version of web notifications until Dart fixes land.
+        String dummyMessage = 'Lorem ipsum dolor sit amet conseceteur adipiscing\n elit and some other random text and gibberish to prove a point';
+        var notificationOptions = new JsObject.jsify({
+          'body': InputFormatter.createTeaser(dummyMessage.replaceAll('\n', ' '), 75),
+          'icon': '/static/images/woven_button_trans_margin_more.png'
         });
+
+        var notification = new JsObject(context['Notification'], ['${message.user} just said something', notificationOptions]);
+        new Timer(new Duration(seconds: 8), () {
+          notification.callMethod('close');
+        });
+        notification.callMethod('addEventListener', ['click', notificationClicked]);
+
+
+      //    TODO: Testing web notifications.
+//        Notification.requestPermission().then((res) {
+//          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: '/static/images/favicon-32x32.png');
+//          new Timer(new Duration(seconds: 4), () {
+//            notification.close();
+//          });
+//        });
         break;
       default:
         message.message = 'I don\'t recognize that command.';
