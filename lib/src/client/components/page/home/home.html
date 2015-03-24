@@ -8,25 +8,28 @@
     <link rel="stylesheet" href="home.css">
     <div class="cover" layout vertical fit>
       <div class="logo"></div>
-      <div class="cta" self-center layout vertical>
-        <h2>Tap into the real world communities you care about.</h2>
-        <h3>Get informed. Get involved. Make a difference.</h3>
-        <div self-center>
-          <div class="field-wrapper first">
-            <input id="email" is="core-input" placeholder="Email">
+      <div class="cta" self-center>
+        <div class="content-container" layout vertical>
+          <h2>Tap into the real world communities you care about.</h2>
+          <h3>Get informed. Get involved. Make a difference.</h3>
+
+          <div self-center>
+            <div class="field-wrapper first">
+              <input id="email" is="core-input" placeholder="Email">
+            </div>
+            <div class="field-wrapper">
+              <input id="password" is="core-input" type="password" placeholder="Password">
+            </div>
+            <div class="field-wrapper last">
+              <input id="username" is="core-input" placeholder="Username">
+            </div>
+            <div id="submit" class="button" on-tap="{{submit}}">Sign up</div>
+            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
           </div>
-          <div class="field-wrapper">
-            <input id="password" is="core-input" type="password" placeholder="Password">
+          <div class="footer" self-center>
+            <p>We protect your information. Leave anytime.</p>
+            <p><a href="#">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
           </div>
-          <div class="field-wrapper last">
-            <input id="username" is="core-input" placeholder="Username">
-          </div>
-          <div id="submit" class="button" on-tap="{{submit}}">Sign up</div>
-          <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
-        </div>
-        <div class="footer" self-center>
-          <p>We protect your information. Leave anytime.</p>
-          <p><a href="#">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
         </div>
       </div>
       <!--<div class="overlay">-->
