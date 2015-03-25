@@ -52,7 +52,7 @@ class CommunityModel extends shared.CommunityModel {
    * Returns a list of community objects.
    */
   static Future<Iterable<CommunityModel>> getCommunities() =>
-  Firebase.get('/communities.json').then((Map data) => data.values.map(shared.CommunityModel.decode));
+  Firebase.get('/communities.json').then((Map data) => data.values.map(shared.CommunityModel.fromJson));
 
 
 //  static Future<Iterable<CommunityModel>> getCommunities() =>
