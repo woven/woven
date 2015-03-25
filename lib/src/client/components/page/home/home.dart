@@ -30,7 +30,7 @@ class Home extends PolymerElement with Observable {
   var processingAnimation = new CoreAnimation();
 
   Element get overlay => this.shadowRoot.querySelector('div.overlay');
-  Element get logo => this.shadowRoot.querySelector('div.logo');
+  Element get logo => this.shadowRoot.querySelector((app.isMobile ? 'div.logo-solo' : 'div.logo'));
   Element get menu => this.shadowRoot.querySelector('ul.menu');
   Element get main => this.shadowRoot.querySelector('div.cover');
   Element get cta => this.shadowRoot.querySelector('div.cta');
@@ -103,7 +103,7 @@ class Home extends PolymerElement with Observable {
     ctaAnimation.fill = 'both';
     ctaAnimation.keyframes = [
         {'opacity': '0', 'top': '300px'},
-        {'opacity': '1', 'top': '60px'}
+        {'opacity': '1', 'top': (app.isMobile ? '0px' : '60px')}
     ];
     ctaAnimation.play();
 

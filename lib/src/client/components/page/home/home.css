@@ -123,6 +123,14 @@
 
 }
 
+.logo-solo {
+  background: url('http://storage.googleapis.com/woven/public/images/app/woven_logo_solo.png') no-repeat center;
+  height: 50px;
+  background-size: contain;
+  opacity: 0;
+  margin-bottom: 20px;
+}
+
 .logo-small {
   background: url('http://storage.googleapis.com/woven/public/images/app/woven-logo-small.png') no-repeat right;
   height: 60px;
@@ -168,6 +176,7 @@ ul.menu > li:hover {
   div.cta {
     width: 100%;
     border-radius: 0;
+    height: 100%;
   }
 
   .cta .content-container {
@@ -181,7 +190,7 @@ ul.menu > li:hover {
 
   .cta h3 {
     font-size: 25px;
-    margin-top: 25px;
+    margin-top: 20px;
   }
 
   .cta .footer {
@@ -200,6 +209,6 @@ ul.menu > li:hover {
 
   .cta h3 {
     font-size: 22px;
-    margin-top: 25px;
+    margin-top: 20px;
   }
 }
