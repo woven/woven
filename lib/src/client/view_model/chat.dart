@@ -56,6 +56,10 @@ class ChatViewModel extends BaseViewModel with Observable {
     // Get the list of items, and listen for new ones.
     return messagesRef.once('value').then((snapshot) {
       Map messages = snapshot.exportVal();
+      if (messages == null) {
+        reachedEnd = true;
+        return null;
+      }
       List messagesAsList = [];
       messages.forEach((k,v) {
         Map message = v;
