@@ -44,85 +44,87 @@ class ItemViewModel extends BaseViewModel with Observable {
       var decodedItem = base64Decode(encodedItem);
 
       f.child('/items/' + decodedItem).onValue.first.then((e) {
-        item = toObservable(e.snapshot.val());
+        // We hold the item in a separate var while we pre-process it.
+        var queuedItem = toObservable(e.snapshot.val());
 
         // Make sure we're using the collapsed username.
-        item['user'] = (item['user'] as String).toLowerCase();
+        queuedItem['user'] = (queuedItem['user'] as String).toLowerCase();
 
-        return UserModel.usernameForDisplay(item['user'], f, app.cache).then((String usernameForDisplay) {
-          item['usernameForDisplay'] = usernameForDisplay;
+        return UserModel.usernameForDisplay(queuedItem['user'], f, app.cache).then((String usernameForDisplay) {
+          queuedItem['usernameForDisplay'] = usernameForDisplay;
 
           // If no updated date, use the created date.
           // TODO: We assume createdDate is never null!
-          if (item['updatedDate'] == null) {
-            item['updatedDate'] = item['createdDate'];
+          if (queuedItem['updatedDate'] == null) {
+            queuedItem['updatedDate'] = queuedItem['createdDate'];
           }
 
           // The live-date-time element needs parsed dates.
-          item['createdDate'] = DateTime.parse(item['createdDate']);
-          item['updatedDate'] = DateTime.parse(item['updatedDate']);
+          queuedItem['createdDate'] = DateTime.parse(queuedItem['createdDate']);
+          queuedItem['updatedDate'] = DateTime.parse(queuedItem['updatedDate']);
 
-          switch (item['type']) {
+          switch (queuedItem['type']) {
             case 'event':
-              if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
-              item['defaultImage'] = 'event';
+              if (queuedItem['startDateTime'] != null) queuedItem['startDateTime'] = DateTime.parse(queuedItem['startDateTime']);
+              queuedItem['defaultImage'] = 'event';
               break;
             case 'announcement':
-              item['defaultImage'] = 'announcement';
+              queuedItem['defaultImage'] = 'announcement';
               break;
             case 'news':
-              item['defaultImage'] = 'custom-icons:news';
+              queuedItem['defaultImage'] = 'custom-icons:news';
               break;
             case 'message':
             case 'other':
-              item['type'] = null;
+              queuedItem['type'] = null;
               break;
             default:
           }
 
           // Handle any URI previews the item may have.
-          if (item['uriPreviewId'] != null) {
-            f.child('/uri_previews/${item['uriPreviewId']}').onValue.listen((e) {
+          if (queuedItem['uriPreviewId'] != null) {
+            f.child('/uri_previews/${queuedItem['uriPreviewId']}').onValue.listen((e) {
               var previewData = e.snapshot.val();
               UriPreview preview = UriPreview.fromJson(previewData);
-              item['uriPreview'] = preview.toJson();
-              item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${item['uriPreview']['imageSmallLocation']}' : null;
-              item['uriPreviewTried'] = true;
+              queuedItem['uriPreview'] = preview.toJson();
+              queuedItem['uriPreview']['imageSmallLocation'] = (queuedItem['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${queuedItem['uriPreview']['imageSmallLocation']}' : null;
+              queuedItem['uriPreviewTried'] = true;
 
               // If subject and body are empty, use title and teaser from URI preview instead.
-              if (item['subject'] == null) item['subject'] = toObservable(preview.title);
-              if (item['body'] == null) item['body'] =  toObservable(preview.teaser);;
+              if (queuedItem['subject'] == null) queuedItem['subject'] = toObservable(preview.title);
+              if (queuedItem['body'] == null) queuedItem['body'] =  toObservable(preview.teaser);;
             });
           } else {
-            item['uriPreviewTried'] = true;
+            queuedItem['uriPreviewTried'] = true;
           }
 
           // Format the URL for display.
-          if (item['url'] != null) {
-            String uriHost = Uri.parse(item['url']).host;
+          if (queuedItem['url'] != null) {
+            String uriHost = Uri.parse(queuedItem['url']).host;
             String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
-            item['uriHost'] = uriHostShortened;
+            queuedItem['uriHost'] = uriHostShortened;
           }
 
           // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
           // So we'll add that to our local item list.
-          item['id'] = e.snapshot.name;
+          queuedItem['id'] = e.snapshot.name;
 
           // Listen for realtime changes to the star count.
-          f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-            item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          f.child('/items/' + queuedItem['id'] + '/star_count').onValue.listen((e) {
+            queuedItem['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
           });
 
           // Listen for realtime changes to the like count.
-          f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
-            item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          f.child('/items/' + queuedItem['id'] + '/like_count').onValue.listen((e) {
+            queuedItem['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
           });
 
           // Listen for realtime changes to the comment count.
-          f.child('/items/' + item['id'] + '/comment_count').onValue.listen((e) {
+          f.child('/items/' + queuedItem['id'] + '/comment_count').onValue.listen((e) {
             item['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
           });
 
+          item = queuedItem;
           app.router.selectedItem = item;
         });
       }).then((e) {
