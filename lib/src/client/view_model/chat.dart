@@ -67,6 +67,9 @@ class ChatViewModel extends BaseViewModel with Observable {
         count++;
         totalCount++;
 
+        // Make sure we're using the collapsed username.
+        message['user'] = (message['user'] as String).toLowerCase();
+
         // Track the snapshot's priority so we can paginate from the last one.
         lastPriority = message['.priority'];
 
@@ -90,7 +93,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         if (count <= pageSize) reachedEnd = true;
 
         // Wait until the view is loaded, then scroll to bottom.
-        if (isScrollPosAtBottom || isFirstLoad) Timer.run(() => chatView.scrollToBottom());
+        if (isScrollPosAtBottom || isFirstLoad && chatView != null) Timer.run(() => chatView.scrollToBottom());
         isFirstLoad = false;
 
         new Timer(new Duration(seconds: 1), () {
@@ -135,6 +138,9 @@ class ChatViewModel extends BaseViewModel with Observable {
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
       Map newItem = e.snapshot.val();
       newItem['id'] = e.snapshot.name;
+
+      // Make sure we're using the collapsed username.
+      newItem['user'] = (newItem['user'] as String).toLowerCase();
 
       var existingItem = messages.firstWhere((i) => (i['id'] != null)
         ? (i['id'] == newItem['id'])
@@ -283,7 +289,6 @@ class ChatViewModel extends BaseViewModel with Observable {
           notification.callMethod('close');
         });
         notification.callMethod('addEventListener', ['click', notificationClicked]);
-
 
       //    TODO: Testing web notifications.
 //        Notification.requestPermission().then((res) {

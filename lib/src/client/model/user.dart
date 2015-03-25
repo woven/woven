@@ -14,10 +14,13 @@ class UserModel extends shared.UserModel {
     // Find the case-ified username, from app cache or directly.
     user = user.toLowerCase();
     if (cache.users.containsKey(user)) {
+      if (cache.users[user] == null) {
+        return new Future.value('Unknown');
+      }
       return new Future.value(cache.users[user].username);
     } else {
       return f.child('/users/$user/username').once('value').then((res) {
-        if (res == null) return null;
+        if (res.val() == null) return new Future.value(user);
         return res.val();
       });
     }

@@ -13,7 +13,8 @@ import 'package:woven/src/client/model/user.dart';
 class ItemViewModel extends BaseViewModel with Observable {
   final App app;
   @observable Map item = toObservable({});
-  final String firebaseLocation = config['datastore']['firebaseLocation'];
+
+  db.Firebase get f => app.f;
 
   ItemViewModel(this.app) {
     getItem();
@@ -42,16 +43,24 @@ class ItemViewModel extends BaseViewModel with Observable {
       var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
       var decodedItem = base64Decode(encodedItem);
 
-      var f = new db.Firebase(firebaseLocation);
-
       f.child('/items/' + decodedItem).onValue.first.then((e) {
         item = toObservable(e.snapshot.val());
+
+        // Make sure we're using the collapsed username.
+        item['user'] = (item['user'] as String).toLowerCase();
 
         return UserModel.usernameForDisplay(item['user'], f, app.cache).then((String usernameForDisplay) {
           item['usernameForDisplay'] = usernameForDisplay;
 
+          // If no updated date, use the created date.
+          // TODO: We assume createdDate is never null!
+          if (item['updatedDate'] == null) {
+            item['updatedDate'] = item['createdDate'];
+          }
+
           // The live-date-time element needs parsed dates.
           item['createdDate'] = DateTime.parse(item['createdDate']);
+          item['updatedDate'] = DateTime.parse(item['updatedDate']);
 
           switch (item['type']) {
             case 'event':
@@ -95,16 +104,6 @@ class ItemViewModel extends BaseViewModel with Observable {
             item['uriHost'] = uriHostShortened;
           }
 
-          // Find the case-ified username, from app cache or directly.
-          if (app.cache.users.containsKey((item['user'] as String).toLowerCase())) {
-            item['user'] = app.cache.users[item['user']].username;
-          } else {
-            app.f.child('/users/${item['user']}/username').once('value').then((res) {
-              if (res == null) return;
-              item['user'] = res;
-            });
-          }
-
           // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
           // So we'll add that to our local item list.
           item['id'] = e.snapshot.name;
@@ -134,7 +133,7 @@ class ItemViewModel extends BaseViewModel with Observable {
 
   void loadItemUserStarredLikedInformation() {
     if (item['id'] == null) return;
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+
     if (app.user != null && !item.isEmpty) {
       var starredItemsRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
       var likedItemsRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
@@ -153,7 +152,6 @@ class ItemViewModel extends BaseViewModel with Observable {
   void toggleStar() {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var starredItemRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
@@ -199,7 +197,6 @@ class ItemViewModel extends BaseViewModel with Observable {
   void toggleLike() {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var starredItemRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
@@ -238,7 +235,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
 }

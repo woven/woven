@@ -136,6 +136,10 @@ class FeedViewModel extends BaseViewModel with Observable {
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
       Map newItem = e.snapshot.val();
+
+      // Make sure we're using the collapsed username.
+      newItem['user'] = (newItem['user'] as String).toLowerCase();
+
       var existingItem = items.firstWhere((i) => i['id'] == e.snapshot.name, orElse: () => null);
       if (existingItem != null) return;
 
@@ -154,6 +158,9 @@ class FeedViewModel extends BaseViewModel with Observable {
     childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
       Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
       Map newData = e.snapshot.val();
+
+      // Make sure we're using the collapsed username.
+      newData['user'] = (newData['user'] as String).toLowerCase();
 
       Future processData = new Future.sync(() {
         // First pre-process some things.
@@ -222,6 +229,9 @@ class FeedViewModel extends BaseViewModel with Observable {
 
   processItem(DataSnapshot snapshot) {
     var item = toObservable(snapshot.val());
+
+    // Make sure we're using the collapsed username.
+    item['user'] = (item['user'] as String).toLowerCase();
 
     UserModel.usernameForDisplay(item['user'], f, app.cache)
       .then((String usernameForDisplay) => item['usernameForDisplay'] = usernameForDisplay);
