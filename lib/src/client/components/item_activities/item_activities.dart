@@ -8,6 +8,8 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/client/model/user.dart';
+
 import 'package:paper_elements/paper_autogrow_textarea.dart';
 import 'package:core_elements/core_a11y_keys.dart';
 
@@ -52,15 +54,12 @@ class ItemActivities extends PolymerElement {
       comment['createdDate'] = DateTime.parse(comment['createdDate']);
       comment['id'] = e.snapshot.name;
 
-      f.child('/users/' + comment['user']).once('value').then((snapshot) {
-        Map user = snapshot.val();
-        if (user == null) return;
-        if (user['picture'] != null) {
-          comment['user_picture'] = "${app.cloudStoragePath}/${user['picture']}";
-        } else {
-          comment['user_picture'] = null;
-        }
-      }).then((e) {
+      // Make sure we're using the collapsed username.
+      comment['user'] = (comment['user'] as String).toLowerCase();
+
+      UserModel.usernameForDisplay(comment['user'], f, app.cache).then((String usernameForDisplay) {
+        comment['usernameForDisplay'] = usernameForDisplay;
+
         // Insert each new item at top of list so the list is ascending.
         comments.insert(0, comment);
         comments.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
