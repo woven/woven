@@ -15,6 +15,10 @@ body {
   touch-action: none;
 }
 
+body.colored-bg {
+  background-color: #eee;
+}
+
 /* This somehow fixes the disappearing dialog. */
 core-overlay-layer.core-opened {
   position: inherit;

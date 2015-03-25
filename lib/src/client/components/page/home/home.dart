@@ -293,6 +293,10 @@ class Home extends PolymerElement with Observable {
     }
   }
 
+  toggleSignIn() {
+    app.toggleSignIn();
+  }
+
   animateRandomWords() {
     List words = ['changemakers', 'community organizers', 'movers and shakers',
     'collaborators', 'the crazy ones', 'makers', 'world changers', 'we vs. me', 'repairing the world',
@@ -320,10 +324,15 @@ class Home extends PolymerElement with Observable {
 
   attached() {
     ImageElement coverImage = new ImageElement(src: 'http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg');
+    document.body.classes.add('colored-bg');
+    Timer.run(() => toggleCover());
+    toggleMain();
     coverImage.onLoad.listen((e) {
       main.style.backgroundImage = 'url(http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg)';
-      Timer.run(() => toggleCover());
-      toggleMain();
     });
+  }
+
+  detached() {
+    document.body.classes.remove('colored-bg');
   }
 }
