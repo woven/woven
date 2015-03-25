@@ -2,6 +2,7 @@
   width: 40px;
   height: 40px;
   background: #F5F5F5;
+  border-radius: 2px;
 }
 
 .user-photo.theme-dark core-image {
