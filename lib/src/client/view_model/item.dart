@@ -136,8 +136,8 @@ class ItemViewModel extends BaseViewModel with Observable {
     if (item['id'] == null) return;
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
     if (app.user != null && !item.isEmpty) {
-      var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
-      var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+      var starredItemsRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
+      var likedItemsRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
       starredItemsRef.onValue.listen((e) {
         item['starred'] = e.snapshot.val() != null;
       });
@@ -154,7 +154,7 @@ class ItemViewModel extends BaseViewModel with Observable {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
-    var starredItemRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+    var starredItemRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['starred']) {
@@ -174,7 +174,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
     } else {
       // If it's not starred, time to star it.
       item['starred'] = true;
@@ -192,7 +192,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
 
@@ -200,7 +200,7 @@ class ItemViewModel extends BaseViewModel with Observable {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
     var f = new db.Firebase(config['datastore']['firebaseLocation']);
-    var starredItemRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+    var starredItemRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['liked']) {
@@ -220,7 +220,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
     } else {
       // If it's not starred, time to star it.
       item['liked'] = true;

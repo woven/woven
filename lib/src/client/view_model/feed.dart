@@ -301,8 +301,8 @@ class FeedViewModel extends BaseViewModel with Observable {
     });
 
     if (app.user != null) {
-      var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
-      var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+      var starredItemsRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
+      var likedItemsRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
       starredItemsRef.onValue.listen((e) {
         item['starred'] = e.snapshot.val() != null;
       });
@@ -322,7 +322,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
     var item = items.firstWhere((i) => i['id'] == id);
 
-    var starredItemRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+    var starredItemRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['starred']) {
@@ -342,7 +342,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
     } else {
       // If it's not starred, time to star it.
       item['starred'] = true;
@@ -360,7 +360,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
 
@@ -369,7 +369,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
     var item = items.firstWhere((i) => i['id'] == id);
 
-    var starredItemRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+    var starredItemRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['liked']) {
@@ -389,7 +389,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
     } else {
       // If it's not starred, time to star it.
       item['liked'] = true;
@@ -407,14 +407,14 @@ class FeedViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
 
   void loadUserStarredItemInformation() {
     items.forEach((item) {
       if (app.user != null) {
-        var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+        var starredItemsRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
         starredItemsRef.onValue.listen((e) {
           item['starred'] = e.snapshot.val() != null;
         });
@@ -428,7 +428,7 @@ class FeedViewModel extends BaseViewModel with Observable {
   void loadUserLikedItemInformation() {
     items.forEach((item) {
       if (app.user != null) {
-        var starredItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+        var starredItemsRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
         starredItemsRef.onValue.listen((e) {
           item['liked'] = e.snapshot.val() != null;
         });

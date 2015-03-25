@@ -5,7 +5,7 @@ import 'dart:convert';
 
 class UserModel {
   String id;
-  String username;
+  String username; // This is the username formatted for display, i.e. case sensitive.
   String password;
   String firstName;
   String lastName;

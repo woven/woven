@@ -34,7 +34,7 @@
       <template if="{{app.user != null}}">
         <div layout horizontal>
           <div class="user-area" vertical layout>
-            <user-picture app="{{app}}" username="{{app.user.username}}"></user-picture>
+            <user-picture app="{{app}}" username="{{app.user.username.toLowerCase()}}"></user-picture>
           </div>
           <div vertical layout flex>
             <div class="field-wrapper full-height">

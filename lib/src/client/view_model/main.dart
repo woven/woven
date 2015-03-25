@@ -188,7 +188,7 @@ class MainViewModel extends BaseViewModel with Observable {
       communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
       if (app.user != null) {
-        var starredCommunitiesRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+        var starredCommunitiesRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/communities/' + community['id']);
         starredCommunitiesRef.onValue.listen((e) {
           community['starred'] = e.snapshot.val() != null;
         });
@@ -217,7 +217,7 @@ class MainViewModel extends BaseViewModel with Observable {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
     var community = communities.firstWhere((i) => i['id'] == id);
-    var starredCommunityRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+    var starredCommunityRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/communities/' + community['id']);
     var communityRef = f.child('/communities/' + community['id']);
 
     if (community['starred']) {
@@ -237,7 +237,7 @@ class MainViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username.toLowerCase()).remove();
 
     } else {
       // If it's not starred, time to star it.
@@ -256,7 +256,7 @@ class MainViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
 

@@ -90,7 +90,7 @@
               </template>
               <template if="{{app.user != null}}">
                 <div id="user-area" layout horizontal>
-                  <div class="user-area-photo"><user-picture app="{{app}}" username="{{app.user.username}}"></user-picture></div>
+                  <div class="user-area-photo"><user-picture app="{{app}}" username="{{app.user.username.toLowerCase()}}"></user-picture></div>
                   <div class="user-area-text" flex start-justified layout vertical>
                     <div>Hello, {{app.user.username}}!</div>
                     <div class="sub-links">

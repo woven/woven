@@ -23,8 +23,19 @@ final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
 var googleApiClient;
 
 main() {
-  updateAllItemsMoveOtherToMessages();
-  createPreviewForItemsWithUrls();
+//  updateAllItemsMoveOtherToMessages();
+//  createPreviewForItemsWithUrls();
+changeAllUsersToLowercase();
+}
+
+changeAllUsersToLowercase() {
+  Firebase.get('/users2.json?format=export').then((Map users) {
+    users.forEach((k, v) {
+      String username = k;
+      Firebase.put('/users/${username.toLowerCase()}.json', v);
+      print(username);
+    });
+  });
 }
 
 updateAllItemsMoveOtherToMessages() {

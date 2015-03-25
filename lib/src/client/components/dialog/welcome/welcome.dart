@@ -76,8 +76,8 @@ class WelcomeDialog extends PolymerElement {
     if (app.user == null) {
       createNewUser();
     } else {
-      if (username.value != app.user.username) updateTemporaryUser();
-      if (username.value == app.user.username) updateExistingUser();
+      if (username.value != app.user.username.toLowerCase()) updateTemporaryUser();
+      if (username.value == app.user.username.toLowerCase()) updateExistingUser();
     }
 
 //    overlay.toggle();
@@ -132,7 +132,7 @@ class WelcomeDialog extends PolymerElement {
         app.user.settings = toObservable(app.user.settings);
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
 
-        app.cache.users[app.user.username] = app.user;
+        app.cache.users[app.user.username.toLowerCase()] = app.user;
 
         // Trigger changes to app state in response to user sign in/out.
         //TODO: Aha! This triggers a feedViewModel load.
@@ -155,7 +155,7 @@ class WelcomeDialog extends PolymerElement {
     final userRef = f.child('/users/${username.value}');
     final facebookIndexRef = f.child('/facebook_index/${app.user.facebookId}');
     final sessionIndexRef = f.child('/session_index/${app.sessionId}');
-    final tempUserRef = f.child('/users/${app.user.username}');
+    final tempUserRef = f.child('/users/${app.user.username.toLowerCase()}');
     var epochTime = DateTime.parse(now.toString()).millisecondsSinceEpoch;
 
     // Move the old user data to its new location and update it.

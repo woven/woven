@@ -115,7 +115,7 @@ class WovenApp extends PolymerElement with Observable {
         app.user.settings = toObservable(app.user.settings);
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
 
-        app.cache.users[app.user.username] = app.user;
+        app.cache.users[app.user.username.toLowerCase()] = app.user;
 
         // Trigger changes to app state in response to user sign in/out.
         //TODO: Aha! This triggers a feedViewModel load.

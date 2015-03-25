@@ -60,7 +60,7 @@
           <div class="field-wrapper">
             <input is="core-input" id="username" placeholder="Choose a username"
                    autocomplete="off" autocorrect="off" autocapitalize="off"
-                   value="{{(app.user != null && !app.user.disabled) ? app.user.username : ''}}">
+                   value="{{(app.user != null && !app.user.disabled) ? app.user.username.toLowerCase() : ''}}">
           </div>
           <div class="field-wrapper">
             <input is="core-input" id="password" placeholder="Choose a password"
