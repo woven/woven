@@ -8,6 +8,7 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/client/view_model/base.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/client/model/user.dart';
 
 class ItemViewModel extends BaseViewModel with Observable {
   final App app;
@@ -46,82 +47,85 @@ class ItemViewModel extends BaseViewModel with Observable {
       f.child('/items/' + decodedItem).onValue.first.then((e) {
         item = toObservable(e.snapshot.val());
 
-        // The live-date-time element needs parsed dates.
-        item['createdDate'] = DateTime.parse(item['createdDate']);
+        return UserModel.usernameForDisplay(item['user'], f, app.cache).then((String usernameForDisplay) {
+          item['usernameForDisplay'] = usernameForDisplay;
 
-        switch (item['type']) {
-          case 'event':
-            if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
-            item['defaultImage'] = 'event';
-            break;
-          case 'announcement':
-            item['defaultImage'] = 'announcement';
-            break;
-          case 'news':
-            item['defaultImage'] = 'custom-icons:news';
-            break;
-          case 'message':
-          case 'other':
-            item['type'] = null;
-            break;
-          default:
-        }
+          // The live-date-time element needs parsed dates.
+          item['createdDate'] = DateTime.parse(item['createdDate']);
 
-        // Handle any URI previews the item may have.
-        if (item['uriPreviewId'] != null) {
-          f.child('/uri_previews/${item['uriPreviewId']}').onValue.listen((e) {
-            var previewData = e.snapshot.val();
-            UriPreview preview = UriPreview.fromJson(previewData);
-            item['uriPreview'] = preview.toJson();
-            item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${item['uriPreview']['imageSmallLocation']}' : null;
+          switch (item['type']) {
+            case 'event':
+              if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
+              item['defaultImage'] = 'event';
+              break;
+            case 'announcement':
+              item['defaultImage'] = 'announcement';
+              break;
+            case 'news':
+              item['defaultImage'] = 'custom-icons:news';
+              break;
+            case 'message':
+            case 'other':
+              item['type'] = null;
+              break;
+            default:
+          }
+
+          // Handle any URI previews the item may have.
+          if (item['uriPreviewId'] != null) {
+            f.child('/uri_previews/${item['uriPreviewId']}').onValue.listen((e) {
+              var previewData = e.snapshot.val();
+              UriPreview preview = UriPreview.fromJson(previewData);
+              item['uriPreview'] = preview.toJson();
+              item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${item['uriPreview']['imageSmallLocation']}' : null;
+              item['uriPreviewTried'] = true;
+
+              // If subject and body are empty, use title and teaser from URI preview instead.
+              if (item['subject'] == null) item['subject'] = toObservable(preview.title);
+              if (item['body'] == null) item['body'] =  toObservable(preview.teaser);;
+            });
+          } else {
             item['uriPreviewTried'] = true;
+          }
 
-            // If subject and body are empty, use title and teaser from URI preview instead.
-            if (item['subject'] == null) item['subject'] = toObservable(preview.title);
-            if (item['body'] == null) item['body'] =  toObservable(preview.teaser);;
+          // Format the URL for display.
+          if (item['url'] != null) {
+            String uriHost = Uri.parse(item['url']).host;
+            String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
+            item['uriHost'] = uriHostShortened;
+          }
+
+          // Find the case-ified username, from app cache or directly.
+          if (app.cache.users.containsKey((item['user'] as String).toLowerCase())) {
+            item['user'] = app.cache.users[item['user']].username;
+          } else {
+            app.f.child('/users/${item['user']}/username').once('value').then((res) {
+              if (res == null) return;
+              item['user'] = res;
+            });
+          }
+
+          // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+          // So we'll add that to our local item list.
+          item['id'] = e.snapshot.name;
+
+          // Listen for realtime changes to the star count.
+          f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
+            item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
           });
-        } else {
-          item['uriPreviewTried'] = true;
-        }
 
-        // Format the URL for display.
-        if (item['url'] != null) {
-          String uriHost = Uri.parse(item['url']).host;
-          String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
-          item['uriHost'] = uriHostShortened;
-        }
-
-        // Find the case-ified username, from app cache or directly.
-        if (app.cache.users.containsKey((item['user'] as String).toLowerCase())) {
-          item['user'] = app.cache.users[item['user']].username;
-        } else {
-          app.f.child('/users/${item['user']}/username').once('value').then((res) {
-            if (res == null) return;
-            item['user'] = res;
+          // Listen for realtime changes to the like count.
+          f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
+            item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
           });
-        }
 
-        // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-        // So we'll add that to our local item list.
-        item['id'] = e.snapshot.name;
+          // Listen for realtime changes to the comment count.
+          f.child('/items/' + item['id'] + '/comment_count').onValue.listen((e) {
+            item['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          });
 
-        // Listen for realtime changes to the star count.
-        f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-          item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          app.router.selectedItem = item;
         });
-
-        // Listen for realtime changes to the like count.
-        f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
-          item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-        });
-
-        // Listen for realtime changes to the comment count.
-        f.child('/items/' + item['id'] + '/comment_count').onValue.listen((e) {
-          item['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-        });
-
-        app.router.selectedItem = item;
-
       }).then((e) {
         loadItemUserStarredLikedInformation();
       });
@@ -145,7 +149,6 @@ class ItemViewModel extends BaseViewModel with Observable {
       item['liked'] = false;
     }
   }
-
 
   void toggleStar() {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
@@ -238,6 +241,4 @@ class ItemViewModel extends BaseViewModel with Observable {
       f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
     }
   }
-
-
 }
