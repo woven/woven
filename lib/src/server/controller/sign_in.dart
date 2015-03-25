@@ -58,10 +58,14 @@ class SignInController {
 
       // Return the user data.
       return findUser(username).then((Map userData) {
+        var response = new Response();
+
         if (userData['password'] == null) userData['needsPassword'] = true;
         userData.remove('password');
 
-        var response = new Response();
+        if (userData == null) {
+          return Response.fromError('The user associated with that session was not found.');
+        }
 
         if (authToken == null) {
           var newSessionId = app.sessionManager.createSessionId();
