@@ -72,12 +72,6 @@ core-tooltip::shadow .core-tooltip {
   font-size: 12px;
 }
 
-#fixed-area {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-}
-
 #post-container {
   background: #F0F0F0;
   /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
@@ -130,8 +124,7 @@ user-picture {
   white-space: nowrap;
   color: #333;
   height: 40px;
-  position: relative;
-  top: 12px;
+  line-height: 40px;
 }
 
 @media all and (min-width: 600px)  {
