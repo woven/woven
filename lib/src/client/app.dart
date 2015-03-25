@@ -137,7 +137,7 @@ class App extends Observable {
   }
 
   void showItem(String path) {
-    router.previousPage = router.selectedPage;
+//    router.previousPage = router.selectedPage;
     router.selectedPage = 'item';
   }
 
