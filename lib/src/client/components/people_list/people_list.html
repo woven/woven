@@ -13,13 +13,13 @@
             <div class="item-col1" vertical layout>
               <div class="user-photo">
                 <template if="{{user['picture'] != null}}">
-                  <user-picture app="{{app}}" username="{{user['username']}}"></user-picture>
+                  <user-picture app="{{app}}" username="{{user['username'].toLowerCase()}}"></user-picture>
                 </template>
               </div>
             </div>
             <div class="item-col2" flex>
-              <div class="user-username">{{ user['username'] }}</div>
-              <div class="user-name" flex>{{ user['firstName'] }} {{ user['lastName'] }}</div>
+              <div class="user-username">{{user['username']}}</div>
+              <div class="user-name" flex>{{user['firstName']}} {{user['lastName']}}</div>
             </div>
             <div class="item-col3">
               <div class="item-updated">
