@@ -99,7 +99,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
 
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
-      users.removeWhere((i) => i['username'] == e.snapshot.name);
+      users.removeWhere((i) => i['username'].toLowerCase() == e.snapshot.name);
 
       Map user = e.snapshot.val();
       if (user['disabled'] == true) return;
