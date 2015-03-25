@@ -7,9 +7,10 @@
   <template>
     <link rel="stylesheet" href="home.css">
     <div class="cover" layout vertical fit>
-      <div class="logo"></div>
+      <template if="{{!app.isMobile}}"><div class="logo"></div></template>
       <div class="cta" self-center>
         <div class="content-container" layout vertical>
+          <template if="{{app.isMobile}}"><div class="logo-solo"></div></template>
           <h2>Tap into the real world communities you care about.</h2>
           <h3>Get informed. Get involved. Make a difference.</h3>
 
@@ -31,7 +32,7 @@
           </div>
           <div class="footer" self-center>
             <p>We protect your information. Leave anytime.</p>
-            <p><a href="#">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+            <p><a on-tap="{{toggleSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
           </div>
         </div>
       </div>
