@@ -257,6 +257,10 @@ class ChatViewModel extends BaseViewModel with Observable {
    */
   commandRouter(MessageModel message) {
     // TODO: Refactor all this later.
+    // A message of type 'local' is a basic, temporary local message
+    // to the user, like in response to a command.
+//    message.type = 'local';
+    message.type = 'notification';
     switch (message.message) {
       case '/theme dark':
         message.message = 'You went dark. I\'ve saved your preference.';

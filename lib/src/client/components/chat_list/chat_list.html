@@ -42,7 +42,7 @@
             </div>
           </div>
         </template>
-        <template if="{{message['type'] == 'notification' && message['data'] != null}}">
+        <template if="{{message['type'] != null}}">
           <div layout horizontal>
             <div class="user-area" vertical layout>
               <div class="no-photo"></div>
@@ -50,8 +50,13 @@
             <div class="activity-card {{(message['highlighted']) ? 'highlight' : ''}} {{message['type']}}" flex>
               <div id="content">
                 <div class="card-top" horizontal layout>
-                  <div flex class="message notification">
+                  <div flex class="message {{message['type']}}">
+                    <template if="{{message['data'] != null}}">
                         <strong>{{message['usernameForDisplay']}}</strong> {{message['data']['event']}} <a class="internal" _href="{{formatItemUrl(message['data']['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message['data']['type'])}} {{message['data']['type']}}</a> to the feed.
+                    </template>
+                    <template if="{{message['data'] == null}}">
+                      {{message['message']}}
+                    </template>
                   </div>
                   <div class="date-time">
                     <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
