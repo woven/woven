@@ -32,7 +32,6 @@ class InboxList extends PolymerElement with Observable {
 
     app.router.previousPage = app.router.selectedPage;
     app.router.selectedItem = item;
-    app.router.selectedPage = 'item';
 
 
     var str = target.dataset['id'];

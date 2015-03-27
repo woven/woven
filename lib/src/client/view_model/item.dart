@@ -121,7 +121,7 @@ class ItemViewModel extends BaseViewModel with Observable {
 
           // Listen for realtime changes to the comment count.
           f.child('/items/' + queuedItem['id'] + '/comment_count').onValue.listen((e) {
-            item['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+            queuedItem['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
           });
 
           item = queuedItem;
