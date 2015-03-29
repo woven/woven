@@ -21,11 +21,17 @@ import 'package:woven/src/shared/response.dart';
 final googleServiceAccountCredentials = new auth.ServiceAccountCredentials.fromJson(config['google']['serviceAccountCredentials']);
 final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
 var googleApiClient;
+final firebaseSecret = 'i7dfNHOVFPZ1vxNe6LpWku5E0QjlHacVuz1kjPIq';
 
-main() {
+main() async {
 //  updateAllItemsMoveOtherToMessages();
-//  createPreviewForItemsWithUrls();
-changeAllUsersToLowercase();
+  try {
+    await createPreviewForItemsWithUrls();
+  } catch(error) {
+    print('MAIN: $error');
+  }
+//  moveItemsFromAtoB();
+//changeAllUsersToLowercase();
 }
 
 changeAllUsersToLowercase() {
@@ -52,7 +58,7 @@ updateAllItemsMoveOtherToMessages() {
         if (item['type'] != 'event' && item['type'] != 'news') {
           ItemModel.update(item['id'], {
               'message': item['body']
-          });
+          }, firebaseSecret);
           print(item['id']);
         }
       });
@@ -60,91 +66,140 @@ updateAllItemsMoveOtherToMessages() {
   });
 }
 
-createPreviewForItemsWithUrls() {
+/**
+ * Move items from locationA to locationB, only when it does *not* already exist in locationB.
+ */
+moveItemsFromAtoB() async {
+  Map items = await Firebase.get('/itemsA.json');
+  List itemsAsList = [];
+  items.forEach((k,v) {
+    Map item = v;
+    item['id'] = k;
+    itemsAsList.add(item);
+  });
 
+  Future.forEach(itemsAsList,(Map item) async {
+//    new Future.delayed(const Duration(seconds: 1), () async {
+      var itemExists = await Firebase.get('/items/${item['id']}.json');
+      if (itemExists == null) return;
+      await Firebase.put('/items/${item['id']}.json', item, auth: firebaseSecret);
+      print('Updated ${item['id']}: ${item['subject']}');
+//    });
+  });
+}
 
-
+createPreviewForItemsWithUrls() async {
   CrawlerUtil crawler = new CrawlerUtil();
   CloudStorageUtil cloudStorageUtil;
 
-  auth.clientViaServiceAccount(googleServiceAccountCredentials, googleApiScopes).then((client) {
-    googleApiClient = client;
-    cloudStorageUtil = new CloudStorageUtil(googleApiClient);
-  });
+  googleApiClient = await auth.clientViaServiceAccount(googleServiceAccountCredentials, googleApiScopes);
+  cloudStorageUtil = new CloudStorageUtil(googleApiClient);
 
-  Firebase.get('/items.json').then((Map items) {
-    List itemsAsList = [];
-    items.forEach((k,v) {
+  Map items = await Firebase.get('/items.json');
+
+  try {
+    items.forEach((k, v) async {
       Map item = v;
       item['id'] = k;
-      itemsAsList.add(item);
-    });
 
-    Future.forEach(itemsAsList,(Map item) {
-      new Future.delayed(const Duration(seconds: 1), () {
-        if (item['url'] != null && isValidUrl(item['url']) && item['uriPreviewId'] == null) {
-          String uri = item['url'];
+      if (item['url'] != null && isValidUrl(item['url'])) {
+        String uri = item['url'];
 
-          // Crawl for some data.
-          return crawler.getPreview(Uri.parse(uri)).then((Response res) {
-            if (res.success == false) return Response.fromError('Could not fetch from that URL.');
-
-            UriPreview preview = UriPreview.fromJson(res.data);
-
-            if (preview.imageOriginalUrl == null || !isValidUrl(preview.imageOriginalUrl)) {
-              // Save the preview.
-              return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
-                Map updates = {};
-                updates['uriPreviewId'] = name;
-                if (item['subject'] == null) updates['subject'] = preview.title;
-                if (item['body'] == null) updates['body'] = preview.teaser;
-
-                print(updates);
-
-                // Update the item with a reference to the preview.
-                ItemModel.update(item['id'], updates);
-              });
-            } else {
-              // Resize and save a small preview image.
-              ImageUtil imageUtil = new ImageUtil();
-              // Set up a temporary file to write to.
-              return createTemporaryFile().then((File file) {
-                // Download the image locally to our temporary file.
-                return downloadFileTo(preview.imageOriginalUrl, file).then((_) {
-                  // Resize the image.
-                  return imageUtil.resize(file, width: 225, height: 125).then((File convertedFile) {
-                    // Save the preview.
-                    return Firebase.post('/uri_previews.json', preview.toJson()).then((String name) {
-                      Map updates = {};
-                      updates['uriPreviewId'] = name;
-                      if (item['subject'] == null) updates['subject'] = preview.title;
-                      if (item['body'] == null) updates['body'] = preview.teaser;
-
-                      // Update the item with a reference to the preview.
-                      ItemModel.update(item['id'], updates);
-
-                      // Convert and save the image.
-                      var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
-                      var filename = 'preview_small$extension';
-                      var gsBucket = 'woven';
-                      var gsPath = 'public/images/preview/$name/$filename';
-
-                      // Then upload the image to our filesystem.
-                      return cloudStorageUtil.uploadFile(convertedFile.path, gsBucket, gsPath, public: true).then((_) {
-                        return file.delete().then((_) {
-                          // Update the preview with a reference to the cloud file.
-                          preview.imageSmallLocation = gsPath;
-                          return Firebase.patch('/uri_previews/$name.json', JSON.encode(preview.toJson()));
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            }
-          });
+        Response crawl;
+        // Crawl for some data.
+        try {
+          crawl = await crawler.getPreview(Uri.parse(uri));
+        } catch (error) {
+          print('CRAWLER: $error');
         }
-      });
+
+        if (crawl.success == false) {
+          print('FAILED:\n ${crawl.message}');
+          return;
+        }
+
+        UriPreview preview = UriPreview.fromJson(crawl.data);
+
+        if (preview.imageOriginalUrl == null || !isValidUrl(preview.imageOriginalUrl)) {
+          // Save the preview.
+          var name;
+          try {
+            name = await Firebase.post('/uri_previews.json', preview.toJson(), auth: firebaseSecret);
+          } catch (error) {
+            print('DEBUG1: $error');
+          }
+          Map updates = {
+          };
+          updates['uriPreviewId'] = name;
+          if (item['subject'] == null) updates['subject'] = preview.title;
+          if (item['body'] == null) updates['body'] = preview.teaser;
+          // Update the item with a reference to the preview.
+          await ItemModel.update(item['id'], updates, firebaseSecret);
+
+        } else {
+          // Resize and save a small preview image.
+          ImageUtil imageUtil = new ImageUtil();
+
+          // Set up a temporary file to write to.
+          File file = await createTemporaryFile();
+
+          // Download the image locally to our temporary file.
+          try {
+            await downloadFileTo(preview.imageOriginalUrl, file);
+          } catch (error) {
+            print('CAUGHT:\n $error');
+          }
+
+          // Resize the image.
+          File convertedFile = await imageUtil.resize(file, width: 225, height: 125);
+
+          // Save the preview.
+          String name;
+          try {
+            name = await Firebase.post('/uri_previews.json', preview.toJson(), auth: firebaseSecret);
+          } catch (error) {
+            print('DEBUG2: $error');
+          }
+
+
+          Map updates = {
+          };
+          updates['uriPreviewId'] = name;
+          if (item['subject'] == null) updates['subject'] = preview.title;
+          if (item['body'] == null) updates['body'] = preview.teaser;
+
+          // Update the item with a reference to the preview.
+          try {
+            await ItemModel.update(item['id'], updates, firebaseSecret);
+          } catch (error) {
+            print('DEBUG3: $error');
+          }
+
+          // Convert and save the image.
+          var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
+          var filename = 'preview_small$extension';
+          var gsBucket = 'woven';
+          var gsPath = 'public/images/preview/$name/$filename';
+
+          // Then upload the image to our filesystem and delete the temporary file.
+          try {
+            await cloudStorageUtil.uploadFile(convertedFile.path, gsBucket, gsPath, public: true);
+          } catch (error) {
+            print('DEBUG4: $error');
+          }
+          await file.delete();
+
+          // Update the preview with a reference to the cloud file.
+          preview.imageSmallLocation = gsPath;
+          try {
+            await Firebase.patch('/uri_previews/$name.json', JSON.encode(preview.toJson()), auth: firebaseSecret);
+          } catch (error) {
+            print('FIREBASE ERROR: $error');
+          }
+        }
+      }
     });
-  });
+  } catch (error) {
+    print('FUNC: $error');
+  }
 }
