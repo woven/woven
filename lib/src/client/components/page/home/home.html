@@ -11,39 +11,55 @@
       <div class="cta" self-center>
         <div class="content-container" layout vertical>
           <template if="{{app.isMobile}}"><div class="logo-solo"></div></template>
-          <h2>Tap into the real world communities you care about.</h2>
-          <h3>Get informed. Get involved. Make a difference.</h3>
 
-          <div self-center>
-            <div class="field-wrapper first">
-              <input id="email" is="core-input" placeholder="Email"
-                     autocomplete="off" autocorrect="off" autocapitalize="off">
+          <template if="{{ctaPage == 'sign-up'}}">
+            <h2>Tap into the real world communities you care about.</h2>
+            <h3>Get informed. Get involved. Make a difference.</h3>
+
+            <div self-center>
+              <div class="field-wrapper first">
+                <input id="email" is="core-input" placeholder="Email"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div class="field-wrapper">
+                <input id="password" is="core-input" type="password" placeholder="Password"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div class="field-wrapper last">
+                <input id="username" is="core-input" placeholder="Username"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div id="submit" class="button" on-tap="{{signUp}}">Sign up</div>
+              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
             </div>
-            <div class="field-wrapper">
-              <input id="password" is="core-input" type="password" placeholder="Password"
-                     autocomplete="off" autocorrect="off" autocapitalize="off">
+            <div class="footer" self-center>
+              <p>We protect your information. Leave anytime.</p>
+              <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
             </div>
-            <div class="field-wrapper last">
-              <input id="username" is="core-input" placeholder="Username"
-                     autocomplete="off" autocorrect="off" autocapitalize="off">
+          </template>
+
+          <template if="{{ctaPage == 'sign-in'}}">
+            <h3>Please sign in.</h3>
+
+            <div self-center>
+              <div class="field-wrapper first">
+                <input id="username" is="core-input" placeholder="Username"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div class="field-wrapper">
+                <input id="password" is="core-input" type="password" placeholder="Password"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div id="submit" class="button" on-tap="{{signIn}}">Sign in</div>
+              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signIn}}"></core-a11y-keys>
             </div>
-            <div id="submit" class="button" on-tap="{{submit}}">Sign up</div>
-            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
-          </div>
-          <div class="footer" self-center>
-            <p>We protect your information. Leave anytime.</p>
-            <p><a on-tap="{{toggleSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
-          </div>
+            <div class="footer" self-center>
+              <p><a on-tap="{{showSignUp}}">Sign up</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+            </div>
+          </template>
+
         </div>
       </div>
-      <!--<div class="overlay">-->
-        <!--<div flex layout horizontal>-->
-          <!--<ul class="menu" flex>-->
-            <!--<li class="first" on-click="{{toggleOverlay}}">Why</li>-->
-            <!--<li>What</li>-->
-          <!--</ul>-->
-        <!--</div>-->
-      <!--</div>-->
     </div>
   </template>
   <script type="application/dart" src="home.dart"></script>

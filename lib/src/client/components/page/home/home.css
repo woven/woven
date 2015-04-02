@@ -33,6 +33,12 @@
   position:relative;
 }
 
+.cta-container {
+  position: relative;
+  top: 60px;
+  width: 100%;
+}
+
 .cta {
   /* border: solid 6px rgba(255, 255, 255, 0.8); */
   background: rgba(255, 255, 255, 0.8);
@@ -206,8 +212,8 @@ ul.menu > li:hover {
 
 @media (max-width: 400px) {
   .cta .content-container {
-    width: 300px;
-    margin: 20px auto;
+    width: 305px;
+    margin: 35px auto;
   }
   .cta h2 {
     font-size: 32px;

@@ -5,20 +5,20 @@ import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_animation.dart';
-import 'package:core_elements/core_overlay.dart';
 import 'package:core_elements/core_input.dart';
 
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
+import 'package:woven/src/shared/shared_util.dart';
 
 @CustomTag('x-home')
 class Home extends PolymerElement with Observable {
   @published App app;
   @observable String randomWord = '';
   @observable Map formData = toObservable({});
+  @observable String ctaPage = 'sign-up';
 
   var overlayAnimation = new CoreAnimation();
   var logoAnimation = new CoreAnimation();
@@ -32,11 +32,11 @@ class Home extends PolymerElement with Observable {
   Element get overlay => this.shadowRoot.querySelector('div.overlay');
   Element get logo => this.shadowRoot.querySelector((app.isMobile ? 'div.logo-solo' : 'div.logo'));
   Element get menu => this.shadowRoot.querySelector('ul.menu');
-  Element get main => this.shadowRoot.querySelector('div.cover');
+  Element get cover => this.shadowRoot.querySelector('div.cover');
   Element get cta => this.shadowRoot.querySelector('div.cta');
 
-  CoreInput get username => $['username'];
-  CoreInput get password => $['password'];
+  CoreInput get username => this.shadowRoot.querySelector('#username');
+  CoreInput get password => this.shadowRoot.querySelector('#password');
   CoreInput get email => $['email'];
   Element get submitButton => $['submit'];
 
@@ -64,8 +64,40 @@ class Home extends PolymerElement with Observable {
     }
   }
 
+  changeCta(String page) {
+    toggleCta();
+    new Timer(new Duration(milliseconds: 100), () {
+      ctaPage = page;
+      toggleCta();
+    });
+  }
+
+  showSignIn() => changeCta('sign-in');
+
+  showSignUp() => changeCta('sign-up');
+
+  toggleCta() {
+    mainAnimation.target = cta;
+    mainAnimation.duration = 400;
+    mainAnimation.iterations = 'auto';
+    mainAnimation.easing = 'ease-out';
+    mainAnimation.composite = 'add';
+    mainAnimation.fill = 'both';
+    mainAnimation.keyframes = [
+        {'opacity': '1', 'top': (app.isMobile ? '0px' : '60px')},
+        {'opacity': '0', 'top': '300px'}
+    ];
+    mainAnimation.play();
+
+    if (mainAnimation.direction == 'reverse') {
+      mainAnimation.direction = 'forward';
+    } else {
+      mainAnimation.direction = 'reverse';
+    }
+  }
+
   toggleCover() {
-    mainAnimation.target = main;
+    mainAnimation.target = cover;
     mainAnimation.duration = 400;
     mainAnimation.iterations = 'auto';
     mainAnimation.easing = 'ease-out';
@@ -90,28 +122,7 @@ class Home extends PolymerElement with Observable {
       new Timer(new Duration(milliseconds: 800), () {
         toggleCta();
       });
-//      toggleMenu();
     });
-  }
-
-  toggleCta() {
-    ctaAnimation.target = cta;
-    ctaAnimation.duration = 500;
-    ctaAnimation.iterations = 'auto';
-    ctaAnimation.easing = 'ease-out';
-    ctaAnimation.composite = 'add';
-    ctaAnimation.fill = 'both';
-    ctaAnimation.keyframes = [
-        {'opacity': '0', 'top': '300px'},
-        {'opacity': '1', 'top': (app.isMobile ? '0px' : '60px')}
-    ];
-    ctaAnimation.play();
-
-    if (ctaAnimation.direction == 'reverse') {
-      ctaAnimation.direction = 'forward';
-    } else {
-      ctaAnimation.direction = 'reverse';
-    }
   }
 
   toggleLogo() {
@@ -176,13 +187,13 @@ class Home extends PolymerElement with Observable {
   }
 
   /**
-   * Submit the form and choose what to do.
+   * Create a new user.
    */
-  submit(Event e) {
+  signUp(Event e) {
     e.preventDefault();
 
-    if (email.value.trim().isEmpty) {
-      window.alert("Please provide your email.");
+    if (email.value.trim().isEmpty || !isValidEmail(email.value.trim())) {
+      window.alert("Please provide a valid email.");
       return false;
     }
 
@@ -202,18 +213,7 @@ class Home extends PolymerElement with Observable {
       return false;
     }
 
-//    if (firstname.value.trim().isEmpty || lastname.value.trim().isEmpty) {
-//      window.alert("Please give us your full name so we can be cordial.");
-//      return false;
-//    }
 
-    createNewUser();
-  }
-
-  /**
-   * Create a new user.
-   */
-  createNewUser() {
     toggleProcessingIndicator();
 
     // Check credentials and sign the user in server side.
@@ -221,11 +221,11 @@ class Home extends PolymerElement with Observable {
         Routes.createNewUser.toString(),
         method: 'POST',
         sendData: JSON.encode({
-            'username': username.value,
+            'username': username.value.trim(),
             'password': password.value,
 //            'firstName': firstname.value,
 //            'lastName': lastname.value,
-            'email': email.value
+            'email': email.value.trim()
         }))
     .then((HttpRequest request) {
       // Set up the response as an object.
@@ -266,6 +266,82 @@ class Home extends PolymerElement with Observable {
     });
   }
 
+  /**
+   * Handle sign in.
+   */
+  signIn() {
+    if (username.value.trim().isEmpty || password.value.trim().isEmpty) {
+      window.alert("Your username and password, please.");
+      return false;
+    }
+
+    // Disable button and add activity indicator animation.
+    toggleProcessingIndicator();
+
+    // Check credentials and sign the user in server side.
+    HttpRequest.request(
+        Routes.signIn.toString(),
+        method: 'POST',
+        sendData: JSON.encode({'username': username.value.toLowerCase(), 'password': password.value}))
+    .then((HttpRequest request) {
+      // Set up the response as an object.
+      Response response = Response.fromJson(JSON.decode(request.responseText));
+      if (response.success) {
+        // Set the auth token and remove it from the map.
+        app.authToken = response.data['authToken'];
+        // TODO: This should totally just be part of the UserModel.
+        response.data.remove('authToken');
+        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+
+        // Set up the user object.
+        app.user = UserModel.fromJson(response.data);
+        if (app.user.settings == null) app.user.settings = {};
+
+        document.body.classes.add('no-transition');
+        app.user.settings = toObservable(app.user.settings);
+        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+
+        app.cache.users[app.user.username.toLowerCase()] = app.user;
+
+        // Mark as new so the welcome pops up.
+        app.user.isNew = true;
+
+        // Trigger changes to app state in response to user sign in/out.
+        //TODO: Aha! This triggers a feedViewModel load.
+        app.mainViewModel.invalidateUserState();
+
+        // Hide the homepage and show the app.
+        app.showHomePage = false;
+        app.skippedHomePage = true;
+
+        Timer.run(() => greetUser());
+      } else {
+        toggleProcessingIndicator();
+        window.alert("We don't recognize you. Try again.");
+      }
+    });
+  }
+
+  // Greet the user upon sign in.
+  greetUser() {
+    var greeting;
+    DateTime now = new DateTime.now();
+
+    if (now.hour < 12) {
+      greeting = "Good morning";
+    } else {
+      if (now.hour >= 12 && now.hour <= 17) {
+        greeting = "Good afternoon";
+      } else if (now.hour > 17 && now.hour <= 24) {
+        greeting = "Good evening";
+      } else {
+        greeting = "Hello";
+      }
+    }
+
+    app.showMessage("$greeting, ${app.user.firstName}.");
+  }
+
   toggleProcessingIndicator() {
     if (processing) {
       submitButton.classes.remove('disabled');
@@ -291,10 +367,6 @@ class Home extends PolymerElement with Observable {
       processingAnimation.play();
       processing = true;
     }
-  }
-
-  toggleSignIn() {
-    app.toggleSignIn();
   }
 
   animateRandomWords() {
@@ -328,7 +400,7 @@ class Home extends PolymerElement with Observable {
     Timer.run(() => toggleCover());
     toggleMain();
     coverImage.onLoad.listen((e) {
-      main.style.backgroundImage = 'url(http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg)';
+      cover.style.backgroundImage = 'url(http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg)';
     });
   }
 

@@ -2,6 +2,7 @@ library shared_util;
 
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'regex.dart';
 
 String htmlDecode(String text) {
   if (text == null) {
@@ -162,6 +163,15 @@ bool isValidUrl(String url) {
   }
 
   return true;
+}
+
+/**
+ * Check if given string is a valid email address.
+ */
+bool isValidEmail(String email) {
+  RegExp regExp = new RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+
+  return regExp.hasMatch(email);
 }
 
 /**
