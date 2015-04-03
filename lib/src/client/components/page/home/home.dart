@@ -37,8 +37,8 @@ class Home extends PolymerElement with Observable {
 
   CoreInput get username => this.shadowRoot.querySelector('#username');
   CoreInput get password => this.shadowRoot.querySelector('#password');
-  CoreInput get email => $['email'];
-  Element get submitButton => $['submit'];
+  CoreInput get email => this.shadowRoot.querySelector('#email');
+  Element get submitButton => this.shadowRoot.querySelector('#submit');
 
   Home.created() : super.created();
 
