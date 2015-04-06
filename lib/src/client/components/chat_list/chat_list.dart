@@ -95,7 +95,9 @@ class ChatList extends PolymerElement {
   attached() {
     if (app.debugMode) print('+ChatList');
 
-    Notification.requestPermission();
+    new Timer(new Duration(seconds: 4), () {
+      Notification.requestPermission();
+    });
 
     // TODO: Bring back infinite scrolling on chat.
 //    initializeInfiniteScrolling();
