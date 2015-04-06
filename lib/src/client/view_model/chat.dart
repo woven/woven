@@ -189,7 +189,7 @@ class ChatViewModel extends BaseViewModel with Observable {
             // Notify the user.
             if (!Notification.supported) return;
 
-            Notification notification = new Notification("${newItem['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((newItem['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/woven_button_trans_margin_more.png');
+            Notification notification = new Notification("${newItem['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((newItem['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/w_button_trans_margin.png');
             notification.addEventListener('click', notificationClicked);
             new Timer(new Duration(seconds: 4), () {
               notification.close();
