@@ -342,7 +342,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         if (!Notification.supported) return;
         await Notification.requestPermission();
         Notification notification = new Notification("Hello world", body: InputFormatter.createTeaser(dummyMessage.replaceAll('\n', ' '), 75), icon: '/static/images/woven_button_trans_margin_more.png');
-        new Timer(new Duration(seconds: 4), () {
+        new Timer(new Duration(seconds: 8), () {
           notification.close();
         });
 
