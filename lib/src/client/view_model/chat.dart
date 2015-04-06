@@ -2,16 +2,17 @@ library chat_view_model;
 
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'dart:async';
-import 'dart:html';
+import 'dart:html' hide Notification;
+import 'package:notification/notification.dart';
 import 'dart:js';
 import 'base.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/shared/model/message.dart';
 import 'package:woven/src/client/model/user.dart';
 import 'package:woven/src/shared/input_formatter.dart';
+import 'package:woven/src/shared/regex.dart';
 
 class ChatViewModel extends BaseViewModel with Observable {
   final App app;
@@ -85,6 +86,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
         return usernameForDisplay(message['user']).then((String usernameForDisplay) {
           message['usernameForDisplay'] = usernameForDisplay;
+
           queuedMessages.add(message);
         });
 
@@ -168,8 +170,33 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       } else {
         // Insert each new item into the list.
-        usernameForDisplay(newItem['user']).then((String usernameForDisplay) {
+        usernameForDisplay(newItem['user']).then((String usernameForDisplay) async {
           newItem['usernameForDisplay'] = usernameForDisplay;
+
+          // Notify mentioned users.
+          // TODO: Put this someplace better.
+
+          var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
+
+          List mentions = [];
+
+          for (var mention in regExp.allMatches(newItem['message'])) {
+            if (mentions.contains(mention.group(2))) return;
+            mentions.add(mention.group(2).replaceAll("@", "").toLowerCase());
+          }
+
+          if (mentions.contains(app.user.username.toLowerCase())) {
+            // Notify the user.
+            if (!Notification.supported) return;
+            await Notification.requestPermission();
+
+            Notification notification = new Notification("${newItem['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((newItem['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/woven_button_trans_margin_more.png');
+            notification.addEventListener('click', notificationClicked);
+            new Timer(new Duration(seconds: 4), () {
+              notification.close();
+            });
+          }
+
           insertMessage(newItem);
         });
       }
@@ -255,7 +282,7 @@ class ChatViewModel extends BaseViewModel with Observable {
   /**
    * Handle commands.
    */
-  commandRouter(MessageModel message) {
+  commandRouter(MessageModel message) async {
     // TODO: Refactor all this later.
     // A message of type 'local' is a basic, temporary local message
     // to the user, like in response to a command.
@@ -287,20 +314,41 @@ class ChatViewModel extends BaseViewModel with Observable {
       case '/notify':
         // JS interop version of web notifications until Dart fixes land.
         String dummyMessage = 'Lorem ipsum dolor sit amet conseceteur adipiscing\n elit and some other random text and gibberish to prove a point';
-        var notificationOptions = new JsObject.jsify({
-          'body': InputFormatter.createTeaser(dummyMessage.replaceAll('\n', ' '), 75),
-          'icon': '/static/images/woven_button_trans_margin_more.png'
+
+        if (!Notification.supported) return;
+        await Notification.requestPermission();
+        Notification notification = new Notification("Hello world", body: InputFormatter.createTeaser(dummyMessage.replaceAll('\n', ' '), 75), icon: '/static/images/woven_button_trans_margin_more.png');
+        new Timer(new Duration(seconds: 4), () {
+          notification.close();
         });
 
-        var notification = new JsObject(context['Notification'], ['${message.user} just said something', notificationOptions]);
-        new Timer(new Duration(seconds: 8), () {
-          notification.callMethod('close');
-        });
-        notification.callMethod('addEventListener', ['click', notificationClicked]);
+
+// var notificationOptions = new JsObject.jsify({
+//          'body': InputFormatter.createTeaser(dummyMessage.replaceAll('\n', ' '), 75),
+//          'icon': '/static/images/woven_button_trans_margin_more.png'
+//        });
+
+
+
+//        Notification.requestPermission().then((res) {
+//          var notification = new JsObject(context['Notification'], ['${message.user} just said something', notificationOptions]);
+////          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: '/static/images/woven_button_trans_margin_more.png');
+//          new Timer(new Duration(seconds: 4), () {
+//            notification.callMethod('close');
+//          });
+//        });
+//
+//        notification.callMethod('requestPermission');
+//        notification.callMethod('addEventListener', ['click', notificationClicked]);
+//
+//        new Timer(new Duration(seconds: 8), () {
+//          notification.callMethod('close');
+//        });
+
 
       //    TODO: Testing web notifications.
 //        Notification.requestPermission().then((res) {
-//          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: '/static/images/favicon-32x32.png');
+//          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: '/static/images/woven_button_trans_margin_more.png');
 //          new Timer(new Duration(seconds: 4), () {
 //            notification.close();
 //          });
