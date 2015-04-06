@@ -6,6 +6,7 @@ import 'package:woven/src/client/app.dart';
 import 'dart:async';
 import 'dart:html' hide Notification;
 import 'package:notification/notification.dart';
+import 'dart:web_audio';
 import 'dart:js';
 import 'base.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
@@ -36,6 +37,8 @@ class ChatViewModel extends BaseViewModel with Observable {
   ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
 
   db.Firebase get f => app.f;
+
+  AudioContext audioContext = new AudioContext();
 
   ChatViewModel({this.app}) {
     loadMessagesByPage();
@@ -190,6 +193,7 @@ class ChatViewModel extends BaseViewModel with Observable {
             if (!Notification.supported) return;
 
             Notification notification = new Notification("${newItem['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((newItem['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/w_button_trans_margin.png');
+            playNotificationSound();
             notification.addEventListener('click', notificationClicked);
             new Timer(new Duration(seconds: 4), () {
               notification.close();
@@ -279,6 +283,27 @@ class ChatViewModel extends BaseViewModel with Observable {
   notificationClicked(Event e) => context.callMethod('focus');
 
   /**
+   * Play the notification sound.
+   */
+  playNotificationSound() async {
+
+    GainNode gainNode = audioContext.createGain();
+
+    // get the audio file
+    HttpRequest request = await HttpRequest.request("/static/audio/beep_short_on.wav", responseType: "arraybuffer");
+    print(request.response);
+    // decode it
+    AudioBuffer buffer = await audioContext.decodeAudioData(request.response);
+    print(buffer);
+    AudioBufferSourceNode source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connectNode(audioContext.destination);
+
+    // play it now
+    source.start(audioContext.currentTime);
+  }
+
+  /**
    * Handle commands.
    */
   commandRouter(MessageModel message) async {
@@ -320,6 +345,8 @@ class ChatViewModel extends BaseViewModel with Observable {
         new Timer(new Duration(seconds: 4), () {
           notification.close();
         });
+
+        playNotificationSound();
 
 
 // var notificationOptions = new JsObject.jsify({
