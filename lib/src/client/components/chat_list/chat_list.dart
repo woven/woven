@@ -95,7 +95,7 @@ class ChatList extends PolymerElement {
   attached() {
     if (app.debugMode) print('+ChatList');
 
-    new Timer(new Duration(seconds: 4), () {
+    new Timer(new Duration(seconds: 2), () {
       Notification.requestPermission();
     });
 
