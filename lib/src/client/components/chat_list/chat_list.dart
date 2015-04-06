@@ -1,5 +1,6 @@
 import 'package:polymer/polymer.dart';
-import 'dart:html';
+import 'dart:html' hide Notification;
+import 'package:notification/notification.dart';
 import 'dart:async';
 
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
@@ -93,6 +94,9 @@ class ChatList extends PolymerElement {
 
   attached() {
     if (app.debugMode) print('+ChatList');
+
+    Notification.requestPermission();
+
     // TODO: Bring back infinite scrolling on chat.
 //    initializeInfiniteScrolling();
 

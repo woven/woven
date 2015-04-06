@@ -188,7 +188,6 @@ class ChatViewModel extends BaseViewModel with Observable {
           if (mentions.contains(app.user.username.toLowerCase())) {
             // Notify the user.
             if (!Notification.supported) return;
-            await Notification.requestPermission();
 
             Notification notification = new Notification("${newItem['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((newItem['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/woven_button_trans_margin_more.png');
             notification.addEventListener('click', notificationClicked);
