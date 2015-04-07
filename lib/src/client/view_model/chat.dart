@@ -347,38 +347,6 @@ class ChatViewModel extends BaseViewModel with Observable {
         });
 
         playNotificationSound();
-
-
-// var notificationOptions = new JsObject.jsify({
-//          'body': InputFormatter.createTeaser(dummyMessage.replaceAll('\n', ' '), 75),
-//          'icon': '/static/images/woven_button_trans_margin_more.png'
-//        });
-
-
-
-//        Notification.requestPermission().then((res) {
-//          var notification = new JsObject(context['Notification'], ['${message.user} just said something', notificationOptions]);
-////          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: '/static/images/woven_button_trans_margin_more.png');
-//          new Timer(new Duration(seconds: 4), () {
-//            notification.callMethod('close');
-//          });
-//        });
-//
-//        notification.callMethod('requestPermission');
-//        notification.callMethod('addEventListener', ['click', notificationClicked]);
-//
-//        new Timer(new Duration(seconds: 8), () {
-//          notification.callMethod('close');
-//        });
-
-
-      //    TODO: Testing web notifications.
-//        Notification.requestPermission().then((res) {
-//          Notification notification = new Notification('New message from ${message.user}', body: message.message, iconUrl: '/static/images/woven_button_trans_margin_more.png');
-//          new Timer(new Duration(seconds: 4), () {
-//            notification.close();
-//          });
-//        });
         break;
       default:
         message.message = 'I don\'t recognize that command.';
