@@ -25,13 +25,14 @@ final firebaseSecret = 'i7dfNHOVFPZ1vxNe6LpWku5E0QjlHacVuz1kjPIq';
 
 main() async {
 //  updateAllItemsMoveOtherToMessages();
-  try {
-    await createPreviewForItemsWithUrls();
-  } catch(error) {
-    print('MAIN: $error');
-  }
+//  try {
+//    await createPreviewForItemsWithUrls();
+//  } catch(error) {
+//    print('MAIN: $error');
+//  }
 //  moveItemsFromAtoB();
 //changeAllUsersToLowercase();
+migrateAllUsersOnboardingState();
 }
 
 changeAllUsersToLowercase() {
@@ -39,6 +40,18 @@ changeAllUsersToLowercase() {
     users.forEach((k, v) {
       String username = k;
       Firebase.put('/users/${username.toLowerCase()}.json', v);
+      print(username);
+    });
+  });
+}
+
+migrateAllUsersOnboardingState() {
+  Firebase.get('/users.json').then((Map users) {
+    users.forEach((k, v) {
+      String username = k;
+      if (v['disabled']) return;
+      var updateData = {'onboardingState': 'signUpComplete'};
+      Firebase.patch('/users/${username.toLowerCase()}.json', updateData, auth: firebaseSecret);
       print(username);
     });
   });
