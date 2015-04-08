@@ -93,4 +93,19 @@ class Firebase {
       return null;
     }).catchError(print);
   }
+
+  /**
+   *
+   * DELETE the object at the location.
+   *
+   * Equivalent to a .remove() in the Firebase client API.
+   */
+  static Future delete(String path, {String auth}) {
+    return http.delete('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}').then((response) {
+      var message = JSON.decode(response.body);
+      if (message['error'] != null) {
+        throw 'Firebase returned an error.\nPath: $path\nResponse: ${message["error"]}';
+      }
+    });
+  }
 }
