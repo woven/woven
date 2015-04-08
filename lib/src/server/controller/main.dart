@@ -2,21 +2,20 @@ library main_controller;
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:path/path.dart' as path;
+
+import 'mail.dart';
 import '../app.dart';
 import '../firebase.dart';
-import 'package:woven/src/shared/response.dart';
-import 'package:woven/config/config.dart';
-import '../mailer/mailer.dart';
-import 'package:woven/src/shared/shared_util.dart';
-import 'package:woven/src/server/util/crawler_util.dart';
-import 'dart:convert';
-import 'package:woven/src/shared/model/uri_preview.dart';
-import 'package:woven/src/server/model/item.dart';
 import '../util/file_util.dart';
 import '../util/image_util.dart';
-import 'package:path/path.dart' as path;
-import '../util.dart';
-import 'package:woven/src/shared/regex.dart';
+import 'package:woven/src/shared/response.dart';
+import 'package:woven/config/config.dart';
+import 'package:woven/src/server/util/crawler_util.dart';
+import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/server/model/item.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -41,6 +40,9 @@ class MainController {
   }
 
   static confirmEmail(App app, HttpRequest request, String confirmId) {
+    // Kill any existing session since the user appears to be signing up again.
+    app.sessionManager.deleteCookie(request);
+
     return new File(config['server']['directory'] + '/index.html');
   }
 
@@ -132,7 +134,7 @@ class MainController {
         Firebase.put('/messages/$name.json', fullData, auth: authToken).then((_) {
           // Send a notification email to anybody mentioned in the message.
           fullData['id'] = name;
-          _sendNotifications('message', fullData, app);
+          MailController.sendNotifications('message', fullData, app);
         });
 
         // Return the data back to the client.
@@ -227,363 +229,6 @@ class MainController {
             });
           }
         });
-      });
-    });
-  }
-
-  /**
-   * Send a welcome email to the user when they complete sign up.
-   */
-  static sendWelcomeEmail(App app, HttpRequest request) {
-    var id = request.cookies.firstWhere((cookie) => cookie.name == 'session').value;
-
-    if (id == null) return new Response(false);
-
-    // Find the username associated with the Facebook ID
-    // that's in session.id, then get that user data.
-    return Firebase.get('/facebook_index/$id.json').then((indexData) {
-      var username = (indexData['username'] as String).toLowerCase();
-      return Firebase.get('/users/$username.json').then((userData) {
-        // Send the welcome email.
-        var envelope = new Envelope()
-          ..from = "Woven <hello@woven.co>"
-          ..to = ['${userData['firstName']} ${userData['lastName']} <${userData['email']}>']
-          ..bcc = ['David Notik <davenotik@gmail.com>']
-          ..subject = 'Welcome, ${userData['firstName']}!'
-          ..text = '''
-Hey ${userData['firstName']},
-
-Thank you for creating an account on the new Woven.
-
-Beyond social networking, this is collaborative networking. Woven is being designed from the ground up to help us coordinate our actions to improve the world.
-
-Here's a manifesto of sorts: http://woven.co/item/LUpZTWEtZWZOejRFRklYVTYxWmY=
-
-The new Woven is starting simple and getting better every day.
-
-Please take a moment to respond to me with your first impressions, good or bad. Please share all your feedback on the Early Adopters community on Woven as well.
-
-And you can always call or text me on my mobile at 206-351-3948 – at any time.
-
-Thank you for your early support!
-
---David Notik
-
---
-Woven
-http://woven.co
-
-http://facebook.com/woven
-http://twitter.com/wovenco
-''';
-        return app.mailer.send(envelope).then((success) {
-          return new Response(success);
-        });
-      });
-    });
-  }
-
-  static sendNotificationsForItem(App app, HttpRequest request) {
-    Map data = request.requestedUri.queryParameters;
-    _sendNotifications('item', data, app);
-  }
-
-  static sendNotificationsForComment(App app, HttpRequest request) {
-    Map data = request.requestedUri.queryParameters;
-    _sendNotifications('comment', data, app);
-  }
-
-//  static sendNotificationsForMessage(App app, HttpRequest request) {
-//    Map data = request.requestedUri.queryParameters;
-//    _sendNotifications('message', data, app);
-//  }
-
-
-//  static sendNotificationsForItem(App app, HttpRequest request) {
-//    var item = request.requestedUri.queryParameters['itemid'];
-//    var comment = request.requestedUri.queryParameters['commentid'];
-//    // Sending notifications for an item itself (not a comment)?
-//    String type = (comment == null) ? 'item' : 'comment';
-//    String id = (comment == null) ? item : comment;
-//
-//    _sendNotifications(type, id);
-//  }
-
-  /**
-   * Send email notifications as appropriate.
-   */
-  static _sendNotifications(type, Map data, App app) {
-    bool isItem = (type == 'item') ? true : false;
-    bool isComment = (type == 'comment') ? true : false;
-    bool isMessage = (type == 'message') ? true : false;
-    var id = data['id']; // The id of the item/comment/message we're notifying about.
-    var item = (type == 'item') ? id : data['itemid']; // If this isn't an item, we still might have/need the item id.
-
-    Map notificationData = {};
-
-    Future findItem() {
-      return Firebase.get('/items/$item.json').then((itemData) {
-        notificationData['itemSubject'] = itemData['subject'];
-        notificationData['itemAuthor'] = (itemData['user'] as String).toLowerCase();
-        notificationData['itemBody'] = itemData['body'];
-        notificationData['message'] = itemData['message'];
-        var encodedItem = base64Encode(id);
-        notificationData['itemLink'] = "http://${config['server']['displayDomain']}/item/$encodedItem";
-
-        if (isItem) return;
-
-        // Find all the unique users who have commented on this item.
-        Map comments = itemData['activities']['comments'];
-        notificationData['participants'] = comments.values.map((v) => v['user']).toSet();
-      });
-    }
-
-    Future findItemAuthorInfo(_) {
-      return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
-        if (isItem) {
-          notificationData['itemAuthorEmail'] = userData['email'];
-          notificationData['itemAuthorFirstName'] = userData['firstName'];
-          notificationData['itemAuthorLastName'] = userData['lastName'];
-        }
-      });
-    }
-
-    Future findCommentAuthorInfo(_) {
-      if (isItem) return null;
-      return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
-        notificationData['commentAuthorFirstName'] = userData['firstName'];
-        notificationData['commentAuthorLastName'] = userData['lastName'];
-      });
-    }
-
-    Future findMessageAuthorInfo(_) {
-      return Firebase.get('/users/${notificationData['messageAuthor']}.json').then((userData) {
-        notificationData['messageAuthorFirstName'] = userData['firstName'];
-        notificationData['messageAuthorLastName'] = userData['lastName'];
-      });
-    }
-
-    Future findCommentInfo() {
-      if (isItem) return null;
-      return Firebase.get('/items/$item/activities/comments/$id.json').then((commentData) {
-        notificationData['commentBody'] = commentData['comment'];
-        notificationData['commentAuthor'] = (commentData['user'] as String).toLowerCase();
-      });
-    }
-
-    Future findMessage() {
-      return Firebase.get('/messages/$id.json').then((messageData) {
-        notificationData['message'] = messageData['message'];
-        notificationData['messageAuthor'] = (messageData['user'] as String).toLowerCase();
-        notificationData['itemLink'] = "http://${config['server']['displayDomain']}/${messageData['community']}";
-      });
-    }
-
-    notify(_) {
-      // Order matters, as we prioritize notification of mentions over multiple notifications.
-      _notifyMentionedUsers(type, notificationData, app);
-
-      // If it's a comment we're notifying about, notify participants on the parent item.
-      if (isComment) {
-        _notifyAuthor(app, notificationData);
-        _notifyOtherParticipants(app, notificationData);
-      };
-    }
-
-    // Logic for handling the notifications.
-    if (isItem) {
-      return findItem()
-      .then((_) => Future.wait([findItemAuthorInfo(_)]))
-      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
-      .then((success) => new Response(success))
-      .catchError((error) => print("Error sending notifications: $error"));
-    }
-    if (isComment) {
-      return findItem()
-      .then((_) => Future.wait([findItemAuthorInfo(_), findCommentInfo()]))
-      .then(findCommentAuthorInfo)
-      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
-      .then((success) => new Response(success))
-      .catchError((error) => print("Error sending notifications: $error"));
-    }
-    if (isMessage) {
-      return findMessage()
-      .then((_) => Future.wait([findMessageAuthorInfo(_)]))
-      // TODO: Get the community details, like the name.
-      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
-      .then((success) => new Response(success))
-      .catchError((error) => print("Error sending notifications: $error"));
-    }
-  }
-
-  static _notifyAuthor(App app, Map notificationData) {
-    // Don't send this notification when we've already notified the author that someone mentioned him.
-    if (notificationData['itemAuthorMentioned'] != null && notificationData['itemAuthorMentioned'] == true) return;
-
-    // Don't send notifications when the item author comments on their own post.
-    if (notificationData['itemAuthor'] != notificationData['commentAuthor']) {
-      var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
-      var commentAuthorLastName = notificationData['commentAuthorLastName'];
-      var itemAuthorFirstName = notificationData['itemAuthorFirstName'];
-      var itemAuthorLastName = notificationData['itemAuthorLastName'];
-
-      // Send notification.
-      var envelope = new Envelope()
-        ..from = "Woven <hello@woven.co>"
-        ..to = ['$itemAuthorFirstName $itemAuthorLastName <${notificationData['itemAuthorEmail']}>']
-        ..bcc = ['David Notik <davenotik@gmail.com>']
-        ..subject = '$commentAuthorFirstName $commentAuthorLastName commented on your post'
-        ..text = '''
-Hey $itemAuthorFirstName,
-
-$commentAuthorFirstName $commentAuthorLastName just commented on your post:
-
-${notificationData['itemSubject']}
-${notificationData['itemLink']}
-
-${notificationData['commentBody']}
-
---
-Woven
-http://woven.co
-''';
-      app.mailer.send(envelope);
-    }
-    return;
-  }
-
-  static _notifyOtherParticipants(App app, Map notificationData) {
-    Set participants = notificationData['participants'];
-    List mentions = notificationData['mentions'];
-
-    // Notify participants.
-    participants.forEach((participant) {
-
-      // If participant mentioned and thus already notified, don't notify again.
-      if (mentions.contains(participant)) return;
-
-      // Don't notify the author of the original item (whom we email above) or said comment.
-      if (participant != notificationData['itemAuthor'] && participant != notificationData['commentAuthor']) {
-        // Get the participant's user details.
-        Firebase.get('/users/$participant.json').then((userData) {
-          if (userData == null) return;
-
-          var participantFirstName = userData['firstName'];
-          var participantLastName = userData['lastName'];
-          var participantEmail = userData['email'];
-          var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
-          var commentAuthorLastName = notificationData['commentAuthorLastName'];
-          var referToItemAuthorAs = "${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])}";
-
-          // Don't ever say "Dave commented on Dave's post". Later we'll know his or her.
-          if (notificationData['commentAuthor'] == notificationData['itemAuthor']) referToItemAuthorAs = "their";
-
-          // Send notification.
-          var envelope = new Envelope()
-            ..from = "Woven <hello@woven.co>"
-            ..to = ['$participantFirstName $participantLastName <$participantEmail>']
-            ..bcc = ['David Notik <davenotik@gmail.com>']
-            ..subject = "$commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAuthorAs post"
-            ..text = '''
-Hey $participantFirstName,
-
-$commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAuthorAs post:
-
-${notificationData['itemSubject']}
-${notificationData['itemLink']}
-
-${notificationData['commentBody']}
-
---
-Woven
-http://woven.co
-''';
-          app.mailer.send(envelope);
-        });
-      }
-      return;
-    });
-  }
-
-  static _notifyMentionedUsers(String type, Map notificationData, App app) {
-    bool isItem = (type == 'item') ? true : false;
-    bool isComment = (type == 'comment') ? true : false;
-    bool isMessage = (type == 'message') ? true : false;
-
-    var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
-
-    // Combine message and item body fields for purpose of parsing all @mentions in either.
-    String postText;
-    if (isItem) postText = '${notificationData['message']}\n===\n${notificationData['itemBody']}';
-    if (isComment) postText = notificationData['commentBody'];
-    if (isMessage) postText = notificationData['message'];
-
-    List mentions = [];
-
-    // Remember any mentions so we can special case other notifications.
-    notificationData['mentions'] = mentions;
-
-    for (var mention in regExp.allMatches(postText)) {
-      if (mentions.contains(mention.group(2))) return;
-      mentions.add(mention.group(2).replaceAll("@", ""));
-    }
-
-    mentions.forEach((String user) {
-      user = user.toLowerCase();
-      // Don't notify when you mention yourself.
-      if (user == notificationData['commentAuthor']) return;
-
-      // If the item author is mentioned, remember it so we don't also send other notifications.
-      if (user == notificationData['itemAuthor']) notificationData['itemAuthorMentioned'] = true;
-
-      // Get the user data. TODO: Address case sensitivity of usernames.
-      Firebase.get('/users/$user.json').then((userData) {
-        if (userData == null) return;
-
-        var firstName = userData['firstName'];
-        var lastName = userData['lastName'];
-        var email = userData['email'];
-        var postAuthorFirstName;
-        var postAuthorLastName;
-        var notificationText;
-
-        if (isItem) {
-          notificationText = '';
-          postAuthorFirstName =  notificationData['itemAuthorFirstName'];
-          postAuthorLastName =  notificationData['itemAuthorLastName'];
-        }
-
-        if (isComment) {
-          notificationText = '\n${notificationData['commentBody']}\n';
-          postAuthorFirstName =  notificationData['commentAuthorFirstName'];
-          postAuthorLastName =  notificationData['commentAuthorLastName'];
-        }
-
-        if (isMessage) {
-          notificationText = '\n${notificationData['message']}\n';
-          postAuthorFirstName =  notificationData['messageAuthorFirstName'];
-          postAuthorLastName =  notificationData['messageAuthorLastName'];
-        }
-
-        // Send notification.
-        var envelope = new Envelope()
-          ..from = "Woven <hello@woven.co>"
-          ..to = ['$firstName $lastName <$email>']
-          ..bcc = ['David Notik <davenotik@gmail.com>']
-          ..subject = "$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
-          ..text = '''
-Hey $firstName,
-
-$postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post:' : ':'}
-
-${notificationData['itemLink']}
-
---
-Woven
-http://woven.co
-''';
-        app.mailer.send(envelope);
-
       });
     });
   }

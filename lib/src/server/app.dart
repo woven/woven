@@ -14,6 +14,7 @@ import 'controller/main.dart';
 import 'controller/sign_in.dart';
 import 'controller/user.dart';
 import 'controller/admin.dart';
+import 'controller/mail.dart';
 import 'routing/router.dart';
 
 import 'firebase.dart';
@@ -66,9 +67,9 @@ class App {
       ..routes[Routes.currentUser] = SignInController.getCurrentUser
       ..routes[Routes.starred] = MainController.serveApp
       ..routes[Routes.people] = MainController.serveApp
-      ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail
-      ..routes[Routes.sendNotificationsForItem] = MainController.sendNotificationsForItem
-      ..routes[Routes.sendNotificationsForComment] = MainController.sendNotificationsForComment
+      ..routes[Routes.sendWelcome] = MailController.sendWelcomeEmail
+      ..routes[Routes.sendNotificationsForItem] = MailController.sendNotificationsForItem
+      ..routes[Routes.sendNotificationsForComment] = MailController.sendNotificationsForComment
       ..routes[Routes.getUriPreview] = MainController.getUriPreview
       ..routes[Routes.generateDigest] = AdminController.generateDigest
       ..routes[Routes.exportUsers] = AdminController.exportUsers
@@ -77,8 +78,8 @@ class App {
       ..routes[Routes.signIn] = SignInController.signIn
       ..routes[Routes.signOut] = SignInController.signOut
       ..routes[Routes.createNewUser] = UserController.createNewUser
-      ..routes[Routes.sendConfirmEmail] = UserController.sendConfirmEmail
-      ..routes[Routes.confirmEmail] = MainController.confirmEmail;
+      ..routes[Routes.confirmEmail] = MainController.confirmEmail
+      ..routes[Routes.sendConfirmEmail] = MailController.sendConfirmEmail;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
