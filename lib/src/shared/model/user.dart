@@ -1,7 +1,6 @@
 library user_model;
 
 import 'package:woven/config/config.dart';
-import 'dart:convert';
 
 class UserModel {
   String id;
@@ -42,7 +41,7 @@ class UserModel {
       "createdDate": createdDate,
       "disabled": disabled,
       "needsPassword": needsPassword,
-      "onboardingStatus": onboardingStatus
+      "onboardingStatus": enumToName(onboardingStatus)
     };
   }
 
@@ -67,7 +66,20 @@ class UserModel {
   }
 }
 
+/**
+ * Converts enum value to string, because there's no toString().
+ */
+String enumToName(OnboardingStatus onboardingStatus) {
+  if (onboardingStatus == OnboardingStatus.temporaryUser) return 'temporaryUser';
+  if (onboardingStatus == OnboardingStatus.signUpComplete) return 'signUpComplete';
+  if (onboardingStatus == OnboardingStatus.onboardingComplete) return 'onboardingComplete';
+}
+
+/**
+ * Defines valid/recognized onboarding statuses associated with a user.
+ */
 enum OnboardingStatus {
-  signUpComplete,
-  onboardingComplete
+  signUpComplete, // User has chosen a username and password.
+  onboardingComplete, // User has completed the initial onboarding flow. TODO: Not used atm.
+  temporaryUser // For when we have a temporary user created with information from FB or Tw, which needs to be updated.
 }
