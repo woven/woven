@@ -94,7 +94,7 @@ class SignInDialog extends PolymerElement {
         overlay.toggle();
       } else {
         toggleProcessingIndicator();
-        window.alert("We don't recognize you. Try again.");
+        window.alert(response.message);
       }
     });
   }
