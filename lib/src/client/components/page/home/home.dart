@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_animation.dart';
 import 'package:core_elements/core_input.dart';
+import 'package:firebase/firebase.dart' as firebase;
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/model/user.dart';
@@ -28,6 +29,10 @@ class Home extends PolymerElement with Observable {
 
   var processing = false;
   var processingAnimation = new CoreAnimation();
+
+  firebase.Firebase get f => app.f;
+
+  DateTime get now => new DateTime.now().toUtc();
 
   Element get overlay => this.shadowRoot.querySelector('div.overlay');
   Element get logo => this.shadowRoot.querySelector((app.isMobile ? 'div.logo-solo' : 'div.logo'));
@@ -130,7 +135,7 @@ class Home extends PolymerElement with Observable {
           if (app.user.disabled && app.user.onboardingStatus == 'signUpComplete') {
             ctaPage = 'sign-up-note';
           }
-          if (app.user.onboardingStatus == null) {
+          if (app.user.onboardingStatus == null || app.user.onboardingStatus == 'temporaryUser') {
             ctaPage = 'complete-sign-up';
           }
 
@@ -138,7 +143,7 @@ class Home extends PolymerElement with Observable {
           Uri currentPath = Uri.parse(window.location.toString());
 
           if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
-            var snapshot = await app.f.child('/email_confirmation_index/${currentPath.pathSegments[1].toString()}/email').once('value');
+            firebase.DataSnapshot snapshot = await f.child('/email_confirmation_index/${currentPath.pathSegments[1].toString()}/email').once('value');
             if (snapshot.val() == null) {
               ctaPage = 'sign-up';
             } else {
@@ -281,7 +286,8 @@ class Home extends PolymerElement with Observable {
             'password': password.value,
             'firstName': firstname.value,
             'lastName': lastname.value,
-            'email': email.value.trim()
+            'email': email.value.trim(),
+            'status': app.user.onboardingStatus
         }))
     .then((HttpRequest request) {
       // Set up the response as an object.
@@ -294,11 +300,12 @@ class Home extends PolymerElement with Observable {
 
         if (response.data['disabled'] == true) {
           toggleProcessingIndicator();
+          app.user = null; // Kill the disabled user.
           showSignUpNote();
           return;
         }
 
-        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+        f.authWithCustomToken(app.authToken).catchError((error) => print(error));
 
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);

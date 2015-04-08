@@ -126,8 +126,15 @@ class WovenApp extends PolymerElement with Observable {
       }
 
       app.hasTriedLoadingUser = true;
-      if (app.user == null && (window.location.pathname == '/' || window.location.pathname.contains('/confirm'))) app.showHomePage = true;
-      if (app.user != null && app.user.onboardingStatus == null) app.showHomePage = true;
+      // TODO: https://gist.github.com/kaisellgren/75f1aa96abb9c8cc56ae
+      var user = app.user;
+      if (user == null) {
+        var path = window.location.pathname;
+        app.showHomePage = path == '/' || path.contains('/confirm');
+      } else {
+        app.showHomePage = user.disabled || user.onboardingStatus == null ||
+          user.onboardingStatus == 'temporaryUser';
+      }
     });
 
     // Listen for App changes so we can do some things.

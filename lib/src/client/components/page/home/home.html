@@ -87,7 +87,7 @@
               <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
             </div>
             <div class="footer" self-center>
-              <!--<p><a on-tap="{{close}}">Just browse &#8594;</a></p>-->
+              <p style="visibility:hidden;"><a on-tap="{{close}}">Just browse &#8594;</a></p>
             </div>
           </template>
 
@@ -96,14 +96,27 @@
 
             <div self-center>
               <p>
-                Thank you for signing up and reserving your username. Woven is currently serving a few select
+                You've signed up and reserved your username. Woven is currently serving a few select
                 communities. The quickest way to get access is to ask a current participant to invite you. If you don't
-                know someone, you can respond to the email we just sent you to request access. Or, wait until we open up
+                know someone, you can reply to the email we just sent you to request access. Or, wait until we open up
                 to more communities. We can't wait to get you involved.
               </p>
               <div class="footer" self-center>
                 <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
               </div>
+            </div>
+          </template>
+
+          <template if="{{ctaPage == 'get-started-note'}}">
+            <h3>Check your email...</h3>
+
+            <div self-center>
+              <p>
+                I just sent you an email with a link.
+              </p>
+              <p>
+                We'll be back together in no time.
+              </p>
             </div>
           </template>
         </div>

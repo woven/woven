@@ -121,9 +121,9 @@ class SignInDialog extends PolymerElement {
   }
 
   toggleSignUp() {
-    WelcomeDialog welcome = document.querySelector('woven-app').shadowRoot.querySelector('welcome-dialog');
     this.toggleOverlay();
-    welcome.toggleOverlay();
+    app.router.dispatch(url: '/');
+    app.showHomePage = true;
   }
 
   signInWithFacebook() {
