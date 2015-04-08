@@ -23,6 +23,8 @@ class Routes {
   static final signIn = new UrlPattern(r'/_signin');
   static final signOut = new UrlPattern(r'/_signout');
   static final createNewUser = new UrlPattern(r'/_createnewuser');
+  static final sendConfirmEmail = new UrlPattern(r'/_sendconfirmemail');
+  static final confirmEmail = new UrlPattern(r'/confirm/(.+)');
 }
 
 class NoMatchingRoute {}

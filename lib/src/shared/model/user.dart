@@ -20,9 +20,11 @@ class UserModel {
   bool isNew = false;
   bool disabled = false;
   bool needsPassword = false;
+  OnboardingStatus onboardingStatus;
 
   // Return the path to the small picture if we have it, otherwise the original picture.
   String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}" : null;
+
 
   Map toJson() {
     return {
@@ -39,7 +41,8 @@ class UserModel {
       "settings": settings,
       "createdDate": createdDate,
       "disabled": disabled,
-      "needsPassword": needsPassword
+      "needsPassword": needsPassword,
+      "onboardingStatus": onboardingStatus
     };
   }
 
@@ -59,6 +62,12 @@ class UserModel {
       ..settings = data['settings']
       ..createdDate = data['createdDate']
       ..disabled = data['disabled']
-      ..needsPassword = data['needsPassword'];
+      ..needsPassword = data['needsPassword']
+      ..onboardingStatus = data['onboardingStatus'];
   }
+}
+
+enum OnboardingStatus {
+  signUpComplete,
+  onboardingComplete
 }

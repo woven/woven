@@ -37,6 +37,8 @@ class Home extends PolymerElement with Observable {
 
   CoreInput get username => this.shadowRoot.querySelector('#username');
   CoreInput get password => this.shadowRoot.querySelector('#password');
+  CoreInput get firstname => this.shadowRoot.querySelector('#firstname');
+  CoreInput get lastname => this.shadowRoot.querySelector('#lastname');
   CoreInput get email => this.shadowRoot.querySelector('#email');
   Element get submitButton => this.shadowRoot.querySelector('#submit');
 
@@ -75,6 +77,10 @@ class Home extends PolymerElement with Observable {
   showSignIn() => changeCta('sign-in');
 
   showSignUp() => changeCta('sign-up');
+
+  showSignUpNote() => changeCta('sign-up-note');
+
+  showGetStartedNote() => changeCta('get-started-note');
 
   toggleCta() {
     mainAnimation.target = cta;
@@ -116,10 +122,35 @@ class Home extends PolymerElement with Observable {
     }
   }
 
-  toggleMain() {
+  toggleMain() async {
     new Timer(new Duration(milliseconds: 500), () {
       toggleLogo();
-      new Timer(new Duration(milliseconds: 800), () {
+      new Timer(new Duration(milliseconds: 800), () async {
+        if (app.user != null) {
+          if (app.user.disabled && app.user.onboardingStatus == 'signUpComplete') {
+            ctaPage = 'sign-up-note';
+          }
+          if (app.user.onboardingStatus == null) {
+            ctaPage = 'complete-sign-up';
+          }
+
+        } else {
+          Uri currentPath = Uri.parse(window.location.toString());
+
+          if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
+            var snapshot = await app.f.child('/email_confirmation_index/${currentPath.pathSegments[1].toString()}/email').once('value');
+            if (snapshot.val() == null) {
+              ctaPage = 'sign-up';
+            } else {
+              var user = new UserModel();
+              user.email = snapshot.val();
+              app.user = user;
+              ctaPage = 'complete-sign-up';
+            }
+            app.router.dispatch(url: '/');
+          }
+
+        }
         toggleCta();
       });
     });
@@ -183,7 +214,32 @@ class Home extends PolymerElement with Observable {
         });
       });
     });
+  }
 
+  /**
+   * Create a new user.
+   */
+  getStarted(Event e) async {
+    e.preventDefault();
+
+    if (email.value.trim().isEmpty || !isValidEmail(email.value.trim())) {
+      window.alert("Please provide a valid email.");
+      return false;
+    }
+
+    toggleProcessingIndicator();
+
+    // Check credentials and sign the user in server side.
+    HttpRequest request = await HttpRequest.request(
+        Routes.sendConfirmEmail.toString(),
+        method: 'POST',
+        sendData: JSON.encode({
+          'email': email.value.trim()
+        }));
+
+    toggleProcessingIndicator();
+
+    showGetStartedNote();
   }
 
   /**
@@ -223,8 +279,8 @@ class Home extends PolymerElement with Observable {
         sendData: JSON.encode({
             'username': username.value.trim(),
             'password': password.value,
-//            'firstName': firstname.value,
-//            'lastName': lastname.value,
+            'firstName': firstname.value,
+            'lastName': lastname.value,
             'email': email.value.trim()
         }))
     .then((HttpRequest request) {
@@ -235,6 +291,13 @@ class Home extends PolymerElement with Observable {
         app.authToken = response.data['authToken'];
         // TODO: This should totally just be part of the UserModel.
         response.data.remove('authToken');
+
+        if (response.data['disabled'] == true) {
+          toggleProcessingIndicator();
+          showSignUpNote();
+          return;
+        }
+
         app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
 
         // Set up the user object.
@@ -317,7 +380,7 @@ class Home extends PolymerElement with Observable {
         Timer.run(() => greetUser());
       } else {
         toggleProcessingIndicator();
-        window.alert("We don't recognize you. Try again.");
+        window.alert(response.message);
       }
     });
   }

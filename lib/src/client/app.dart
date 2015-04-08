@@ -22,11 +22,12 @@ class App extends Observable {
   @observable CommunityModel community;
   @observable bool hasTriedLoadingUser = false;
   @observable bool showHomePage = false;
+  @observable bool showSignUpNote = false; // Notice for disabled users.
   @observable bool skippedHomePage = false;
   DateTime timeOfLastFocus = new DateTime.now().toUtc();
   bool isFocused = true;
   bool debugMode;
-  List reservedPaths = ['people', 'events', 'item'];
+  List reservedPaths = ['people', 'events', 'item', 'confirm'];
 //  @observable bool isNewUser = false;
 
   Router router;
@@ -63,7 +64,8 @@ class App extends Observable {
       ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
       ..routes[Routes.people] = people
-      ..routes[Routes.showItem] = showItem;
+      ..routes[Routes.showItem] = showItem
+      ..routes[Routes.confirmEmail] = home;
 
     router.onNotFound.listen(notFound);
     router.onDispatch.listen(globalHandler);

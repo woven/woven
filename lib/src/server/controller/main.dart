@@ -40,6 +40,10 @@ class MainController {
     }
   }
 
+  static confirmEmail(App app, HttpRequest request, String confirmId) {
+    return new File(config['server']['directory'] + '/index.html');
+  }
+
   static showCommunity(App app, HttpRequest request, String community) {
     if (Uri.parse(community).pathSegments[0].length > 0) {
       community = Uri.parse(community).pathSegments[0];

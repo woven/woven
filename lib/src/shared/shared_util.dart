@@ -3,6 +3,7 @@ library shared_util;
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'regex.dart';
+import 'dart:math';
 
 String htmlDecode(String text) {
   if (text == null) {
@@ -183,6 +184,14 @@ String hash(String content) {
   var digest = sha256.close();
   var hexString = CryptoUtils.bytesToHex(digest);
   return hexString;
+}
+
+String generateRandomHash() {
+  var range = new Random();
+  var sha1 = new SHA1();
+  sha1.add([range.nextInt(1000)]);
+  var hash = CryptoUtils.bytesToHex(sha1.close());
+  return hash;
 }
 
 /**

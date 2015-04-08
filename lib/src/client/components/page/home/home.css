@@ -41,7 +41,7 @@
 
 .cta {
   /* border: solid 6px rgba(255, 255, 255, 0.8); */
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
   color: white;
   width: 500px;
   border-radius: 3px;
@@ -70,6 +70,12 @@
 
 .cta p {
   color: #333;
+  font-size: 16px;
+  text-align: center;
+  line-height: 21px;
+}
+
+.cta .footer p {
   font-size: 14px;
 }
 
@@ -108,6 +114,11 @@
 .field-wrapper.last {
   border-bottom: solid 1px #ddd;
   border-radius: 0 0 3px 3px;
+}
+
+.field-wrapper.only {
+  border: solid 1px #ddd;
+  border-radius: 3px;
 }
 
 .button {

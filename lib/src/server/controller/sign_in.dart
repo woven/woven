@@ -60,7 +60,9 @@ class SignInController {
       return findUser(username).then((Map userData) {
         var response = new Response();
 
-        if (userData == null) return Response.fromError('The user associated with that session was not found.');
+        if (userData == null) return Response.fromError('That user was not found.');
+
+//        if (userData['disabled'] == true) return Response.fromError('That user is not active.');
 
         if (userData['password'] == null) userData['needsPassword'] = true;
         userData.remove('password');
@@ -103,19 +105,24 @@ class SignInController {
       Map data = JSON.decode(dataReceived);
       String username = (data['username'] as String).toLowerCase();
       var password = data['password'];
+
       return checkCredentials(username, password).then((success) {
-        if (!success) return Response.fromError('Bad credentials.');
-        return app.sessionManager.addSessionToIndex(sessionId, username).then((sessionData) {
-          return findUserInfo(username).then((Map userData) {
-            var response = new Response();
-            userData['authToken'] = sessionData['authToken'];
-            userData.remove('password');
-            response.data = userData;
-            response.success = true;
-            return response;
+        if (!success) return Response.fromError('We don\'t recognize you. Try again.');
+
+        return Firebase.get('/users/$username/disabled.json').then((res) {
+          if (res == true) return Response.fromError('You don\'t have access yet.\n\nWanna talk about it? hello@woven.co');
+
+          return app.sessionManager.addSessionToIndex(sessionId, username).then((sessionData) {
+            return findUserInfo(username).then((Map userData) {
+              var response = new Response();
+              userData['authToken'] = sessionData['authToken'];
+              userData.remove('password');
+              response.data = userData;
+              response.success = true;
+              return response;
+            });
           });
         });
-
       });
     });
   }
@@ -198,6 +205,7 @@ class SignInController {
             // Store the user, and we can use the index to find it and set a different username later.
             Firebase.put('/users/$facebookId.json', user.toJson(), auth: sessionData['authToken']);
 
+            // Do not add cookie to request if this is new user, as we leave disabled until approved.
             app.sessionManager.addSessionCookieToRequest(request, sessionId);
           });
         } else {
@@ -217,6 +225,8 @@ class SignInController {
             // Update the session index with a reference to this username.
             app.sessionManager.addSessionToIndex(sessionId, username).then((sessionData) {
               Firebase.patch('/users/$username.json', userData, auth: sessionData['authToken']);
+              // Do not add cookie to request if this is new user, as we leave disabled until approved.
+//              if (!user.disabled) app.sessionManager.addSessionCookieToRequest(request, sessionId);
               app.sessionManager.addSessionCookieToRequest(request, sessionId);
             });
           });
