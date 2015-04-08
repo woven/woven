@@ -3,8 +3,10 @@ library sign_in_controller;
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:query_string/query_string.dart';
 import 'package:http/http.dart' as http;
+
 import '../app.dart';
 import '../firebase.dart';
 import 'package:woven/src/shared/model/user.dart';
@@ -137,102 +139,95 @@ class SignInController {
 
   static Future findUserInfo(String username) => Firebase.get('/users/$username.json');
 
-  static facebook(App app, HttpRequest request) {
+  static facebook(App app, HttpRequest request) async {
     var code = Uri.encodeComponent(request.uri.queryParameters['code']);
     var appId = Uri.encodeComponent(config['authentication']['facebook']['appId']);
     var appSecret = Uri.encodeComponent(config['authentication']['facebook']['appSecret']);
     var callbackUrl = Uri.encodeComponent(config['authentication']['facebook']['url']);
 
     var url = 'https://graph.facebook.com/oauth/access_token?client_id=$appId&redirect_uri=$callbackUrl&client_secret=$appSecret&code=$code';
-    return http.read(url).then((String contents) {
-      // The contents look like this: access_token=USER_ACCESS_TOKEN&expires=NUMBER_OF_SECONDS_UNTIL_TOKEN_EXPIRES
-      var parameters = QueryString.parse(contents);
-      var accessToken = parameters['access_token'];
+    String contents = await http.read(url);
 
-      // Try to gather the user info.
-      return http.read('https://graph.facebook.com/me?access_token=$accessToken&fields=picture,first_name,last_name,gender,birthday,email,location');
-    }).then((String userInfo) {
-      Map facebookData = JSON.decode(userInfo);
+    // The contents look like this: access_token=USER_ACCESS_TOKEN&expires=NUMBER_OF_SECONDS_UNTIL_TOKEN_EXPIRES
+    var parameters = QueryString.parse(contents);
+    var accessToken = parameters['access_token'];
 
-      var facebookId = facebookData['id'];
+    // Try to gather the user info.
+    String userInfo = await http.read('https://graph.facebook.com/me?access_token=$accessToken&fields=picture,first_name,last_name,gender,birthday,email,location');
+    Map facebookData = JSON.decode(userInfo);
+    var facebookId = facebookData['id'];
 
-      // Get the profile pictures.
-      return app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId).then((Response res) {
-        Map pictures = res.data;
+    // Get the profile pictures.
+    Response findFacebookProfilePicture = await app.profilePictureUtil.downloadFacebookProfilePicture(id: facebookId, user: facebookId);
+    Map pictures = findFacebookProfilePicture.data;
 
-        facebookData['picture'] = pictures['original'];
-        facebookData['pictureSmall'] = pictures['small'];
+    facebookData['picture'] = pictures['original'];
+    facebookData['pictureSmall'] = pictures['small'];
 
-        return facebookData;
+    // Streamline some of this data so it's easier to work with later.
+    facebookData['location'] = facebookData['location'] != null ? facebookData['location']['name'] : null;
+    facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
+    facebookData['lastName'] = facebookData['last_name']; facebookData.remove("last_name");
+
+    facebookId = facebookData['facebookId'] = facebookData['id']; facebookData.remove("id");
+
+    var user = new UserModel()
+      ..username = facebookData['facebookId']
+      ..facebookId = facebookData['facebookId']
+      ..firstName = facebookData['firstName']
+      ..lastName = facebookData['lastName']
+      ..email = facebookData['email']
+      ..location = facebookData['location']
+      ..gender = facebookData['gender']
+      ..picture = facebookData['picture']
+      ..pictureSmall = facebookData['pictureSmall']
+      ..disabled = true
+      ..onboardingStatus = OnboardingStatus.temporaryUser;
+
+    // Check for a session cookie in the request.
+    var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+
+    // If there's an existing session cookie, use it. Else, create a new session id.
+    String sessionId = (sessionCookie == null || sessionCookie.value == null) ? app.sessionManager.createSessionId() : sessionCookie.value;
+
+    Map facebookIndexData = await findFacebookIndex(facebookId);
+
+    // Upon sign in with Facebook, we redirect as appropriate.
+    request.response.statusCode = 302;
+    request.response.headers.add(HttpHeaders.LOCATION, '/');
+
+    if (facebookIndexData == null) {
+      // Add the session to our index, and add a session cookie to the request.
+      Map sessionData = await app.sessionManager.addSessionToIndex(sessionId, facebookId);
+
+      // Store the Facebook ID in an index that references the associated username.
+      Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'}, auth: sessionData['authToken']);
+
+      // Store the user, and we can use the index to find it and set a different username later.
+      Firebase.put('/users/$facebookId.json', user.toJson(), auth: sessionData['authToken']);
+
+      // Do not add cookie to request if this is new user, as we leave disabled until approved.
+      app.sessionManager.addSessionCookieToRequest(request, sessionId);
+
+    } else {
+      // If we already know of this Facebook user, update with any new data.
+      var username = facebookIndexData['username'];
+
+      // Get the existing user's data so we can compare against it.
+      // TODO: Handle edge case where index points to non-existent user.
+      Map userData = await Firebase.get('/users/$username.json');
+
+      if (userData == null) return null;
+      facebookData.forEach((k, v) {
+        if (userData[k] == null) userData[k] = v;
       });
 
-    }).then((Map facebookData) {
-      // Streamline some of this data so it's easier to work with later.
-      facebookData['location'] = facebookData['location'] != null ? facebookData['location']['name'] : null;
-      facebookData['firstName'] = facebookData['first_name']; facebookData.remove("first_name");
-      facebookData['lastName'] = facebookData['last_name']; facebookData.remove("last_name");
-      var facebookId = facebookData['facebookId'] = facebookData['id']; facebookData.remove("id");
-
-      var user = new UserModel()
-        ..username = facebookData['facebookId']
-        ..facebookId = facebookData['facebookId']
-        ..firstName = facebookData['firstName']
-        ..lastName = facebookData['lastName']
-        ..email = facebookData['email']
-        ..location = facebookData['location']
-        ..gender = facebookData['gender']
-        ..picture = facebookData['picture']
-        ..pictureSmall = facebookData['pictureSmall']
-        ..disabled = true;
-
-      // Check for a session cookie in the request.
-      var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
-
-      // If there's an existing session cookie, use it. Else, create a new session id.
-      String sessionId = (sessionCookie == null || sessionCookie.value == null) ? app.sessionManager.createSessionId() : sessionCookie.value;
-
-      return findFacebookIndex(facebookId).then((Map facebookIndexData) {
-        // Upon sign in with Facebook, we redirect as appropriate.
-        request.response.statusCode = 302;
-        request.response.headers.add(HttpHeaders.LOCATION, '/');
-
-        if (facebookIndexData == null) {
-          // Add the session to our index, and add a session cookie to the request.
-          app.sessionManager.addSessionToIndex(sessionId, facebookId).then((sessionData) {
-            // Store the Facebook ID in an index that references the associated username.
-            Firebase.put('/facebook_index/$facebookId.json', {'username': '$facebookId'}, auth: sessionData['authToken']);
-
-            // Store the user, and we can use the index to find it and set a different username later.
-            Firebase.put('/users/$facebookId.json', user.toJson(), auth: sessionData['authToken']);
-
-            // Do not add cookie to request if this is new user, as we leave disabled until approved.
-            app.sessionManager.addSessionCookieToRequest(request, sessionId);
-          });
-        } else {
-          // If we already know of this Facebook user, update with any new data.
-          var username = facebookIndexData['username'];
-
-          // Get the existing user's data so we can compare against it.
-          // TODO: Handle edge case where index points to non-existent user.
-          return Firebase.get('/users/$username.json').then((Map userData) {
-            if (userData == null) return null;
-            facebookData.forEach((k, v) {
-              if (userData[k] == null) userData[k] = v;
-            });
-            return userData;
-          }).then((userData) {
-            // TODO: handle null.
-            // Update the session index with a reference to this username.
-            app.sessionManager.addSessionToIndex(sessionId, username).then((sessionData) {
-              Firebase.patch('/users/$username.json', userData, auth: sessionData['authToken']);
-              // Do not add cookie to request if this is new user, as we leave disabled until approved.
-//              if (!user.disabled) app.sessionManager.addSessionCookieToRequest(request, sessionId);
-              app.sessionManager.addSessionCookieToRequest(request, sessionId);
-            });
-          });
-        }
-      });
-    });
+      // TODO: handle null.
+      // Update the session index with a reference to this username.
+      Map sessionData = await app.sessionManager.addSessionToIndex(sessionId, username);
+      Firebase.patch('/users/$username.json', userData, auth: sessionData['authToken']);
+      app.sessionManager.addSessionCookieToRequest(request, sessionId);
+    }
   }
 
   static Future<bool> userExists(String user) {
