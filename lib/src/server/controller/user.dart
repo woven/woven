@@ -6,7 +6,7 @@ import 'dart:convert';
 
 import 'package:query_string/query_string.dart';
 import 'package:http/http.dart' as http;
-import 'package:gravatar/gravatar.dart';
+//import 'package:gravatar/gravatar.dart';
 
 import '../app.dart';
 import '../firebase.dart';
@@ -130,8 +130,8 @@ class UserController {
 
   static Future findUserInfo(String username) => Firebase.get('/users/$username.json');
 
-  static getGravatarForEmail(String email) {
-    var gravatar = new Gravatar(email);
-    print(gravatar.imageUrl(size: 2048) + '&d=404');
-  }
+//  static getGravatarForEmail(String email) {
+//    var gravatar = new Gravatar(email);
+//    print(gravatar.imageUrl(size: 2048) + '&d=404');
+//  }
 }
