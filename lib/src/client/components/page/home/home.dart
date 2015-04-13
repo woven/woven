@@ -108,7 +108,7 @@ class Home extends PolymerElement with Observable {
 
   toggleCover() {
     mainAnimation.target = cover;
-    mainAnimation.duration = 400;
+    mainAnimation.duration = 300;
     mainAnimation.iterations = 'auto';
     mainAnimation.easing = 'ease-out';
     mainAnimation.composite = 'add';
@@ -127,18 +127,15 @@ class Home extends PolymerElement with Observable {
   }
 
   toggleMain() async {
-    new Timer(new Duration(milliseconds: 500), () {
+    new Timer(new Duration(milliseconds: 300), () {
       toggleLogo();
-      new Timer(new Duration(milliseconds: 800), () async {
+      new Timer(new Duration(milliseconds: 600), () async {
         if (app.user != null) {
           if (app.user.disabled && app.user.onboardingStatus == 'signUpComplete') {
             app.homePageCta = 'sign-up-note';
           }
-          if (app.user.onboardingStatus == null || app.user.onboardingStatus == 'temporaryUser') {
+          if (app.user.onboardingStatus == 'temporaryUser') {
             app.homePageCta = 'complete-sign-up';
-          }
-          if (app.user.disabled || app.user.onboardingStatus == null || app.user.onboardingStatus == 'temporaryUser') {
-
           }
         } else {
           Uri currentPath = Uri.parse(window.location.toString());

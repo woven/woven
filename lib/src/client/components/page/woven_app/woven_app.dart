@@ -135,8 +135,12 @@ class WovenApp extends PolymerElement with Observable {
           if (app.user.isNew != true) Timer.run(() => greetUser());
 
         } else {
-          app.homePageCta = 'disabled-note';
-          app.user = null;
+          if (user.onboardingStatus == 'temporaryUser') {
+            app.homePageCta = 'complete-signup';
+          } else {
+            app.homePageCta = 'disabled-note';
+            app.user = null;
+          }
         }
       }
     });
