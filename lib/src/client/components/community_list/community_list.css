@@ -62,18 +62,21 @@
 
 .community-alias {
   /*overflow: hidden;*/
-  color: #0061BB;
+  color: #1878D2;
   font-size: 18px;
+  letter-spacing: 0.2pt;
   white-space: nowrap;
   margin-right: 5px;
-  font-weight: bold;
   padding: 5px 0 0 0;
+  letter-spacing: .1pt;
 }
 
 .item-body {
-  color: #5c5c5c;
+  font-size: 14px;
+  color: #2d2d2d;
   /*overflow: hidden;*/
   white-space: nowrap;
+  letter-spacing: .1pt;
 }
 
 .theme-dark .item-body {
@@ -83,13 +86,13 @@
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
-  font-size: 0.90em;
+  font-size: 13px;
   display: inline;
 }
 
 .item-users {
   /*color: #3A89BE;*/
-  color: #333;
+  color: #2d2d2d;
   font-size: 90%;
   display: inline;
   margin-right: 2px;
@@ -155,8 +158,8 @@
 }
 
 span.item-count {
-  font-size: 13px;
-  color: #3F3F3F;
+  font-size: 14px;
+  color: #444;
   outline: none;
   margin-left: 12px;
 }

@@ -100,7 +100,8 @@ core-drawer-panel:not([narrow]) #menu-button {
 }
 
 .menu {
-  font-size: 16px;
+  color: #444;
+  font-size: 17px;
 }
 
 .menu-section {

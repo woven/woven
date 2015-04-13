@@ -6,7 +6,8 @@
   border-radius: 4px;
   border: 1px solid #e5e5e5;
   transition: background-color 2s;
-  font-size: 14px;
+  font-size: 15px;
+  color: #2d2d2d;
 }
 
 .theme-dark .activity-card {
@@ -65,12 +66,14 @@ user-picture::shadow .user-photo {
 }
 
 .user {
+  font-size: 15px;
+  color: #444;
   font-weight: bold;
 }
 
 .date-time {
-  color: #3F3F3F;
-  font-size: 90%;
+  color: #444;
+  font-size: 13px;
 }
 
 .theme-dark .date-time {

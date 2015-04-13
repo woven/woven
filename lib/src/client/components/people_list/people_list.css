@@ -76,12 +76,12 @@ core-icon {
   padding: 2px 0 0 0;
   white-space: nowrap;
   margin-right: 5px;
-  font-size: 1.3em;
-  letter-spacing: 0.3pt;
+  font-size: 17px;
+  letter-spacing: 0.2pt;
 }
 .user-name {
   color: #5c5c5c;
-  font-size: 1.05em;
+  font-size: 14px;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
