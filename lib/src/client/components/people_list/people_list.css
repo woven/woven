@@ -72,14 +72,16 @@ core-icon {
 }
 
 .user-username {
+  color: #444;
+  padding: 2px 0 0 0;
   white-space: nowrap;
   margin-right: 5px;
-  font-weight: bold;
-  font-size: 1.2em;
-  padding: 2px 0 0 0;
+  font-size: 1.3em;
+  letter-spacing: 0.3pt;
 }
 .user-name {
   color: #5c5c5c;
+  font-size: 1.05em;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
@@ -147,7 +149,7 @@ core-icon {
   background: #F5F5F5;
   border: solid 1px #E6E6E6;
   overflow:hidden;
-  border-radius: 3px;
+  border-radius: 50%;
 
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
