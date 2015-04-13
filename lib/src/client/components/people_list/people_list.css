@@ -86,9 +86,9 @@ core-icon {
   white-space: nowrap;
 }
 .item-updated {
-  color: rgb(102, 102, 102);
+  color: #666;
   overflow: hidden;
-  font-size: 90%;
+  font-size: 13px;
   display: inline;
 }
 

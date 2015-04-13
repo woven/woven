@@ -72,11 +72,10 @@
 }
 
 .item-body {
-  font-size: 14px;
-  color: #2d2d2d;
+  font-size: 16px;
+  color: #6E6E6E;
   /*overflow: hidden;*/
   white-space: nowrap;
-  letter-spacing: .1pt;
 }
 
 .theme-dark .item-body {
@@ -92,7 +91,7 @@
 
 .item-users {
   /*color: #3A89BE;*/
-  color: #2d2d2d;
+  color: #6e6e6e;
   font-size: 90%;
   display: inline;
   margin-right: 2px;
@@ -116,7 +115,7 @@
   cursor: pointer;
   color: #2e2e2e;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
   padding: 3px 5px;
   text-decoration: none;
