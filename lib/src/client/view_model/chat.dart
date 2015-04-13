@@ -286,15 +286,12 @@ class ChatViewModel extends BaseViewModel with Observable {
    * Play the notification sound.
    */
   playNotificationSound() async {
-
     GainNode gainNode = audioContext.createGain();
 
     // get the audio file
     HttpRequest request = await HttpRequest.request("/static/audio/beep_short_on.wav", responseType: "arraybuffer");
-    print(request.response);
     // decode it
     AudioBuffer buffer = await audioContext.decodeAudioData(request.response);
-    print(buffer);
     AudioBufferSourceNode source = audioContext.createBufferSource();
     source.buffer = buffer;
     source.connectNode(audioContext.destination);
