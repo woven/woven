@@ -24,7 +24,7 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.5"
+    version: "0.2.7"
   collection:
     description: collection
     source: hosted
@@ -32,7 +32,7 @@ packages:
   core_elements:
     description: core_elements
     source: hosted
-    version: "0.6.0+4"
+    version: "0.6.0+5"
   crypto:
     description: crypto
     source: hosted
@@ -45,10 +45,18 @@ packages:
     description: custom_element_apigen
     source: hosted
     version: "0.1.3"
+  dart_style:
+    description: dart_style
+    source: hosted
+    version: "0.1.3"
   firebase:
     description: firebase
     source: hosted
     version: "0.3.0"
+  glob:
+    description: glob
+    source: hosted
+    version: "1.0.4"
   googleapis:
     description: googleapis
     source: hosted
@@ -57,6 +65,10 @@ packages:
     description: googleapis_auth
     source: hosted
     version: "0.2.3+1"
+  gravatar:
+    description: gravatar
+    source: hosted
+    version: "1.2.3"
   html5lib:
     description: html5lib
     source: hosted
@@ -76,7 +88,7 @@ packages:
   initialize:
     description: initialize
     source: hosted
-    version: "0.2.0"
+    version: "0.5.1+4"
   intl:
     description: intl
     source: hosted
@@ -92,7 +104,7 @@ packages:
   matcher:
     description: matcher
     source: hosted
-    version: "0.11.4+1"
+    version: "0.11.4+3"
   meta:
     description: meta
     source: hosted
@@ -105,6 +117,10 @@ packages:
     description: mustache
     source: hosted
     version: "0.1.8"
+  notification:
+    description: notification
+    source: hosted
+    version: "0.0.1"
   observe:
     description: observe
     source: hosted
@@ -120,11 +136,11 @@ packages:
   petitparser:
     description: petitparser
     source: hosted
-    version: "1.3.6"
+    version: "1.3.7"
   polymer:
     description: polymer
     source: hosted
-    version: "0.15.5+3"
+    version: "0.15.5+4"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -160,7 +176,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.2.1"
+    version: "1.2.4"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -180,11 +196,11 @@ packages:
   watcher:
     description: watcher
     source: hosted
-    version: "0.9.4"
+    version: "0.9.5"
   web_components:
     description: web_components
     source: hosted
-    version: "0.10.1"
+    version: "0.10.5+3"
   when:
     description: when
     source: hosted

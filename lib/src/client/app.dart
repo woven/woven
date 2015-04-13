@@ -21,8 +21,8 @@ class App extends Observable {
   @observable UserModel user;
   @observable CommunityModel community;
   @observable bool hasTriedLoadingUser = false;
-  @observable bool showHomePage = false;
-  @observable bool showSignUpNote = false; // Notice for disabled users.
+  @observable bool showHomePage = true;
+  @observable var homePageCta = 'sign-up';
   @observable bool skippedHomePage = false;
   DateTime timeOfLastFocus = new DateTime.now().toUtc();
   bool isFocused = true;
@@ -88,7 +88,7 @@ class App extends Observable {
     // Home goes to the community list for now.
     router.selectedPage = 'channels';
     changeCommunity(null);
-    if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
+    if (hasTriedLoadingUser && user == null && !skippedHomePage) showHomePage = true;
   }
 
   void starred(String path) {

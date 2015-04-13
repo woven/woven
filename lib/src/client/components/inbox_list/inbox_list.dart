@@ -251,7 +251,6 @@ class InboxList extends PolymerElement with Observable {
 
   scriptUpdateCommentCounts() {
     var itemsRef = f.child('/items');
-    var item;
 
     itemsRef.onChildAdded.listen((e) {
       var countRef = f.child('/items/' + e.snapshot.name + '/activities/comments');
@@ -290,6 +289,8 @@ class InboxList extends PolymerElement with Observable {
   }
 
   attached() {
+    if (app.debugMode) print('+InboxList');
+
     switch (app.router.selectedPage) {
       case 'events':
         app.pageTitle = 'Events';
@@ -329,6 +330,7 @@ class InboxList extends PolymerElement with Observable {
   }
 
   detached() {
+    if (app.debugMode) print('-InboxList');
 //    viewModel.lastScrollPos = app.scroller.scrollTop;
 
     // TODO: If we cancel, how to resume? pause/resume instead?

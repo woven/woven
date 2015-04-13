@@ -12,7 +12,7 @@
         <div class="content-container" layout vertical>
           <template if="{{app.isMobile}}"><div class="logo-solo"></div></template>
 
-          <template if="{{ctaPage == 'sign-up'}}">
+          <template if="{{app.homePageCta == 'sign-up'}}">
             <h2>Tap into the communities you care about.</h2>
             <h3>Get informed. Get involved. Make a difference.</h3>
 
@@ -30,7 +30,7 @@
             </div>
           </template>
 
-          <template if="{{ctaPage == 'sign-in'}}">
+          <template if="{{app.homePageCta == 'sign-in'}}">
             <h3>Please sign in.</h3>
 
             <div self-center>
@@ -50,7 +50,7 @@
             </div>
           </template>
 
-          <template if="{{ctaPage == 'complete-sign-up'}}">
+          <template if="{{app.homePageCta == 'complete-sign-up'}}">
             <h3>Please complete your sign up.</h3>
 
             <div self-center>
@@ -91,7 +91,7 @@
             </div>
           </template>
 
-          <template if="{{ctaPage == 'sign-up-note'}}">
+          <template if="{{app.homePageCta == 'sign-up-note'}}">
             <h3>Look out for an invitation...</h3>
 
             <div self-center>
@@ -107,7 +107,7 @@
             </div>
           </template>
 
-          <template if="{{ctaPage == 'get-started-note'}}">
+          <template if="{{app.homePageCta == 'get-started-note'}}">
             <h3>Check your email...</h3>
 
             <div self-center>
@@ -117,6 +117,23 @@
               <p>
                 We'll be back together in no time.
               </p>
+            </div>
+          </template>
+
+          <template if="{{app.homePageCta == 'disabled-note'}}">
+            <h3>Your account is not active.</h3>
+
+            <div self-center>
+              <p>
+                It looks like you're signed in with an inactive account. You may have recently requested an invitation
+                and do not yet have access, or your account is disabled for some other reason.
+              </p>
+              <p>
+                Want to discuss? hello@woven.co
+              </p>
+              <div class="footer" self-center>
+                <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+              </div>
             </div>
           </template>
         </div>

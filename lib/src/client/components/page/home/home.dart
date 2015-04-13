@@ -19,7 +19,6 @@ class Home extends PolymerElement with Observable {
   @published App app;
   @observable String randomWord = '';
   @observable Map formData = toObservable({});
-  @observable String ctaPage = 'sign-up';
 
   var overlayAnimation = new CoreAnimation();
   var logoAnimation = new CoreAnimation();
@@ -74,7 +73,7 @@ class Home extends PolymerElement with Observable {
   changeCta(String page) {
     toggleCta();
     new Timer(new Duration(milliseconds: 100), () {
-      ctaPage = page;
+      app.homePageCta = page;
       toggleCta();
     });
   }
@@ -133,24 +132,26 @@ class Home extends PolymerElement with Observable {
       new Timer(new Duration(milliseconds: 800), () async {
         if (app.user != null) {
           if (app.user.disabled && app.user.onboardingStatus == 'signUpComplete') {
-            ctaPage = 'sign-up-note';
+            app.homePageCta = 'sign-up-note';
           }
           if (app.user.onboardingStatus == null || app.user.onboardingStatus == 'temporaryUser') {
-            ctaPage = 'complete-sign-up';
+            app.homePageCta = 'complete-sign-up';
           }
+          if (app.user.disabled || app.user.onboardingStatus == null || app.user.onboardingStatus == 'temporaryUser') {
 
+          }
         } else {
           Uri currentPath = Uri.parse(window.location.toString());
 
           if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
             firebase.DataSnapshot snapshot = await f.child('/email_confirmation_index/${currentPath.pathSegments[1].toString()}/email').once('value');
             if (snapshot.val() == null) {
-              ctaPage = 'sign-up';
+              app.homePageCta = 'sign-up';
             } else {
               var user = new UserModel();
               user.email = snapshot.val();
               app.user = user;
-              ctaPage = 'complete-sign-up';
+              app.homePageCta = 'complete-sign-up';
             }
             app.router.dispatch(url: '/');
           }
@@ -214,6 +215,10 @@ class Home extends PolymerElement with Observable {
       new Timer(new Duration(milliseconds: 400), () {
         toggleCover();
         new Timer(new Duration(milliseconds: 400), () {
+          if (app.user != null && app.user.disabled == true) {
+            app.user = null; // Kill the disabled user before entering app.
+          }
+
           app.showHomePage = false;
           app.skippedHomePage = true;
         });
@@ -287,7 +292,8 @@ class Home extends PolymerElement with Observable {
             'firstName': firstname.value,
             'lastName': lastname.value,
             'email': email.value.trim(),
-            'status': app.user.onboardingStatus
+            'onboardingStatus': app.user.onboardingStatus,
+            'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null
         }))
     .then((HttpRequest request) {
       // Set up the response as an object.
@@ -465,6 +471,7 @@ class Home extends PolymerElement with Observable {
   }
 
   attached() {
+    if (app.debugMode) print('+Home');
     ImageElement coverImage = new ImageElement(src: 'http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg');
     document.body.classes.add('colored-bg');
     Timer.run(() => toggleCover());
@@ -475,6 +482,7 @@ class Home extends PolymerElement with Observable {
   }
 
   detached() {
+    if (app.debugMode) print('-Home');
     document.body.classes.remove('colored-bg');
   }
 }

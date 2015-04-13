@@ -39,8 +39,8 @@ core-toolbar {
   background: #333;
   color: #fff;
   fill: #fff;
-  font-family: 'RobotoDraft', sans-serif;
-  font-weight: bold;
+  letter-spacing: .2pt;
+  font-size: 1.4em;
 }
 
 core-icon-button.action {

@@ -1,8 +1,8 @@
 #core_header_panel {
   width: 300px;
   height: 400px;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   position: absolute;
 }
 
@@ -52,9 +52,8 @@
 #page-title {
   opacity: 0;
   transition: .2s opacity;
-  font-family: 'RobotoDraft', sans-serif;
-  font-weight: bold;
-  font-size: 1em;
+  font-size: 1.1em;
+  letter-spacing: .2pt;
   cursor: pointer;
 }
 
@@ -66,9 +65,8 @@
 #sidebar-title {
   opacity: 1;
   transition: .2s opacity;
-  font-family: 'RobotoDraft', sans-serif;
-  font-weight: bold;
-  font-size: 1em;
+  font-size: 1.1em;
+  letter-spacing: .2pt;
 }
 
 #sidebar-title.has-logo {
@@ -310,7 +308,7 @@ paper-toast {
 
 paper-toast.important {
   background: #ef4206;
-  font-family: 'RobotoDraft', sans-serif;
+  letter-spacing: .2pt;
   font-size: 15px;
 }
 

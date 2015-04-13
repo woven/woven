@@ -112,7 +112,7 @@ class SignInController {
         if (!success) return Response.fromError('We don\'t recognize you. Try again.');
 
         return Firebase.get('/users/$username/disabled.json').then((res) {
-          if (res == true) return Response.fromError('You don\'t have access yet.\n\nWanna talk about it? hello@woven.co');
+          if (res == true) return Response.fromError('You don\'t have access yet.\n\nWant to talk about it? hello@woven.co');
 
           return app.sessionManager.addSessionToIndex(sessionId, username).then((sessionData) {
             return findUserInfo(username).then((Map userData) {

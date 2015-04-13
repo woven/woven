@@ -11,8 +11,6 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
-import 'package:woven/src/client/util.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 
 @CustomTag('woven-app')
@@ -116,24 +114,30 @@ class WovenApp extends PolymerElement with Observable {
         new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
 
         app.cache.users[app.user.username.toLowerCase()] = app.user;
-
-        // Trigger changes to app state in response to user sign in/out.
-        //TODO: Aha! This triggers a feedViewModel load.
-        app.mainViewModel.invalidateUserState();
-
-        // On sign in, greet the user.
-        if (app.user.isNew != true) Timer.run(() => greetUser());
       }
 
       app.hasTriedLoadingUser = true;
+
       // TODO: https://gist.github.com/kaisellgren/75f1aa96abb9c8cc56ae
       var user = app.user;
       if (user == null) {
         var path = window.location.pathname;
         app.showHomePage = path == '/' || path.contains('/confirm');
       } else {
-        app.showHomePage = user.disabled || user.onboardingStatus == null ||
-          user.onboardingStatus == 'temporaryUser';
+        if (!user.disabled && user.onboardingStatus != 'temporaryUser') {
+          app.showHomePage = false;
+
+          // Trigger changes to app state in response to user sign in/out.
+          //TODO: Aha! This triggers a feedViewModel load.
+          app.mainViewModel.invalidateUserState();
+
+          // On sign in, greet the user.
+          if (app.user.isNew != true) Timer.run(() => greetUser());
+
+        } else {
+          app.homePageCta = 'disabled-note';
+          app.user = null;
+        }
       }
     });
 

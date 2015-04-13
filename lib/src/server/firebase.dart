@@ -100,12 +100,8 @@ class Firebase {
    *
    * Equivalent to a .remove() in the Firebase client API.
    */
-  static Future delete(String path, {String auth}) {
-    return http.delete('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}').then((response) {
-      var message = JSON.decode(response.body);
-      if (message['error'] != null) {
-        throw 'Firebase returned an error.\nPath: $path\nResponse: ${message["error"]}';
-      }
-    });
+  static Future delete(String path, {String auth}) async {
+    await http.delete('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}');
+    // TODO: Check for successful HTTP status and respond w/ it.
   }
 }

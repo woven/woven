@@ -95,6 +95,10 @@ core-item core-icon {
   /*background-color: transparent;*/
 }
 
+.compact .item {
+  background: #252525;
+}
+
 .theme-dark .item.compact:hover {
   border-color: #444;
 }
@@ -113,6 +117,9 @@ core-item core-icon {
   width:225px;
   height:125px;
   text-align: center;
+  background: rgb(76, 163, 216);
+  fill: white;
+  color: white;
 }
 
 .theme-dark .item-photo-area .item-photo-wrapper {
@@ -146,11 +153,9 @@ core-item core-icon {
 }
 
 .item-photo-area .item-photo-icon-none {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   margin-top: 10% !important;
-  /* margin-top: 20px; */
-  color: #ddd;
 }
 
 .item-subject {
