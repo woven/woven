@@ -71,13 +71,17 @@ user-picture::shadow .user-photo {
   font-weight: bold;
 }
 
+.theme-dark .user {
+  color: #666;
+}
+
 .date-time {
   color: #444;
   font-size: 13px;
 }
 
 .theme-dark .date-time {
-  color: #ddd;
+  color: #666;
 }
 
 #activity-wrapper {

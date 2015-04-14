@@ -79,12 +79,22 @@ core-icon {
   font-size: 17px;
   letter-spacing: 0.2pt;
 }
+
+.theme-dark .user-username {
+  color: #fff;
+}
+
 .user-name {
   color: #5c5c5c;
   font-size: 14px;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
+
+.theme-dark .user-name {
+  color: #fff;
+}
+
 .item-updated {
   color: #666;
   overflow: hidden;
