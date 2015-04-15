@@ -72,8 +72,8 @@
 }
 
 .item-body {
-  font-size: 16px;
-  color: #6E6E6E;
+  font-size: 15px;
+  color: #666;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
