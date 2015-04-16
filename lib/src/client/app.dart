@@ -220,6 +220,8 @@ class App extends Observable {
 
     if (severity == "important") {
       toastElement.classes.add("important");
+    } else {
+      toastElement.classes.remove("important");
     }
     toastElement.text = "$message";
     toastElement.show();
