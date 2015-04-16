@@ -108,12 +108,13 @@
 }
 
 .join-button {
-  fill: #eee;
+  fill: #666;
+  color: #666;
+  background-color: #fff;
   box-shadow: none;
   border: 1px solid #e6e6e6;
   display: inline-block;
   cursor: pointer;
-  color: #2e2e2e;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   font-weight: bold;
@@ -128,27 +129,22 @@
 }
 
 .join-button:hover {
-  /*background-color:#fff;*/
-}
-
-.join-button:active {
-  /*position:relative;*/
-  /*top:2px;*/
-}
-
-.join-button:hover {
   box-shadow: none;
 }
 
 .join-button.selected:not([disabled]) {
   box-shadow: none;
-  background-color:#ffffff;
+  background-color: #fff;
   fill: #f99b15;
   color: #f99b15;
 }
 
 .theme-dark .join-button.selected:not([disabled]) {
   background-color: transparent;
+}
+
+.join-button:active:not([disabled]), .join-button.selected:active:not([disabled]) {
+  background-color: #fff;
 }
 
 .join-button span {
