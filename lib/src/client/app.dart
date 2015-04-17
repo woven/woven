@@ -218,13 +218,18 @@ class App extends Observable {
 
     if (toastElement == null) return;
 
-    if (severity == "important") {
-      toastElement.classes.add("important");
-    } else {
-      toastElement.classes.remove("important");
-    }
-    toastElement.text = "$message";
-    toastElement.show();
+    if (toastElement.opened) toastElement.opened = false;
+
+    new Timer(new Duration(milliseconds: 300), () {
+      if (severity == "important") {
+        toastElement.classes.add("important");
+      } else {
+        toastElement.classes.remove("important");
+      }
+
+      toastElement.text = "$message";
+      toastElement.show();
+    });
   }
 
   /**
