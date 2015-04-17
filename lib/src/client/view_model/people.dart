@@ -40,7 +40,11 @@ class PeopleViewModel extends BaseViewModel with Observable {
 
     // Get the list of items, and listen for new ones.
     itemsRef.once('value').then((snapshot) {
+      print('===============\nPRIORITY DEBUG: $lastPriority | $secondToLastPriority');
+
       snapshot.forEach((itemSnapshot) {
+        var user = itemSnapshot.val();
+
         count++;
 
         // Track the snapshot's priority so we can paginate from the last one.
@@ -52,17 +56,16 @@ class PeopleViewModel extends BaseViewModel with Observable {
         // Remember the priority of the last item, excluding the extra item which we ignore above.
         secondToLastPriority = itemSnapshot.getPriority();
 
-        var user = itemSnapshot.val();
-
-        if (user['disabled'] == true) return;
-
         // Insert each new item into the list.
-        users.add(toObservable(processItem(itemSnapshot)));
+        if (!user['disabled']) users.add(toObservable(processItem(itemSnapshot)));
       });
 
       relistenForItems();
 
-      if (count < pageSize) reachedEnd = true;
+      print(count);
+
+      // If we received less than we tried to load, we've reached the end.
+      if (count <= pageSize) reachedEnd = true;
       reloadingContent = false;
     });
   }
@@ -97,17 +100,27 @@ class PeopleViewModel extends BaseViewModel with Observable {
     .startAt(priority: startAt)
     .endAt(priority: endAt);
 
+    // Find the index of the user with the closest created date.
+    indexOfClosestItemByDate(date) {
+      for (var item in users) {
+        if ((item['createdDate'] as DateTime).isAfter(date)) return users.indexOf(item);
+      }
+    }
+
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
-      users.removeWhere((i) => i['username'].toLowerCase() == e.snapshot.name);
-
       Map user = e.snapshot.val();
-      if (user['disabled'] == true) return;
 
-      users.add(toObservable(processItem(e.snapshot)));
+      var existingItem = users.firstWhere((i) => i['username'].toLowerCase() == e.snapshot.name, orElse: () => null);
 
-      // Sort the list by the item's updatedDate.
-      users.sort((m1, m2) => m2["createdDate"].compareTo(m1["createdDate"]));
+      print('debug: ${e.snapshot.name} | ${e.snapshot.getPriority()}');
+
+      if (existingItem != null) return;
+
+      if (!user['disabled']) {
+        var index = indexOfClosestItemByDate(DateTime.parse(user['createdDate']));
+        users.insert(index == null ? 0 : index, toObservable(processItem(e.snapshot)));
+      }
     });
 
     // Listen for changed items.
@@ -132,9 +145,9 @@ class PeopleViewModel extends BaseViewModel with Observable {
     });
 
     // Listen for removed items.
-    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
-      users.removeWhere((i) => i['id'] == e.snapshot.name);
-    });
+//    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
+//      users.removeWhere((i) => i['id'] == e.snapshot.name);
+//    });
   }
 
   processItem(DataSnapshot snapshot) {
