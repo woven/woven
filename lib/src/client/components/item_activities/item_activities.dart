@@ -38,12 +38,14 @@ class ItemActivities extends PolymerElement {
    */
   getActivities() {
     var itemId;
+    print('debug: ${app.router.selectedItem}');
     // If there's no app.selectedItem, we probably
     // came here directly, so let's use itemId from the URL.
     if (app.router.selectedItem == null) {
       // Decode the base64 URL and determine the item.
       var encodedItemId = Uri.parse(window.location.toString()).pathSegments[1];
       itemId = base64Decode(encodedItemId);
+      print('debug2');
     } else {
       itemId = app.router.selectedItem['id'];
     }
@@ -52,7 +54,7 @@ class ItemActivities extends PolymerElement {
     commentsRef.onChildAdded.listen((e) {
       var comment = e.snapshot.val();
       comment['createdDate'] = DateTime.parse(comment['createdDate']);
-      comment['id'] = e.snapshot.name;
+      comment['id'] = e.snapshot.key;
 
       // Make sure we're using the collapsed username.
       comment['user'] = (comment['user'] as String).toLowerCase();
@@ -212,7 +214,7 @@ class ItemActivities extends PolymerElement {
 
     updateParentItem(parent);
 
-    var commentId = id.name;
+    var commentId = id.key;
     // Send a notification email to the item's author.
     HttpRequest.request(Routes.sendNotificationsForComment.toString() + "?id=$commentId&itemid=$itemId");
 

@@ -105,9 +105,9 @@ class ItemViewModel extends BaseViewModel with Observable {
             queuedItem['uriHost'] = uriHostShortened;
           }
 
-          // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
+          // snapshot.key is Firebase's ID, i.e. "the name of the Firebase location"
           // So we'll add that to our local item list.
-          queuedItem['id'] = e.snapshot.name;
+          queuedItem['id'] = e.snapshot.key;
 
           // Listen for realtime changes to the star count.
           f.child('/items/' + queuedItem['id'] + '/star_count').onValue.listen((e) {

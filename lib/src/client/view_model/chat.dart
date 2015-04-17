@@ -58,7 +58,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     var messagesRef = f.child('/messages_by_community/${app.community.alias}')
     .startAt(priority: lastPriority)
-    .limit(pageSize + 1);
+    .limitToFirst(pageSize + 1);
 
     if (messages.length == 0) onLoadCompleter.complete(true);
 
@@ -151,7 +151,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
       Map newItem = e.snapshot.val();
-      newItem['id'] = e.snapshot.name;
+      newItem['id'] = e.snapshot.key;
 
       // Make sure we're using the collapsed username.
       newItem['user'] = (newItem['user'] as String).toLowerCase();
@@ -215,7 +215,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     // Listen for changed items.
     childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
-      Map currentData = messages.firstWhere((i) => i['id'] == e.snapshot.name);
+      Map currentData = messages.firstWhere((i) => i['id'] == e.snapshot.key);
       Map newData = e.snapshot.val();
 
       Future processData = new Future.sync(() {

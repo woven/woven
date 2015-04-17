@@ -78,9 +78,9 @@ class InboxList extends PolymerElement with Observable {
 //    }
 
     var priority = '2014-10-17 23:54:32.146Z';
-    f.child('/priority_test2').startAt(priority: priority).limit(10).onChildAdded.listen((e) {
+    f.child('/priority_test2').startAt(priority: priority).limitToFirst(10).onChildAdded.listen((e) {
       print(e.snapshot.val());
-      print(e.snapshot.name);
+      print(e.snapshot.key);
       print(e.snapshot.getPriority());
       priority = e.snapshot.getPriority();
     });
@@ -91,7 +91,8 @@ class InboxList extends PolymerElement with Observable {
     var item;
 
     itemsRef.onChildAdded.listen((e) {
-      item = e.snapshot.val();
+      db.DataSnapshot snapshot = e.snapshot;
+      item = snapshot.val();
       // If no updated date, use the created date.
       if (item['updatedDate'] == null) {
         item['updatedDate'] = item['createdDate'];
@@ -99,10 +100,10 @@ class InboxList extends PolymerElement with Observable {
 
       DateTime time = DateTime.parse(item['updatedDate']);
       var epochTime = time.millisecondsSinceEpoch;
-      f.child('/items_by_community/' + app.community.alias + '/' + e.snapshot.name)
+      f.child('/items_by_community/' + app.community.alias + '/' + snapshot.key)
         .setPriority(-epochTime);
 
-      print(e.snapshot.name);
+      print(e.snapshot.key);
     });
   }
 
@@ -119,7 +120,7 @@ class InboxList extends PolymerElement with Observable {
 
       DateTime time = DateTime.parse(item['updatedDate']);
       var epochTime = time.millisecondsSinceEpoch;
-      f.child('/items/' + e.snapshot.name)
+      f.child('/items/' + e.snapshot.key)
       .setPriority(-epochTime);
     });
   }
@@ -156,17 +157,17 @@ class InboxList extends PolymerElement with Observable {
 
       DateTime time = DateTime.parse(item['updatedDate']);
       var epochTime = time.millisecondsSinceEpoch;
-      f.child('/items/' + e.snapshot.name)
+      f.child('/items/' + e.snapshot.key)
       .setPriority(-epochTime);
 
-      itemsRef.child(e.snapshot.name + '/communities').onValue.listen((e2) {
+      itemsRef.child(e.snapshot.key + '/communities').onValue.listen((e2) {
         Map communitiesRef = e2.snapshot.val();
         if (communitiesRef != null) {
           communitiesRef.keys.forEach((community) {
-            f.child('/items_by_community/' + community + '/' + e.snapshot.name).setPriority(-epochTime);
+            f.child('/items_by_community/' + community + '/' + e.snapshot.key).setPriority(-epochTime);
 
 
-            var itemsByTypeRef = f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name);
+            var itemsByTypeRef = f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.key);
 
             if (item['type'] == 'event') {
                 // Leave events for scriptMakeItemsByCommunityType().
@@ -216,7 +217,7 @@ class InboxList extends PolymerElement with Observable {
       var epochTime = time.millisecondsSinceEpoch;
       var type = item['type'];
 
-      var itemsByTypeRef = f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.name);
+      var itemsByTypeRef = f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.key);
 
       if (item['type'] == 'event') {
         var eventPriority;
@@ -253,20 +254,20 @@ class InboxList extends PolymerElement with Observable {
     var itemsRef = f.child('/items');
 
     itemsRef.onChildAdded.listen((e) {
-      var countRef = f.child('/items/' + e.snapshot.name + '/activities/comments');
+      var countRef = f.child('/items/' + e.snapshot.key + '/activities/comments');
       var count = 0;
       var item = e.snapshot.val();
       countRef.once('value').then((snapshot) {
         print(snapshot.val());
         print(snapshot.numChildren);
-        itemsRef.child(e.snapshot.name + '/comment_count').set(snapshot.numChildren); // TODO: In Progress.
+        itemsRef.child(e.snapshot.key + '/comment_count').set(snapshot.numChildren); // TODO: In Progress.
 
-        itemsRef.child(e.snapshot.name + '/communities').onValue.listen((e2) {
+        itemsRef.child(e.snapshot.key + '/communities').onValue.listen((e2) {
           Map communitiesRef = e2.snapshot.val();
           if (communitiesRef != null) {
             communitiesRef.keys.forEach((community) {
-              f.child('/items_by_community/' + community + '/' + e.snapshot.name + '/comment_count').set(snapshot.numChildren);
-              f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name + '/comment_count').set(snapshot.numChildren);
+              f.child('/items_by_community/' + community + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
+              f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
             });
           }
         });

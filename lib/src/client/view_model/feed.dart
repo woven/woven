@@ -57,7 +57,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
     var itemsRef = f.child(dataLocation)
       .startAt(priority: lastPriority)
-      .limit(pageSize + 1);
+      .limitToFirst(pageSize + 1);
 
     if (items.length == 0) onLoadCompleter.complete(true);
 
@@ -140,7 +140,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       // Make sure we're using the collapsed username.
       newItem['user'] = (newItem['user'] as String).toLowerCase();
 
-      var existingItem = items.firstWhere((i) => i['id'] == e.snapshot.name, orElse: () => null);
+      var existingItem = items.firstWhere((i) => i['id'] == e.snapshot.key, orElse: () => null);
       if (existingItem != null) return;
 
       var index = indexOfClosestItemByDate(DateTime.parse(newItem['updatedDate']));
@@ -156,7 +156,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
     // Listen for changed items.
     childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
-      Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.name);
+      Map currentData = items.firstWhere((i) => i['id'] == e.snapshot.key);
       Map newData = e.snapshot.val();
 
       // Make sure we're using the collapsed username.
@@ -209,7 +209,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     // Listen for removed items.
 //    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
 //      updateEventView();
-//      items.removeWhere((i) => i['id'] == e.snapshot.name);
+//      items.removeWhere((i) => i['id'] == e.snapshot.key);
 //    });
   }
 
@@ -230,7 +230,7 @@ class FeedViewModel extends BaseViewModel with Observable {
   processItem(DataSnapshot snapshot) {
     var item = toObservable(snapshot.val());
 
-//    if (item['user'] == null) print(snapshot.name);
+//    if (item['user'] == null) print(snapshot.key);
 
     // Make sure we're using the collapsed username.
     item['user'] = (item['user'] as String).toLowerCase();
@@ -297,7 +297,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     }
 
     // Use the Firebase snapshot ID as our ID.
-    item['id'] = snapshot.name;
+    item['id'] = snapshot.key;
 
     // Sort the list by the item's updatedDate.
 //      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));

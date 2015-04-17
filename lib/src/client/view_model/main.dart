@@ -157,7 +157,7 @@ class MainViewModel extends BaseViewModel with Observable {
    */
   void loadCommunities() {
     // TODO: Remove the limit.
-    var communitiesRef = f.child('/communities').limit(20);
+    var communitiesRef = f.child('/communities').limitToFirst(20);
 
      // Get the list of communities, and listen for new ones.
     communitiesRef.onChildAdded.listen((e) {
@@ -167,7 +167,7 @@ class MainViewModel extends BaseViewModel with Observable {
       if (community['disabled'] == true) return;
 
       // Use the ID from Firebase as our ID.
-      community['id'] = e.snapshot.name;
+      community['id'] = e.snapshot.key;
 
       // Add the community to the app cache, so we have it elsewhere.
       app.cache.communities[community['id']] = CommunityModel.fromJson(community);
@@ -199,7 +199,7 @@ class MainViewModel extends BaseViewModel with Observable {
 
     // When a community changes, let's update it.
     communitiesRef.onChildChanged.listen((e) {
-      Map currentData = communities.firstWhere((i) => i['id'] == e.snapshot.name);
+      Map currentData = communities.firstWhere((i) => i['id'] == e.snapshot.key);
       Map newData = e.snapshot.val();
 
       newData.forEach((k, v) {

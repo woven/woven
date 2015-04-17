@@ -36,7 +36,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
 
     var itemsRef = f.child('/users')
     .startAt(priority: lastPriority)
-    .limit(pageSize + 1);
+    .limitToFirst(pageSize + 1);
 
     // Get the list of items, and listen for new ones.
     itemsRef.once('value').then((snapshot) {
@@ -111,9 +111,9 @@ class PeopleViewModel extends BaseViewModel with Observable {
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
       Map user = e.snapshot.val();
 
-      var existingItem = users.firstWhere((i) => i['username'].toLowerCase() == e.snapshot.name, orElse: () => null);
+      var existingItem = users.firstWhere((i) => i['username'].toLowerCase() == e.snapshot.key, orElse: () => null);
 
-      print('debug: ${e.snapshot.name} | ${e.snapshot.getPriority()}');
+      print('debug: ${e.snapshot.key} | ${e.snapshot.getPriority()}');
 
       if (existingItem != null) return;
 
@@ -125,7 +125,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
 
     // Listen for changed items.
     childChangedSubscriber = itemsRef.onChildChanged.listen((e) {
-      Map currentData = users.firstWhere((i) => i['username'] == e.snapshot.name);
+      Map currentData = users.firstWhere((i) => i['username'] == e.snapshot.key);
       Map newData = e.snapshot.val();
 
       newData.forEach((k, v) {
@@ -146,7 +146,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
 
     // Listen for removed items.
 //    childRemovedSubscriber = itemsRef.onChildRemoved.listen((e) {
-//      users.removeWhere((i) => i['id'] == e.snapshot.name);
+//      users.removeWhere((i) => i['id'] == e.snapshot.key);
 //    });
   }
 
