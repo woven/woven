@@ -230,6 +230,8 @@ class FeedViewModel extends BaseViewModel with Observable {
   processItem(DataSnapshot snapshot) {
     var item = toObservable(snapshot.val());
 
+//    if (item['user'] == null) print(snapshot.name);
+
     // Make sure we're using the collapsed username.
     item['user'] = (item['user'] as String).toLowerCase();
 
