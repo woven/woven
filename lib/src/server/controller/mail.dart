@@ -33,23 +33,14 @@ class MailController {
           ..bcc = ['David Notik <davenotik@gmail.com>']
           ..subject = 'Welcome, ${userData['firstName']}!'
           ..text = '''
-Hey ${userData['firstName']},
+Hi ${userData['firstName']},
 
-Thank you for creating an account on the new Woven.
+Thank you for joining Woven.
 
-Beyond social networking, this is collaborative networking. Woven is being designed from the ground up to help us coordinate our actions to improve the world.
+Access is limited at this time. The quickest way to get in is to ask someone to invite you to an existing channel.
+If you don't know someone, reply to this email and let us know which channel you believe you should have access to.
 
-Here's a manifesto of sorts: http://woven.co/item/LUpZTWEtZWZOejRFRklYVTYxWmY=
-
-The new Woven is starting simple and getting better every day.
-
-Please take a moment to respond to me with your first impressions, good or bad. Please share all your feedback on the Early Adopters community on Woven as well.
-
-And you can always call or text me on my mobile at 206-351-3948 – at any time.
-
-Thank you for your early support!
-
---David Notik
+Otherwise, we'll let you know when we open up to more communities. Thank you very much for your patience.
 
 --
 Woven
@@ -408,6 +399,66 @@ Please go to this link to confirm your email address:
 $confirmLink
 
 Awaiting your return,
+
+--
+Woven
+http://woven.co
+''';
+    app.mailer.send(envelope);
+
+
+    // Save the confirmation hash to an index.
+    Firebase.put('/email_confirmation_index/$hash.json', data, auth: config['datastore']['firebaseSecret']);
+
+    var response = new Response();
+    response.success = true;
+    return response;
+  }
+
+  /**
+   * Generate a confirmation code and send a link to confirm user's email.
+   */
+  static inviteUserToChannel(App app, HttpRequest request) async {
+    String dataReceived;
+
+    await request.listen((List<int> buffer) {
+      dataReceived = new String.fromCharCodes(buffer);
+    }).asFuture();
+
+    Map data = JSON.decode(dataReceived);
+
+    var getData = await Future.wait([
+      Firebase.get('/users/${data['fromUser']}.json'),
+      Firebase.get('/communities/${data['community']}.json')
+    ]);
+
+    Map fromUser = getData[0];
+    Map community = getData[1];
+
+    // Prepare the data for save and response.
+    data['email'] = (data['email'] as String).toLowerCase();
+    DateTime now = new DateTime.now().toUtc();
+    data['createdDate'] = now.toString();
+    data['.priority'] = -now.millisecondsSinceEpoch;
+    data.remove('authToken');
+
+    var hash = generateRandomHash();
+    var confirmLink = "http://${config['server']['displayDomain']}/confirm/$hash";
+
+    print(hash);
+
+    // Email the confirmation link to the user.
+    var envelope = new Envelope()
+      ..from = "Woven <hello@woven.co>"
+      ..to = ['<${data['email']}>']
+      ..bcc = ['David Notik <davenotik@gmail.com>']
+      ..subject = "${fromUser['firstName']} invited you to ${community['name']}"
+      ..text = '''
+${fromUser['firstName']} ${fromUser['lastName']} (${fromUser['username']} ) has invited you to ${community['name']} (${community['alias']}) on Woven.
+
+Please go to this link to accept the invitation:
+
+$confirmLink
 
 --
 Woven

@@ -25,6 +25,7 @@ class Routes {
   static final createNewUser = new UrlPattern(r'/_createnewuser');
   static final sendConfirmEmail = new UrlPattern(r'/_sendconfirmemail');
   static final confirmEmail = new UrlPattern(r'/confirm/(.+)');
+  static final inviteUserToChannel = new UrlPattern(r'/_inviteusertochannel');
 }
 
 class NoMatchingRoute {}

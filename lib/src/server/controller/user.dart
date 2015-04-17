@@ -33,7 +33,7 @@ class UserController {
     data['.priority'] = -now.millisecondsSinceEpoch;
     data['createdDate'] = now.toString();
     data['password'] = hash(data['password']);
-    data['disabled'] = true;
+    data['disabled'] = data['invitation'] == null; // If we have don't have an invitation, user starts as disabled.
 
     if (data['onboardingStatus'] == 'temporaryUser') {
       // Update the references in the relevant indexes to the new username.
@@ -50,9 +50,10 @@ class UserController {
 
     } else {
       // TODO: Consider simplifying auth so just checks user == user, so we don't have to wait for session index.
-//      Map newSession = await app.sessionManager.addSessionToIndex(newSessionId, username);
-      data['authToken'] = authToken;
-//      app.sessionManager.addSessionCookieToRequest(request, newSessionId);
+      Map newSession = await app.sessionManager.addSessionToIndex(newSessionId, username);
+      data['authToken'] = newSession['authToken'];
+      // If the user isn't disabled (i.e. they  have an invitation) send down a session to sign them in.
+      if (!data['disabled']) app.sessionManager.addSessionCookieToRequest(request, newSessionId);
     }
 
     // Update the onboarding state now that we created the user.

@@ -79,7 +79,8 @@ class App {
       ..routes[Routes.signOut] = SignInController.signOut
       ..routes[Routes.createNewUser] = UserController.createNewUser
       ..routes[Routes.confirmEmail] = MainController.confirmEmail
-      ..routes[Routes.sendConfirmEmail] = MailController.sendConfirmEmail;
+      ..routes[Routes.sendConfirmEmail] = MailController.sendConfirmEmail
+      ..routes[Routes.inviteUserToChannel] = MailController.inviteUserToChannel;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])

@@ -19,11 +19,11 @@ class UserModel {
   bool isNew = false;
   bool disabled = false;
   bool needsPassword = false;
+  Map invitation;
   OnboardingStatus onboardingStatus;
 
   // Return the path to the small picture if we have it, otherwise the original picture.
   String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}" : null;
-
 
   Map toJson() {
     return {
