@@ -126,7 +126,7 @@ class Home extends PolymerElement with Observable {
     }
   }
 
-  toggleMain() async {
+  toggleMain() {
     new Timer(new Duration(milliseconds: 300), () {
       toggleLogo();
       new Timer(new Duration(milliseconds: 600), () async {
@@ -141,22 +141,38 @@ class Home extends PolymerElement with Observable {
           Uri currentPath = Uri.parse(window.location.toString());
 
           if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
-            firebase.DataSnapshot snapshot = await f.child('/email_confirmation_index/${currentPath.pathSegments[1].toString()}/email').once('value');
-            if (snapshot.val() == null) {
-              app.homePageCta = 'sign-up';
-            } else {
-              var user = new UserModel();
-              user.email = snapshot.val();
-              app.user = user;
-              app.homePageCta = 'complete-sign-up';
-            }
+            var confirmId = currentPath.pathSegments[1].toString();
+            handleConfirm(confirmId);
             app.router.dispatch(url: '/');
+          } else {
+            app.homePageCta = 'sign-up';
           }
-
         }
         toggleCta();
       });
     });
+  }
+
+  /**
+   * Handle the case where user is coming by way of an email confirmation/invite link.
+   */
+  handleConfirm(String confirmId) async {
+    firebase.DataSnapshot snapshot = await f.child('/email_confirmation_index/$confirmId').once('value');
+    if (snapshot.val() == null) {
+      app.homePageCta = 'sign-up';
+    } else {
+      Map confirmationData = snapshot.val();
+
+      // If the confirmation link looks like it came from an invitation.
+      if (confirmationData['fromUser'] != null) {
+        user.invitation = confirmationData;
+        user.invitation['confirmationId'] = confirmId;
+      }
+
+      user.email = confirmationData['email'];
+      app.user = user;
+      app.homePageCta = 'complete-sign-up';
+    }
   }
 
   toggleLogo() {
@@ -290,6 +306,7 @@ class Home extends PolymerElement with Observable {
             'lastName': lastname.value,
             'email': email.value.trim(),
             'onboardingStatus': app.user.onboardingStatus,
+            'invitation': app.user.invitation,
             'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null
         }))
     .then((HttpRequest request) {
