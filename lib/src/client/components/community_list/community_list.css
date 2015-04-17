@@ -108,8 +108,8 @@
 }
 
 .join-button {
-  fill: #666;
-  color: #666;
+  fill: #2d2d2d;
+  color: #2d2d2d;
   background-color: #fff;
   box-shadow: none;
   border: 1px solid #e6e6e6;
@@ -149,7 +149,7 @@
 
 .join-button span {
   position: relative;
-  top: 2px;
+  top: 1px;
 }
 
 span.item-count {

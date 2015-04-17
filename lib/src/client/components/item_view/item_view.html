@@ -88,13 +88,13 @@
                   <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
                                     on-tap="{{toggleLike}}"
                                     class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
-                                    data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
+                                    data-id="{{item['id']}}"><span>{{item['like_count']}}</span>
                     <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
                   </core-icon-button>
                   <core-icon-button icon="communication:comment"
                                     class="action-button comment-button"
                                     data-id="{{item['id']}}">
-                <span class="item-count">
+                <span>
                   <template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Comment</strong></template>
                   <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
                   <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>

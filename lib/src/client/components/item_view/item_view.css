@@ -207,10 +207,6 @@ core-item core-icon {
   outline: none;
 }
 
-.item-count {
-  color: #999;
-}
-
 .item-user {
   color: #0076C5;
   font-weight: bold;
@@ -327,20 +323,19 @@ core-item core-icon {
 }
 
 .action-button {
-  fill: #bbb;
-  color: #bbb;
+  background-color: #fff;
+  fill: #666;
+  color: #666;
   box-shadow: none;
-  border: 1px solid #e6e6e6;
+  border: 1px solid #ddd;
   display: inline-block;
   cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   font-weight: bold;
-  padding: 3px 10px 3px 5px;
+  padding: 5px 12px 5px 8px;
   text-decoration: none;
   text-align: left;
-  background-color: #F5F5F5;
-  transition: background-color .2s;
+  border-radius: 2px;
 }
 
 .theme-dark .action-button {
@@ -353,8 +348,8 @@ core-item core-icon {
 }
 
 .action-button:hover {
-  background-color:#fff;
-  transition: background-color .2s;
+  box-shadow: none;
+  color: #2d2d2d;
 }
 
 .theme-dark .action-button:hover,
@@ -364,21 +359,13 @@ core-item core-icon {
   color: white;
 }
 
+.action-button.selected, .action-button.selected:active, .action-button:active {
+  background-color: #fff;
+}
+
 .action-button.comment-button, .action-button.comment-button:hover {
   border: none;
   background-color: transparent;
-  position:relative;
-  top:1px;
-}
-
-.action-button:active {
-  background: #fff;
-  /*position:relative;*/
-  /*top:2px;*/
-}
-
-.action-button:hover {
-  box-shadow: none;
 }
 
 .link-button {
@@ -408,8 +395,6 @@ core-item core-icon {
 
 .link-button:active {
   background: #fff;
-  /*position:relative;*/
-  /*top:2px;*/
 }
 
 .theme-dark .link-button, .theme-dark .link-button:hover, .theme-dark .link-button:active {
