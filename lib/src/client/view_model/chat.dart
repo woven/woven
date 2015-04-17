@@ -1,19 +1,24 @@
 library chat_view_model;
 
-import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart' as db;
-import 'package:woven/src/client/app.dart';
 import 'dart:async';
 import 'dart:html' hide Notification;
-import 'package:notification/notification.dart';
 import 'dart:web_audio';
 import 'dart:js';
+import 'dart:convert';
+
+import 'package:polymer/polymer.dart';
+import 'package:firebase/firebase.dart' as db;
+import 'package:notification/notification.dart';
+
 import 'base.dart';
+import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/shared/model/message.dart';
 import 'package:woven/src/client/model/user.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/regex.dart';
+import 'package:woven/src/shared/routing/routes.dart';
+import 'package:woven/src/shared/response.dart';
 
 class ChatViewModel extends BaseViewModel with Observable {
   final App app;
@@ -309,24 +314,54 @@ class ChatViewModel extends BaseViewModel with Observable {
     // to the user, like in response to a command.
 //    message.type = 'local';
     message.type = 'notification';
-    switch (message.message) {
-      case '/theme dark':
-        message.message = 'You went dark. I\'ve saved your preference.';
-        if (app.user.settings['theme'] == 'dark') message.message = 'You\'ve already gone dark.';
-        document.body.classes.add('no-transition');
-        insertMessage(message.toJson());
-        Timer.run(() => app.user.settings['theme'] = 'dark');
-        f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('dark');
-        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+    String commandText =  message.message;
+    String commandTop = commandText.split(' ').first;
+    String commandOptions = (commandText.split(' ').length > 1) ? commandText.substring(commandText.lastIndexOf(' ') + 1, commandText.length).trim() : null;
+    switch (commandTop) {
+      case '/theme':
+        switch (commandOptions) {
+          case 'dark':
+            message.message = 'You went dark. I\'ve saved your preference.';
+            if (app.user.settings['theme'] == 'dark') message.message = 'You\'ve already gone dark.';
+            document.body.classes.add('no-transition');
+            insertMessage(message.toJson());
+            Timer.run(() => app.user.settings['theme'] = 'dark');
+            f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('dark');
+            new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+            break;
+          case 'light':
+            message.message = 'Let there be light. I\'ve saved your preference.';
+            if (app.user.settings['theme'] == 'light') message.message = 'You\'re already lit up.';
+            document.body.classes.add('no-transition');
+            insertMessage(message.toJson());
+            Timer.run(() => app.user.settings['theme'] = 'light');
+            f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('light');
+            new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+            break;
+          default:
+            message.message = 'I don\'t recognize that theme.';
+            insertMessage(message.toJson());
+            break;
+        }
         break;
-      case '/theme light':
-        message.message = 'Let there be light. I\'ve saved your preference.';
-        if (app.user.settings['theme'] == 'light') message.message = 'You\'re already lit up.';
-        document.body.classes.add('no-transition');
+      case '/invite':
+        // TODO: Validate the email.
+        String email = commandOptions;
+
+        HttpRequest request = await HttpRequest.request(
+            Routes.inviteUserToChannel.toString(),
+            method: 'POST',
+            sendData: JSON.encode({
+              'community': app.community.alias,
+              'fromUser': message.user,
+              'email': email,
+              'authToken': app.authToken
+            }));
+
+        var response = Response.fromJson(JSON.decode(request.responseText));
+        if (response.success) message.message = 'I have sent an invitation to $email on your behalf.';
+        if (!response.success) message.message = 'Sorry. I was not able to send an invitation to $email.';
         insertMessage(message.toJson());
-        Timer.run(() => app.user.settings['theme'] = 'light');
-        f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('light');
-        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
         break;
       case '/print isMobile':
         message.message = app.isMobile.toString() + ' ' + window.screen.width.toString();
