@@ -197,7 +197,7 @@ class AddStuff extends PolymerElement {
 
       // Update the main item, then...
       itemRef.setWithPriority(encodedItem, -priority).then((e) {
-        var itemId = itemRef.name;
+        var itemId = itemRef.key;
 
         // Loop over all communities shared to.
         shareTos.forEach((community) {
@@ -249,7 +249,7 @@ class AddStuff extends PolymerElement {
       });
 
     // Reference to the item.
-    var itemId = itemRef.name;
+    var itemId = itemRef.key;
 
     // For event and news items, let's get URL previews.
     if (item is EventModel || item is NewsModel) {
