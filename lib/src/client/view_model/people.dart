@@ -31,7 +31,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
     if ((users.length - 1) > (pageSize * pages)) return;
     pages++;
 
-    var queryRef = f.child('/users3')
+    var queryRef = f.child('/users')
       .orderByPriority()
       .startAt(priority: lastPriority)
       .limitToFirst(pageSize + 1);
