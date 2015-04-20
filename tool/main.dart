@@ -32,7 +32,8 @@ main() async {
 //  }
 //  moveItemsFromAtoB();
 //changeAllUsersToLowercase();
-migrateAllUsersOnboardingState();
+//migrateAllUsersOnboardingState();
+  changeAllUsersDateToEpochFormat();
 }
 
 changeAllUsersToLowercase() {
@@ -40,6 +41,17 @@ changeAllUsersToLowercase() {
     users.forEach((k, v) {
       String username = k;
       Firebase.put('/users/${username.toLowerCase()}.json', v);
+      print(username);
+    });
+  });
+}
+
+changeAllUsersDateToEpochFormat() {
+  Firebase.get('/users.json').then((Map users) {
+    users.forEach((k, v) {
+      String username = k;
+      v['.priority'] = (v['createdDate'] != null) ? -DateTime.parse(v['createdDate']).millisecondsSinceEpoch : null;
+      Firebase.put('/users3/${username.toLowerCase()}.json', v);
       print(username);
     });
   });
