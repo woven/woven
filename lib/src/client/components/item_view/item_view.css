@@ -417,7 +417,7 @@ core-item core-icon {
 }
 
 .like-button {
-  width: 55px;
+  width: 60px;
 }
 
 .like-button.selected:not([disabled]) {
