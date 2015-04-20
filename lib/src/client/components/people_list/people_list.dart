@@ -42,7 +42,7 @@ class PeopleList extends PolymerElement with Observable {
 
     subscriptions = [];
     subscriptions.add(scroll.onScroll.listen((_) {
-      if (!viewModel.reloadingContent) viewModel.paginate();
+      if (!viewModel.isLoading) viewModel.paginate();
     }));
   }
 
