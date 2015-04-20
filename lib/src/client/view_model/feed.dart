@@ -82,7 +82,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
       updateEventView();
 
-      relistenForItems();
+      listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
@@ -93,7 +93,7 @@ class FeedViewModel extends BaseViewModel with Observable {
   /**
    * Listen for new stuff within the items we're currently showing.
    */
-  void relistenForItems() {
+  listenForNewItems({startAt, endAt}) {
     if (childAddedSubscriber != null) {
       childAddedSubscriber.cancel();
       childAddedSubscriber = null;
@@ -111,10 +111,6 @@ class FeedViewModel extends BaseViewModel with Observable {
       childRemovedSubscriber = null;
     }
 
-    listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
-  }
-
-  listenForNewItems({startAt, endAt}) {
     if (typeFilter != null) {
       dataLocation = '/items_by_community_by_type/' + app.community.alias + '/' + typeFilter;
     } else {
