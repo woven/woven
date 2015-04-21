@@ -20,7 +20,7 @@ class UserModel {
   bool disabled = false;
   bool needsPassword = false;
   Map invitation;
-  OnboardingStatus onboardingStatus;
+  OnboardingState onboardingState;
 
   // Return the path to the small picture if we have it, otherwise the original picture.
   String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}" : null;
@@ -41,7 +41,7 @@ class UserModel {
       "createdDate": createdDate,
       "disabled": disabled,
       "needsPassword": needsPassword,
-      "onboardingStatus": enumToName(onboardingStatus)
+      "onboardingState": enumToName(onboardingState)
     };
   }
 
@@ -62,23 +62,25 @@ class UserModel {
       ..createdDate = data['createdDate']
       ..disabled = data['disabled']
       ..needsPassword = data['needsPassword']
-      ..onboardingStatus = data['onboardingStatus'];
+      ..onboardingState = data['onboardingState'];
   }
 }
 
 /**
  * Converts enum value to string, because there's no toString().
  */
-String enumToName(OnboardingStatus onboardingStatus) {
-  if (onboardingStatus == OnboardingStatus.temporaryUser) return 'temporaryUser';
-  if (onboardingStatus == OnboardingStatus.signUpComplete) return 'signUpComplete';
-  if (onboardingStatus == OnboardingStatus.onboardingComplete) return 'onboardingComplete';
+String enumToName(OnboardingState onboardingState) {
+  if (onboardingState == OnboardingState.temporaryUser) return 'temporaryUser';
+  if (onboardingState == OnboardingState.signUpComplete) return 'signUpComplete';
+  if (onboardingState == OnboardingState.signUpIncomplete) return 'signUpIncomplete';
+  if (onboardingState == OnboardingState.onboardingComplete) return 'onboardingComplete';
 }
 
 /**
- * Defines valid/recognized onboarding statuses associated with a user.
+ * Defines valid/recognized onboarding states associated with a user.
  */
-enum OnboardingStatus {
+enum OnboardingState {
+  signUpIncomplete, // User is missing a password, first/last name, etc.
   signUpComplete, // User has chosen a username and password.
   onboardingComplete, // User has completed the initial onboarding flow. TODO: Not used atm.
   temporaryUser // For when we have a temporary user created with information from FB or Tw, which needs to be updated.

@@ -35,7 +35,7 @@ class UserController {
     data['password'] = hash(data['password']);
     data['disabled'] = data['invitation'] == null; // If we have don't have an invitation, user starts as disabled.
 
-    if (data['onboardingStatus'] == 'temporaryUser') {
+    if (data['onboardingState'] == 'temporaryUser') {
       // Update the references in the relevant indexes to the new username.
       var dataToUpdate = {'username': username};
       Firebase.patch('/facebook_index/$facebookId.json', dataToUpdate, auth: config['datastore']['firebaseSecret']);
@@ -57,7 +57,7 @@ class UserController {
     }
 
     // Update the onboarding state now that we created the user.
-    data['onboardingStatus'] = 'signUpComplete';
+    data['onboardingState'] = 'signUpComplete';
 
     // Create the new user.
     Firebase.put('/users/$username.json', data, auth: config['datastore']['firebaseSecret']);

@@ -131,10 +131,10 @@ class Home extends PolymerElement with Observable {
       toggleLogo();
       new Timer(new Duration(milliseconds: 600), () async {
         if (app.user != null) {
-          if (app.user.disabled && app.user.onboardingStatus == 'signUpComplete') {
+          if (app.user.disabled && app.user.onboardingState == 'signUpComplete') {
             app.homePageCta = 'sign-up-note';
           }
-          if (app.user.onboardingStatus == 'temporaryUser') {
+          if (app.user.onboardingState == 'temporaryUser') {
             app.homePageCta = 'complete-sign-up';
           }
         } else {
@@ -269,7 +269,7 @@ class Home extends PolymerElement with Observable {
   /**
    * Create a new user.
    */
-  signUp(Event e) {
+  signUp(Event e) async {
     e.preventDefault();
 
     if (email.value.trim().isEmpty || !isValidEmail(email.value.trim())) {
@@ -293,39 +293,38 @@ class Home extends PolymerElement with Observable {
       return false;
     }
 
-
     toggleProcessingIndicator();
 
     // Check credentials and sign the user in server side.
-    HttpRequest.request(
-        Routes.createNewUser.toString(),
-        method: 'POST',
-        sendData: JSON.encode({
-            'username': username.value.trim(),
-            'password': password.value,
-            'firstName': firstname.value,
-            'lastName': lastname.value,
-            'email': email.value.trim(),
-            'onboardingStatus': app.user.onboardingStatus,
-            'invitation': app.user.invitation,
-            'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null
-        }))
-    .then((HttpRequest request) {
-      // Set up the response as an object.
-      Response response = Response.fromJson(JSON.decode(request.responseText));
-      if (response.success) {
-        // Set the auth token and remove it from the map.
-        app.authToken = response.data['authToken'];
-        // TODO: This should totally just be part of the UserModel.
-        response.data.remove('authToken');
+    HttpRequest request = await HttpRequest.request(
+      Routes.createNewUser.toString(),
+      method: 'POST',
+      sendData: JSON.encode({
+        'username': username.value.trim(),
+        'password': password.value,
+        'firstName': firstname.value,
+        'lastName': lastname.value,
+        'email': email.value.trim(),
+        'onboardingState': app.user.onboardingState,
+        'invitation': app.user.invitation,
+        'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null
+      })
+    );
 
-        if (response.data['disabled'] == true) {
-          toggleProcessingIndicator();
-          app.user = null; // Kill the disabled user.
-          showSignUpNote();
-          return;
-        }
+    // Set up the response as an object.
+    Response response = Response.fromJson(JSON.decode(request.responseText));
+    if (response.success) {
+      // Set the auth token and remove it from the map.
+      app.authToken = response.data['authToken'];
+      // TODO: This should totally just be part of the UserModel.
+      response.data.remove('authToken');
 
+      if (response.data['disabled'] == true) {
+        toggleProcessingIndicator();
+        app.user = null; // Kill the disabled user.
+        showSignUpNote();
+
+      } else {
         f.authWithCustomToken(app.authToken).catchError((error) => print(error));
 
         // Set up the user object.
@@ -350,11 +349,79 @@ class Home extends PolymerElement with Observable {
 //    HttpRequest.request(Routes.sendWelcome.toString());
 
         Timer.run(() => app.showMessage('Welcome to Woven, ${app.user.username}!'));
-      } else {
-        toggleProcessingIndicator();
-        window.alert(response.message);
       }
-    });
+    } else {
+      toggleProcessingIndicator();
+      window.alert(response.message);
+    }
+  }
+
+  /**
+   * Updates an existing user.
+   */
+  updateExistingUser(Event e) async {
+    e.preventDefault();
+
+    if (email.value.trim().isEmpty || !isValidEmail(email.value.trim())) {
+      window.alert("Please provide a valid email.");
+      return false;
+    }
+
+    if (username.value.trim().isEmpty) {
+      window.alert("Please choose a username.");
+      return false;
+    }
+
+    //TODO: Regex this for all disallowed cases.
+    if (username.value.trim().contains(" ")) {
+      window.alert("Your username may not contain spaces.");
+      return false;
+    }
+
+    if (password.value.trim().isEmpty || password.value.trim().length < 6) {
+      window.alert("Please choose a password at least 6 characters long.");
+      return false;
+    }
+
+    toggleProcessingIndicator();
+
+    final userRef = f.child('/users/${username.value}');
+
+    var user = new UserModel()
+      ..username = username.value
+      ..password = hash(password.value)
+      ..firstName = convertEmptyToNull(firstname.value)
+      ..lastName = convertEmptyToNull(lastname.value)
+      ..email = convertEmptyToNull(email.value)
+      ..onboardingState = OnboardingState.signUpComplete;
+    Map userData = removeNullsFromMap(user.toJson());
+
+    // TODO: Handle any errors with update later, and consider moving to server-side.
+    await userRef.update(userData);
+
+    f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+
+    // Set up the user object.
+    app.user = user;
+    if (app.user.settings == null) app.user.settings = {};
+
+    document.body.classes.add('no-transition');
+    app.user.settings = toObservable(app.user.settings);
+    new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+
+    app.cache.users[app.user.username.toLowerCase()] = app.user;
+
+    // Trigger changes to app state in response to user sign in/out.
+    //TODO: Aha! This triggers a feedViewModel load.
+    app.mainViewModel.invalidateUserState();
+
+    toggleProcessingIndicator();
+
+    // Hide the homepage and show the app.
+    app.showHomePage = false;
+    app.skippedHomePage = true;
+
+    Timer.run(() => app.showMessage('Thanks for doing that, ${app.user.firstName}.'));
   }
 
   /**
@@ -487,6 +554,7 @@ class Home extends PolymerElement with Observable {
 
   attached() {
     if (app.debugMode) print('+Home');
+
     ImageElement coverImage = new ImageElement(src: 'http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg');
     document.body.classes.add('colored-bg');
     Timer.run(() => toggleCover());
@@ -494,6 +562,12 @@ class Home extends PolymerElement with Observable {
     coverImage.onLoad.listen((e) {
       cover.style.backgroundImage = 'url(http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg)';
     });
+
+    if (app.user != null && app.user.onboardingState == 'signUpIncomplete') {
+      username.disabled = true;
+      email.disabled = true;
+      submitButton.text = 'Continue →';
+    }
   }
 
   detached() {

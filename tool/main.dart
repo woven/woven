@@ -67,11 +67,17 @@ changeAllUsersDateToEpochFormat() {
 }
 
 migrateAllUsersOnboardingState() {
+  var updateData;
   Firebase.get('/users.json').then((Map users) {
     users.forEach((k, v) {
       String username = k;
       if (v['disabled']) return;
-      var updateData = {'onboardingState': 'signUpComplete'};
+
+      if (v['password'] == null || v['firstName'] == null || v['lastName'] == null) {
+        updateData = {'onboardingState': 'signUpIncomplete'};
+      } else {
+        updateData = {'onboardingState': 'signUpComplete'};
+      }
       Firebase.patch('/users/${username.toLowerCase()}.json', updateData, auth: firebaseSecret);
       print(username);
     });

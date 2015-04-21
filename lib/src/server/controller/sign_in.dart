@@ -182,7 +182,7 @@ class SignInController {
       ..picture = facebookData['picture']
       ..pictureSmall = facebookData['pictureSmall']
       ..disabled = true
-      ..onboardingStatus = OnboardingStatus.temporaryUser;
+      ..onboardingState = OnboardingState.temporaryUser;
 
     // Check for a session cookie in the request.
     var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);

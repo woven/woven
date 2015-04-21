@@ -124,19 +124,23 @@ class WovenApp extends PolymerElement with Observable {
         var path = window.location.pathname;
         app.showHomePage = path == '/' || path.contains('/confirm');
       } else {
-        if (!user.disabled && user.onboardingStatus != 'temporaryUser') {
-          app.showHomePage = false;
+        if (!user.disabled && user.onboardingState != 'temporaryUser') {
+          if (user.onboardingState == 'signUpIncomplete') {
+            app.showHomePage = true; // Show homepage regardless of path condition above.
+            app.homePageCta = 'complete-sign-up';
+          } else {
+            app.showHomePage = false;
 
-          // Trigger changes to app state in response to user sign in/out.
-          //TODO: Aha! This triggers a feedViewModel load.
-          app.mainViewModel.invalidateUserState();
+            // Trigger changes to app state in response to user sign in/out.
+            //TODO: Aha! This triggers a feedViewModel load.
+            app.mainViewModel.invalidateUserState();
 
-          // On sign in, greet the user.
-          if (app.user.isNew != true) Timer.run(() => greetUser());
-
+            // On sign in, greet the user.
+            if (app.user.isNew != true) Timer.run(() => greetUser());
+          }
         } else {
-          if (user.onboardingStatus == 'temporaryUser' || user.needsPassword) {
-            app.homePageCta = 'complete-signup';
+          if (user.onboardingState == 'temporaryUser') {
+            app.homePageCta = 'complete-sign-up';
           } else {
             app.homePageCta = 'disabled-note';
             app.user = null;

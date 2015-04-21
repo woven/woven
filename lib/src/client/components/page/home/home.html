@@ -51,7 +51,13 @@
           </template>
 
           <template if="{{app.homePageCta == 'complete-sign-up'}}">
-            <h3>Please complete your sign up.</h3>
+            <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+              <h3>Please complete your sign up.</h3>
+            </template>
+            <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+              <h3>Please update your account.</h3>
+              <p>We're missing some pertinent details.</p>
+            </template>
 
             <div self-center>
               <div class="field-wrapper first">
@@ -83,8 +89,8 @@
                 <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
                        value="{{(app.user != null) ? app.user.lastName : ''}}">
               </div>
-              <div id="submit" class="button" on-tap="{{signUp}}">Sign up</div>
-              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
+              <div id="submit" class="button" on-tap="{{updateExistingUser}}">Sign up</div>
+              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
             </div>
             <div class="footer" self-center>
               <p style="visibility:hidden;"><a on-tap="{{close}}">Just browse &#8594;</a></p>
