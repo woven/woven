@@ -387,14 +387,12 @@ class Home extends PolymerElement with Observable {
 
     final userRef = f.child('/users/${username.value}');
 
-    var user = new UserModel()
-      ..username = username.value
-      ..password = hash(password.value)
-      ..firstName = convertEmptyToNull(firstname.value)
-      ..lastName = convertEmptyToNull(lastname.value)
-      ..email = convertEmptyToNull(email.value)
-      ..onboardingState = OnboardingState.signUpComplete;
-    Map userData = removeNullsFromMap(user.toJson());
+    app.user.password = hash(password.value);
+    app.user.firstName = firstname.value;
+    app.user.lastName = lastname.value;
+    app.user.onboardingState = OnboardingState.signUpComplete;
+
+    Map userData = removeNullsFromMap(app.user.toJson());
 
     // TODO: Handle any errors with update later, and consider moving to server-side.
     await userRef.update(userData);
@@ -402,7 +400,6 @@ class Home extends PolymerElement with Observable {
     f.authWithCustomToken(app.authToken).catchError((error) => print(error));
 
     // Set up the user object.
-    app.user = user;
     if (app.user.settings == null) app.user.settings = {};
 
     document.body.classes.add('no-transition');
