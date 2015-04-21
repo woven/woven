@@ -21,7 +21,7 @@ import 'package:woven/src/shared/response.dart';
 final googleServiceAccountCredentials = new auth.ServiceAccountCredentials.fromJson(config['google']['serviceAccountCredentials']);
 final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
 var googleApiClient;
-final firebaseSecret = 'i7dfNHOVFPZ1vxNe6LpWku5E0QjlHacVuz1kjPIq';
+final firebaseSecret = 'uY8p08LpEK6eF8JnB1ijFPdLQOoNpeJEgQEFJ3cI';
 
 main() async {
 //  updateAllItemsMoveOtherToMessages();
@@ -32,31 +32,33 @@ main() async {
 //  }
 //  moveItemsFromAtoB();
 //changeAllUsersToLowercase();
-migrateAllUsersOnboardingState();
+//migrateAllUsersOnboardingState();
 //  changeAllUsersDateToEpochFormat();
 //  dumpDataToFile();
+doMigration();
 }
 
 /**
  * Do ONE AT A TIME. See individual comments.
  */
 doMigration() async {
-  changeAllUsersToLowercase();
-  updateAllUsersAddPriority();
-  migrateAllUsersOnboardingState();
-
-  try {
-    await createPreviewForItemsWithUrls();
-  } catch(error) {
-    print('MIGRATION: $error');
-  }
+//  changeAllUsersToLowercase();
+//  updateAllUsersAddPriority();
+//  migrateAllUsersOnboardingState();
+  updateAllItemsMoveOtherToMessages();
+//
+//  try {
+//    await createPreviewForItemsWithUrls();
+//  } catch(error) {
+//    print('MIGRATION: $error');
+//  }
 }
 
 changeAllUsersToLowercase() {
-  Firebase.get('/users2.json?format=export').then((Map users) {
+  Firebase.get('/users.json?format=export').then((Map users) {
     users.forEach((k, v) {
       String username = k;
-      Firebase.put('/users/${username.toLowerCase()}.json', v);
+      Firebase.put('/users2/${username.toLowerCase()}.json', v);
       print(username);
     });
   });
@@ -93,7 +95,7 @@ migrateAllUsersOnboardingState() {
       } else {
         updateData = {'onboardingState': 'signUpComplete'};
       }
-      Firebase.patch('/users/${username.toLowerCase()}.json', updateData, auth: firebaseSecret);
+      Firebase.patch('/users/${username.toLowerCase()}.json', updateData);
       print(username);
     });
   });
