@@ -16,6 +16,7 @@ import '../util.dart';
  * This supports both HTTP and data URIs.
  */
 Future<File> downloadFileTo(String url, File file) {
+  if (url == null) return null;
   return new Future(() {
     if (url.startsWith('http')) {
       return http.get(correctUrl(url)).then((response) {

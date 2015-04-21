@@ -1,0 +1,136 @@
+core-field {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  height: 40px;
+  background-color: #fff;
+}
+
+core-field input {
+  font-family: arial, sans-serif;
+}
+
+#message-box {
+  border: solid 1px #e6e6e6;
+  transition: border .4s;
+  border-radius: 2px;
+}
+
+.theme-dark #message-box {
+  border: solid 1px #383838;
+  transition: border .2s;
+}
+
+#message-box.active {
+  border: solid 1px rgb(39, 178, 1);
+}
+
+.theme-dark #message-box.active {
+  border: solid 1px rgb(32, 102, 1);
+  transition: border .2s;
+}
+
+.field-wrapper {
+  padding: 12px 10px 6px 10px;
+  border: solid 1px #e6e6e6;
+  background-color: #fff;
+}
+
+.field-wrapper.first {
+  border-top: none;
+}
+
+.field-wrapper.transparent {
+  background: transparent;
+  border: none;
+}
+
+.theme-dark .field-wrapper {
+  background-color: transparent;
+  transition: background-color .2s;
+}
+
+#comment {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  min-height: 20px;
+}
+
+#comment-textarea {
+  font: inherit;
+  background: transparent;
+}
+
+.theme-dark #comment-textarea {
+  color: white;
+  transition: color .2s;
+}
+
+core-tooltip::shadow .core-tooltip {
+  font-size: 12px;
+}
+
+#post-container {
+  background: #F0F0F0;
+  /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
+  padding: 8px;
+  border-top: solid 1px #ddd;
+  /*height: 40px;*/
+}
+
+#post-container.theme-dark  {
+  background: transparent;
+  border-top: solid 1px #383838;
+}
+
+.user-area {
+  margin-right: 8px;
+}
+
+user-picture {
+  border: none;
+  border-radius: 0;
+}
+
+.sign-in-container .message {
+  padding: 0 10px 0 10px;
+}
+
+.button-sign-in {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  width: 100px;
+  color: #fff;
+  background-color: #247BA1;
+  margin-right: 3px;
+  height: 34px;
+}
+
+.button-sign-in:hover {
+  background-color: #269BCF;
+}
+
+.message {
+  margin-left: 10px;
+  font-size: 15px;
+  white-space: nowrap;
+  color: #444;
+  height: 40px;
+  line-height: 40px;
+}
+
+@media all and (min-width: 600px)  {
+  .button-sign-in {
+    display: none;
+  }
+  #post-container {
+    /*height: 40px;*/
+  }
+}

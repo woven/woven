@@ -1,76 +1,235 @@
-.page-wrapper {
+:host {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.cover {
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+}
+
+.centered-container {
   position: absolute;
-  height: 100%;
+  left: 70%;
+  top: 25%;
+}
+
+.overlay {
+  /*height: 70px;*/
+  background: rgba(0,0,0,0.75);
+  color: white;
   width: 100%;
-  /*background: #15384B;*/
-  /*border-left: solid 10px #FFA944;*/
+  position: absolute;
+  bottom: 0;
 }
 
-#content-header-wrapper {
-  /*text-align: center;*/
+.cta .content-container {
+  min-width: 300px;
+  margin: 20px;
+  position:relative;
 }
 
-#content-header-wrapper img {
-  height: 35px;
+.cta-container {
+  position: relative;
+  top: 60px;
+  width: 100%;
 }
 
-#content-wrapper {
-  max-width: 560px;
-  padding: 25px 20px 25px 25px;
+.cta {
+  /* border: solid 6px rgba(255, 255, 255, 0.8); */
+  background: rgba(255, 255, 255, 0.9);
+  color: white;
+  width: 500px;
+  border-radius: 3px;
+  text-align: center;
+  position: relative;
+  top: 60px;
+  opacity: 0;
 }
 
-#home-text {
-  /*color: #fff;*/
-  font-size: 24px;
+.cta h2 {
+  font-size: 35px;
+  color: #333;
   font-family: Georgia, serif;
-  font-style: oblique;
+  font-style: italic;
+  font-weight: normal;
+  margin: 0;
 }
 
-#skip {
-  font-family: Arial, Helvetica, sans-serif;
+.cta h3 {
+  color: #444;
+  letter-spacing: .2pt;
   font-size: 20px;
+  font-weight: normal;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.cta p {
+  color: #444;
+  font-size: 16px;
+  text-align: center;
+  line-height: 21px;
+  margin-top: 5px;
+}
+
+.cta .footer p {
+  font-size: 14px;
+}
+
+.cta a {
   cursor: pointer;
-  color: black;
-}
-
-#skip:hover {
-  color: dodgerblue;
-}
-
-#random-word {
-  opacity: 1;
-  transition: opacity 0.5s;
-}
-
-.signin-btn {
-  border-radius: 2px;
-  padding: 10px;
+  color: #2c6ab9;
+  text-decoration: none;
   outline: none;
+}
+
+.cta a:hover {
+  text-decoration: underline;
+}
+
+.field-wrapper {
+  width: 250px;
+  border-bottom: solid 1px #ddd;
+  border-left: solid 1px #ddd;
+  border-right: solid 1px #ddd;
+  background: rgba(255, 255, 255, 0.75);
+  padding:10px;
+}
+
+.field-wrapper > input {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+
+.field-wrapper.first {
+  border-top: solid 1px #ddd;
+  border-radius: 3px 3px 0 0;
+}
+
+.field-wrapper.last {
+  border-bottom: solid 1px #ddd;
+  border-radius: 0 0 3px 3px;
+}
+
+.field-wrapper.only {
+  border: solid 1px #ddd;
+  border-radius: 3px;
+}
+
+.button {
+  width: 249px;
+  padding: 12px;
+  background: #059905;
+  border-radius: 2px;
+  margin-top: 12px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
+  font-weight: bold;
+  font-size: 14px;
   cursor: pointer;
-  border: none;
 }
 
-#facebook-signin {
+.button:hover {
+  background: #058705;
+}
+
+.logo {
+  background: url('http://storage.googleapis.com/woven/public/images/app/woven-logo-white.png') no-repeat center;
+  min-height: 60px;
+  background-size: contain;
+  margin-top: 40px;
+  opacity: 0;
+
+}
+
+.logo-solo {
+  background: url('http://storage.googleapis.com/woven/public/images/app/woven_logo_solo.png') no-repeat center;
+  height: 50px;
+  background-size: contain;
+  opacity: 0;
+  margin-bottom: 20px;
+}
+
+.logo-small {
+  background: url('http://storage.googleapis.com/woven/public/images/app/woven-logo-small.png') no-repeat right;
+  height: 60px;
+  background-size: contain;
+}
+
+.position-1 {
+  position: relative;
+  top: 50px;
+  right: 30%;
+}
+
+ul.menu {
+  list-style-type: none;
+  font-family: Georgia, serif;
+  font-style: italic;
+  text-transform: lowercase;
+  font-size: 26px;
+  color: #ddd;
+  margin-top: 22px;
+  transition: color .2s;
+}
+
+ul.menu > * {
+  display: inline;
+}
+
+ul.menu > li {
+  margin-right: 55px;
+  cursor: pointer;
+}
+
+ul.menu > li.first {
+  margin-left: 50px;
+}
+
+ul.menu > li:hover {
   color: #fff;
-  background: #3e5a9b;
-  width: 200px;
+  transition: color .2s;
 }
 
-#facebook-signin:hover {
-  background: #223E8D;
+@media (max-width: 500px) {
+  div.cta {
+    width: 100%;
+    border-radius: 0;
+    height: 100%;
+  }
+
+  .cta .content-container {
+    width: 360px;
+    margin: 20px auto;
+  }
+
+  .cta h2 {
+    font-size: 35px;
+  }
+
+  .cta h3 {
+    font-size: 25px;
+    margin-top: 20px;
+  }
+
+  .cta .footer {
+    margin-top: 10px;
+  }
 }
 
-#message {
-  opacity: 1;
-  transition: opacity 2s;
-  font-size: 13px;
-  margin-bottom: 8px;
-}
+@media (max-width: 400px) {
+  .cta .content-container {
+    width: 305px;
+    margin: 35px auto;
+  }
+  .cta h2 {
+    font-size: 32px;
+  }
 
-@media all and (max-width: 350px)  {
-  #random-word {
-    display: block;
+  .cta h3 {
+    font-size: 22px;
+    margin-top: 20px;
   }
 }

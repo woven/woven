@@ -2,6 +2,8 @@ library shared_util;
 
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'regex.dart';
+import 'dart:math';
 
 String htmlDecode(String text) {
   if (text == null) {
@@ -94,17 +96,17 @@ parseTime(String time) {
 }
 
 /**
- * Hash some string, e.g. for an item ID in a URL.
+ * Encode some string to base64, e.g. for an item ID in a URL.
  */
-hashEncode(String text) {
+base64Encode(String text) {
   var encodedText = CryptoUtils.bytesToBase64(UTF8.encode(text));
   return encodedText;
 }
 
 /**
- * Decode a hashed string, e.g. an item ID in a URL.
+ * Decode some string from base64, e.g. for an item ID in a URL.
  */
-hashDecode(String encodedText) {
+base64Decode(String encodedText) {
   var base64 = encodedText;
   var bytes = CryptoUtils.base64StringToBytes(base64);
   var decodedText = UTF8.decode(bytes);
@@ -128,12 +130,87 @@ formatPossessive(String text) {
 }
 
 /**
+ * Tries to choose the proper article ("a" or "an" or none) for a given string.
+ */
+String formatWordArticle(String word) {
+  if (word == null) return null;
+  if (word.endsWith('s')) return null;
+  if (word.startsWith(new RegExp('[aeiou]'))) return 'an ';
+  return 'a ';
+}
+
+/**
  * Removes nulls from a given map.
  */
 removeNullsFromMap(Map map) {
   Map newMap = new Map.from(map);
   map.forEach((k, v) {
     if (v == null) newMap.remove(k);
+  });
+  return newMap;
+}
+
+/**
+ * Check if given string is a valid URL.
+ */
+bool isValidUrl(String url) {
+  // Let's enforce http/https for now.
+  if (!(url.contains("http://") || url.contains("https://"))) return false;
+
+  try {
+    Uri.parse(url);
+  } catch (e) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Check if given string is a valid email address.
+ */
+bool isValidEmail(String email) {
+  RegExp regExp = new RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+
+  return regExp.hasMatch(email);
+}
+
+/**
+ * Hash a given string using sha256.
+ */
+String hash(String content) {
+  var sha256 = new SHA256();
+  sha256.add(content.codeUnits);
+  var digest = sha256.close();
+  var hexString = CryptoUtils.bytesToHex(digest);
+  return hexString;
+}
+
+String generateRandomHash() {
+  var range = new Random();
+  var sha1 = new SHA1();
+  sha1.add([range.nextInt(1000)]);
+  var hash = CryptoUtils.bytesToHex(sha1.close());
+  return hash;
+}
+
+/**
+ * Convert an empty string to null.
+ */
+convertEmptyToNull(String content) {
+  if (content.trim().isEmpty) return null;
+  return content;
+}
+
+/**
+ * Removes empty strings from a given map.
+ */
+removeEmptyStringsFromMap(Map map) {
+  Map newMap = new Map.from(map);
+  map.forEach((k, v) {
+    if (v is String) {
+      if ((v as String).isEmpty) newMap.remove(k);
+    }
   });
   return newMap;
 }

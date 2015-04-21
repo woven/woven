@@ -1,0 +1,25 @@
+<link rel="import" href="../../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_image.html">
+<polymer-element name="uri-preview">
+  <template>
+    <link rel="stylesheet" href="uri_preview.css">
+
+      <div class="preview" layout horizontal>
+        <!--<a _href="{{preview['uri']}}" target="_blank" on-tap="{{stopPropagation}}">-->
+            <template if="{{preview['image'] != null}}">
+              <div class="image">
+                <core-image sizing="cover" preload fade src="{{preview['image']}}"></core-image>
+              </div>
+            </template>
+            <div class="content" flex>
+              <div class="title">{{preview['title']}}</div>
+              <div class="teaser">{{preview['teaser']}}</div>
+              <div class="host">{{preview['uri_host']}}</div>
+            </div>
+        <!--</a>-->
+      </div>
+
+  </template>
+
+  <script type="application/dart" src='uri_preview.dart'></script>
+</polymer-element>

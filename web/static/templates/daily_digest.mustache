@@ -6,79 +6,88 @@
 </head>
 <body>
   <div id="content-container" style="max-width:800px;margin:auto;">
-    <div class="message-area" style="border-radius:3px;margin-bottom:22px;padding: 13px 23px;background-color: #259b24;color: #fff;font-size: 1.2em;font-family: 'Georgia', serif;">
-      Hey, *|FNAME|* *|LNAME|*! Your email is *|EMAIL|*.
+    <!--<div class="message-area" style="border-radius:3px;margin-bottom:22px;padding: 13px 23px;background-color: #259b24;color: #fff;font-size: 1.2em;font-family: 'Georgia', serif;">-->
+      <!--Hey, *|FNAME|* *|LNAME|*! Your email is *|EMAIL|*.-->
 
-      “Success is walking from failure to failure with no loss of enthusiasm.”
-        - Winston Churchill
-      <div style="font-family: 'Arial', sans-serif;margin-top:20px;">Please take a moment this week to let a fellow community member know about the new Woven.</div>
-    </div>
-  <!--<div id="heading"><strong>*|FNAME|*, just one question for you:</strong></div>-->
-  <!--<p>How can we do better?</p>-->
-  <!--<p><a style="color:white;" href="https://app.clickinsights.io/thank-you/545db38dec2d2f8f378b45cbo0attrs0o_*1o0attrs0o_*1o0attrs0o&lt;&lt;Email Address&gt;&gt;o0attrs0o_*1o0attrs0osecond/" target="_blank">More than just events</a></p>-->
-  <!--<p><a style="color:white;" href="https://app.clickinsights.io/thank-you/545db38dec2d2f8f378b45cbo0attrs0o_*1o0attrs0o_*1o0attrs0o&lt;&lt;Email Address&gt;&gt;o0attrs0o_*1o0attrs0othird/" target="_blank">Change the time or frequency</a></p>-->
-  <!--<p><a style="color:white;" href="https://app.clickinsights.io/thank-you/545db38dec2d2f8f378b45cbo0attrs0o_*1o0attrs0o_*1o0attrs0o&lt;&lt;Email Address&gt;&gt;o0attrs0o_*1o0attrs0ofirst/" target="_blank">Better design</a></p>-->
-  <!--<p><a style="color:white;" href="https://app.clickinsights.io/thank-you/545db38dec2d2f8f378b45cbo0attrs0o_*1o0attrs0o_*1o0attrs0o&lt;&lt;Email Address&gt;&gt;o0attrs0o_*1o0attrs0ofourth/" target="_blank">I have another idea</a></p>-->
-<div class="date-group-header" style="padding: 13px 23px;background-color: #0091F1;color: #fff;font-size: 1.2em;
-    font-family: 'Arial', sans-serif;border-radius:2px 2px 0 0">
-  Today in <strong>Miami Tech</strong>
+      <!--“Success is walking from failure to failure with no loss of enthusiasm.”-->
+        <!--- Winston Churchill-->
+      <!--<div style="font-family: 'Arial', sans-serif;margin-top:20px;">Please take a moment this week to let a fellow community member know about the new Woven.</div>-->
+    <!--</div>-->
+<div id="header" style="margin: 0 15px 0 15px;">
+  <div style="vertical-align: middle;font-family: Georgia, Times, serif;font-size: 1.7em;margin-bottom: 15px;text-align: center;">Today in Miami Tech</div>
+  <div style="font-family: 'Arial', sans-serif;margin-top:20px;padding: 20px;background-color: lemonchiffon;border-radius: 4px;border: solid 1px #eee;margin-bottom: 20px;text-align: center;">Please take a moment this week to let a fellow community member know about the new Woven.</div>
 </div>
-{{#items}}
+<div id="title">
+  <div style="vertical-align: middle;font-family: Arial, Helvetica, sans-serif;font-size: 1.7em;margin-left: 15px;margin-bottom: 15px;">Events today</div>
+</div>
+{{#events}}
   <div class="item-wrapper" style="">
-    <div class="item event" style="padding: 0 20px 0 13px;margin: 0;border-bottom: solid 1px #f2f2f2;
-    background-color: white;font-family: 'Arial', sans-serif;
-    border-right: solid 1px #f2f2f2;border-left: solid 1px #f2f2f2;">
+    <div class="item event" style="padding: 15px 10px 10px 15px;margin-bottom: 10px;background-color: white;font-family: 'Arial', sans-serif;
+    border: 1px solid #bbb;border-radius: 4px;">
       <div class="item-container" style="overflow: hidden;width: 100%;">
-        <div class="item-col2" style="margin-left: 10px;margin-right: 5px;padding-top: 20px;">
-          <div class="item-type event" style="text-transform: capitalize;margin-right: 3px;margin-bottom: 8px;border-radius: 3px;font-size: 0.9em;color: #03a9f4;">
-            Event <span class="item-users" style="color: #212121;display: inline;margin-right: 2px;text-transform: none;font-weight: normal;">posted by <strong>{{user}}</strong></span>
+        <div>
+          <span class="item-subject" style="border-bottom: solid 1px #EAEAEA;white-space: normal;margin-right: 5px;font-weight: bold;font-size: 1.5em;padding: 5px 0 0 0;margin-bottom: 5px;">
+            <a target="_blank" style="text-decoration:none;color:#408ADF;" href="http://woven.co/item/{{encodedId}}">
+              {{subject}}
+            </a>
+          </span>
+        </div>
+        <div class="item-body" style="color: #5c5c5c;font-size: 1em;white-space:normal;margin-bottom: 5px;">
+          <div style="color:green;margin:12px 0 10px 0;">
+            {{startDateTime}}
           </div>
-          <div>
-            <span class="item-subject" style="border-bottom: solid 1px #EAEAEA;white-space: normal;margin-right: 5px;font-weight: normal;font-size: 1.5em;padding: 5px 0 0 0;margin-bottom: 5px;font-family: Georgia;">
-              <a target="_blank" style="text-decoration:none;color:#000;" href="http://woven.co/item/{{encodedId}}">
-                {{subject}}
-              </a>
-            </span>
-          </div>
-          <div class="item-body" style="color: #5c5c5c;font-size: 1em;white-space:normal;margin-bottom: 5px;">
-            <div style="color:green;margin:12px 0 10px 0;">
-              {{startDateTime}}
-            </div>
-            {{body}}
-            <div class="item-actions event" style="margin-top: 14px;font-size: 0.95em;color: rgb(67, 132, 214);">
-
-            </div>
-          </div>
-          <div class="item-col3" style="padding-top: 7px;margin-bottom: 5px;">
-            <div class="item-updated" style="color: rgb(102, 102, 102);overflow: hidden;font-size: 90%;display: block;">
-
-            </div>
-          </div>
+          {{body}}
+        </div>
+        <div class="item-type event" style="text-transform: capitalize;margin-right: 3px;margin-top: 15px;border-radius: 3px;font-size: 0.9em;color: #03a9f4;">
+          <span class="item-users" style="color: #212121;display: inline;margin-right: 2px;text-transform: none;font-weight: normal;">Posted by <strong>{{user}}</strong></span>
         </div>
       </div>
     </div>
   </div>
-  {{/items}}
+  {{/events}}
+
+  <div id="title">
+    <!--<div style="display:inline;">-->
+    <!--<img src="web/static/images/types/icon_type_events.png" style="width:40px;height:40px;display:inline;">-->
+    <!--</div>-->
+    <div style="vertical-align: middle;font-family: Arial, Helvetica, sans-serif;font-size: 1.7em;margin-left: 15px;margin-bottom: 15px;margin-top:25px;">News today</div>
+  </div>
+  {{#news}}
+    <div class="item-wrapper" style="">
+      <div class="item event" style="padding: 15px 10px 10px 15px;margin-bottom: 10px;background-color: white;font-family: 'Arial', sans-serif;
+  border: 1px solid #bbb;border-radius: 4px;">
+        <div class="item-container" style="overflow: hidden;width: 100%;">
+          <div>
+        <span class="item-subject" style="border-bottom: solid 1px #EAEAEA;white-space: normal;margin-right: 5px;font-weight: bold;font-size: 1.5em;padding: 5px 0 0 0;margin-bottom: 5px;">
+          <a target="_blank" style="text-decoration:none;color:#408ADF;" href="http://woven.co/item/{{encodedId}}">
+            {{subject}}
+          </a>
+        </span>
+          </div>
+          <div class="item-body" style="color: #5c5c5c;font-size: 1em;white-space:normal;margin-bottom: 5px;">
+            <div style="color:#333;margin:12px 0 10px 0;">
+              Posted {{createdDate}}
+            </div>
+            {{body}}
+          </div>
+          <div class="item-type event" style="text-transform: capitalize;margin-right: 3px;margin-top: 15px;border-radius: 3px;font-size: 0.9em;color: #03a9f4;">
+            <span class="item-users" style="color: #212121;display: inline;margin-right: 2px;text-transform: none;font-weight: normal;">Posted by <strong>{{user}}</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/news}}
   <div style="text-align:center;margin:40px 0">
     <a style="text-decoration:none;background:#0a8f08;border-radius:2px;padding:12px 24px;font-size:18px;color:#fff;font-family:Georgia"
        href="http://woven.co/miamitech/events" target="_blank">Keep exploring</a>
   </div>
   <div style="text-align:center;font-size:0.8em;font-family:Arial, Helvetica, sans-serif;color:#666;margin:5px;">
-    <p><span>Woven</span> is a collaborative inbox for the communities you care about.
-    </p>
+    <p>Woven is a community collaboration platform powered by you.</p>
 
-    <p style="margin-top:16px;">Please take a moment to reply to this email and let us
-      know how we can do better.</p>
+    <!--<p style="margin-top:16px;">Please take a moment to reply to this email and let us-->
+      <!--know how we can do better.</p>-->
 
     <div id="logo" style="text-align:center;margin-top:30px;"><a href="http://woven.co/?utm_source=dailydigest&utm_medium=email&utm_campaign=digest_logo" target="_blank"><img style="width:175px" src="http://woven.co/static/images/woven_logo_together_trans_retina.png" alt="Woven – together."></a></div>
-
-
-    <p style="margin-top:40px;"><a style="color:gray;text-decoration:none;" href="*|UNSUB|*">Remove me from this list</a>
-    </p>
-
-    <!--<p style="margin-top:16px;"><a href="http://www.woven.co" target="_blank">Subscribe to-->
-    <!--#<span class="pM">miamitech</span> <span class="pM">on</span> <span class="pM">Woven</span></a> — <a>Unsubscribe</a>-->
-    <!--</p>-->
   </div>
 
 

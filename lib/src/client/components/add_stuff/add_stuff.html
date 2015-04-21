@@ -6,14 +6,16 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_overlay.html">
-<link rel="import" href="../widgets/dialog/dialog.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
+<link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
 <link rel="import" href="../widgets/dialog/dialog.html">
 
 <polymer-element name="add-stuff">
   <template>
     <link rel="stylesheet" href="add_stuff.css">
-    <core-overlay id="overlay" class="dialog" opened="{{opened}}" transition="core-transition-bottom" autoclosedisabled="true"
-        on-core-overlay-open-completed="{{handleOpen}}">
+    <core-overlay id="overlay" class="dialog" opened="{{opened}}" transition="core-transition-bottom"
+                  autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}"
+                  on-core-overlay-open-completed="{{handleOpen}}">
       <core-toolbar center-justified>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
         <div flex horizontal center-justified layout>
@@ -22,47 +24,71 @@
         <core-icon-button icon="send" on-tap="{{addItem}}" class="action"></core-icon-button>
       </core-toolbar>
       <div id="container">
-        <div id="content-container">
-          <core-selector id="content-type" target="{{$['types']}}" itemsSelector="li" valueattr="value"
-                         selected="other"></core-selector>
-          <ul id="types" class="list">
-            <li value="announcement">Announcement</li>
-            <li value="ask">Ask</li>
-            <li value="offer">Offer</li>
-            <li value="idea">Idea</li>
-            <li value="event">Event</li>
-            <li value="news">News</li>
-            <li value="project">Project</li>
-            <li value="other">Other</li>
-          </ul>
-
-          <div class="field-wrapper first">
-            <core-input id="subject" placeholder="Subject" autocomplete="off"
-                        inputValue="{{theData['subject']}}"></core-input>
+        <div id="post-container">
+          <div>
+            <core-selector id="content-type" target="{{$['types']}}" itemsSelector="li"
+                           valueattr="value" selected="message"></core-selector>
+            <ul id="types" class="list">
+              <!--<li value="ask">Ask</li>-->
+              <!--<li value="offer">Offer</li>-->
+              <!--<li value="idea">Idea</li>-->
+              <li value="message">Message</li>
+              <li value="event">Event</li>
+              <li value="news">News</li>
+              <!--<li value="announcement">Announcement</li>-->
+              <!--<li value="project">Project</li>-->
+              <!--<li value="other">Other</li>-->
+            </ul>
           </div>
+          <div class="field-wrapper full-height last">
+            <paper-autogrow-textarea
+                id="message"
+                autocomplete="off"
+                maxrows="15"
+                row="4"
+                >
+              <textarea id="message-textarea" placeholder="Say something..." value="{{formData['message']}}"></textarea>
+            </paper-autogrow-textarea>
+          </div>
+        </div>
+        <div id="content-container">
+          <template if="{{selectedType == 'event' || selectedType == 'news'}}">
+            <div class="field-wrapper first {{(selectedType == 'news') ? 'last' : ''}}">
+              <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off" value="{{formData['url']}}">
+            </div>
+          </template>
           <template if="{{selectedType == 'event'}}">
             <div class="field-wrapper">
-              <core-input id="event-start-date" placeholder="When is the event?" autocomplete="off"
-                          inputValue="{{theData['event-start-date']}}" on-focus="{{updateInput}}"></core-input>
+              <input is="core-input" id="subject" placeholder="Title" autocomplete="off" value="{{formData['subject']}}">
             </div>
-            <div class="field-wrapper">
-              <core-input id="event-start-time" placeholder="What time does it start?" autocomplete="off"
-                          inputValue="{{theData['event-start-time']}}" on-focus="{{updateInput}}"></core-input>
+            <template if="{{selectedType == 'event'}}">
+              <div class="field-wrapper">
+                <input is="core-input" id="event-start-date" placeholder="When is the event?" autocomplete="off"
+                       on-focus="{{updateInput}}" value="{{formData['event-start-date']}}">
+              </div>
+              <div class="field-wrapper">
+                <input is="core-input" id="event-start-time" placeholder="What time does it start?" autocomplete="off"
+                       on-focus="{{updateInput}}" value="{{formData['event-start-time']}}">
+              </div>
+            </template>
+            <div class="field-wrapper last">
+              <paper-autogrow-textarea
+                  id="body"
+                  autocomplete="off"
+                  maxrows="15"
+                  row="2"
+                  >
+                <textarea id="body-textarea" placeholder="Description" value="{{formData['body']}}"></textarea>
+              </paper-autogrow-textarea>
             </div>
           </template>
-          <template if="{{selectedType == 'event' || selectedType == 'news'}}">
-            <div class="field-wrapper">
-              <core-input id="url" placeholder="Link to the {{selectedType}}" autocomplete="off"
-                          inputValue="{{theData['url']}}"></core-input>
+        </div>
+        <div id="footer-container">
+          <div class="field-wrapper share-to first">
+            <div layout horizontal>
+              <div class="share-to-label">Share to:</div>
+              <div flex><input is="core-input" id="share-to" autocomplete="off"></div>
             </div>
-          </template>
-          <div class="field-wrapper full-height">
-            <core-input class="expand" id="body" multiline rows="fit" required placeholder="Share more..." autocomplete="off"
-                        inputValue="{{theData['body']}}"></core-input>
-          </div>
-          <div class="field-wrapper share-to" style="background: aliceblue;">
-            <core-input id="share-to" placeholder="Share to..." autocomplete="off"
-                        inputValue="{{theData['share-to']}}"></core-input>
           </div>
         </div>
       </div>

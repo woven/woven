@@ -4,12 +4,10 @@ import 'dart:html';
 import 'dart:async';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/feed.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
-import 'package:core_elements/core_header_panel.dart';
 
 /**
  * A list of items.
@@ -25,14 +23,15 @@ class InboxList extends PolymerElement with Observable {
 
   InputElement get subject => $['subject'];
 
+  db.Firebase get f => app.f;
+
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
     // id passed in the data-id attribute on the element.
     var item = viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
-    app.previousPage = app.selectedPage;
-    app.selectedItem = item;
-    app.selectedPage = 1;
+    app.router.previousPage = app.router.selectedPage;
+    app.router.selectedItem = item;
 
 
     var str = target.dataset['id'];
@@ -72,7 +71,6 @@ class InboxList extends PolymerElement with Observable {
   // Temporary script, about as good a place as any to put it.
 
   scriptTryPriority() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
 //    for (int i = 0; i < 30; i++) {
 //      var ref = f.child('/priority_test2').push();
 //      var now = new DateTime.now().toUtc();
@@ -80,21 +78,21 @@ class InboxList extends PolymerElement with Observable {
 //    }
 
     var priority = '2014-10-17 23:54:32.146Z';
-    f.child('/priority_test2').startAt(priority: priority).limit(10).onChildAdded.listen((e) {
+    f.child('/priority_test2').startAt(priority: priority).limitToFirst(10).onChildAdded.listen((e) {
       print(e.snapshot.val());
-      print(e.snapshot.name);
+      print(e.snapshot.key);
       print(e.snapshot.getPriority());
       priority = e.snapshot.getPriority();
     });
   }
 
   scriptAddPriorityOnItemsByCommunity() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items_by_community/' + app.community.alias);
     var item;
 
     itemsRef.onChildAdded.listen((e) {
-      item = e.snapshot.val();
+      db.DataSnapshot snapshot = e.snapshot;
+      item = snapshot.val();
       // If no updated date, use the created date.
       if (item['updatedDate'] == null) {
         item['updatedDate'] = item['createdDate'];
@@ -102,15 +100,14 @@ class InboxList extends PolymerElement with Observable {
 
       DateTime time = DateTime.parse(item['updatedDate']);
       var epochTime = time.millisecondsSinceEpoch;
-      f.child('/items_by_community/' + app.community.alias + '/' + e.snapshot.name)
+      f.child('/items_by_community/' + app.community.alias + '/' + snapshot.key)
         .setPriority(-epochTime);
 
-      print(e.snapshot.name);
+      print(e.snapshot.key);
     });
   }
 
   scriptAddPriorityOnItems() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items');
     var item;
 
@@ -123,13 +120,12 @@ class InboxList extends PolymerElement with Observable {
 
       DateTime time = DateTime.parse(item['updatedDate']);
       var epochTime = time.millisecondsSinceEpoch;
-      f.child('/items/' + e.snapshot.name)
+      f.child('/items/' + e.snapshot.key)
       .setPriority(-epochTime);
     });
   }
 
   scriptAddPriorityOnPeople() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/users');
     var item;
 
@@ -148,7 +144,6 @@ class InboxList extends PolymerElement with Observable {
 
 
   scriptAddPriorityOnItemsEverywhere() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items');
     var item;
 
@@ -162,17 +157,17 @@ class InboxList extends PolymerElement with Observable {
 
       DateTime time = DateTime.parse(item['updatedDate']);
       var epochTime = time.millisecondsSinceEpoch;
-      f.child('/items/' + e.snapshot.name)
+      f.child('/items/' + e.snapshot.key)
       .setPriority(-epochTime);
 
-      itemsRef.child(e.snapshot.name + '/communities').onValue.listen((e2) {
+      itemsRef.child(e.snapshot.key + '/communities').onValue.listen((e2) {
         Map communitiesRef = e2.snapshot.val();
         if (communitiesRef != null) {
           communitiesRef.keys.forEach((community) {
-            f.child('/items_by_community/' + community + '/' + e.snapshot.name).setPriority(-epochTime);
+            f.child('/items_by_community/' + community + '/' + e.snapshot.key).setPriority(-epochTime);
 
 
-            var itemsByTypeRef = f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name);
+            var itemsByTypeRef = f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.key);
 
             if (item['type'] == 'event') {
                 // Leave events for scriptMakeItemsByCommunityType().
@@ -207,7 +202,6 @@ class InboxList extends PolymerElement with Observable {
 
 
   scriptMakeItemsByCommunityByType() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items_by_community/' + app.community.alias);
     var item;
 
@@ -223,7 +217,7 @@ class InboxList extends PolymerElement with Observable {
       var epochTime = time.millisecondsSinceEpoch;
       var type = item['type'];
 
-      var itemsByTypeRef = f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.name);
+      var itemsByTypeRef = f.child('/items_by_community_by_type/' + app.community.alias + '/$type/' + e.snapshot.key);
 
       if (item['type'] == 'event') {
         var eventPriority;
@@ -257,25 +251,23 @@ class InboxList extends PolymerElement with Observable {
   }
 
   scriptUpdateCommentCounts() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
     var itemsRef = f.child('/items');
-    var item;
 
     itemsRef.onChildAdded.listen((e) {
-      var countRef = f.child('/items/' + e.snapshot.name + '/activities/comments');
+      var countRef = f.child('/items/' + e.snapshot.key + '/activities/comments');
       var count = 0;
       var item = e.snapshot.val();
       countRef.once('value').then((snapshot) {
         print(snapshot.val());
         print(snapshot.numChildren);
-        itemsRef.child(e.snapshot.name + '/comment_count').set(snapshot.numChildren); // TODO: In Progress.
+        itemsRef.child(e.snapshot.key + '/comment_count').set(snapshot.numChildren); // TODO: In Progress.
 
-        itemsRef.child(e.snapshot.name + '/communities').onValue.listen((e2) {
+        itemsRef.child(e.snapshot.key + '/communities').onValue.listen((e2) {
           Map communitiesRef = e2.snapshot.val();
           if (communitiesRef != null) {
             communitiesRef.keys.forEach((community) {
-              f.child('/items_by_community/' + community + '/' + e.snapshot.name + '/comment_count').set(snapshot.numChildren);
-              f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.name + '/comment_count').set(snapshot.numChildren);
+              f.child('/items_by_community/' + community + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
+              f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
             });
           }
         });
@@ -287,18 +279,30 @@ class InboxList extends PolymerElement with Observable {
    * Initializes the infinite scrolling ability.
    */
   initializeInfiniteScrolling() {
-    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
-    HtmlElement scroller = el.scroller;
+    var scroller = app.scroller;
     HtmlElement element = $['content-container'];
-    var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
+    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller);
 
     subscriptions.add(scroll.onScroll.listen((_) {
-      if (!viewModel.reloadingContent) viewModel.paginate();
+//      print("DEBUG: ${viewModel.reloadingContent} // ${viewModel.reachedEnd}");
+      if (!viewModel.reloadingContent && !viewModel.reachedEnd) viewModel.paginate();
     }));
   }
 
   attached() {
-    print("+InboxList");
+    if (app.debugMode) print('+InboxList');
+
+    switch (app.router.selectedPage) {
+      case 'events':
+        app.pageTitle = 'Events';
+        break;
+      case 'announcements':
+        app.pageTitle = 'Announcements';
+        break;
+      default:
+        app.pageTitle = 'Feed';
+        break;
+    }
 
     initializeInfiniteScrolling();
 
@@ -327,7 +331,7 @@ class InboxList extends PolymerElement with Observable {
   }
 
   detached() {
-    print("-InboxList");
+    if (app.debugMode) print('-InboxList');
 //    viewModel.lastScrollPos = app.scroller.scrollTop;
 
     // TODO: If we cancel, how to resume? pause/resume instead?
@@ -336,8 +340,6 @@ class InboxList extends PolymerElement with Observable {
 //    viewModel.childMovedSubscriber.cancel();
 //    viewModel.childRemovedSubscriber.cancel();
 
-    subscriptions.forEach((subscription) {
-      subscription.cancel();
-    });
+    subscriptions.forEach((subscription) => subscription.cancel());
   }
 }

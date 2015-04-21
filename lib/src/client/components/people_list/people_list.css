@@ -55,28 +55,50 @@ core-icon {
   border-bottom: solid 1px #f2f2f2;;
 }
 
+.theme-dark .item   {
+  background: rgba(45, 45, 45, 0.5);
+  border: none;
+  color: white;
+}
+
 .item:hover {
   cursor: pointer;
   overflow: hidden;
   background-color: rgb(244, 244, 244);
 }
 
+.theme-dark .item:hover {
+  background: rgba(37, 37, 37, 0.50);
+}
+
 .user-username {
+  color: #2d2d2d;
+  padding: 2px 0 0 0;
   white-space: nowrap;
   margin-right: 5px;
-  font-weight: bold;
-  font-size: 1.2em;
-  padding: 2px 0 0 0;
+  font-size: 17px;
+  letter-spacing: 0.2pt;
 }
+
+.theme-dark .user-username {
+  color: #fff;
+}
+
 .user-name {
-  color: #5c5c5c;
+  color: #666;
+  font-size: 15px;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
+
+.theme-dark .user-name {
+  color: #fff;
+}
+
 .item-updated {
-  color: rgb(102, 102, 102);
+  color: #666;
   overflow: hidden;
-  font-size: 90%;
+  font-size: 13px;
   display: inline;
 }
 
@@ -127,13 +149,17 @@ core-icon {
   width: 100%;
 }
 
+.user-area {
+  margin-right: 10px;
+}
+
 .user-photo {
-  width:50px;
-  height:50px;
+  width: 40px;
+  height: 40px;
   background: #F5F5F5;
   border: solid 1px #E6E6E6;
   overflow:hidden;
-  border-radius: 3px;
+  border-radius: 2px;
 
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -147,9 +173,14 @@ core-icon {
   user-select: none;
 }
 
+.theme-dark .user-photo {
+  background: #2d2d2d;
+  border: none;
+}
+
 .user-photo img {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 
 #loading-indicator {

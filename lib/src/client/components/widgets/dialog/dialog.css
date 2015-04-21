@@ -40,6 +40,12 @@ polyfill-next-selector { content: ':host core-icon-button.action:hover'; }
   background-color: rgb(45, 104, 214);
 }
 
+polyfill-next-selector { content: ':host core-icon-button.disabled'; }
+::content core-icon-button.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
 polyfill-next-selector { content: ':host h1'; }
 ::content h1 {
   margin: 20px 20px 20px 20px;
@@ -48,6 +54,7 @@ polyfill-next-selector { content: ':host h1'; }
 polyfill-next-selector { content: ':host p'; }
 ::content p {
   margin: 15px 20px 15px 10px;
+  font-size: 14px;
 }
 
 polyfill-next-selector { content: ':host .field-wrapper'; }
@@ -122,7 +129,7 @@ polyfill-next-selector { content: ':host button:focus'; }
 polyfill-next-selector { content: ':host a'; }
 ::content a {
   cursor: pointer;
-  color: #0000ee;
+  color: #166ACA;
 }
 
 polyfill-next-selector { content: ':host a:hover'; }

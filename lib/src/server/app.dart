@@ -2,6 +2,7 @@ library woven_server;
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
 import 'package:http_server/http_server.dart';
 import 'package:woven/config/config.dart';
 
@@ -11,7 +12,9 @@ import '../shared/response.dart';
 import 'controller/hello.dart';
 import 'controller/main.dart';
 import 'controller/sign_in.dart';
+import 'controller/user.dart';
 import 'controller/admin.dart';
+import 'controller/mail.dart';
 import 'routing/router.dart';
 
 import 'firebase.dart';
@@ -22,10 +25,11 @@ import 'package:woven/src/server/task_scheduler.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:googleapis/storage/v1.dart' as storage;
 import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
+import 'package:woven/src/server/session_manager.dart';
 
 // Add parts.
 import 'package:woven/src/server/util/profile_picture_util.dart';
-part 'util/cloud_storage_util.dart';
+import 'package:woven/src/server/util/cloud_storage_util.dart';
 
 class App {
   Router router;
@@ -34,6 +38,7 @@ class App {
   ProfilePictureUtil profilePictureUtil;
   CloudStorageUtil cloudStorageUtil;
   TaskScheduler taskScheduler;
+  SessionManager sessionManager;
 
   // Obtain the service account credentials from the Google Developers Console by
   // creating new OAuth credentials of application type "Service account".
@@ -45,7 +50,7 @@ class App {
   // Console.
   final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
 
-  // Store the client authenticated for accessing Google APIs, which we instantiate below.
+  // Holds the client authenticated for accessing Google APIs, which we instantiate below.
   var googleApiClient;
 
   App() {
@@ -55,18 +60,27 @@ class App {
     // Define what routes we have.
     router = new Router(this)
       ..routes[Routes.home] = MainController.serveApp
-      ..routes[Routes.sayWelcome] = MainController.serveApp
       ..routes[Routes.showItem] = MainController.showItem
       ..routes[Routes.sayFoo] = HelloController.sayFoo
       ..routes[Routes.sayHello] = HelloController.sayHello
       ..routes[Routes.signInFacebook] = SignInController.facebook
-      ..routes[Routes.currentUser] = MainController.getCurrentUser
+      ..routes[Routes.currentUser] = SignInController.getCurrentUser
       ..routes[Routes.starred] = MainController.serveApp
       ..routes[Routes.people] = MainController.serveApp
-      ..routes[Routes.sendWelcome] = MainController.sendWelcomeEmail
-      ..routes[Routes.sendNotifications] = MainController.sendNotifications
+      ..routes[Routes.sendWelcome] = MailController.sendWelcomeEmail
+      ..routes[Routes.sendNotificationsForItem] = MailController.sendNotificationsForItem
+      ..routes[Routes.sendNotificationsForComment] = MailController.sendNotificationsForComment
+      ..routes[Routes.getUriPreview] = MainController.getUriPreview
       ..routes[Routes.generateDigest] = AdminController.generateDigest
-      ..routes[Routes.exportUsers] = AdminController.exportUsers;
+      ..routes[Routes.exportUsers] = AdminController.exportUsers
+      ..routes[Routes.addItem] = MainController.addItem
+      ..routes[Routes.addMessage] = MainController.addMessage
+      ..routes[Routes.signIn] = SignInController.signIn
+      ..routes[Routes.signOut] = SignInController.signOut
+      ..routes[Routes.createNewUser] = UserController.createNewUser
+      ..routes[Routes.confirmEmail] = MainController.confirmEmail
+      ..routes[Routes.sendConfirmEmail] = MailController.sendConfirmEmail
+      ..routes[Routes.inviteUserToChannel] = MailController.inviteUserToChannel;
 
     // Set up the virtual directory.
     virtualDirectory = new VirtualDirectory(config['server']['directory'])
@@ -77,6 +91,7 @@ class App {
     mailer = new Mailgun();
     profilePictureUtil = new ProfilePictureUtil(this);
     taskScheduler = new TaskScheduler(this);
+    sessionManager = new SessionManager();
 
     taskScheduler.run();
 
@@ -88,12 +103,14 @@ class App {
     // to request access for all scopes in `Scopes`.
     auth.clientViaServiceAccount(googleServiceAccountCredentials, googleApiScopes).then((client) {
       this.googleApiClient = client;
-      cloudStorageUtil = new CloudStorageUtil(this);
+      cloudStorageUtil = new CloudStorageUtil(googleApiClient);
     });
   }
 
   void onServerEstablished(HttpServer server) {
     print("Server started.");
+
+    server.sessionTimeout = new DateTime.now().add(new Duration(days: 365)).toUtc().millisecondsSinceEpoch*1000;
 
     server.listen((HttpRequest request) {
       // Some redirects if coming from related domains.
@@ -132,6 +149,19 @@ class App {
       } else {
         router.dispatch(request).then((response) {
           if (response is File) {
+
+
+            // When serving the app, pass along a session.
+            // First, check for an existing session cookie in the request.
+            // Note that we might have just added a new cookie to the request, e.g. in SignInController.
+            var sessionCookie = request.cookies.firstWhere((cookie) => cookie.name == 'session', orElse: () => null);
+
+            // If there's an existing session cookie, use it. Else, create a new session id.
+            String sessionId = (sessionCookie == null || sessionCookie.value == null) ? sessionManager.createSessionId() : sessionCookie.value;
+
+            // Save the session to a cookie, sent to the browser with the request.
+            sessionManager.addSessionCookieToRequest(request, sessionId);
+
             // A controller action responded with a File.
             virtualDirectory.serveFile(response, request);
           } else if (response is! NoMatchingRoute) {
@@ -142,7 +172,8 @@ class App {
 
               // If the action returned an instance of Response, then let's JSON encode it.
               // This is useful for AJAX and non-HTTP requests.
-              if (response is Response) response = response.encode();
+              // TODO: Temporary hack. We actually want to use (response is Response) instead.
+              if (response.runtimeType.toString() == 'Response') response = JSON.encode(response);
 
               // A controller action responded with some data.
               request.response.write(response);
@@ -153,10 +184,9 @@ class App {
             // If no matching route, first let's try to serve a file.
             new File(config['server']['directory'] + request.uri.path).exists().then((bool exists) {
               if (!exists) {
-                // File doesn't exist, so check if it's a community alias/
+                // File doesn't exist, so check if it's a community alias.
                 if (Uri.parse(request.uri.path).pathSegments.length > 0) {
-                  var alias;
-                  alias = Uri.parse(request.uri.path).pathSegments[0];
+                  var alias = Uri.parse(request.uri.path).pathSegments[0];
                   // Wait for the aliasExists future to complete.
                   Future checkIfAliasExists = aliasExists(alias);
                   checkIfAliasExists.then((res) {
@@ -171,7 +201,6 @@ class App {
                 }
               } else {
                 // File exists, so serve it.
-                print("Serve file");
                 serveFileBasedOnRequest(request);
               }
             });

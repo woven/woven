@@ -1,12 +1,41 @@
 <link rel="import" href="../../../../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_overlay.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_toolbar.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_input.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_animation.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_a11y_keys.html">
+<link rel="import" href="../../widgets/dialog/dialog.html">
 <polymer-element name="sign-in-dialog">
   <template>
-    <link rel="stylesheet" href="sign_in.css">
-    <core-overlay id="overlay" class="overlay" layered backdrop opened="false" transition="core-transition-center">
-      <span id="message">Please sign in to comment.</span>
-      <button class="signin-btn" id="facebook-signin" on-click="{{signInWithFacebook}}">Sign in with Facebook</button>
-    </core-overlay>
+    <x-dialog id="dialog-overlay" class="dialog" opened="{{opened}}"
+              autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}">
+      <core-toolbar center-justified>
+        <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
+        <div flex horizontal center-justified layout>
+          <div>Sign in</div>
+        </div>
+        <core-icon-button id="submit" icon="done" on-tap="{{submit}}" class="action"></core-icon-button>
+      </core-toolbar>
+      <div id="container">
+        <div id="content-container">
+          <p>Please sign in.</p>
+          <div class="field-wrapper first">
+            <input is="core-input" id="username" placeholder="Your username"
+                   autocomplete="off" autocorrect="off" autocapitalize="off">
+          </div>
+          <div class="field-wrapper">
+            <input is="core-input" id="password" placeholder="Your password"
+                   autocomplete="off" autocorrect="off" autocapitalize="off" type="password">
+          </div>
+          <br/>
+          <p><a on-tap="{{toggleSignUp}}">Create a new account</a></p>
+          <p><a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a></p>
+        </div>
+      </div>
+      <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
+    </x-dialog>
   </template>
   <script type="application/dart" src="sign_in.dart"></script>
 </polymer-element>

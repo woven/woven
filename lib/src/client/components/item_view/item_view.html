@@ -1,54 +1,160 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
+<link rel="import" href="../widgets/custom_icons/custom_icons.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
+<link rel="import" href="../widgets/uri_preview/uri_preview.html">
+<link rel="import" href="../user_picture/user_picture.html">
+
 <polymer-element name="item-view">
   <template>
     <link rel="stylesheet" href="item_view.css">
+    <custom-icons></custom-icons>
       <template if="{{item != null}}">
-        <div class="item-card">
-          <div class="content">
-            <div class="content-header">
-              <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</div>
-              <div>
-                <h1>{{item['subject']}}</h1>
-              </div>
-              <template if="{{app.selectedItem != null}}">
-                <div class="item-updated">
-                  <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-                  by
-                  <span class="item-users">{{item['user']}}</span>
+        <div class="item-wrapper {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
+          <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" data-id="{{item['id']}}">
+            <div class="item-container" vertical layout>
+              <div class="item-main-container" vertical layout>
+                <div class="content-header" vertical layout>
+                  <div horizontal layout>
+                    <div class="user-area">
+                      <user-picture app="{{app}}" username="{{item['user']}}"></user-picture>
+                    </div>
+                    <div class="info-area" layout vertical flex>
+                      <div class="item-info">
+                        <div><span class="item-user">{{item['usernameForDisplay']}}</span> <template if="{{item['type'] != null && item['type'] != 'message' && item['type'] != 'other'}}">posted {{formatWordArticle(item['type'].toString())}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></template></div>
+                        <!--<p id="body" class="item-body {{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>-->
+                        <div class="item-ago">
+                          <template if="{{item['createdDate'] != null}}">
+                            <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                          </template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </template>
-            </div>
-            <template if="{{item['startDateTime'] != null || item['url'] != null}}">
-              <div class="content-info">
-
-                    <template if="{{item['startDateTime'] != null}}">
-                      <div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div>
-                    </template>
-                    <template if="{{item['url'] != null}}">
-                      <div class="item-url"><a target="_blank" _href="{{item['url']}}">{{item['url']}}</a></div>
-                    </template>
-
+                <div class="content-main" vertical layout>
+                  <template if="{{item['message'] != null}}">
+                    <div class="item-message {{item['type'] != null && item['type'] != 'message' ? 'with-type' : ''}}">
+                      <safe-html>{{formatText(item['message'])}}</safe-html>
+                    </div>
+                  </template>
+                  <template if="{{item['type'] != 'message' && item['type'] != null}}">
+                    <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" data-id="{{item['id']}}">
+                      <div class="item-container" vertical layout>
+                        <div layout horizontal>
+                          <div class="content-main" vertical layout flex>
+                            <div class="item-subject first">{{item['subject']}}</div>
+                            <!--<p id="body" class="item-body {{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>-->
+                            <div class="item-body">
+                              <div class="event-date">
+                                <live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time>
+                              </div>
+                              <template if="{{item['body'] != null}}"><safe-html>{{getFormattedBody}}</safe-html></template>
+                            </div>
+                            <template if="{{item['uriPreviewId'] != null}}">
+                              <div class="item-url">
+                                <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}">
+                                  <core-icon-button icon="launch"
+                                                    class="link-button"
+                                                    data-id="{{item['id']}}">
+                                    <span>
+                                        {{item['uriHost']}}
+                                    </span>
+                                  </core-icon-button>
+                                </a>
+                              </div>
+                            </template>
+                          </div>
+                          <div class="item-photo-area">
+                            <div class="item-photo-wrapper">
+                              <template if="{{item['uriPreview']['imageSmallLocation'] != null}}">
+                                <core-image class="item-photo" sizing="cover" preload fade src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
+                              </template>
+                              <template if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
+                                <core-icon class="item-photo-icon-none" icon="{{item['defaultImage']}}"></core-icon>
+                              </template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </core-item>
+                  </template>
+                </div>
               </div>
-            </template>
-            <div class="content-main">
-              <div>
-                <p id="body" class="{{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>
+              <div class="content-footer">
+                <div class="item-col1" horizontal layout>
+                  <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+                                    on-tap="{{toggleLike}}"
+                                    class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
+                                    data-id="{{item['id']}}"><span>{{item['like_count']}}</span>
+                    <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
+                  </core-icon-button>
+                  <core-icon-button icon="communication:comment"
+                                    class="action-button comment-button"
+                                    data-id="{{item['id']}}">
+                <span>
+                  <template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Comment</strong></template>
+                  <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
+                  <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
+                </span>
+                    <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
+                  </core-icon-button>
+                </div>
               </div>
             </div>
-          </div>
-          <div id="content-footer">
-            <div class="item-col1" horizontal layout>
-              <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                         id="icon-fav" on-click="{{toggleLike}}"
-                         class="like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
-                         data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
-                <!--<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>-->
-              </core-icon-button>
-            </div>
-          </div>
+          </core-item>
+          <!--<div class="item">-->
+            <!--<div class="content">-->
+              <!--<div class="content-header" vertical layout>-->
+                <!--<div class="info-area" horizontal layout>-->
+                  <!--<div class="user-area">-->
+                    <!--<user-picture app="{{app}}" user="{{item['user']}}"></user-picture>-->
+                  <!--</div>-->
+                  <!--<div class="info-area" layout vertical flex>-->
+                    <!--<div class="item-info">-->
+                      <!--<div><span class="item-user">{{item['user']}}</span> posted {{formatWordArticle(item['type'])}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></div>-->
+                      <!--<div class="item-ago">-->
+                        <!--<template if="{{item['createdDate'] != null}}">-->
+                          <!--<live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>-->
+                        <!--</template>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<h1 class="item-subject">{{item['subject']}}</h1>-->
+              <!--</div>-->
+              <!--<template if="{{item['startDateTime'] != null || item['url'] != null}}">-->
+                <!--<div class="content-info">-->
+                      <!--<template if="{{item['startDateTime'] != null}}">-->
+                        <!--<div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div>-->
+                      <!--</template>-->
+                      <!--<template if="{{item['url'] != null}}">-->
+                        <!--<div class="item-url"><a target="_blank" _href="{{item['url']}}">{{item['url']}}</a></div>-->
+                      <!--</template>-->
+                <!--</div>-->
+              <!--</template>-->
+              <!--<div class="content-main">-->
+                <!--<div>-->
+                  <!--<p id="body" class="item-body {{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>-->
+                <!--</div>-->
+                <!--<template if="{{item['uriPreviewId'] != null}}">-->
+                  <!--<uri-preview previewid="{{item['uriPreviewId']}}"></uri-preview>-->
+                <!--</template>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="content-footer">-->
+              <!--<div class="item-col1" horizontal layout>-->
+                <!--<core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"-->
+                           <!--id="icon-fav" on-click="{{toggleLike}}"-->
+                           <!--class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"-->
+                           <!--data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>-->
+                  <!--&lt;!&ndash;<span class="button-text">{{app.user != null && item['liked'] == true ? 'Liked' : 'Like'}}</span>&ndash;&gt;-->
+                <!--</core-icon-button>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
         </div>
       </template>
   </template>

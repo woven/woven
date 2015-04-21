@@ -1,0 +1,18 @@
+<link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../chat_list/chat_list.html">
+<link rel="import" href="../chat_box/chat_box.html">
+
+<polymer-element name="chat-view">
+  <template>
+    <link rel="stylesheet" href="chat_view.css">
+    <div layout vertical fit>
+      <div class="main-area" id="scroller" flex>
+        <chat-list app="{{app}}" viewModel="{{viewModel}}"></chat-list>
+      </div>
+      <div class="footer-area">
+        <chat-box app="{{app}}" viewModel="{{viewModel}}"></chat-box>
+      </div>
+    </div>
+  </template>
+  <script type="application/dart" src="chat_view.dart"></script>
+</polymer-element>

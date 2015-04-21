@@ -9,13 +9,23 @@ class Routes {
   static final showItem = new UrlPattern(r'/item/(.+)');
   static final signInFacebook = new UrlPattern(r'/signin/facebook');
   static final currentUser = new UrlPattern(r'/currentuser');
-  static final sayWelcome = new UrlPattern(r'/welcome');
   static final starred = new UrlPattern(r'/saved');
   static final people = new UrlPattern(r'/people');
+  static final communityPeople = new UrlPattern(r'(.+)/people');
   static final sendWelcome = new UrlPattern(r'/sendwelcome');
-  static final sendNotifications = new UrlPattern(r'/x/sendnotifications');
+  static final sendNotificationsForItem = new UrlPattern(r'/_notifyforitem');
+  static final sendNotificationsForComment = new UrlPattern(r'/_notifyforcomment');
+  static final getUriPreview = new UrlPattern(r'/_geturipreview');
+  static final addItem = new UrlPattern(r'/_additem');
+  static final addMessage = new UrlPattern(r'/_addmessage');
   static final generateDigest = new UrlPattern(r'/admin/generatedigest');
   static final exportUsers = new UrlPattern(r'/admin/exportusers');
+  static final signIn = new UrlPattern(r'/_signin');
+  static final signOut = new UrlPattern(r'/_signout');
+  static final createNewUser = new UrlPattern(r'/_createnewuser');
+  static final sendConfirmEmail = new UrlPattern(r'/_sendconfirmemail');
+  static final confirmEmail = new UrlPattern(r'/confirm/(.+)');
+  static final inviteUserToChannel = new UrlPattern(r'/_inviteusertochannel');
 }
 
 class NoMatchingRoute {}

@@ -1,0 +1,36 @@
+<link rel="import" href="../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_field.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_a11y_keys.html">
+<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
+<link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
+<link rel="import" href="../user_picture/user_picture.html">
+
+<polymer-element name="chat-box">
+  <template>
+    <link rel="stylesheet" href="chat_box.css">
+    <div id="post-container" layout horizontal class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
+        <template if="{{app.user != null}}">
+          <div class="user-area">
+            <user-picture app="{{app}}" username="{{app.user.username.toLowerCase()}}"></user-picture>
+          </div>
+          <div id="message-box" class="field-wrapper full-height" flex>
+            <paper-autogrow-textarea
+                maxRows="7"
+                id="comment"
+                autocomplete="off">
+              <textarea id="comment-textarea" placeholder="Say something..." type="submit"
+                        on-focus="{{onFocusHandler}}"
+                        on-blur="{{onBlurHandler}}"></textarea>
+            </paper-autogrow-textarea>
+          </div>
+          <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
+        </template>
+        <template if="{{app.user == null}}">
+          <div class="message" self-center flex><template if="{{!app.isMobile}}">Please sign in to participate.</template></div>
+          <button class="button-sign-in" self-center on-tap="{{toggleSignIn}}">Sign in</button>
+        </template>
+    </div>
+  </template>
+  <script type="application/dart" src="chat_box.dart"></script>
+</polymer-element>

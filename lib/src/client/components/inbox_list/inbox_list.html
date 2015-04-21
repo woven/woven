@@ -3,136 +3,29 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../widgets/uri_preview/uri_preview.html">
+<link rel="import" href="../user_picture/user_picture.html">
+<link rel="import" href="../item/item.html">
 <polymer-element name="inbox-list">
   <template>
     <link rel="stylesheet" href="inbox_list.css">
-    <div id="content-container">
-      <!--<core-list-dart id="list" data="{{data}}" height="80">-->
-        <!--<template>-->
-          <!--<core-item class="item" on-click="{{selectItem}}" data-id="{{id}}">-->
-            <!--<div class="item-container" horizontal layout>-->
-              <!--<div class="item-col1" vertical layout>-->
-                <!--<core-icon icon="{{app.user != null && liked == true ? 'favorite' : 'favorite-outline'}}"-->
-                           <!--id="icon-fav" on-click="{{toggleLike}}"-->
-                           <!--class="{{app.user != null && liked == true ? 'selected' : ''}}"-->
-                           <!--data-id="{{id}}"></core-icon>-->
-                <!--<span class="item-count">{{like_count}}</span>-->
-                <!--<core-icon icon="{{app.user != null && starred == true ? 'star' : 'star-outline'}}"-->
-                           <!--id="icon-star" on-click="{{toggleStar}}"-->
-                           <!--class="{{app.user != null && starred == true ? 'selected' : ''}}"-->
-                           <!--data-id="{{id}}"></core-icon>-->
-                <!--<span class="item-count">{{star_count]}}</span>-->
-              <!--</div>-->
-              <!--<div class="item-col2" flex>-->
-                <!--<div class="item-type">{{(type != null) ? type : 'other'}}</div>-->
-                <!--<div class="item-subject">{{subject}}</div>-->
-                <!--<div class="item-body" flex><div class="event-date"><live-date-time value="{{startDateTime}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>-->
-              <!--</div>-->
-              <!--<div class="item-col3">-->
-                <!--<div class="item-users">{{user}}</div>-->
-                <!--<div class="item-updated">-->
-                  <!--<live-date-time value="{{updatedDate}}" formatter="{{formatItemDate}}"></live-date-time>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</core-item>-->
-        <!--</template>-->
-      <!--</core-list-dart>-->
+    <div id="content-container" class="{{viewModel.typeFilter != null ? 'compact' : null}} {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <template if="{{viewModel.typeFilter == 'event'}}">
         <template repeat="{{groupDate in viewModel.groupedItems.keys}}">
         <div class="date-group-header">{{groupDate}}</div>
         <template repeat="{{item in viewModel.groupedItems[groupDate]}}">
-          <div class="item-wrapper">
-            <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-tap="{{selectItem}}" data-id="{{item['id']}}">
-              <div class="item-container" horizontal layout>
-                <div class="item-col1" vertical center layout>
-                  <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                             id="icon-fav" on-tap="{{toggleLike}}"
-                             class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
-                             data-id="{{item['id']}}"></core-icon>
-                  <span class="item-count">{{item['like_count']}}</span>
-                </div>
-                <div class="item-col2" flex>
-                  <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
-                  <div class="item-subject">{{item['subject']}}</div>
-                  <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
-                  <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">
-                    <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
-                    <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
-                    <!--<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}">Add a comment</template>-->
-                  </div>
-                </div>
-                <div class="item-col3">
-                  <div class="item-updated">
-                    <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-                    <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
-                    <!--id="icon-star" on-click="{{toggleStar}}"-->
-                    <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
-                    <!--data-id="{{item['id']}}"></core-icon>-->
-                    <!--<span class="item-count">{{item['star_count']}}</span>-->
-                  </div>
-                  <!--<div class="item-star">-->
-                  <!--&lt;!&ndash;<core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">&ndash;&gt;-->
-                  <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
-                  <!--id="icon-star" on-tap="{{toggleStar}}"-->
-                  <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
-                  <!--data-id="{{item['id']}}"></core-icon>-->
-                  <!--&lt;!&ndash;</core-tooltip>&ndash;&gt;-->
-                  <!--</div>-->
-                </div>
-              </div>
-            </core-item>
-          </div>
+          <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>
         </template>
       </template>
     </template>
     <template if="{{viewModel.typeFilter != 'event'}}">
       <template repeat="{{item in viewModel.items}}">
-        <div class="item-wrapper">
-        <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}}" on-tap="{{selectItem}}" data-id="{{item['id']}}">
-          <div class="item-container" horizontal layout>
-            <div class="item-col1" vertical center layout>
-              <core-icon icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
-                         id="icon-fav" on-tap="{{toggleLike}}"
-                         class="{{app.user != null && item['liked'] == true ? 'selected' : ''}}"
-                         data-id="{{item['id']}}"></core-icon>
-              <span class="item-count">{{item['like_count']}}</span>
-            </div>
-            <div class="item-col2" flex>
-              <div class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}} <span class="item-users">posted by <strong>{{item['user']}}</strong></span></div>
-              <div class="item-subject">{{item['subject']}}</div>
-              <div class="item-body" flex><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div> {{item['body']}}</div>
-              <div class="item-actions {{(item['type'] != null) ? item['type'] : 'other'}}">
-                <template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>
-                <template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>
-                <!--<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}">Add a comment</template>-->
-              </div>
-            </div>
-            <div class="item-col3">
-              <div class="item-updated">
-              <live-date-time value="{{item['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-                <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
-                           <!--id="icon-star" on-click="{{toggleStar}}"-->
-                           <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
-                           <!--data-id="{{item['id']}}"></core-icon>-->
-                <!--<span class="item-count">{{item['star_count']}}</span>-->
-              </div>
-              <!--<div class="item-star">-->
-                <!--&lt;!&ndash;<core-tooltip label="{{app.user != null && item['starred'] == true ? 'Unsave' : 'Save'}}" position="left" role="tooltip" tabindex="0">&ndash;&gt;-->
-                  <!--<core-icon icon="{{app.user != null && item['starred'] == true ? 'star' : 'star-outline'}}"-->
-                             <!--id="icon-star" on-tap="{{toggleStar}}"-->
-                             <!--class="{{app.user != null && item['starred'] == true ? 'selected' : ''}}"-->
-                             <!--data-id="{{item['id']}}"></core-icon>-->
-                <!--&lt;!&ndash;</core-tooltip>&ndash;&gt;-->
-              <!--</div>-->
-            </div>
-          </div>
-        </core-item>
-        </div>
+        <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>
       </template>
     </template>
     <template if="{{viewModel.reachedEnd == false}}"><div id="loading-indicator">Fetching...</div></template>
     <template if="{{viewModel.reachedEnd == true}}"><div id="loading-indicator">You've reached the end of this universe.</div></template>
+      <!--<template if="{{viewModel.count <= viewModel.pageSize}}"><div id="loading-indicator">You've reached the end of this universe.</div></template>-->
     </div>
   </template>
   <script type="application/dart" src="inbox_list.dart"></script>

@@ -1,172 +1,165 @@
 library application;
 
 import 'package:polymer/polymer.dart';
-import 'package:core_elements/core_animation.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'dart:html';
 import 'dart:async';
-import 'dart:js' as js;
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
-import 'dart:convert';
-import 'package:firebase/firebase.dart' as db;
+import 'package:firebase/firebase.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/client/components/page/woven_app/woven_app.dart';
 import 'package:woven/src/client/view_model/main.dart';
-import 'package:woven/src/client/view_model/feed.dart';
 import 'package:core_elements/core_header_panel.dart';
+import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
+import 'cache.dart';
+import 'util.dart';
 
 class App extends Observable {
-  @observable var selectedItem;
-  @observable var selectedPage;
-  @observable var previousPage = null;
   @observable String pageTitle = "";
   @observable UserModel user;
   @observable CommunityModel community;
   @observable bool hasTriedLoadingUser = false;
-  @observable bool showHomePage = false;
+  @observable bool showHomePage = true;
+  @observable var homePageCta = 'sign-up';
   @observable bool skippedHomePage = false;
+  DateTime timeOfLastFocus = new DateTime.now().toUtc();
+  bool isFocused = true;
+  bool debugMode;
+  List reservedPaths = ['people', 'events', 'item', 'confirm'];
 //  @observable bool isNewUser = false;
+
   Router router;
   MainViewModel mainViewModel;
+  Cache cache;
+  String authToken;
+  String sessionId;
+  Firebase f;
+  String cloudStoragePath;
 
   App() {
+    f = new Firebase(config['datastore']['firebaseLocation']);
+    cloudStoragePath = config['google']['cloudStoragePath'];
+
     mainViewModel = new MainViewModel(this);
+    cache = new Cache();
+    sessionId = readCookie('session');
+    debugMode = (config['debug_mode'] != null ? config['debug_mode'] : false);
 
-    void home(String path) {
-      // Home goes to the community list for now.
-      selectedPage = 4;
-      community = null;
-      if (user == null && hasTriedLoadingUser && !skippedHomePage) showHomePage = true;
-//      print('''
-//      hasTriedLoadingUser: $hasTriedLoadingUser
-//      skippedHomePage: $skippedHomePage
-//      showHomePage: $showHomePage
-//      ''');
-    }
+    // Track when app gets focus.
+    window.onFocus.listen((_) {
+      this.isFocused = true;
+    });
 
-    void welcome(String path) {
-      selectedPage = 4;
-    }
+    // Track when app loses focus.
+    window.onBlur.listen((_) {
+      this.isFocused = false;
+      this.timeOfLastFocus = new DateTime.now().toUtc();
+    });
 
-    void starred(String path) {
-      selectedPage = 2;
-      pageTitle = "Starred";
-    }
-
-    void people(String path) {
-      selectedPage = 3;
-    }
-
-    // We're using this as a kind of placeholder for variable routes.
-    void notFound(String path) {
-      pageTitle = "Everything";
-      var pathUri = Uri.parse(path);
-      if (pathUri.pathSegments.length == 1) {
-        selectedPage = 0;
-      } else {
-//        print(pathUri.pathSegments[1]);
-        // If we're at <community>/<something>, see if <something> is a valid page.
-        switch (pathUri.pathSegments[1]) {
-          case 'people':
-            selectedPage = 3;
-            break;
-          case 'events':
-            pageTitle = "Events";
-            selectedPage = 5;
-            break;
-          case 'announcements':
-            pageTitle = "Announcements";
-            selectedPage = 6;
-            break;
-          default:
-//            selectedPage = 0;
-            print('404: ' + path);
-        }
-      }
-    }
-
-    void showItem(String path) {
-      selectedPage = 1;
-    }
-
-    void globalHandler(String path) {
-      print("Global handler fired at: $path");
-
-      /* TODO: Things like G tracking could be handled here. */
-//      if (js.context['_gaq'] != null) {
-//        js.context._gaq.push(js.array(['_trackPageview', path]));
-//        js.context._gaq.push(js.array(['b._trackPageview', path]));
-//      }
-
-    }
-
+    // Set up the router.
     router = new Router()
-    // Every route has to be registered... but if you don't need a handler, pass null.
+    // Every route has to be registered... but if we don't need a handler, pass null.
       ..routes[Routes.home] = home
       ..routes[Routes.starred] = starred
       ..routes[Routes.people] = people
-      ..routes[Routes.sayWelcome] = welcome
-//      ..routes[Routes.anyAlias] = home
-      ..routes[Routes.showItem] = showItem;
+      ..routes[Routes.showItem] = showItem
+      ..routes[Routes.confirmEmail] = home;
 
     router.onNotFound.listen(notFound);
     router.onDispatch.listen(globalHandler);
 
+    // On load, check to see if there's a community in the URL.
     // Use the first part of the path as the alias.
     var path = window.location.toString();
-    if (Uri.parse(path).pathSegments.length > 0) {
+    if (Uri.parse(path).pathSegments.length > 0 && !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
       String alias = Uri.parse(path).pathSegments[0];
-
-      // Get the community instance.
-      var f = new db.Firebase(config['datastore']['firebaseLocation'] + '/communities/' + alias);
-
-      f.onValue.first.then((e) {
-        var communityData = e.snapshot.val();
-
-        if (communityData != null) {
-          community = new CommunityModel()
-            ..createdDate = communityData['createdDate']
-            ..alias = communityData['alias']
-            ..name = communityData['name']
-            ..shortDescription = communityData['shortDescription'];
-        }
-
+      f.child('/communities/$alias').once('value').then((res) {
+        if (res == null) return;
+        // If so, create a community object and add it to our cache.
+        community = CommunityModel.fromJson(res.val());
+        cache.communities[alias] = community;
       });
     }
   }
 
-   @observable bool get isMobile {
-    if (isMobile == null) {
-      //http://stackoverflow.com/questions/11381673/javascript-solution-to-detect-mobile-browser
-      var a = window.navigator.userAgent;
-
-      if (window.screen.width < 640 ||
-      a.contains('Android') ||
-      a.contains('webOS') ||
-      a.contains('iPhone') ||
-      a.contains('iPad') ||
-      a.contains('iPod') ||
-      a.contains('BlackBerry') ||
-      a.contains('Windows Phone')
-      ) {
-        isMobile = true;
-      } else {
-        isMobile = false;
-      }
-    }
-
-    return isMobile;
+  void home(String path) {
+    // Home goes to the community list for now.
+    router.selectedPage = 'channels';
+    changeCommunity(null);
+    if (hasTriedLoadingUser && user == null && !skippedHomePage) showHomePage = true;
   }
 
-  set isMobile(bool value) => isMobile = value;
+  void starred(String path) {
+    router.selectedPage = 'starred';
+    pageTitle = "Starred";
+  }
+
+  void people(String path) {
+    router.selectedPage = 'people';
+  }
+
+  // We're using this as a kind of placeholder for various routes.
+  void notFound(String path) {
+    var pathUri = Uri.parse(path);
+    if (pathUri.pathSegments.length > 0) showHomePage = false;
+    if (pathUri.pathSegments.length > 0 && !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
+      String alias = Uri.parse(path).pathSegments[0];
+      // Check the app cache for the community.
+      changeCommunity(alias).then((bool success) {
+        if (pathUri.pathSegments.length == 1) {
+          router.selectedPage = 'lobby';
+        } else {
+          // If we're at <community>/<something>, see if <something> is a valid page.
+          switch (pathUri.pathSegments[1]) {
+            case 'people':
+              pageTitle = "People";
+              router.selectedPage = 'people';
+              break;
+            case 'events':
+              pageTitle = 'Events';
+              router.selectedPage = 'events';
+              break;
+            case 'feed':
+              pageTitle = 'Feed';
+              router.selectedPage = 'feed';
+              break;
+            case 'announcements':
+              pageTitle = 'Announcements';
+              router.selectedPage = 'announcements';
+              break;
+            default:
+              pageTitle = "default";
+              print('404: ' + path);
+          }
+        }
+      });
+    }
+  }
+
+  void showItem(String path) {
+//    router.previousPage = router.selectedPage;
+    router.selectedPage = 'item';
+  }
+
+  void globalHandler(String path) {
+    if (router.selectedPage != 'channels') showHomePage = false;
+
+    if (this.debugMode) print("Global handler fired at: $path");
+
+    /* TODO: Things like G tracking could be handled here. */
+//      if (js.context['_gaq'] != null) {
+//        js.context._gaq.push(js.array(['_trackPageview', path]));
+//        js.context._gaq.push(js.array(['b._trackPageview', path]));
+//      }
+  }
 
   /**
    * Get the main scrolling element on app.
    */
   HtmlElement get scroller {
+    //TODO: Get this working for chat view, which has its own scroller.
     CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
     HtmlElement scroller = el.scroller;
     return scroller;
@@ -185,14 +178,66 @@ class App extends Observable {
     }
   }
 
+  void getUpdatedViewModels() {
+    //
+  }
+
+  /**
+   * Change the community.
+   *
+   * Set the community to null so we trigger an re-attach
+   * for certain components that need to refresh their view model.
+   */
+  Future<bool> changeCommunity(String alias) {
+    if (community != null && community.alias == alias) return new Future.value(true);
+
+    if (alias == null) {
+      community = null;
+      return new Future.value(true);
+    }
+
+    // Check the app cache for the community...
+    if (cache.communities.containsKey(alias)) {
+      community = null;
+      Timer.run(() => community = cache.communities[alias]);
+    } else {
+      // ...or query for the community.
+      return f.child('/communities/$alias').once('value').then((res) {
+        if (res == null) return false;
+        cache.communities[alias] = CommunityModel.fromJson(res.val());
+        community = null;
+        Timer.run(() => community = cache.communities[alias]);
+        return true;
+      });
+    }
+    return new Future.value(true);
+  }
+
   void showMessage(String message, [String severity]) {
     PaperToast toastElement = document.querySelector('woven-app').shadowRoot.querySelector('#toast-message');
-//    PaperToast toastElement = document.querySelector('woven-app::shadow #toast-message');
-    if (severity == "important") {
-      toastElement.classes.add("important");
-    }
-    toastElement.text = "$message";
-    toastElement.show();
+
+    if (toastElement == null) return;
+
+    if (toastElement.opened) toastElement.opened = false;
+
+    new Timer(new Duration(milliseconds: 300), () {
+      if (severity == "important") {
+        toastElement.classes.add("important");
+      } else {
+        toastElement.classes.remove("important");
+      }
+
+      toastElement.text = "$message";
+      toastElement.show();
+    });
+  }
+
+  /**
+   * Toggle the sign in dialog.
+   */
+  toggleSignIn() {
+    SignInDialog signInDialog = document.querySelector('woven-app').shadowRoot.querySelector('sign-in-dialog');
+    signInDialog.toggleOverlay();
   }
 
   void signInWithFacebook() {
@@ -206,9 +251,25 @@ class App extends Observable {
     window.location.assign(signInUrl);
   }
 
-  void signInWithEmail() {
-//    var signInUrl = 'https://www.facebook.com/dialog/oauth/?client_id=$appId&redirect_uri=$url&scope=email';
-//    window.location.assign(signInUrl);
-  }
+  @observable bool get isMobile {
+    //http://stackoverflow.com/questions/11381673/javascript-solution-to-detect-mobile-browser
+    var a = window.navigator.userAgent;
+    bool _isMobile;
 
+    if (window.screen.width < 640 ||
+    a.contains('Android') ||
+    a.contains('webOS') ||
+    a.contains('iPhone') ||
+    a.contains('iPad') ||
+    a.contains('iPod') ||
+    a.contains('BlackBerry') ||
+    a.contains('Windows Phone')
+    ) {
+      _isMobile = true;
+    } else {
+      _isMobile = false;
+    }
+
+    return _isMobile;
+  }
 }

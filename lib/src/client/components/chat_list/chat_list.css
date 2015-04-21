@@ -1,0 +1,166 @@
+
+
+.activity-card {
+  background-color: #fff;
+  margin: 0 auto 10px auto;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+  transition: background-color 2s;
+  font-size: 15px;
+  color: #2d2d2d;
+}
+
+.theme-dark .activity-card {
+  background-color: rgb(45, 45, 45);
+  color: white;
+  border: none;
+}
+
+:host-context(.no-transition) .activity-card {
+  transition: none;
+}
+
+.activity-card #content {
+  padding: 10px 10px 3px 10px;
+  white-space: inherit;
+  word-wrap: break-word;
+  line-height: 18px;
+}
+
+.activity-card #content p.not-delivered {
+  color: gray;
+}
+
+
+.activity-card .card-top {
+  margin-bottom: 2px;
+}
+
+.activity-card.highlight {
+  background-color: #FFEDC2;
+  transition: background-color 1s;
+}
+
+.theme-dark .activity-card.highlight {
+  background-color: #28402c;
+}
+
+.activity-card.notification {
+  background-color: transparent;
+  border: none;
+  padding-top: 5px;
+}
+
+.message.notification {
+  font-weight: normal;
+  color: #2FA300;
+}
+
+.user-area {
+  margin-right: 10px;
+}
+
+user-picture::shadow .user-photo {
+  position:relative;
+  top:1px;
+}
+
+.user {
+  font-size: 15px;
+  color: #444;
+  font-weight: bold;
+}
+
+.theme-dark .user {
+  color: #666;
+}
+
+.date-time {
+  color: #666;
+  font-size: 13px;
+}
+
+.theme-dark .date-time {
+  color: #666;
+}
+
+#activity-wrapper {
+  margin: 20px;
+}
+
+.loading-area {
+  text-align: center;
+  width: 100%;
+  font-size: 15px;
+  font-family: inherit;
+  color: #666;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.loading-area a {
+  cursor: pointer;
+  color: royalblue;
+}
+
+.loading-area a:hover {
+  color: #0061BB;
+}
+
+linkify-text::shadow a {
+  text-decoration: none;
+  color: rgb(34, 110, 223);
+}
+
+linkify-text::shadow a.internal,
+linkify-text::shadow a.internal:visited {
+  color: #2FA300;
+}
+
+.notification linkify-text::shadow a.internal,
+linkify-text::shadow a.internal:visited,
+.notification a.internal,
+.notification a.internal:visited {
+  text-decoration: none;
+  color: rgb(245, 108, 0);
+}
+
+linkify-text::shadow a:hover,
+.notification a:hover, {
+  text-decoration: underline;
+}
+
+linkify-text::shadow a:visited:not(.internal) {
+  color: #8055C8;
+}
+
+.theme-dark linkify-text::shadow a:visited:not(.internal) {
+  color: #8055C8;
+}
+
+linkify-text::shadow .mention {
+  color: rgb(245, 108, 0);
+}
+
+safe-html::shadow .mention {
+  color: rgb(245, 108, 0);
+}
+
+.no-photo {
+  width: 40px;
+  height: 40px;
+}
+
+@media all and (max-width: 800px)  {
+  #post-container {
+    margin: 10px;
+  }
+  #activity-wrapper {
+    margin: 10px;
+  }
+
+  .activity-card {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

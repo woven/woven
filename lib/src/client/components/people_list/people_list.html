@@ -2,23 +2,24 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_item.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
+<link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="people-list">
   <template>
     <link rel="stylesheet" href="people_list.css">
-    <div id="content-container">
+    <div id="content-container" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <template repeat="{{user in viewModel.users}}">
         <core-item class="item" on-tap="{{selectUser}}" data-user="{{user['username']}}">
           <div class="item-container" horizontal layout>
             <div class="item-col1" vertical layout>
               <div class="user-photo">
                 <template if="{{user['picture'] != null}}">
-                  <img _src="{{user['picture']}}">
+                  <user-picture app="{{app}}" username="{{user['username'].toLowerCase()}}"></user-picture>
                 </template>
               </div>
             </div>
             <div class="item-col2" flex>
-              <div class="user-username">{{ user['username'] }}</div>
-              <div class="user-name" flex>{{ user['firstName'] }} {{ user['lastName'] }}</div>
+              <div class="user-username">{{user['username']}}</div>
+              <div class="user-name" flex>{{user['firstName']}} {{user['lastName']}}</div>
             </div>
             <div class="item-col3">
               <div class="item-updated">

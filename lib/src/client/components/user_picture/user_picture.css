@@ -1,10 +1,21 @@
-.user-photo {
-  width:50px;
-  height:50px;
+.user-photo core-image {
+  width: 40px;
+  height: 40px;
   background: #F5F5F5;
-  border: solid 1px #E6E6E6;
+  border-radius: 2px;
+}
+
+.user-photo.theme-dark core-image {
+  background: #2d2d2d;
+}
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  background: #F5F5F5;
+  /*border: solid 1px #E6E6E6;*/
   overflow:hidden;
-  border-radius: 3px;
+  border-radius: 2px;
 
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -18,9 +29,9 @@
   user-select: none;
 }
 
-.user-photo img {
-  width: 50px;
-  height: 50px;
+.user-photo.theme-dark  {
+  background: #2d2d2d;
+  border: none;
 }
 
 .user {

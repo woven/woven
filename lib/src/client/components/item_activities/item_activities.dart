@@ -8,7 +8,9 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/uri_policy.dart';
 import 'package:woven/src/shared/shared_util.dart';
-import 'package:core_elements/core_input.dart';
+import 'package:woven/src/client/model/user.dart';
+
+import 'package:paper_elements/paper_autogrow_textarea.dart';
 import 'package:core_elements/core_a11y_keys.dart';
 
 
@@ -16,9 +18,8 @@ import 'package:core_elements/core_a11y_keys.dart';
 class ItemActivities extends PolymerElement {
   @published App app;
   @observable List comments = toObservable([]);
-  @observable Map theData = toObservable({}); // We'll bind the form data to this.
 
-  final f = new db.Firebase(config['datastore']['firebaseLocation']);
+  db.Firebase get f => app.f;
 
   //TODO: Further explore this ViewModel stuff.
   //@observable ActivityCommentModel activity = new ActivityCommentModel();
@@ -30,39 +31,40 @@ class ItemActivities extends PolymerElement {
 
   Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('item-activities');
 
+  TextAreaElement get textarea => elRoot.shadowRoot.querySelector('#comment-textarea');
+
   /**
    * Get the activities for this item.
    */
   getActivities() {
     var itemId;
+    print('debug: ${app.router.selectedItem}');
     // If there's no app.selectedItem, we probably
     // came here directly, so let's use itemId from the URL.
-    if (app.selectedItem == null) {
+    if (app.router.selectedItem == null) {
       // Decode the base64 URL and determine the item.
       var encodedItemId = Uri.parse(window.location.toString()).pathSegments[1];
-      itemId = hashDecode(encodedItemId);
+      itemId = base64Decode(encodedItemId);
+      print('debug2');
     } else {
-      itemId = app.selectedItem['id'];
+      itemId = app.router.selectedItem['id'];
     }
 
     var commentsRef = f.child('/items/' + itemId + '/activities/comments');
     commentsRef.onChildAdded.listen((e) {
       var comment = e.snapshot.val();
       comment['createdDate'] = DateTime.parse(comment['createdDate']);
-      comment['id'] = e.snapshot.name;
+      comment['id'] = e.snapshot.key;
 
-      f.child('/users/' + comment['user']).once('value').then((snapshot) {
-        Map user = snapshot.val();
-        if (user == null) return;
-        if (user['picture'] != null) {
-          comment['user_picture'] = "${config['google']['cloudStoragePath']}/${user['picture']}";
-        } else {
-          comment['user_picture'] = null;
-        }
-      }).then((e) {
+      // Make sure we're using the collapsed username.
+      comment['user'] = (comment['user'] as String).toLowerCase();
+
+      UserModel.usernameForDisplay(comment['user'], f, app.cache).then((String usernameForDisplay) {
+        comment['usernameForDisplay'] = usernameForDisplay;
+
         // Insert each new item at top of list so the list is ascending.
         comments.insert(0, comment);
-        comments.sort((m1, m2) => m2["createdDate"].compareTo(m1["createdDate"]));
+        comments.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
       });
     });
   }
@@ -79,49 +81,30 @@ class ItemActivities extends PolymerElement {
   }
 
   /**
-   * Grow and shrink the comment.
-   *
-   * Responds to key-press event.
-   */
-  resizeCommentInput(Event e, detail, CoreInput target) {
-    e.stopPropagation();
-
-    Element textarea = target.shadowRoot.querySelector("textarea");
-
-    // Reset height on every press, so we can get true scrollHeight below.
-    textarea.style.height = "0px";
-
-    // We set this here, as it's not reading it properly from CSS.
-    target.style.lineHeight = "16px";
-
-    // Parse the textarea's height as an int so we can play w/ it.
-    var elHeight = textarea.clientHeight;
-
-    if (textarea.scrollHeight > elHeight) elHeight = textarea.scrollHeight;
-    textarea.style.height = "${elHeight}px";
-  }
-
-  /**
    * Handle focus of the comment input.
    */
-  onFocusHandler(Event e, detail, CoreInput target) {
-    elRoot.shadowRoot.querySelector("footer").style.display = "block";
-    elRoot.shadowRoot.querySelector("#comment-message").style.opacity = "1";
+  onFocusHandler(Event e, detail, Element target) {
+//    elRoot.shadowRoot.querySelector("#footer").style.display = "block";
+//    elRoot.shadowRoot.querySelector("#comment-message").style.opacity = "1";
 
     CoreA11yKeys a11y = elRoot.shadowRoot.querySelector('#a11y-send');
-    a11y.target = elRoot.shadowRoot.querySelector('#comment-send-button');
+    a11y.target = elRoot.shadowRoot.querySelector('#comment-textarea');
   }
 
-  onBlurHandler(Event e, detail, CoreInput target) {
+  onBlurHandler(Event e, detail, Element target) {
     //
   }
 
   resetCommentInput() {
-    CoreInput commentInput = elRoot.shadowRoot.querySelector('#comment');
-    commentInput.focus();
-    Element textarea = commentInput.shadowRoot.querySelector("textarea");
-    textarea.style.height = "16px";
-    theData['comment'] = "";
+    PaperAutogrowTextarea commentInput = elRoot.shadowRoot.querySelector('#comment');
+    TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
+    textarea.value = "";
+    textarea.focus();
+    commentInput.update();
+  }
+
+  debugKeys() {
+    print("Woooot!");
   }
 
   /**
@@ -130,22 +113,21 @@ class ItemActivities extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    String comment = theData['comment'];
-    comment = comment.trim();
-
-    if (comment == "") {
-      window.alert("Your comment is empty.");
+    TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
+    String comment = textarea.value;
+    if (comment.trim() == "") {
+//      window.alert("Your comment is empty.");
       resetCommentInput();
-      return false;
+      return;
     }
 
-    var itemId = app.selectedItem['id'];
+    var itemId = app.router.selectedItem['id'];
 
     DateTime now = new DateTime.now().toUtc();
 
     // Save the comment
     var id = f.child('/items/' + itemId + '/activities/comments').push();
-    var commentJson =  {'user': app.user.username, 'comment': comment, 'createdDate': '$now'};
+    var commentJson =  {'user': app.user.username.toLowerCase(), 'comment': comment, 'createdDate': '$now'};
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
@@ -232,9 +214,9 @@ class ItemActivities extends PolymerElement {
 
     updateParentItem(parent);
 
-    var commentId = id.name;
+    var commentId = id.key;
     // Send a notification email to the item's author.
-    HttpRequest.request(Routes.sendNotifications.toString() + "?itemid=$itemId&commentid=$commentId");
+    HttpRequest.request(Routes.sendNotificationsForComment.toString() + "?id=$commentId&itemid=$itemId");
 
     // Reset the fields.
     resetCommentInput();
@@ -247,19 +229,18 @@ class ItemActivities extends PolymerElement {
   fixItemCommunities() {
       if (app.community != null) {
           // Update the community's copy of the item.
-        f.child('/items/' + app.selectedItem['id'] + '/communities/' + app.community.alias)
+        f.child('/items/' + app.router.selectedItem['id'] + '/communities/' + app.community.alias)
           ..set(true);
       }
   }
 
   attached() {
-    print("+ItemActivities");
     getActivities();
 //    fixItemCommunities();
   }
 
   detached() {
-    print("-ItemActivities");
+    //
   }
 
   ItemActivities.created() : super.created();

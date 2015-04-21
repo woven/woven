@@ -1,7 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=RobotoDraft);
+@import url(http://fonts.googleapis.com/css?family=Bitter:400,700);
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
   transition: opacity ease-in 0.2s;
   font-size: 85%;
   /*margin: auto;*/
@@ -9,6 +9,12 @@ body {
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
   margin: 0;
+  -ms-touch-action: none;
+  touch-action: none;
+}
+
+body.colored-bg {
+  background-color: #eee;
 }
 
 /* This somehow fixes the disappearing dialog. */

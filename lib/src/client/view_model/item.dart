@@ -7,11 +7,14 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/client/view_model/base.dart';
+import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/client/model/user.dart';
 
 class ItemViewModel extends BaseViewModel with Observable {
   final App app;
   @observable Map item = toObservable({});
-  final String firebaseLocation = config['datastore']['firebaseLocation'];
+
+  db.Firebase get f => app.f;
 
   ItemViewModel(this.app) {
     getItem();
@@ -31,46 +34,98 @@ class ItemViewModel extends BaseViewModel with Observable {
   void getItem() {
     if (item.length == 0) onLoadCompleter.complete(true);
 
-    if (app.selectedItem != null) {
-      item = app.selectedItem;
+    if (app.router.selectedItem != null) {
+      item = app.router.selectedItem;
 
     } else {
       // If there's no app.selectedItem, we probably
       // came here directly, so let's get it using the URL.
       var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
-      var decodedItem = hashDecode(encodedItem);
-
-      var f = new db.Firebase(firebaseLocation);
+      var decodedItem = base64Decode(encodedItem);
 
       f.child('/items/' + decodedItem).onValue.first.then((e) {
-        item = toObservable(e.snapshot.val());
+        // We hold the item in a separate var while we pre-process it.
+        var queuedItem = toObservable(e.snapshot.val());
 
-        // The live-date-time element needs parsed dates.
-        item['createdDate'] = DateTime.parse(item['createdDate']);
+        // Make sure we're using the collapsed username.
+        queuedItem['user'] = (queuedItem['user'] as String).toLowerCase();
 
-        switch (item['type']) {
-          case 'event':
-            if (item['startDateTime'] != null) item['startDateTime'] = DateTime.parse(item['startDateTime']);
-            break;
-          default:
-        }
+        return UserModel.usernameForDisplay(queuedItem['user'], f, app.cache).then((String usernameForDisplay) {
+          queuedItem['usernameForDisplay'] = usernameForDisplay;
 
-        // snapshot.name is Firebase's ID, i.e. "the name of the Firebase location"
-        // So we'll add that to our local item list.
-        item['id'] = e.snapshot.name;
+          // If no updated date, use the created date.
+          // TODO: We assume createdDate is never null!
+          if (queuedItem['updatedDate'] == null) {
+            queuedItem['updatedDate'] = queuedItem['createdDate'];
+          }
 
-        // Listen for realtime changes to the star count.
-        f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-          item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          // The live-date-time element needs parsed dates.
+          queuedItem['createdDate'] = DateTime.parse(queuedItem['createdDate']);
+          queuedItem['updatedDate'] = DateTime.parse(queuedItem['updatedDate']);
+
+          switch (queuedItem['type']) {
+            case 'event':
+              if (queuedItem['startDateTime'] != null) queuedItem['startDateTime'] = DateTime.parse(queuedItem['startDateTime']);
+              queuedItem['defaultImage'] = 'event';
+              break;
+            case 'announcement':
+              queuedItem['defaultImage'] = 'announcement';
+              break;
+            case 'news':
+              queuedItem['defaultImage'] = 'custom-icons:news';
+              break;
+            case 'message':
+            case 'other':
+              break;
+            default:
+          }
+
+          // Handle any URI previews the item may have.
+          if (queuedItem['uriPreviewId'] != null) {
+            f.child('/uri_previews/${queuedItem['uriPreviewId']}').onValue.listen((e) {
+              var previewData = e.snapshot.val();
+              UriPreview preview = UriPreview.fromJson(previewData);
+              queuedItem['uriPreview'] = preview.toJson();
+              queuedItem['uriPreview']['imageSmallLocation'] = (queuedItem['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${queuedItem['uriPreview']['imageSmallLocation']}' : null;
+              queuedItem['uriPreviewTried'] = true;
+
+              // If subject and body are empty, use title and teaser from URI preview instead.
+              if (queuedItem['subject'] == null) queuedItem['subject'] = toObservable(preview.title);
+              if (queuedItem['body'] == null) queuedItem['body'] =  toObservable(preview.teaser);;
+            });
+          } else {
+            queuedItem['uriPreviewTried'] = true;
+          }
+
+          // Format the URL for display.
+          if (queuedItem['url'] != null) {
+            String uriHost = Uri.parse(queuedItem['url']).host;
+            String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
+            queuedItem['uriHost'] = uriHostShortened;
+          }
+
+          // snapshot.key is Firebase's ID, i.e. "the name of the Firebase location"
+          // So we'll add that to our local item list.
+          queuedItem['id'] = e.snapshot.key;
+
+          // Listen for realtime changes to the star count.
+          f.child('/items/' + queuedItem['id'] + '/star_count').onValue.listen((e) {
+            queuedItem['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          });
+
+          // Listen for realtime changes to the like count.
+          f.child('/items/' + queuedItem['id'] + '/like_count').onValue.listen((e) {
+            queuedItem['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          });
+
+          // Listen for realtime changes to the comment count.
+          f.child('/items/' + queuedItem['id'] + '/comment_count').onValue.listen((e) {
+            queuedItem['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
+          });
+
+          item = queuedItem;
+          app.router.selectedItem = item;
         });
-
-        // Listen for realtime changes to the like count.
-        f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
-          item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-        });
-
-        app.selectedItem = item;
-
       }).then((e) {
         loadItemUserStarredLikedInformation();
       });
@@ -78,10 +133,11 @@ class ItemViewModel extends BaseViewModel with Observable {
   }
 
   void loadItemUserStarredLikedInformation() {
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
+    if (item['id'] == null) return;
+
     if (app.user != null && !item.isEmpty) {
-      var starredItemsRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
-      var likedItemsRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+      var starredItemsRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
+      var likedItemsRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
       starredItemsRef.onValue.listen((e) {
         item['starred'] = e.snapshot.val() != null;
       });
@@ -94,12 +150,10 @@ class ItemViewModel extends BaseViewModel with Observable {
     }
   }
 
-
   void toggleStar() {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
-    var starredItemRef = f.child('/starred_by_user/' + app.user.username + '/items/' + item['id']);
+    var starredItemRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['starred']) {
@@ -119,7 +173,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
     } else {
       // If it's not starred, time to star it.
       item['starred'] = true;
@@ -137,15 +191,14 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
 
   void toggleLike() {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
-    var f = new db.Firebase(config['datastore']['firebaseLocation']);
-    var starredItemRef = f.child('/liked_by_user/' + app.user.username + '/items/' + item['id']);
+    var starredItemRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['liked']) {
@@ -165,7 +218,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
     } else {
       // If it's not starred, time to star it.
       item['liked'] = true;
@@ -183,9 +236,7 @@ class ItemViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
-
-
 }

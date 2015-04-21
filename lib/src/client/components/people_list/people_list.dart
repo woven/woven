@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:polymer/polymer.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/people.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:core_elements/core_header_panel.dart';
@@ -35,18 +36,18 @@ class PeopleList extends PolymerElement with Observable {
    * Initializes the infinite scrolling ability.
    */
   initializeInfiniteScrolling() {
-    CoreHeaderPanel el = document.querySelector("woven-app").shadowRoot.querySelector("#main-panel");
-    HtmlElement scroller = el.scroller;
+    var scroller = app.scroller;
     HtmlElement element = $['content-container'];
-    var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
+    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller, threshold: 0);
 
     subscriptions = [];
     subscriptions.add(scroll.onScroll.listen((_) {
-      if (!viewModel.reloadingContent) viewModel.paginate();
+      if (!viewModel.isLoading) viewModel.paginate();
     }));
   }
 
   attached() {
+    if (app.debugMode) print('+PeopleList');
     app.pageTitle = "People";
 
     initializeInfiniteScrolling();
@@ -66,8 +67,7 @@ class PeopleList extends PolymerElement with Observable {
   }
 
   detached() {
-    subscriptions.forEach((subscription) {
-      subscription.cancel();
-    });
+    subscriptions.forEach((subscription) => subscription.cancel());
+    if (app.debugMode) print('-PeopleList');
   }
 }

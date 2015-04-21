@@ -24,25 +24,25 @@ class StarredViewModel extends Observable {
     var starredItemsByUserRef = f.child('/starred_by_user/' + app.user.username + '/items');
 
     // TODO: Undo the limit of 20; https://github.com/firebase/firebase-dart/issues/8
-    starredItemsByUserRef.limit(20).onChildAdded.listen((e) {
+    starredItemsByUserRef.limitToFirst(20).onChildAdded.listen((e) {
 
       bool itemExists = false;
       if (items.isEmpty || items == null) {
         itemExists = false;
       } else {
-        itemExists = (items.any((i) => i['id'] == e.snapshot.name)) ? true : false;
+        itemExists = (items.any((i) => i['id'] == e.snapshot.key)) ? true : false;
       }
 
       if (itemExists) {
         return;
       }
 
-      f.child('/items/' + e.snapshot.name).onValue.first.then((e) {
+      f.child('/items/' + e.snapshot.key).onValue.first.then((e) {
         bool itemExists = false;
         if (items.isEmpty || items == null) {
           itemExists = false;
         } else {
-          itemExists = (items.any((i) => i['id'] == e.snapshot.name)) ? true : false;
+          itemExists = (items.any((i) => i['id'] == e.snapshot.key)) ? true : false;
         }
 
         if (itemExists) return;
@@ -58,7 +58,7 @@ class StarredViewModel extends Observable {
         item['updatedDate'] = DateTime.parse(item['updatedDate']);
         item['createdDate'] = DateTime.parse(item['createdDate']);
 
-        item['id'] = e.snapshot.name;
+        item['id'] = e.snapshot.key;
 
         // Insert each new item into the list.
         items.add(toObservable(item));
@@ -93,7 +93,7 @@ class StarredViewModel extends Observable {
     });
 
     starredItemsByUserRef.onChildRemoved.listen((e) {
-      items.removeWhere((i) => i['id'] == e.snapshot.name);
+      items.removeWhere((i) => i['id'] == e.snapshot.key);
     });
 
   }

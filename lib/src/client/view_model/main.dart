@@ -3,28 +3,32 @@ library main_view_model;
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
-import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'feed.dart';
+import 'chat.dart';
 import 'people.dart';
 import 'item.dart';
 import 'list.dart';
 import 'base.dart';
 
+import 'package:woven/src/shared/model/community.dart';
+
 class MainViewModel extends BaseViewModel with Observable {
   final App app;
   final List communities = toObservable([]);
   final List users = toObservable([]);
-  final f = new Firebase(config['datastore']['firebaseLocation']);
   final Map feedViewModels = {};
   final Map itemViewModels = {};
   final Map peopleViewModels = {};
+  final Map chatViewModels = {};
   var starredViewModelForUser = null;
   int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
+
+  Firebase get f => app.f;
 
   MainViewModel(this.app) {
     loadCommunities();
@@ -43,7 +47,7 @@ class MainViewModel extends BaseViewModel with Observable {
     if (Uri.parse(path).pathSegments.length > 1) {
       // Decode the base64 URL and determine the item.
       var encodedItem = Uri.parse(window.location.toString()).pathSegments[1];
-      id = hashDecode(encodedItem);
+      id = base64Decode(encodedItem);
     }
 
     if (id == null) return null; // No item.
@@ -119,6 +123,23 @@ class MainViewModel extends BaseViewModel with Observable {
     return feedViewModels[id];
   }
 
+  // Get the view model for the current inbox.
+  ChatViewModel get chatViewModel {
+    if (app.community == null) return null;
+
+    var id = app.community.alias;
+
+    if (id == null) return null; // No item, no view model to use.
+
+    if (!chatViewModels.containsKey(id)) {
+      // Item not stored yet, let's create it and store it.
+      var vm = new ChatViewModel(app: app); // Maybe pass MainViewModel instance to the child, so there's a way to access the parent. Or maybe pass App. Do as you see fit.
+      chatViewModels[id] = vm; // Store it.
+    }
+
+    return chatViewModels[id];
+  }
+
   // Get the view model for the user's starred items.
   @observable StarredViewModel get starredViewModel {
     if (app.user == null) return null; // No user, no starred view model.
@@ -136,7 +157,7 @@ class MainViewModel extends BaseViewModel with Observable {
    */
   void loadCommunities() {
     // TODO: Remove the limit.
-    var communitiesRef = f.child('/communities').limit(20);
+    var communitiesRef = f.child('/communities').limitToFirst(20);
 
      // Get the list of communities, and listen for new ones.
     communitiesRef.onChildAdded.listen((e) {
@@ -146,7 +167,10 @@ class MainViewModel extends BaseViewModel with Observable {
       if (community['disabled'] == true) return;
 
       // Use the ID from Firebase as our ID.
-      community['id'] = e.snapshot.name;
+      community['id'] = e.snapshot.key;
+
+      // Add the community to the app cache, so we have it elsewhere.
+      app.cache.communities[community['id']] = CommunityModel.fromJson(community);
 
       // Set some defaults.
       if (community['updatedDate'] == null) community['updatedDate'] = community['createdDate'];
@@ -164,7 +188,7 @@ class MainViewModel extends BaseViewModel with Observable {
       communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
       if (app.user != null) {
-        var starredCommunitiesRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+        var starredCommunitiesRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/communities/' + community['id']);
         starredCommunitiesRef.onValue.listen((e) {
           community['starred'] = e.snapshot.val() != null;
         });
@@ -175,7 +199,7 @@ class MainViewModel extends BaseViewModel with Observable {
 
     // When a community changes, let's update it.
     communitiesRef.onChildChanged.listen((e) {
-      Map currentData = communities.firstWhere((i) => i['id'] == e.snapshot.name);
+      Map currentData = communities.firstWhere((i) => i['id'] == e.snapshot.key);
       Map newData = e.snapshot.val();
 
       newData.forEach((k, v) {
@@ -193,7 +217,7 @@ class MainViewModel extends BaseViewModel with Observable {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
     var community = communities.firstWhere((i) => i['id'] == id);
-    var starredCommunityRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+    var starredCommunityRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/communities/' + community['id']);
     var communityRef = f.child('/communities/' + community['id']);
 
     if (community['starred']) {
@@ -213,7 +237,7 @@ class MainViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).remove();
+      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username.toLowerCase()).remove();
 
     } else {
       // If it's not starred, time to star it.
@@ -232,7 +256,7 @@ class MainViewModel extends BaseViewModel with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username).set(true);
+      f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
   }
 
@@ -240,7 +264,6 @@ class MainViewModel extends BaseViewModel with Observable {
    * Whenever user signs in/out, we should call this to trigger any necessary updates.
    */
   void invalidateUserState() {
-
     loadUserStarredCommunityInformation();
 
     if (itemViewModel != null) {

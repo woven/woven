@@ -36,7 +36,7 @@ class CommunityModel extends shared.CommunityModel {
    *
    * Returns a user object.
    */
-  static Future<UserModel> usernameToUser(username) => Firebase.get('/users/$username.json').then(UserModel.decode);
+  static Future<UserModel> usernameToUser(username) => Firebase.get('/users/$username.json').then(UserModel.fromJson);
 
   /**
    * Get all communities, except disabled.
@@ -52,7 +52,7 @@ class CommunityModel extends shared.CommunityModel {
    * Returns a list of community objects.
    */
   static Future<Iterable<CommunityModel>> getCommunities() =>
-  Firebase.get('/communities.json').then((Map data) => data.values.map(shared.CommunityModel.decode));
+  Firebase.get('/communities.json').then((Map data) => data.values.map(shared.CommunityModel.fromJson));
 
 
 //  static Future<Iterable<CommunityModel>> getCommunities() =>

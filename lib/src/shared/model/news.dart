@@ -7,7 +7,8 @@ class NewsModel extends ItemModel with Link {
 
   Map encode() {
     var data = super.encode();
-    data['url'] = url.toString();
+    data['url'] = (url != null) ? url.toString() : null;
+    data['uriPreviewId'] = (uriPreviewId != null) ? uriPreviewId.toString() : null;
     return data;
   }
 
@@ -21,6 +22,8 @@ class NewsModel extends ItemModel with Link {
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate']
 
-      ..url = data['url'];
+      ..url = data['url']
+      ..uriPreviewId = data['uriPreviewId'];
+
   }
 }

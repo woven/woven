@@ -11,6 +11,7 @@ class EventModel extends ItemModel with TimeSpan, Link {
     data['startDateTime'] = startDateTime.toString();
     data['startDateTimePriority'] = startDateTimePriority.toString();
     data['url'] = url;
+    data['uriPreviewId'] = uriPreviewId;
     return data;
   }
 
@@ -26,6 +27,7 @@ class EventModel extends ItemModel with TimeSpan, Link {
 
       ..startDateTime = data['startDateTime']
       ..startDateTimePriority = data['startDateTimePriority']
-      ..url = data['url'];
+      ..url = data['url']
+      ..uriPreviewId = data['uriPreviewId'];
   }
 }

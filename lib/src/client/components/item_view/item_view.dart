@@ -28,17 +28,23 @@ class ItemView extends PolymerElement with Observable {
    *
    * Format line breaks, links, @mentions.
    */
+
+  String get getFormattedBody {
+    if (item['body'] == null || item['body'].trim().isEmpty) return 'Loading...';
+    return InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(item['body'].trim())));
+  }
+
   formatText(String text) {
     if (text == null || text.trim().isEmpty) return 'Loading...';
     String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
     return formattedText;
   }
 
-  itemChanged() {
-    // Pass the item body to the safe-html element.
-    HtmlElement body = $['body'];
-    HtmlElement safeHtml = body.childNodes[0];
-    if (item.isNotEmpty) safeHtml.shadowRoot.innerHtml = formatText(item['body']);
+  /**
+   * Format the given string with "a" or "an" or none.
+   */
+  formatWordArticle(String content) {
+    return InputFormatter.formatWordArticle(content);
   }
 
   ItemView.created() : super.created();
@@ -63,14 +69,9 @@ class ItemView extends PolymerElement with Observable {
   }
 
   attached() {
-    print("+ItemView");
     app.pageTitle = "";
 
     app.scroller.scrollTop = 0;
-
-    if (item != null) {
-      itemChanged();
-    }
 
     // Once the view is loaded, handle scroll position.
     viewModel.onLoad.then((_) {
@@ -87,8 +88,7 @@ class ItemView extends PolymerElement with Observable {
   }
 
   detached() {
-    subscriptions.forEach((subscription) {
-      subscription.cancel();
-    });
+    subscriptions.forEach((subscription) => subscription.cancel());
+    app.router.selectedItem = null;
   }
 }

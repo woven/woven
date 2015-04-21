@@ -1,35 +1,147 @@
 <link rel="import" href="../../../../../../../packages/polymer/polymer.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_animation.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_input.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_a11y_keys.html">
 
 <polymer-element name="x-home">
   <template>
     <link rel="stylesheet" href="home.css">
-    <div class="page-wrapper">
-      <div id="content-wrapper">
-        <div id="content-header-wrapper">
-          <img src="/static/images/woven_logo_solo_35.png">
-        </div>
-        <div id="home-text">
-          <p>Woven is for people improving the world.</p>
+    <div class="cover" layout vertical fit>
+      <template if="{{!app.isMobile}}"><div class="logo"></div></template>
+      <div class="cta" self-center>
+        <div class="content-container" layout vertical>
+          <template if="{{app.isMobile}}"><div class="logo-solo"></div></template>
 
-          <button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Sign in with Facebook</button>
+          <template if="{{app.homePageCta == 'sign-up'}}">
+            <h2>Tap into the communities you care about.</h2>
+            <h3>Get informed. Get involved. Make a difference.</h3>
 
-          <p>We're making it easier for us to assemble, discover and share resources, and coordinate our efforts to affect real world
-          change.</p>
+            <div self-center>
+              <div class="field-wrapper only">
+                <input id="email" is="core-input" placeholder="Your email"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div id="submit" class="button" on-tap="{{getStarted}}">Get started</div>
+              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{getStarted}}"></core-a11y-keys>
+            </div>
+            <div class="footer" self-center>
+              <p>We protect your information. Leave anytime.</p>
+              <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+            </div>
+          </template>
 
-          <p>We are a collaborative generation, presiding over massive shifts in how humanity works together, but the tools we use are still
-          not optimized to support us. Social networks were built for sharing, not for coordinating our efforts and
-          getting things done.</p>
+          <template if="{{app.homePageCta == 'sign-in'}}">
+            <h3>Please sign in.</h3>
 
-          <p>Imagine how much more effective we can be when our tools are consciously designed to
-          support collaboration and encourage action.</p>
+            <div self-center>
+              <div class="field-wrapper first">
+                <input id="username" is="core-input" placeholder="Username"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div class="field-wrapper">
+                <input id="password" is="core-input" type="password" placeholder="Password"
+                       autocomplete="off" autocorrect="off" autocapitalize="off">
+              </div>
+              <div id="submit" class="button" on-tap="{{signIn}}">Sign in</div>
+              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signIn}}"></core-a11y-keys>
+            </div>
+            <div class="footer" self-center>
+              <p><a on-tap="{{showSignUp}}">Sign up</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+            </div>
+          </template>
 
-          <p>We call it collaborative networking. Join us.</p>
+          <template if="{{app.homePageCta == 'complete-sign-up'}}">
+            <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+              <h3>Please complete your sign up.</h3>
+            </template>
+            <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+              <h3>Please update your account.</h3>
+              <p>We're missing some pertinent details.</p>
+            </template>
 
-          <button class="signin-btn" id="facebook-signin" on-tap="{{signInWithFacebook}}">Join with Facebook</button>
+            <div self-center>
+              <div class="field-wrapper first">
+                <template if="{{app.user != null && app.user.email != null}}">
+                  <input is="core-input" id="email" placeholder="Your email"
+                         autocomplete="off" autocorrect="off" autocapitalize="off"
+                         value="{{(app.user != null) ? app.user.email : ''}}" disabled>
+                </template>
+                <template if="{{app.user == null || (app.user != null && app.user.email == null)}}">
+                  <input is="core-input" id="email" placeholder="Your email"
+                         autocomplete="off" autocorrect="off" autocapitalize="off"
+                         value="{{(app.user != null) ? app.user.email : ''}}">
+                </template>
+              </div>
+              <div class="field-wrapper">
+                <input is="core-input" id="username" placeholder="Choose a username"
+                       autocomplete="off" autocorrect="off" autocapitalize="off"
+                       value="{{(app.user != null && !app.user.disabled) ? app.user.username.toLowerCase() : ''}}">
+              </div>
+              <div class="field-wrapper">
+                <input is="core-input" id="password" placeholder="Choose a password"
+                       autocomplete="off" autocorrect="off" autocapitalize="off" type="password">
+              </div>
+              <div class="field-wrapper">
+                <input is="core-input" id="firstname" placeholder="Your first name" autocomplete="off"
+                       value="{{(app.user != null) ? app.user.firstName : ''}}">
+              </div>
+              <div class="field-wrapper last">
+                <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
+                       value="{{(app.user != null) ? app.user.lastName : ''}}">
+              </div>
+              <div id="submit" class="button" on-tap="{{updateExistingUser}}">Sign up</div>
+              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
+            </div>
+            <div class="footer" self-center>
+              <p style="visibility:hidden;"><a on-tap="{{close}}">Just browse &#8594;</a></p>
+            </div>
+          </template>
 
-          <p style="height: 90px">Woven is for <span id="random-word">{{randomWord}}.</span></p>
+          <template if="{{app.homePageCta == 'sign-up-note'}}">
+            <h3>Look out for an invitation...</h3>
 
-          <p id="skip" on-tap="{{close}}">Skip &raquo;</p>
+            <div self-center>
+              <p>
+                You've signed up and reserved your username. Woven is currently serving a few select
+                communities. The quickest way to get access is to ask a current participant to invite you. If you don't
+                know someone, you can reply to the email we just sent you to request access. Or, wait until we open up
+                to more communities. We can't wait to get you involved.
+              </p>
+              <div class="footer" self-center>
+                <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+              </div>
+            </div>
+          </template>
+
+          <template if="{{app.homePageCta == 'get-started-note'}}">
+            <h3>Check your email...</h3>
+
+            <div self-center>
+              <p>
+                I just sent you an email with a link.
+              </p>
+              <p>
+                We'll be back together in no time.
+              </p>
+            </div>
+          </template>
+
+          <template if="{{app.homePageCta == 'disabled-note'}}">
+            <h3>Your account is not active.</h3>
+
+            <div self-center>
+              <p>
+                It looks like you're signed in with an inactive account. You may have recently requested an invitation
+                and do not yet have access, or your account is disabled for some other reason.
+              </p>
+              <p>
+                Want to discuss? hello@woven.co
+              </p>
+              <div class="footer" self-center>
+                <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </div>

@@ -15,8 +15,8 @@ class SafeHtml extends PolymerElement  {
   addFragment() {
     DivElement container = $['container'];
     String fragment =  this.text;
-    container.setInnerHtml(fragment, // Set the fragment in a safe way.
-      validator: validator);
+    container.setInnerHtml(fragment,
+      validator: validator); // Set the fragment in a safe way.
     this.text = ""; // Clear the original fragment passed to the element.
   }
 

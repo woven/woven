@@ -44,36 +44,54 @@
   border-bottom: solid 1px #f2f2f2;;
 }
 
+.item.theme-dark   {
+  background: rgba(45, 45, 45, 0.5);
+  border: none;
+  color: white;
+}
+
 .item:hover {
   cursor: pointer;
   overflow: hidden;
   background-color: rgb(244, 244, 244);
 }
 
+.item.theme-dark:hover {
+  background: rgba(37, 37, 37, 0.50);
+}
+
 .community-alias {
   /*overflow: hidden;*/
-  color: #0061BB;
+  color: #1878D2;
   font-size: 18px;
+  letter-spacing: 0.2pt;
   white-space: nowrap;
   margin-right: 5px;
-  font-weight: bold;
   padding: 5px 0 0 0;
+  letter-spacing: .1pt;
 }
+
 .item-body {
-  color: #5c5c5c;
+  font-size: 15px;
+  color: #666;
   /*overflow: hidden;*/
   white-space: nowrap;
 }
+
+.theme-dark .item-body {
+  color: #e0e0e0;
+}
+
 .item-updated {
   color: rgb(102, 102, 102);
   overflow: hidden;
-  font-size: 0.90em;
+  font-size: 13px;
   display: inline;
 }
 
 .item-users {
   /*color: #3A89BE;*/
-  color: #333;
+  color: #6e6e6e;
   font-size: 90%;
   display: inline;
   margin-right: 2px;
@@ -90,26 +108,23 @@
 }
 
 .join-button {
-  fill: #eee;
-  color: #eee;
+  fill: #2d2d2d;
+  color: #2d2d2d;
+  background-color: #fff;
   box-shadow: none;
   border: 1px solid #e6e6e6;
   display: inline-block;
   cursor: pointer;
-  color: #2e2e2e;
-  font-family: arial;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
   padding: 3px 5px;
   text-decoration: none;
   width: 90px;
 }
-.join-button:hover {
-  /*background-color:#fff;*/
-}
-.join-button:active {
-  /*position:relative;*/
-  /*top:2px;*/
+
+.theme-dark .join-button {
+  border: none;
+  color: #e0e0e0;
 }
 
 .join-button:hover {
@@ -118,17 +133,35 @@
 
 .join-button.selected:not([disabled]) {
   box-shadow: none;
-  background-color:#ffffff;
+  background-color: #fff;
   fill: #f99b15;
   color: #f99b15;
 }
 
+.theme-dark .join-button.selected:not([disabled]) {
+  background-color: transparent;
+}
+
+.join-button:active:not([disabled]), .join-button.selected:active:not([disabled]) {
+  background-color: #fff;
+}
+
+.join-button span {
+  position: relative;
+  top: 1px;
+}
+
 span.item-count {
-  font-size: 13px;
-  color: #3F3F3F;
+  font-size: 14px;
+  color: #444;
   outline: none;
   margin-left: 12px;
 }
+
+.theme-dark span.item-count {
+  color: #e0e0e0;
+}
+
 .item-col2 {
   margin-right: 5px;
 }

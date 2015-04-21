@@ -1,3 +1,5 @@
+library uri_policy;
+
 import 'dart:html';
 
 class ItemUrlPolicy implements UriPolicy {

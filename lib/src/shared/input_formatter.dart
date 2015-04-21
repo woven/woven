@@ -566,7 +566,7 @@ class InputFormatter {
     // Make sure there's no crazy whitespace.
     contents = contents.replaceAll(new RegExp(' {2,}'), ' ');
 
-    if (originalContent.length > length && contents.length > 100) {
+    if (originalContent.length > length) {
       return '$contents...';
     }
 
@@ -581,10 +581,20 @@ class InputFormatter {
   static String formatMentions(String content) {
     if (content == null) return '';
 
-    var regExp = new RegExp(r'\B@[a-zA-Z0-9_-]+', caseSensitive: false);
+    var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
 
-    content = content.replaceAllMapped(regExp, (Match m) => '<span class="mention">${m[0]}</span>');
+    content = content.replaceAllMapped(regExp, (Match m) => '${m.group(1)}<span class="mention">${m.group(2)}</span>${m.group(3)}');
 
     return content;
+  }
+
+  /**
+  * Tries to choose the proper article ("a" or "an" or none) for a given string.
+  */
+  static String formatWordArticle(String word) {
+    if (word == null) return null;
+    if (word.endsWith('s')) return null;
+    if (word.startsWith(new RegExp('[aeiou]'))) return 'an ';
+    return 'a ';
   }
 }
