@@ -191,6 +191,7 @@ class SignInController {
     String sessionId = (sessionCookie == null || sessionCookie.value == null) ? app.sessionManager.createSessionId() : sessionCookie.value;
 
     Map facebookIndexData = await findFacebookIndex(facebookId);
+    print(facebookIndexData);
 
     // Upon sign in with Facebook, we redirect as appropriate.
     request.response.statusCode = 302;
