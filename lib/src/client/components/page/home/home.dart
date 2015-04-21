@@ -163,6 +163,7 @@ class Home extends PolymerElement with Observable {
     } else {
       Map confirmationData = snapshot.val();
 
+      UserModel user = new UserModel();
       // If the confirmation link looks like it came from an invitation.
       if (confirmationData['fromUser'] != null) {
         user.invitation = confirmationData;
