@@ -23,7 +23,7 @@
                     </div>
                     <div class="info-area" layout vertical flex>
                       <div class="item-info">
-                        <div><span class="item-user">{{item['usernameForDisplay']}}</span> <template if="{{item['type'] != null}}">posted {{formatWordArticle(item['type'].toString())}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></template></div>
+                        <div><span class="item-user">{{item['usernameForDisplay']}}</span> <template if="{{item['type'] != null && item['type'] != 'message' && item['type'] != 'other'}}">posted {{formatWordArticle(item['type'].toString())}}<span class="item-type {{(item['type'] != null) ? item['type'] : 'other'}}">{{(item['type'] != null) ? item['type'] : 'other'}}</span></template></div>
                         <!--<p id="body" class="item-body {{(item['id'] == '-JYMa-efNz4EFIXU61Zf') ? 'special' : ''}}"><safe-html>Loading...</safe-html></p>-->
                         <div class="item-ago">
                           <template if="{{item['createdDate'] != null}}">

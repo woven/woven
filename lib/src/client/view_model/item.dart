@@ -76,7 +76,6 @@ class ItemViewModel extends BaseViewModel with Observable {
               break;
             case 'message':
             case 'other':
-              queuedItem['type'] = null;
               break;
             default:
           }
