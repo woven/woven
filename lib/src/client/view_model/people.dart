@@ -32,7 +32,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
     pages++;
 
     var queryRef = f.child('/users')
-      .orderByPriority()
+      .orderByChild('_priority')
       .startAt(priority: lastPriority)
       .limitToFirst(pageSize + 1);
 
@@ -46,7 +46,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
 
     queryRef.onChildAdded.listen((e) {
       var user = e.snapshot.val();
-      lastPriority = e.snapshot.getPriority();
+      lastPriority = user['_priority'];
       var existingItem = users.firstWhere((i) => (i['username'] as String).toLowerCase() == e.snapshot.key, orElse: () => null);
 
       if (existingItem == null && !user['disabled']) {
