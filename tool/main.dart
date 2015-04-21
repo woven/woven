@@ -32,9 +32,24 @@ main() async {
 //  }
 //  moveItemsFromAtoB();
 //changeAllUsersToLowercase();
-//migrateAllUsersOnboardingState();
+migrateAllUsersOnboardingState();
 //  changeAllUsersDateToEpochFormat();
-  dumpDataToFile();
+//  dumpDataToFile();
+}
+
+/**
+ * Do ONE AT A TIME. See individual comments.
+ */
+doMigration() async {
+  changeAllUsersToLowercase();
+  updateAllUsersAddPriority();
+  migrateAllUsersOnboardingState();
+
+  try {
+    await createPreviewForItemsWithUrls();
+  } catch(error) {
+    print('MIGRATION: $error');
+  }
 }
 
 changeAllUsersToLowercase() {
@@ -55,12 +70,12 @@ dumpDataToFile() {
   });
 }
 
-changeAllUsersDateToEpochFormat() {
+updateAllUsersAddPriority() {
   Firebase.get('/users.json').then((Map users) {
     users.forEach((k, v) {
       String username = k;
-      v['.priority'] = (v['createdDate'] != null) ? -DateTime.parse(v['createdDate']).millisecondsSinceEpoch : null;
-      Firebase.put('/users3/${username.toLowerCase()}.json', v);
+      v['_priority'] = (v['createdDate'] != null) ? -DateTime.parse(v['createdDate']).millisecondsSinceEpoch : null;
+      Firebase.put('/users/${username.toLowerCase()}.json', v);
       print(username);
     });
   });
