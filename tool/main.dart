@@ -33,7 +33,8 @@ main() async {
 //  moveItemsFromAtoB();
 //changeAllUsersToLowercase();
 //migrateAllUsersOnboardingState();
-  changeAllUsersDateToEpochFormat();
+//  changeAllUsersDateToEpochFormat();
+  dumpDataToFile();
 }
 
 changeAllUsersToLowercase() {
@@ -43,6 +44,14 @@ changeAllUsersToLowercase() {
       Firebase.put('/users/${username.toLowerCase()}.json', v);
       print(username);
     });
+  });
+}
+
+dumpDataToFile() {
+  Firebase.get('/.json?format=export&print=pretty').then((data) {
+    String now = new DateTime.now().toString();
+    File file = new File('firebase_dump_$now.json');
+    file.writeAsString(data);
   });
 }
 
