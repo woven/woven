@@ -89,8 +89,14 @@
                 <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
                        value="{{(app.user != null) ? app.user.lastName : ''}}">
               </div>
-              <div id="submit" class="button" on-tap="{{updateExistingUser}}">Sign up</div>
-              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
+              <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+                <div id="submit" class="button" on-tap="{{signUp}}">Sign up</div>
+                <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
+              </template>
+              <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+                <div id="submit" class="button" on-tap="{{updateExistingUser}}">Continue &#8594;</div>
+                <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
+              </template>
             </div>
             <div class="footer" self-center>
               <p style="visibility:hidden;"><a on-tap="{{close}}">Just browse &#8594;</a></p>
