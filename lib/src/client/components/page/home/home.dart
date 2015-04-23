@@ -13,6 +13,7 @@ import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/regex.dart';
 
 @CustomTag('x-home')
 class Home extends PolymerElement with Observable {
@@ -283,8 +284,8 @@ class Home extends PolymerElement with Observable {
     }
 
     //TODO: Regex this for all disallowed cases.
-    if (username.value.trim().contains(" ")) {
-      window.alert("Your username may not contain spaces.");
+    if (!new RegExp(RegexHelper.username).hasMatch(username.value.trim())) {
+      window.alert("Your username may only contain letters and numbers, and must have at least one letter.");
       return false;
     }
 

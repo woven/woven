@@ -18,4 +18,7 @@ class RegexHelper {
   static String linkOrEmail = '($email|$link)';
 
   static String mention = r'(^|\s+)(@[a-zA-Z0-9_-]+)((?=\s+)|$|[!?.,-])';
+
+  // Letters and and numbers allowed, but not just numbers.
+  static String username = r'^\d*[a-zA-Z][a-zA-Z\d]*$';
 }
