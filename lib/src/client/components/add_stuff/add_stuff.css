@@ -84,12 +84,14 @@ input {
 }
 
 #message {
+  margin-top: 5px;
   font-size: 14px;
   outline: none;
   width: 100%;
   min-height: 19px;
-  max-height: 205px;
-  margin-top: 5px;
+  max-height: 180px;
+  overflow: hidden;
+  line-height: 18px;
 }
 
 #message-textarea {
@@ -101,7 +103,9 @@ input {
   outline: none;
   width: 100%;
   min-height: 19px;
-  line-height: 14px;
+  max-height: 105px;
+  overflow: hidden;
+  line-height: 18px;
 }
 
 #body-textarea {
