@@ -59,7 +59,7 @@ class ChatBox extends PolymerElement {
     var communityId = app.community.alias;
 
     if (messageText.trim().isEmpty) {
-      resetCommentInput();
+      Timer.run(() => resetCommentInput());
       return;
     }
 
@@ -73,8 +73,7 @@ class ChatBox extends PolymerElement {
       message.type = 'notification';
       viewModel.commandRouter(message);
       Timer.run(() => chatView.scrollToBottom());
-      resetCommentInput();
-      return;
+      Timer.run(() => resetCommentInput());
     }
 
     // Insert the message instantly.
@@ -107,7 +106,7 @@ class ChatBox extends PolymerElement {
     });
 
     // Reset the fields.
-    resetCommentInput();
+    Timer.run(() => resetCommentInput());
   }
 
   focusMessageInput() {
