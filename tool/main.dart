@@ -35,7 +35,8 @@ main() async {
 //migrateAllUsersOnboardingState();
 //  changeAllUsersDateToEpochFormat();
 //  dumpDataToFile();
-doMigration();
+  updateUsersWhoStarredToLowerCase2();
+//doMigration();
 }
 
 /**
@@ -79,6 +80,45 @@ updateAllUsersAddPriority() {
       v['_priority'] = (v['createdDate'] != null) ? -DateTime.parse(v['createdDate']).millisecondsSinceEpoch : null;
       Firebase.put('/users/${username.toLowerCase()}.json', v);
       print(username);
+    });
+  });
+}
+
+
+updateUsersWhoStarredToLowerCase() async {
+  String location = "users_who_liked";
+  Map query = await Firebase.get('/$location.json');
+  query.forEach((k, v) {
+    var type = k;
+    Map children = v;
+    children.forEach((k, v) {
+      String item = k;
+      Map users = v;
+      users.forEach((k, v) async {
+        String user = k;
+        await Firebase.delete('/$location/$type/$item/${user}.json');
+        Firebase.put('/$location/$type/$item/${user.toLowerCase()}.json', v);
+        print(user);
+      });
+    });
+  });
+}
+
+updateUsersWhoStarredToLowerCase2() async {
+  String location = "starred_by_user";
+  Map query = await Firebase.get('/$location.json');
+  query.forEach((k, v) {
+    String parent = k;
+    Map children = v;
+    children.forEach((k, v) {
+      String item = k;
+      Map finalChildren = v;
+      finalChildren.forEach((k, v) async {
+        String finalChild = k;
+        await Firebase.delete('/$location/$parent/$item/${finalChild}.json');
+        Firebase.put('/$location/${parent.toLowerCase()}/$item/$finalChild.json', v);
+        print(finalChild);
+      });
     });
   });
 }
