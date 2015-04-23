@@ -12,7 +12,7 @@ class MessageModel extends shared.MessageModel {
   static add(MessageModel message, Firebase f) {
     var priority = new DateTime.now().toUtc().millisecondsSinceEpoch;
     var messagesRef = f.child('/messages').push();
-    var messagesByCommunityRef = f.child('/messages_by_community/${message.community}/${messagesRef.name}');
+    var messagesByCommunityRef = f.child('/messages_by_community/${message.community}/${messagesRef.key}');
     messagesRef.setWithPriority(message.toJson(), -priority);
     messagesByCommunityRef.setWithPriority(message.toJson(), -priority);
   }
