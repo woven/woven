@@ -212,7 +212,7 @@ class SignInController {
 
     } else {
       // If we already know of this Facebook user, update with any new data.
-      var username = facebookIndexData['username'];
+      var username = (facebookIndexData['username'] as String).toLowerCase();
 
       // Get the existing user's data so we can compare against it.
       // TODO: Handle edge case where index points to non-existent user.
