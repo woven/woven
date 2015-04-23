@@ -3,7 +3,6 @@
 core-overlay {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
-  /*font-family: Arial, Helvetica, sans-serif;*/
   font-size: 13px;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -78,7 +77,6 @@ p {
 }
 
 input {
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px !important;
   outline: none;
   width: 100% !important;
@@ -86,11 +84,11 @@ input {
 }
 
 #message {
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   outline: none;
   width: 100%;
   min-height: 19px;
+  max-height: 205px;
   margin-top: 5px;
 }
 
@@ -137,7 +135,6 @@ button {
   background-color: white;
   border-radius: 3px;
   border: solid 1px #EEEEEE;
-  font-family: arial, sans-serif;
   font-size: 13px;
   font-weight: bold;
   padding: 2px 20px;
