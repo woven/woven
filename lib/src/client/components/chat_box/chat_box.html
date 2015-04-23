@@ -24,6 +24,7 @@
                         on-blur="{{onBlurHandler}}"></textarea>
             </paper-autogrow-textarea>
           </div>
+          <template if="{{app.isMobile}}"><core-icon-button id="button-send" class="btn action" icon="send" on-tap="{{addComment}}" tabindex="0"></core-icon-button></template>
           <core-a11y-keys id="a11y-send" keys="enter ctrl+enter" on-keys-pressed="{{addComment}}"></core-a11y-keys>
         </template>
         <template if="{{app.user == null}}">

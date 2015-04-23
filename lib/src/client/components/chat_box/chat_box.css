@@ -63,6 +63,31 @@ core-field input {
   background: transparent;
 }
 
+.btn {
+  background-color: white;
+}
+
+.btn.action {
+  background-color: rgb(64, 136, 214);
+  color: white;
+}
+
+.btn.action:hover {
+  background-color: rgb(45, 104, 214);
+  cursor: pointer;
+}
+
+.btn.action:focus {
+  background-color: rgb(45, 104, 214);
+  cursor: pointer;
+  outline: none;
+}
+
+#button-send {
+  margin: 1px 0 0 5px;
+  height: 38px
+}
+
 .theme-dark #comment-textarea {
   color: white;
   transition: color .2s;
