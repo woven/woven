@@ -285,7 +285,7 @@ class MainViewModel extends BaseViewModel with Observable {
   void loadUserStarredCommunityInformation() {
     communities.forEach((community) {
       if (app.user != null) {
-        var starredCommunityRef = f.child('/starred_by_user/' + app.user.username + '/communities/' + community['id']);
+        var starredCommunityRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/communities/' + community['id']);
         starredCommunityRef.onValue.listen((e) {
           community['starred'] = e.snapshot.val() != null;
         });
