@@ -115,6 +115,9 @@ core-item core-icon {
   width:225px;
   height:125px;
   text-align: center;
+  background: #eee;
+  fill: white;
+  color: white;
 }
 
 .theme-dark .item-photo-area .item-photo-wrapper {
