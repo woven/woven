@@ -14,18 +14,16 @@ class Firebase {
    *
    * Equivalent to a .push() in the Firebase client API.
    */
-  static Future post(String path, data, {String auth}) {
+  static Future post(String path, data, {String auth}) async {
     if (data is! String) data = JSON.encode(data);
 
-    return http.post('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}', body: data).then((response) {
-      Map message = JSON.decode(response.body);
-      if (message['error'] != null) {
-        throw 'Firebase returned an error.\nPath: $path\nData: $data\nResponse: ${message["error"]}';
-      }
-      if (message['name'] != null) {
-        return message['name'];
-      }
-    });
+    http.Response response = await http.post('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}', body: data);
+
+    Map message = JSON.decode(response.body);
+
+    if (response.statusCode != 200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
+
+    if (message['name'] != null) return message['name'];
   }
 
   /**
@@ -34,15 +32,11 @@ class Firebase {
    *
    * Equivalent to a .set() in the Firebase client API.
    */
-  static Future put(String path, data, {String auth}) {
+  static Future put(String path, data, {String auth}) async {
     if (data is! String) data = JSON.encode(data);
 
-    return http.put('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}', body: data).then((response) {
-      var message = JSON.decode(response.body);
-      if (message['error'] != null) {
-        throw 'Firebase returned an error.\nPath: $path\nData: $data\nResponse: ${message["error"]}';
-      }
-    });
+    http.Response response =  await http.put('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}', body: data);
+    if (response.statusCode != 200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
   }
 
   /**
@@ -51,23 +45,25 @@ class Firebase {
    *
    * Equivalent to a .update() in the Firebase client API.
    */
-  static Future patch(String path, data, {String auth}) {
+  static Future patch(String path, data, {String auth}) async {
     if (data is! String) data = JSON.encode(data);
     var http = new HttpClient();
     var uri = Uri.parse('${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}');
 
     try {
-      return http.patchUrl(uri).then((HttpClientRequest request) {
-        request.headers.contentType = ContentType.JSON; // Without this, possible "String contains invalid characters."
-        request.write(data);
-        request.close();
-        return request.done.then((HttpClientResponse response) {
-          response.transform(UTF8.decoder).listen((contents) {
-            return contents;
-          });
-//          return response.statusCode; // TODO: I want more here.
-        });
+      HttpClientRequest request = await http.patchUrl(uri);
+      request.headers.contentType = ContentType.JSON; // Without this, possible "String contains invalid characters."
+      request.write(data);
+      request.close();
+      HttpClientResponse response = await request.done;
+
+      if (response.statusCode != 200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
+
+      response.transform(UTF8.decoder).listen((contents) {
+        return contents;
       });
+//          return response.statusCode; // TODO: I want more here.
+
     } catch(error, stack) {
       print("Error $error\n\n$stack");
     }
@@ -79,19 +75,21 @@ class Firebase {
    *
    * Returns a Map, or a String for simple values.
    */
-  static Future get(String path) {
-    return http.get('${config['datastore']['firebaseLocation']}$path').then((res) {
+  static Future get(String path) async {
+    try {
+      http.Response res = await http.get('${config['datastore']['firebaseLocation']}$path');
+
+      if (res.statusCode != 200) throw 'Firebase returned an error.\nPath: $path\nStatus code: ${res.statusCode}';
+
       if (res.body != 'null') {
         var response = JSON.decode(res.body);
-
-        if (response is Map && response['error'] != null) {
-          throw 'Firebase returned an error.\nPath: $path\nResponse: ${response["error"]}';
-        }
 
         return response;
       }
       return null;
-    }).catchError(print);
+    } catch(error, stack) {
+      print("Error $error\n\n$stack");
+    }
   }
 
   /**
