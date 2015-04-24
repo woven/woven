@@ -214,3 +214,10 @@ removeEmptyStringsFromMap(Map map) {
   });
   return newMap;
 }
+
+/**
+ * Encode and decode Firebase keys for safe URLs.
+ * See http://goo.gl/Gepw01.
+ */
+String encodeFirebaseKey(key) => Uri.encodeComponent(Uri.encodeComponent(key)).replaceAll('.', '%252E').toString();
+String decodeFirebaseKey(key) => Uri.decodeComponent(Uri.decodeComponent(key)).toString();

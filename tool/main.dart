@@ -34,9 +34,10 @@ main() async {
 //changeAllUsersToLowercase();
 //migrateAllUsersOnboardingState();
 //  changeAllUsersDateToEpochFormat();
+  createEmailIndex();
+
 //  dumpDataToFile();
-  updateUsersWhoStarredToLowerCase2();
-//doMigration();
+//  doMigration();
 }
 
 /**
@@ -84,27 +85,22 @@ updateAllUsersAddPriority() {
   });
 }
 
-
-updateUsersWhoStarredToLowerCase() async {
-  String location = "users_who_liked";
-  Map query = await Firebase.get('/$location.json');
-  query.forEach((k, v) {
-    var type = k;
-    Map children = v;
-    children.forEach((k, v) {
-      String item = k;
-      Map users = v;
-      users.forEach((k, v) async {
-        String user = k;
-        await Firebase.delete('/$location/$type/$item/${user}.json');
-        Firebase.put('/$location/$type/$item/${user.toLowerCase()}.json', v);
-        print(user);
-      });
+createEmailIndex() {
+  Firebase.get('/users.json').then((Map users) {
+    users.forEach((k, v) {
+      var user = k;
+      String email = v['email'];
+      if (email == null || email.isEmpty) return;
+      Firebase.put('/email_index/${encodeFirebaseKey(email.toLowerCase())}.json', {'user': user, 'email': email.toLowerCase()});
     });
   });
 }
 
-updateUsersWhoStarredToLowerCase2() async {
+/**
+ * Can be used to update child usernames like at users_who_starred/item/someitem/dave.
+ * Modify as appropriate.
+ */
+updateUsersWhoStarredAndRelated() async {
   String location = "starred_by_user";
   Map query = await Firebase.get('/$location.json');
   query.forEach((k, v) {

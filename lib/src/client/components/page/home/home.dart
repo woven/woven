@@ -262,9 +262,16 @@ class Home extends PolymerElement with Observable {
           'email': email.value.trim()
         }));
 
-    toggleProcessingIndicator();
+    // Set up the response as an object.
+    Response response = Response.fromJson(JSON.decode(request.responseText));
 
-    showGetStartedNote();
+    if (response.success) {
+      toggleProcessingIndicator();
+      showGetStartedNote();
+    } else {
+      toggleProcessingIndicator();
+      window.alert(response.message);
+    }
   }
 
   /**

@@ -379,6 +379,10 @@ http://woven.co
     data['createdDate'] = now.toString();
     data['.priority'] = -now.millisecondsSinceEpoch;
 
+    var checkForExistingEmail = await Firebase.get('/email_index/${encodeFirebaseKey(data['email'])}.json');
+    if (checkForExistingEmail != null) return Response.fromError('There\'s already an account associated with that email address. Perhaps you signed in with Facebook?');
+
+
     // Kill any existing session if the user signs up again.
     app.sessionManager.deleteCookie(request);
 
