@@ -21,6 +21,7 @@ class UserController {
     Map data = JSON.decode(dataReceived);
     String username = (data['username'] as String).toLowerCase();
     String facebookId = data['facebookId']; // We may have a facebookId if they're a temporary user.
+    String email = (data['email'] as String).toLowerCase();
 
     var lookForExistingUser = await findUserInfo(username);
     if (lookForExistingUser != null) return Response.fromError('That username is not available.'); // User already exists.
@@ -61,6 +62,9 @@ class UserController {
 
     // Create the new user.
     Firebase.put('/users/$username.json', data, auth: config['datastore']['firebaseSecret']);
+
+    //Add the user's email address to the email index so we can look up later by email.
+    Firebase.put('/email_index/${encodeFirebaseKey(data['email'])}.json', {'user': username, 'email': email}, auth: config['datastore']['firebaseSecret']);
 
     // Prepare the data for response.
     data.remove('password'); // The client doesn't need the password.
