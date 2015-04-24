@@ -110,6 +110,7 @@ class App {
   void onServerEstablished(HttpServer server) {
     print("Server started.");
 
+    server.autoCompress = true;
     server.sessionTimeout = new DateTime.now().add(new Duration(days: 365)).toUtc().millisecondsSinceEpoch*1000;
 
     server.listen((HttpRequest request) {
