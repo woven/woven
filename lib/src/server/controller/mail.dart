@@ -431,6 +431,8 @@ http://woven.co
 
     Map data = JSON.decode(dataReceived);
 
+    if (!isValidEmail(data['email'])) return Response.fromError('That doesn\'t look like a valid email address.');
+
     var getData = await Future.wait([
       Firebase.get('/users/${data['fromUser']}.json'),
       Firebase.get('/communities/${data['community']}.json')

@@ -72,8 +72,8 @@ class ChatBox extends PolymerElement {
     if (message.message.trim().startsWith(('/'))) {
       message.type = 'notification';
       viewModel.commandRouter(message);
-      Timer.run(() => chatView.scrollToBottom());
       Timer.run(() => resetCommentInput());
+      return;
     }
 
     // Insert the message instantly.

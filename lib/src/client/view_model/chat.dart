@@ -348,6 +348,12 @@ class ChatViewModel extends BaseViewModel with Observable {
         // TODO: Validate the email.
         String email = commandOptions;
 
+        if (email == null || email.trim().isEmpty) {
+          message.message = 'I need a valid email address.';
+          insertMessage(message.toJson());
+          break;
+        }
+
         HttpRequest request = await HttpRequest.request(
             Routes.inviteUserToChannel.toString(),
             method: 'POST',
@@ -385,6 +391,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         insertMessage(message.toJson());
         break;
     }
+    Timer.run(() => chatView.scrollToBottom());
   }
 
   void paginate() {
