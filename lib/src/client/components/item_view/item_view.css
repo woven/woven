@@ -121,6 +121,7 @@ core-item core-icon {
 }
 
 .theme-dark .item-photo-area .item-photo-wrapper {
+  background: #2d2d2d;
   border-color: #1D1D1D;
 }
 

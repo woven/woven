@@ -124,6 +124,7 @@ core-item core-icon {
 
 .theme-dark .item-photo-area .item-photo-wrapper {
   border-color: #1D1D1D;
+  background: #2d2d2d;
 }
 
 .message {
@@ -414,21 +415,26 @@ core-item core-icon {
     height: 80px;
     overflow: hidden;
   }
+
   .item-photo-area .item-photo {
     width: 80px;
     height: 80px;
   }
+
   .item-photo-area .item-photo-icon-none {
     width: 60px;
     margin-top: 0 !important;
   }
+
   .item.compact .item-body {
     white-space: nowrap;
   }
+
   .item.compact .event-date {
     display: block;
     margin-bottom: 5px;
   }
+
   .item.compact .item-subject {
     margin-bottom: 0;
   }
