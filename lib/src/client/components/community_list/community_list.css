@@ -125,6 +125,7 @@
 .theme-dark .join-button {
   border: none;
   color: #e0e0e0;
+  background-color: transparent;
 }
 
 .join-button:hover {
@@ -144,6 +145,10 @@
 
 .join-button:active:not([disabled]), .join-button.selected:active:not([disabled]) {
   background-color: #fff;
+}
+
+.theme-dark .join-button:active:not([disabled]), .theme-dark .join-button.selected:active:not([disabled]) {
+  background-color: transparent;
 }
 
 .join-button span {
