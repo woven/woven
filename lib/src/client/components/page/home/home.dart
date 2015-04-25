@@ -331,7 +331,6 @@ class Home extends PolymerElement with Observable {
         toggleProcessingIndicator();
         app.user = null; // Kill the disabled user.
         showSignUpNote();
-
       } else {
         f.authWithCustomToken(app.authToken).catchError((error) => print(error));
 
@@ -353,11 +352,12 @@ class Home extends PolymerElement with Observable {
         app.showHomePage = false;
         app.skippedHomePage = true;
 
-        // When the user completes the welcome dialog, send them a welcome email.
-        HttpRequest.request(Routes.sendWelcome.toString());
-
         Timer.run(() => app.showMessage('Welcome to Woven, ${app.user.username}!'));
       }
+
+      // When the user completes the welcome dialog, send them a welcome email.
+      HttpRequest.request(Routes.sendWelcome.toString());
+
     } else {
       toggleProcessingIndicator();
       window.alert(response.message);

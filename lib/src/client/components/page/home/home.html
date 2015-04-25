@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="home.css">
     <div class="cover" layout vertical fit>
       <template if="{{!app.isMobile}}"><div class="logo"></div></template>
-      <div class="cta" self-center>
+      <div class="cta {{app.homePageCta}}" self-center>
         <div class="content-container" layout vertical>
           <template if="{{app.isMobile}}"><div class="logo-solo"></div></template>
 
@@ -26,12 +26,12 @@
             </div>
             <div class="footer" self-center>
               <p>We protect your information. Leave anytime.</p>
-              <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+              <p class="links"><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
             </div>
           </template>
 
           <template if="{{app.homePageCta == 'sign-in'}}">
-            <h3>Please sign in.</h3>
+            <h3 class="first">Please sign in.</h3>
 
             <div self-center>
               <div class="field-wrapper first">
@@ -46,7 +46,7 @@
               <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signIn}}"></core-a11y-keys>
             </div>
             <div class="footer" self-center>
-              <p><a on-tap="{{showSignUp}}">Sign up</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+              <p class="links"><a on-tap="{{showSignUp}}">Sign up</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
             </div>
           </template>
 
@@ -104,7 +104,7 @@
           </template>
 
           <template if="{{app.homePageCta == 'sign-up-note'}}">
-            <h3>Look out for an invitation...</h3>
+            <h3 class="first">Look out for an invitation...</h3>
 
             <div self-center>
               <p>
@@ -114,7 +114,7 @@
                 to more communities. We can't wait to get you involved.
               </p>
               <div class="footer" self-center>
-                <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+                <p class="links"><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
               </div>
             </div>
           </template>
@@ -144,7 +144,7 @@
                 Want to discuss? hello@woven.co
               </p>
               <div class="footer" self-center>
-                <p><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
+                <p class="links"><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
               </div>
             </div>
           </template>
