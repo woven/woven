@@ -23,7 +23,7 @@ class MailController {
 
     // Find the username associated with the Facebook ID
     // that's in session.id, then get that user data.
-    return Firebase.get('/facebook_index/$id.json').then((indexData) {
+    return Firebase.get('/session_index/$id.json').then((indexData) {
       var username = (indexData['username'] as String).toLowerCase();
       return Firebase.get('/users/$username.json').then((userData) {
         // Send the welcome email.
@@ -32,22 +32,23 @@ class MailController {
           ..to = ['${userData['firstName']} ${userData['lastName']} <${userData['email']}>']
           ..bcc = ['David Notik <davenotik@gmail.com>']
           ..subject = 'Welcome, ${userData['firstName']}!'
-          ..text = '''
-Hi ${userData['firstName']},
+          ..html = '''
+<p>Hi ${userData['firstName']},</p>
 
-Thank you for joining Woven.
+<p>Thank you for joining Woven.<p>
 
-Access is limited at this time. The quickest way to get in is to ask someone to invite you to an existing channel.
-If you don't know someone, reply to this email and let us know which channel you believe you should have access to.
+<p>Access is limited at this time. The quickest way to get in is to <strong>ask a current participant to invite you</strong> to an existing channel. If you don't know someone, reply to this email and let us know which channel you believe you should have access to.</p>
 
-Otherwise, we'll let you know when we open up to more communities. Thank you very much for your patience.
+<p>Otherwise, we'll let you know when we open up to more people and communities. Thank you very much for your patience.</p>
 
---
-Woven
-http://woven.co
-
-http://facebook.com/woven
-http://twitter.com/wovenco
+<p>
+--<br/>
+Woven<br/>
+<a href="http://woven.co">http://woven.co</a><br/>
+<br/>
+<a href="http://facebook.com/woven">http://facebook.com/woven</a><br/>
+<a href="http://twitter.com/wovenco">http://twitter.com/wovenco</a><br/>
+</p>
 ''';
         return app.mailer.send(envelope).then((success) {
           return new Response(success);
@@ -380,7 +381,7 @@ http://woven.co
     data['.priority'] = -now.millisecondsSinceEpoch;
 
     var checkForExistingEmail = await Firebase.get('/email_index/${encodeFirebaseKey(data['email'])}.json');
-    if (checkForExistingEmail != null) return Response.fromError('There\'s already an account associated with that email address. Perhaps you signed in with Facebook?');
+    if (checkForExistingEmail != null) return Response.fromError('There\'s already an account associated with that email address. Perhaps you sign in with Facebook?');
 
 
     // Kill any existing session if the user signs up again.

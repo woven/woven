@@ -54,7 +54,7 @@ class UserController {
       Map newSession = await app.sessionManager.addSessionToIndex(newSessionId, username);
       data['authToken'] = newSession['authToken'];
       // If the user isn't disabled (i.e. they  have an invitation) send down a session to sign them in.
-      if (!data['disabled']) app.sessionManager.addSessionCookieToRequest(request, newSessionId);
+      app.sessionManager.addSessionCookieToRequest(request, newSessionId);
     }
 
     // Update the onboarding state now that we created the user.
