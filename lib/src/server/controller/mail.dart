@@ -41,6 +41,8 @@ class MailController {
 <p>Your username is <strong>${userData['username']}</strong>.</p>
 
 <p>Please share your feedback and join us in shaping Woven at http://woven.co/woven.</p>
+
+<p><strong>Pro tip:</strong> In any channel Lobby, use the <strong>/invite</strong> command followed by an email address to invite someone else. They will get immediate access.</p>
       ''';
     }
 
