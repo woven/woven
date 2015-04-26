@@ -16,30 +16,46 @@ class MailController {
   /**
    * Send a welcome email to the user when they complete sign up.
    */
-  static sendWelcomeEmail(App app, HttpRequest request) {
+  static sendWelcomeEmail(App app, HttpRequest request) async {
     var id = request.cookies.firstWhere((cookie) => cookie.name == 'session').value;
 
     if (id == null) return new Response(false);
 
     // Find the username associated with the Facebook ID
     // that's in session.id, then get that user data.
-    return Firebase.get('/session_index/$id.json').then((indexData) {
-      var username = (indexData['username'] as String).toLowerCase();
-      return Firebase.get('/users/$username.json').then((userData) {
-        // Send the welcome email.
-        var envelope = new Envelope()
-          ..from = "Woven <hello@woven.co>"
-          ..to = ['${userData['firstName']} ${userData['lastName']} <${userData['email']}>']
-          ..bcc = ['David Notik <davenotik@gmail.com>']
-          ..subject = 'Welcome, ${userData['firstName']}!'
-          ..html = '''
+    Map indexData = await Firebase.get('/session_index/$id.json');
+    var username = (indexData['username'] as String).toLowerCase();
+    Map userData = await Firebase.get('/users/$username.json');
+
+    // Customize the email based on whether the user is disabled or not.
+    var emailText;
+    if (userData['disabled']) {
+      emailText = '''
+<p>Access is limited at this time. The quickest way to get in is to <strong>ask a current participant to invite you</strong> to an existing channel. If you don't know someone, reply to this email and let us know which channel you believe you should have access to.</p>
+
+<p>Otherwise, we'll let you know when we open up to more people and communities. Thank you very much for your patience.</p>
+      ''';
+
+    } else {
+      emailText = '''
+<p>Your username is <strong>${userData['username']}</strong>.</p>
+
+<p>Please share your feedback and join us in shaping Woven at http://woven.co/woven.</p>
+      ''';
+    }
+
+    // Send the welcome email.
+    var envelope = new Envelope()
+      ..from = "Woven <hello@woven.co>"
+      ..to = ['${userData['firstName']} ${userData['lastName']} <${userData['email']}>']
+      ..bcc = ['David Notik <davenotik@gmail.com>']
+      ..subject = 'Welcome, ${userData['firstName']}!'
+      ..html = '''
 <p>Hi ${userData['firstName']},</p>
 
 <p>Thank you for joining Woven.<p>
 
-<p>Access is limited at this time. The quickest way to get in is to <strong>ask a current participant to invite you</strong> to an existing channel. If you don't know someone, reply to this email and let us know which channel you believe you should have access to.</p>
-
-<p>Otherwise, we'll let you know when we open up to more people and communities. Thank you very much for your patience.</p>
+$emailText
 
 <p>
 --<br/>
@@ -50,10 +66,9 @@ Woven<br/>
 <a href="http://twitter.com/wovenco">http://twitter.com/wovenco</a><br/>
 </p>
 ''';
-        return app.mailer.send(envelope).then((success) {
-          return new Response(success);
-        });
-      });
+
+    return app.mailer.send(envelope).then((success) {
+      return new Response(success);
     });
   }
 
