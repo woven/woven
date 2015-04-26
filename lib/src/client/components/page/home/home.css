@@ -39,7 +39,6 @@
   /* border: solid 6px rgba(255, 255, 255, 0.8); */
   background: rgba(255, 255, 255, 0.9);
   color: white;
-  width: 500px;
   border-radius: 3px;
   text-align: center;
   position: relative;
@@ -47,8 +46,8 @@
   opacity: 0;
 }
 
-.cta.sign-in {
-  width: inherit;
+.cta.sign-up, .cta.sign-up-note {
+  width: 500px;
 }
 
 .cta h2 {

@@ -52,7 +52,7 @@
 
           <template if="{{app.homePageCta == 'complete-sign-up'}}">
             <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-              <h3>Please complete your sign up.</h3>
+              <h3 class="first">Please complete your sign up.</h3>
             </template>
             <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
               <h3>Please update your account.</h3>
@@ -98,9 +98,6 @@
                 <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
               </template>
             </div>
-            <div class="footer" self-center>
-              <p style="visibility:hidden;"><a on-tap="{{close}}">Just browse &#8594;</a></p>
-            </div>
           </template>
 
           <template if="{{app.homePageCta == 'sign-up-note'}}">
@@ -120,7 +117,7 @@
           </template>
 
           <template if="{{app.homePageCta == 'get-started-note'}}">
-            <h3>Check your email...</h3>
+            <h3 class="first">Check your email...</h3>
 
             <div self-center>
               <p>
