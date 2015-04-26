@@ -476,7 +476,7 @@ http://woven.co
       ..bcc = ['David Notik <davenotik@gmail.com>']
       ..subject = "${fromUser['firstName']} invited you to ${community['name']}"
       ..text = '''
-${fromUser['firstName']} ${fromUser['lastName']} (${fromUser['username']} ) has invited you to ${community['name']} (${community['alias']}) on Woven.
+${fromUser['firstName']} ${fromUser['lastName']} (${fromUser['username']}) has invited you to ${community['name']} (${community['alias']}) on Woven.
 
 Please go to this link to accept the invitation:
 
