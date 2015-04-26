@@ -114,6 +114,8 @@ class App {
     server.sessionTimeout = new DateTime.now().add(new Duration(days: 365)).toUtc().millisecondsSinceEpoch*1000;
 
     server.listen((HttpRequest request) {
+      addCorsHeaders(request.response);
+
       // Some redirects if coming from related domains.
       if (request.headers.host != null && (request.headers.host.contains("mycommunity.org") || request.headers.host.contains("woven.org"))) {
         request.response.redirect(new Uri(scheme: 'http', host: 'woven.co', path: request.uri.path));
@@ -234,4 +236,17 @@ class App {
   }
 
   void printError(error) => print("Error: $error");
+
+  /**
+   * Add Cross-site headers to enable accessing this server from pages
+   * not served by this server
+   *
+   * See: http://www.html5rocks.com/en/tutorials/cors/
+   * and http://enable-cors.org/server.html
+   */
+  void addCorsHeaders(HttpResponse response) {
+    response.headers.add("Access-Control-Allow-Origin", "*");
+    response.headers.add("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    response.headers.add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  }
 }
