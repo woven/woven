@@ -38,14 +38,12 @@ class ItemActivities extends PolymerElement {
    */
   getActivities() {
     var itemId;
-    print('debug: ${app.router.selectedItem}');
     // If there's no app.selectedItem, we probably
     // came here directly, so let's use itemId from the URL.
     if (app.router.selectedItem == null) {
       // Decode the base64 URL and determine the item.
       var encodedItemId = Uri.parse(window.location.toString()).pathSegments[1];
       itemId = base64Decode(encodedItemId);
-      print('debug2');
     } else {
       itemId = app.router.selectedItem['id'];
     }
@@ -236,7 +234,6 @@ class ItemActivities extends PolymerElement {
 
   attached() {
     getActivities();
-//    fixItemCommunities();
   }
 
   detached() {
