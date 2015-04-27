@@ -294,7 +294,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     GainNode gainNode = audioContext.createGain();
 
     // get the audio file
-    HttpRequest request = await HttpRequest.request("/static/audio/beep_short_on.wav", responseType: "arraybuffer");
+    HttpRequest request = await HttpRequest.request(app.serverPath + "/static/audio/beep_short_on.wav", responseType: "arraybuffer");
     // decode it
     AudioBuffer buffer = await audioContext.decodeAudioData(request.response);
     AudioBufferSourceNode source = audioContext.createBufferSource();
@@ -355,6 +355,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         }
 
         HttpRequest request = await HttpRequest.request(
+            app.serverPath +
             Routes.inviteUserToChannel.toString(),
             method: 'POST',
             sendData: JSON.encode({

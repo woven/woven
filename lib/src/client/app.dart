@@ -28,7 +28,7 @@ class App extends Observable {
   bool isFocused = true;
   bool debugMode;
   List reservedPaths = ['people', 'events', 'item', 'confirm'];
-//  @observable bool isNewUser = false;
+  final String serverPath = 'http://' + config['server']['domain'];
 
   Router router;
   MainViewModel mainViewModel;

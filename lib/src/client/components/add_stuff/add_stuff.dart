@@ -257,13 +257,14 @@ class AddStuff extends PolymerElement {
       var dataJson = {'itemId': itemId, 'authToken': app.authToken};
       // Start a crawl for a URI preview. The return is handled in onChildChanged.
       HttpRequest.request(
+          app.serverPath +
           Routes.getUriPreview.toString(),
           method: 'POST',
           sendData: JSON.encode(dataJson));
     }
 
     // Send a notification email to anybody mentioned in the item.
-    HttpRequest.request(Routes.sendNotificationsForItem.toString() + "?id=$itemId");
+    HttpRequest.request(app.serverPath + Routes.sendNotificationsForItem.toString() + "?id=$itemId");
 
     overlay.toggle();
 

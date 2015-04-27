@@ -256,6 +256,7 @@ class Home extends PolymerElement with Observable {
 
     // Check credentials and sign the user in server side.
     HttpRequest request = await HttpRequest.request(
+        app.serverPath +
         Routes.sendConfirmEmail.toString(),
         method: 'POST',
         sendData: JSON.encode({
@@ -305,6 +306,7 @@ class Home extends PolymerElement with Observable {
 
     // Check credentials and sign the user in server side.
     HttpRequest request = await HttpRequest.request(
+      app.serverPath +
       Routes.createNewUser.toString(),
       method: 'POST',
       sendData: JSON.encode({
@@ -356,7 +358,7 @@ class Home extends PolymerElement with Observable {
       }
 
       // When the user completes the welcome dialog, send them a welcome email.
-      HttpRequest.request(Routes.sendWelcome.toString());
+      HttpRequest.request(app.serverPath + Routes.sendWelcome.toString());
 
     } else {
       toggleProcessingIndicator();
@@ -443,7 +445,7 @@ class Home extends PolymerElement with Observable {
 
     // Check credentials and sign the user in server side.
     HttpRequest.request(
-        Routes.signIn.toString(),
+        app.serverPath + Routes.signIn.toString(),
         method: 'POST',
         sendData: JSON.encode({'username': username.value.toLowerCase(), 'password': password.value}))
     .then((HttpRequest request) {

@@ -60,6 +60,7 @@ class SignInDialog extends PolymerElement {
 
     // Check credentials and sign the user in server side.
     HttpRequest.request(
+        app.serverPath +
         Routes.signIn.toString(),
         method: 'POST',
         sendData: JSON.encode({'username': username.value.toLowerCase(), 'password': password.value}))

@@ -45,6 +45,7 @@ class WovenApp extends PolymerElement with Observable {
 
   void signOut() {
     HttpRequest.request(
+        app.serverPath +
         Routes.signOut.toString(),
         method: 'GET').then((_) {
       document.body.classes.add('no-transition');
@@ -99,7 +100,8 @@ class WovenApp extends PolymerElement with Observable {
   attached() {
     // Whenever we load the app, try to see what's the current user (i.e. have we signed in?).
 //    Timer.run(() => app.showMessage('Signing you in...'));
-    HttpRequest.getString(Routes.currentUser.reverse([])).then((String contents) {
+    HttpRequest.getString(app.serverPath + Routes.currentUser.reverse([])).then((String contents) {
+      print(contents);
       var response = Response.fromJson(JSON.decode(contents));
       if (response.success && response.data != null) {
         app.authToken = response.data['auth_token'];

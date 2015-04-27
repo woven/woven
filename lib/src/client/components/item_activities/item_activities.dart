@@ -216,7 +216,7 @@ class ItemActivities extends PolymerElement {
 
     var commentId = id.key;
     // Send a notification email to the item's author.
-    HttpRequest.request(Routes.sendNotificationsForComment.toString() + "?id=$commentId&itemid=$itemId");
+    HttpRequest.request(app.serverPath + Routes.sendNotificationsForComment.toString() + "?id=$commentId&itemid=$itemId");
 
     // Reset the fields.
     resetCommentInput();

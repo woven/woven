@@ -84,6 +84,7 @@ class ChatBox extends PolymerElement {
 
     // Save the message to Firebase server-side.
     HttpRequest.request(
+        app.serverPath +
         Routes.addMessage.toString(),
         method: 'POST',
         sendData: JSON.encode({'model': message, 'authToken': app.authToken}))

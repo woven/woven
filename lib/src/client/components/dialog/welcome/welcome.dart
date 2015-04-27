@@ -105,6 +105,7 @@ class WelcomeDialog extends PolymerElement {
   createNewUser() {
     // Check credentials and sign the user in server side.
     HttpRequest.request(
+        app.serverPath +
         Routes.createNewUser.toString(),
         method: 'POST',
         sendData: JSON.encode({
