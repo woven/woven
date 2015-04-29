@@ -312,8 +312,8 @@ class Home extends PolymerElement with Observable {
       sendData: JSON.encode({
         'username': username.value.trim(),
         'password': password.value,
-        'firstName': firstname.value,
-        'lastName': lastname.value,
+        'firstName': firstname.value.trim(),
+        'lastName': lastname.value.trim(),
         'email': email.value.trim(),
         'onboardingState': app.user.onboardingState,
         'invitation': app.user.invitation,
