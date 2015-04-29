@@ -66,12 +66,14 @@ class UserController {
     //Add the user's email address to the email index so we can look up later by email.
     Firebase.put('/email_index/${encodeFirebaseKey(data['email'])}.json', {'user': username, 'email': email}, auth: config['datastore']['firebaseSecret']);
 
+    Map dataForResponse = new Map.from(data);
+
     // Prepare the data for response.
-    data.remove('password'); // The client doesn't need the password.
-    data.remove('.priority');
+    dataForResponse.remove('password'); // The client doesn't need the password.
+    dataForResponse.remove('.priority');
 
     var response = new Response();
-    response.data = data;
+    response.data = dataForResponse;
     response.success = true;
     return response;
   }
