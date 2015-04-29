@@ -62,7 +62,7 @@ class DailyDigestTask extends Task {
               ..subject = 'Here\'s the ${community.alias} digest, ${user.firstName} – ${now.toString()}'
               ..html = '$mergedDigest';
 
-            app.mailer.send(envelope).then((Map res) {
+            Mailgun.send(envelope).then((Map res) {
               if (res['status'] == 200) return; // Success.
               print('Daily digest failed to send. Response was:\n$res');
             });

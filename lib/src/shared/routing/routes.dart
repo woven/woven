@@ -12,7 +12,6 @@ class Routes {
   static final starred = new UrlPattern(r'/saved');
   static final people = new UrlPattern(r'/people');
   static final communityPeople = new UrlPattern(r'(.+)/people');
-  static final sendWelcome = new UrlPattern(r'/sendwelcome');
   static final sendNotificationsForItem = new UrlPattern(r'/_notifyforitem');
   static final sendNotificationsForComment = new UrlPattern(r'/_notifyforcomment');
   static final getUriPreview = new UrlPattern(r'/_geturipreview');

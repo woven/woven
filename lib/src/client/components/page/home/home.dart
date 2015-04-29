@@ -357,9 +357,6 @@ class Home extends PolymerElement with Observable {
         Timer.run(() => app.showMessage('Welcome to Woven, ${app.user.username}!'));
       }
 
-      // When the user completes the welcome dialog, send them a welcome email.
-      HttpRequest.request(app.serverPath + Routes.sendWelcome.toString());
-
     } else {
       toggleProcessingIndicator();
       window.alert(response.message);

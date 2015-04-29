@@ -67,7 +67,6 @@ class App {
       ..routes[Routes.currentUser] = SignInController.getCurrentUser
       ..routes[Routes.starred] = MainController.serveApp
       ..routes[Routes.people] = MainController.serveApp
-      ..routes[Routes.sendWelcome] = MailController.sendWelcomeEmail
       ..routes[Routes.sendNotificationsForItem] = MailController.sendNotificationsForItem
       ..routes[Routes.sendNotificationsForComment] = MailController.sendNotificationsForComment
       ..routes[Routes.getUriPreview] = MainController.getUriPreview
@@ -88,7 +87,6 @@ class App {
       ..jailRoot = false;
 
     // Set up some objects.
-    mailer = new Mailgun();
     profilePictureUtil = new ProfilePictureUtil(this);
     taskScheduler = new TaskScheduler(this);
     sessionManager = new SessionManager();

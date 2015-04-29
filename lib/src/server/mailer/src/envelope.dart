@@ -21,4 +21,18 @@ class Envelope {
         'text': text
     };
   }
+
+  /**
+   * Prepare the envelope for transmission over http POST.
+   *
+   * Removes null properties and converts lists to strings.
+   */
+  static prepareForPost(Envelope e) {
+    Map map = e.toMap();
+    Map newMap = new Map.from(map);
+    map.forEach((k, v) {
+      if (v is List) newMap[k] = (v as List).join(',');
+    });
+    return removeNullsFromMap(newMap);
+  }
 }
