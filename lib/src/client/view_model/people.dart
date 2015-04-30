@@ -9,7 +9,7 @@ import 'dart:async';
 
 class PeopleViewModel extends BaseViewModel with Observable {
   final App app;
-  final List users = toObservable([]);
+  final List items = toObservable([]);
   int pageSize = 40;
   int pages = 0;
   @observable bool isLoading = false;
@@ -26,38 +26,46 @@ class PeopleViewModel extends BaseViewModel with Observable {
     loadPage();
   }
 
-  loadPage() {
+  loadPage() async {
     isLoading = true;
-    if ((users.length - 1) > (pageSize * pages)) return;
+    if ((items.length - 1) > (pageSize * pages)) return;
     pages++;
 
     var queryRef = f.child('/users')
       .orderByChild('_priority')
-      .startAt(priority: lastPriority)
+      .startAt(value: lastPriority)
       .limitToFirst(pageSize + 1);
 
     // If we count any less than one more beyond the current page, we've reached the end.
     int count = 0;
-    queryRef.once('value').then((results) {
-      results.forEach((i) => count++ );
-      if (count <= pageSize) reachedEnd = true;
-      isLoading = false;
-    });
+    DataSnapshot results = await queryRef.once('value');
+    results.forEach((i) => count++ );
+    if (count <= pageSize) reachedEnd = true;
+    isLoading = false;
+
+    // Find the index of the item with the closest updated date.
+    indexOfClosestItemByDate(DateTime date) {
+      for (var item in items.reversed) {
+        if ((item['createdDate'] as DateTime).isAfter(date)) return items.indexOf(item);
+      }
+    }
 
     queryRef.onChildAdded.listen((e) {
-      var user = e.snapshot.val();
-      lastPriority = user['_priority'];
-      var existingItem = users.firstWhere((i) => (i['username'] as String).toLowerCase() == e.snapshot.key, orElse: () => null);
+      var item = e.snapshot.val();
+      lastPriority = item['_priority'];
+      var existingItem = items.firstWhere((i) => (i['username'] as String).toLowerCase() == e.snapshot.key, orElse: () => null);
 
-      if (existingItem == null && !user['disabled']) {
+      if (existingItem == null && !item['disabled']) {
         // The live-date-time element needs parsed dates.
-        user['createdDate'] = user['createdDate'] != null ? DateTime.parse(user['createdDate']) : new DateTime.now();
+        item['createdDate'] = item['createdDate'] != null ? DateTime.parse(item['createdDate']) : new DateTime.now();
 
         // Assemble the full path of the user's profile picture.
         // TODO: Simplify choosing of original or small.
-        if (user['picture'] != null) user['picture'] = "${config['google']['cloudStoragePath']}/${(user['pictureSmall'] != null) ? user['pictureSmall'] : user['picture']}";
+        if (item['picture'] != null) item['picture'] = "${config['google']['cloudStoragePath']}/${(item['pictureSmall'] != null) ? item['pictureSmall'] : item['picture']}";
 
-        users.add(user); // Add to list.
+        var index = indexOfClosestItemByDate(item['createdDate']);
+
+        items.insert(index == null ? 0 : index + 1, item);
       }
     });
   }

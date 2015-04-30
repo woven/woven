@@ -7,7 +7,7 @@
   <template>
     <link rel="stylesheet" href="people_list.css">
     <div id="content-container" class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
-      <template repeat="{{user in viewModel.users}}">
+      <template repeat="{{user in viewModel.items}}">
         <core-item class="item" on-tap="{{selectUser}}" data-user="{{user['username']}}">
           <div class="item-container" horizontal layout>
             <div class="item-col1" vertical layout>
