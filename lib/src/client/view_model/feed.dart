@@ -34,7 +34,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     if (typeFilter == 'event') {
       var now = new DateTime.now();
       DateTime startOfToday = new DateTime(now.year, now.month, now.day);
-      topPriority = lastPriority = startOfToday.millisecondsSinceEpoch;
+      topPriority = lastPriority = startOfToday.toUtc().millisecondsSinceEpoch;
     } else {
       topPriority == null;
     }
@@ -55,9 +55,18 @@ class FeedViewModel extends BaseViewModel with Observable {
       dataLocation = '/items_by_community/' + app.community.alias;
     }
 
-    var itemsRef = f.child(dataLocation)
-      .startAt(priority: lastPriority)
+    Query itemsRef;
+    if (typeFilter == 'event') {
+      itemsRef = f.child(dataLocation)
+      .orderByChild('startDateTimePriority')
+      .startAt(value: '$lastPriority')
       .limitToFirst(pageSize + 1);
+    } else {
+      itemsRef = f.child(dataLocation)
+      .startAt(value: lastPriority)
+      .limitToFirst(pageSize + 1);
+    }
+
 
     if (items.length == 0) onLoadCompleter.complete(true);
 
@@ -67,7 +76,12 @@ class FeedViewModel extends BaseViewModel with Observable {
         count++;
 
         // Track the snapshot's priority so we can paginate from the last one.
-        lastPriority = itemSnapshot.getPriority();
+        if (typeFilter == 'event') {
+          Map item = itemSnapshot.val();
+          lastPriority = item['startDateTimePriority'];
+        } else {
+          lastPriority = itemSnapshot.getPriority();
+        }
 
         // Don't process the extra item we tacked onto pageSize in the limit() above.
         if (count > pageSize) return;
@@ -82,7 +96,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
       updateEventView();
 
-      listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
+//      listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
@@ -145,7 +159,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
       if (typeFilter == 'event') {
         // Sort the list by the event's startDateTime.
-        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
+//        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
         updateEventView();
       }
     });
