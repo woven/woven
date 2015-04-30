@@ -9,7 +9,7 @@ class RegexHelper {
   static String emailName = '[a-zA-Z0-9-._+]';
   static String email = '\\b${emailName}@${domain}\\b';
 
-  static String queryPath = '\\/[-~+=%@_a-zA-Z0-9.]*[-~+=%_a-zA-Z0-9]';
+  static String queryPath = '\\/[-~+=%!#@_a-zA-Z0-9.]*[-~+=%!#_a-zA-Z0-9]';
   static String searchString = '\\?[-+=&;%@_.a-zA-Z0-9]*[-+=&;%@_a-zA-Z0-9]';
   static String queryHash = '#[-=_a-zA-Z0-9]+';
 
@@ -17,7 +17,7 @@ class RegexHelper {
 
   static String linkOrEmail = '($email|$link)';
 
-  static String mention = r'(^|\s+)(@[a-zA-Z0-9_-]+)((?=\s+)|$|[!?.,-])';
+  static String mention = r'(^|\s+)(@[a-zA-Z0-9_-]+)((?=\s+)|$|[!?.,-:])';
 
   // Letters and and numbers allowed, but not just numbers.
   static String username = r'^\d*[a-zA-Z][a-zA-Z\d]*$';
