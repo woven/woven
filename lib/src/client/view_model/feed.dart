@@ -140,8 +140,8 @@ class FeedViewModel extends BaseViewModel with Observable {
 
     // If this is the first item loaded, start listening for new items.
     var itemsRef = f.child(dataLocation)
-      .startAt(priority: startAt)
-      .endAt(priority: endAt);
+      .startAt(value: startAt)
+      .endAt(value: endAt);
 
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
@@ -280,6 +280,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     if (item['uriPreviewId'] != null) {
       f.child('/uri_previews/${item['uriPreviewId']}').onValue.listen((e) {
         var previewData = e.snapshot.val();
+        if (previewData == null) print(item['id']);
         UriPreview preview = UriPreview.fromJson(previewData);
         item['uriPreview'] = preview.toJson();
         item['uriPreview']['imageSmallLocation'] = (item['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${item['uriPreview']['imageSmallLocation']}' : null;

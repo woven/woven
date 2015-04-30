@@ -57,7 +57,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     int count = 0;
 
     var messagesRef = f.child('/messages_by_community/${app.community.alias}')
-    .startAt(priority: lastPriority)
+    .startAt(value: lastPriority)
     .limitToFirst(pageSize + 1);
 
     if (messages.length == 0) onLoadCompleter.complete(true);
@@ -145,8 +145,8 @@ class ChatViewModel extends BaseViewModel with Observable {
   listenForNewItems({startAt, endAt}) {
     // If this is the first item loaded, start listening for new items.
     var itemsRef = f.child('/messages_by_community/${app.community.alias}')
-    .startAt(priority: startAt)
-    .endAt(priority: endAt);
+    .startAt(value: startAt)
+    .endAt(value: endAt);
 
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
