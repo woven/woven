@@ -113,7 +113,11 @@ input {
 }
 
 #share-to {
-  margin-left: 5px;
+  margin-left: 10px;
+}
+
+.share-to {
+  background: whitesmoke;
 }
 
 .share-to-label {
@@ -200,10 +204,10 @@ a:hover {
 .list > * {
   cursor: pointer;
   color: #186FC5;
+  font-size: 14px;
   background: #fff;
   padding: 8px;
   margin-right: 5px;
-  /*margin-bottom: 10px;*/
   border-radius: 3px;
   position: relative;
   border-bottom-right-radius: 0;
