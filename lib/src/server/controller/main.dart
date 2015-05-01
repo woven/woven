@@ -99,51 +99,103 @@ class MainController {
   }
 
   /**
-   * Crawl for and get a preview for a given uri/link.
+   * Add a chat message.
    */
-  static addMessage(App app, HttpRequest req) {
+  static addMessage(App app, HttpRequest request) async {
+    String dataReceived = await new Utf8Codec().decodeStream(request);
+    Map data = JSON.decode(dataReceived);
+    String authToken = data['authToken'];
+    Map message = data['model'];
+    String community = message['community'];
+
+    print(message);
+
+    // Do some pre-processing of the data.
+    DateTime now = new DateTime.now().toUtc(); // Use the server's UTC time.
+    message['createdDate'] = now.toString();
+    message['updatedDate'] = now.toString();
+    message['user'] = (message['user'] as String).toLowerCase();
+
+    // Do some things with the data before saving.
+    message['.priority'] = -now.millisecondsSinceEpoch;
+    Map fullData = new Map.from(message);
+    message.remove('community');
+
+    // Add some additional stuff which we store in the main /messsages location.
+    // TODO: Later, we can add more parent communities here.
+    fullData['communities'] = {community: true};
+
+    // Add the message.
+    String messageId = await Firebase.post('/messages_by_community/$community.json', JSON.encode(message), auth: authToken);
+    Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()}, auth: authToken);
+    await Firebase.put('/messages/$messageId.json', fullData, auth: authToken);
+
+    // Send a notification email to anybody mentioned in the message.
+    fullData['id'] = messageId;
+    MailController.sendNotifications('message', fullData, app);
+
+    // Return the data back to the client.
+    var response = new Response();
+    response.data = messageId;
+    response.success = true;
+    return response;
+  }
+
+  /**
+   * Add a comment on an item.
+   */
+  static addComment(App app, HttpRequest req) async {
     HttpResponse res = req.response;
     String dataReceived;
 
-    return req.listen((List<int> buffer) {
+    await req.listen((List<int> buffer) {
       dataReceived = new String.fromCharCodes(buffer);
-    }).asFuture().then((_) {
-      Map data = JSON.decode(dataReceived);
-      String authToken = data['authToken'];
-      Map message = data['model'];
-      String community = message['community'];
+    }).asFuture();
 
-      // Do some pre-processing of the data.
-      DateTime now = new DateTime.now().toUtc(); // Use the server's UTC time.
-      message['createdDate'] = now.toString();
-      message['updatedDate'] = now.toString();
-      message['user'] = (message['user'] as String).toLowerCase();
+    Map data = JSON.decode(dataReceived);
+    String authToken = data['authToken'];
+    Map comment = data['model'];
+    String itemId = comment['itemId'];
 
-      // Do some things with the data before saving.
-      message['.priority'] = -now.millisecondsSinceEpoch;
-      Map fullData = new Map.from(message);
-      message.remove('community');
+    // Do some pre-processing of the data.
+    DateTime now = new DateTime.now().toUtc(); // Use the server's UTC time.
+    comment['createdDate'] = now.toString();
+    comment['updatedDate'] = now.toString();
+    comment['user'] = (comment['user'] as String).toLowerCase();
 
-      // Add some additional stuff which we store in the main /messsages location.
-      // TODO: Later, we can add more parent communities here.
-      fullData['communities'] = {community: true};
+    // Do some things with the data before saving.
+    comment['_priority'] = -now.millisecondsSinceEpoch;
+    Map fullData = new Map.from(comment);
 
-      // Add the message.
-      return Firebase.post('/messages_by_community/$community.json', JSON.encode(message), auth: authToken).then((String name) {
-        Firebase.patch('/communities/$community.json', {'updatedDate': now.toString()}, auth: authToken);
-        Firebase.put('/messages/$name.json', fullData, auth: authToken).then((_) {
-          // Send a notification email to anybody mentioned in the message.
-          fullData['id'] = name;
-          MailController.sendNotifications('message', fullData, app);
-        });
+    // Add the comment.
+    String name = await Firebase.post('/items/$itemId/activities/comments.json', JSON.encode(comment), auth: authToken);
 
-        // Return the data back to the client.
-        var response = new Response();
-        response.data = name;
-        response.success = true;
-        return response;
-      });
+    // Update the parent item.
+    Firebase.patch('/items/$itemId/updatedDate.json', now.toString(), auth: authToken);
+    // TODO: Patch the comment_count.
+    // http://stackoverflow.com/questions/23041800/firebase-transactions-via-rest-api
+
+    // Get some details from the parent item.
+    Map communities = await Firebase.get('/items/$itemId/communities.json');
+    Map type = await Firebase.get('/items/$itemId/type.json');
+
+    // Loop over and update multiple copies of the item.
+    var updateData = {'updatedDate': now.toString(), '_priority': -now.millisecondsSinceEpoch};
+    communities.keys.forEach((community) {
+      Firebase.patch('/items_by_community/$community/$itemId.json', updateData, auth: authToken);
+      Firebase.patch('/items_by_community_by_type/$community/$type/$itemId.json', updateData, auth: authToken);
+      Firebase.patch('/communities/$community.json', updateData, auth: authToken);
     });
+
+    // Send a notification email to anybody mentioned in the message.
+    fullData['id'] = name;
+    MailController.sendNotifications('comment', fullData, app);
+
+    // Return the data back to the client.
+    var response = new Response();
+    response.data = name;
+    response.success = true;
+    return response;
   }
 
   /**
