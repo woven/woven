@@ -223,6 +223,7 @@ core-item core-icon {
 
 .item-url {
   margin-top: 15px;
+  margin-bottom: 10px;
   font-size: 12px;
   text-transform: uppercase;
 }
@@ -309,7 +310,7 @@ core-item core-icon {
 }
 
 .item.compact .content-main {
-  padding: 9px 5px 0 0;
+  padding: 7px 5px 0 0;
 }
 
 .content-footer {

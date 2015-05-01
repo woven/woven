@@ -414,6 +414,7 @@ core-item core-icon {
 
 .item-url span {
   margin-top: 15px;
+  margin-bottom: 10px;
   font-size: 12px;
   text-transform: uppercase;
   color: green;
@@ -496,7 +497,7 @@ safe-html::shadow .mention {
   }
 
   .item.compact .content-main {
-    padding: 10px 8px 10px 10px;
+    padding: 7px 8px 10px 10px;
     overflow: hidden;
     margin-right: 5px;
   }
