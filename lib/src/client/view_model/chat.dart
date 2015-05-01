@@ -232,7 +232,7 @@ class ChatViewModel extends BaseViewModel with Observable {
       Notification notification = new Notification("${message['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((message['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/w_button_trans_margin.png');
       playNotificationSound();
       notification.addEventListener('click', notificationClicked);
-      new Timer(new Duration(seconds: 4), () {
+      new Timer(new Duration(seconds: 8), () {
         notification.close();
       });
     }
