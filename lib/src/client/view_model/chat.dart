@@ -149,7 +149,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     .endAt(value: endAt);
 
     // Listen for new items.
-    childAddedSubscriber = itemsRef.onChildAdded.listen((e) {
+    childAddedSubscriber = itemsRef.onChildAdded.listen((e) async {
       Map newItem = e.snapshot.val();
       newItem['id'] = e.snapshot.key;
 
@@ -178,35 +178,12 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       } else {
         // Insert each new item into the list.
-        usernameForDisplay(newItem['user']).then((String usernameForDisplay) async {
-          newItem['usernameForDisplay'] = usernameForDisplay;
+        newItem['usernameForDisplay'] = await usernameForDisplay(newItem['user']);
 
-          // Notify mentioned users.
-          // TODO: Put this someplace better.
+        // Notify mentioned users, unless this is a notification message.
+        if (newItem['type'] != 'notification') doNotifications(newItem);
 
-          var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
-
-          List mentions = [];
-
-          for (var mention in regExp.allMatches(newItem['message'])) {
-            if (mentions.contains(mention.group(2))) return;
-            mentions.add(mention.group(2).replaceAll("@", "").toLowerCase());
-          }
-
-          if (mentions.contains(app.user.username.toLowerCase())) {
-            // Notify the user.
-            if (!Notification.supported) return;
-
-            Notification notification = new Notification("${newItem['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((newItem['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/w_button_trans_margin.png');
-            playNotificationSound();
-            notification.addEventListener('click', notificationClicked);
-            new Timer(new Duration(seconds: 4), () {
-              notification.close();
-            });
-          }
-
-          insertMessage(newItem);
-        });
+        insertMessage(newItem);
       }
 
       // If user is scrolled to bottom, keep it that way.
@@ -236,6 +213,29 @@ class ChatViewModel extends BaseViewModel with Observable {
 //        messages.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
       });
     });
+  }
+
+  doNotifications(Map message) {
+    var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
+
+    List mentions = [];
+
+    for (var mention in regExp.allMatches(message['message'])) {
+      if (mentions.contains(mention.group(2))) return;
+      mentions.add(mention.group(2).replaceAll("@", "").toLowerCase());
+    }
+
+    if (mentions.contains(app.user.username.toLowerCase())) {
+      // Notify the user.
+      if (!Notification.supported) return;
+
+      Notification notification = new Notification("${message['usernameForDisplay']} mentioned you", body: InputFormatter.createTeaser((message['message'] as String).replaceAll('\n', ' '), 75), icon: '/static/images/w_button_trans_margin.png');
+      playNotificationSound();
+      notification.addEventListener('click', notificationClicked);
+      new Timer(new Duration(seconds: 4), () {
+        notification.close();
+      });
+    }
   }
 
   /**
