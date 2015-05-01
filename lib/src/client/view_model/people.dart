@@ -1,11 +1,13 @@
 library people_view_model;
 
+import 'dart:async';
+
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
+
+import 'base.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-import 'base.dart';
-import 'dart:async';
 
 class PeopleViewModel extends BaseViewModel with Observable {
   final App app;
@@ -15,8 +17,6 @@ class PeopleViewModel extends BaseViewModel with Observable {
   @observable bool isLoading = false;
   @observable bool reachedEnd = false;
   var lastPriority = null;
-  var topPriority = null;
-  var secondToLastPriority = null;
 
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
