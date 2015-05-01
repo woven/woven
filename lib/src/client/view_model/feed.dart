@@ -96,7 +96,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
       updateEventView();
 
-//      listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
+      listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
 
       // If we received less than we tried to load, we've reached the end.
       if (count <= pageSize) reachedEnd = true;
