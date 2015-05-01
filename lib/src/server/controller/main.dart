@@ -102,13 +102,10 @@ class MainController {
    * Add a chat message.
    */
   static addMessage(App app, HttpRequest request) async {
-    String dataReceived = await new Utf8Codec().decodeStream(request);
-    Map data = JSON.decode(dataReceived);
-    String authToken = data['authToken'];
+    Map data = JSON.decode(await new Utf8Codec().decodeStream(request));
     Map message = data['model'];
+    String authToken = data['authToken'];
     String community = message['community'];
-
-    print(message);
 
     // Do some pre-processing of the data.
     DateTime now = new DateTime.now().toUtc(); // Use the server's UTC time.
@@ -121,7 +118,7 @@ class MainController {
     Map fullData = new Map.from(message);
     message.remove('community');
 
-    // Add some additional stuff which we store in the main /messsages location.
+    // Add some additional stuff which we store in the main /messages location.
     // TODO: Later, we can add more parent communities here.
     fullData['communities'] = {community: true};
 
