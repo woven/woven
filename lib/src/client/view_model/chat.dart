@@ -258,7 +258,7 @@ class ChatViewModel extends BaseViewModel with Observable {
    * Prepare the message and insert it into the observed list.
    */
   insertMessage(Map message) {
-    message['message'] = sanitizer.convert(message['message']);
+    if (message['message'] != null) message['message'] = sanitizer.convert(message['message']);
 
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
