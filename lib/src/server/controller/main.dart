@@ -102,7 +102,9 @@ class MainController {
    * Add a chat message.
    */
   static addMessage(App app, HttpRequest request) async {
-    Map data = JSON.decode(await new Utf8Codec().decodeStream(request));
+    var decoder = JSON.fuse(UTF8).decoder;
+    var data = await decoder.bind(request).single;
+
     Map message = data['model'];
     String authToken = data['authToken'];
     String community = message['community'];
