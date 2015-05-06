@@ -78,7 +78,7 @@ class InboxList extends PolymerElement with Observable {
 //    }
 
     var priority = '2014-10-17 23:54:32.146Z';
-    f.child('/priority_test2').startAt(priority: priority).limitToFirst(10).onChildAdded.listen((e) {
+    f.child('/priority_test2').startAt(value: priority).limitToFirst(10).onChildAdded.listen((e) {
       print(e.snapshot.val());
       print(e.snapshot.key);
       print(e.snapshot.getPriority());
