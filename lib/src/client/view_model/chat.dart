@@ -37,6 +37,8 @@ class ChatViewModel extends BaseViewModel with Observable {
   var secondToLastPriority = null;
   int totalCount = 0;
 
+  var sanitizer = new HtmlEscape(HtmlEscapeMode.ELEMENT);
+
   StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
 
   ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
@@ -158,7 +160,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       var existingItem = messages.firstWhere((i) => (i['id'] != null)
         ? (i['id'] == newItem['id'])
-        : (i['user'] == newItem['user'] && i['message'] == newItem['message']), orElse: () => null);
+        : (i['user'] == newItem['user'] && i['message'] == sanitizer.convert(newItem['message'])), orElse: () => null);
 
       // If we already have the item, get out of here.
       if (existingItem != null) {
@@ -256,6 +258,8 @@ class ChatViewModel extends BaseViewModel with Observable {
    * Prepare the message and insert it into the observed list.
    */
   insertMessage(Map message) {
+    message['message'] = sanitizer.convert(message['message']);
+
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
 

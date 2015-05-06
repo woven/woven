@@ -24,7 +24,7 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.7"
+    version: "0.2.8"
   collection:
     description: collection
     source: hosted
@@ -40,7 +40,7 @@ packages:
   csslib:
     description: csslib
     source: hosted
-    version: "0.11.0+4"
+    version: "0.12.0"
   custom_element_apigen:
     description: custom_element_apigen
     source: hosted
@@ -49,10 +49,14 @@ packages:
     description: dart_style
     source: hosted
     version: "0.1.3"
+  emoji:
+    description: emoji
+    source: hosted
+    version: "1.0.3"
   firebase:
     description: firebase
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   glob:
     description: glob
     source: hosted
@@ -65,18 +69,22 @@ packages:
     description: googleapis_auth
     source: hosted
     version: "0.2.3+1"
+  html:
+    description: html
+    source: hosted
+    version: "0.12.1+1"
   html5lib:
     description: html5lib
     source: hosted
-    version: "0.12.0"
+    version: "0.12.1"
   http:
     description: http
     source: hosted
-    version: "0.11.1+3"
+    version: "0.11.2"
   http_parser:
     description: http_parser
     source: hosted
-    version: "0.0.2+5"
+    version: "0.0.2+6"
   http_server:
     description: http_server
     source: hosted
@@ -84,11 +92,11 @@ packages:
   initialize:
     description: initialize
     source: hosted
-    version: "0.5.1+4"
+    version: "0.5.1+8"
   intl:
     description: intl
     source: hosted
-    version: "0.12.0+3"
+    version: "0.12.2+1"
   jwt:
     description: jwt
     source: hosted
@@ -100,7 +108,7 @@ packages:
   matcher:
     description: matcher
     source: hosted
-    version: "0.11.4+3"
+    version: "0.11.4+4"
   meta:
     description: meta
     source: hosted
@@ -120,7 +128,7 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.13.0"
+    version: "0.13.0+2"
   paper_elements:
     description: paper_elements
     source: hosted
@@ -128,7 +136,7 @@ packages:
   path:
     description: path
     source: hosted
-    version: "1.3.3"
+    version: "1.3.5"
   petitparser:
     description: petitparser
     source: hosted
@@ -164,23 +172,23 @@ packages:
   source_maps:
     description: source_maps
     source: hosted
-    version: "0.10.0+1"
+    version: "0.10.1"
   source_span:
     description: source_span
     source: hosted
-    version: "1.0.3"
+    version: "1.1.2"
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.2.4"
+    version: "1.3.2"
   string_scanner:
     description: string_scanner
     source: hosted
-    version: "0.1.3"
+    version: "0.1.3+1"
   template_binding:
     description: template_binding
     source: hosted
-    version: "0.14.0+1"
+    version: "0.14.0+2"
   uri:
     description: uri
     source: hosted

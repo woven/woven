@@ -1,7 +1,9 @@
-import 'package:polymer/polymer.dart';
 import 'dart:html' hide Notification;
-import 'package:notification/notification.dart';
 import 'dart:async';
+
+import 'package:polymer/polymer.dart';
+import 'package:emoji/emoji.dart';
+import 'package:notification/notification.dart';
 
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/client/view_model/chat.dart';
@@ -9,6 +11,7 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
+
 
 @CustomTag('chat-list')
 class ChatList extends PolymerElement {
@@ -28,7 +31,7 @@ class ChatList extends PolymerElement {
    */
   formatText(String text) {
     if (text == null) return '';
-    String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(text.trim()));
+    String formattedText = InputFormatter.nl2br(InputFormatter.formatMentions(InputFormatter.nl2br(text.trim())));
 
     return formattedText;
   }

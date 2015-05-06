@@ -107,48 +107,50 @@ user-picture::shadow .user-photo {
   color: #0061BB;
 }
 
-linkify-text::shadow a {
+::shadow a {
   text-decoration: none;
   color: rgb(34, 110, 223);
 }
 
-linkify-text::shadow a.internal,
-linkify-text::shadow a.internal:visited {
+format-text::shadow a.internal,
+format-text::shadow a.internal:visited {
   color: #2FA300;
 }
 
-.notification linkify-text::shadow a.internal,
-linkify-text::shadow a.internal:visited,
-.notification a.internal,
-.notification a.internal:visited {
-  text-decoration: none;
-  color: rgb(245, 108, 0);
-}
-
-linkify-text::shadow a:hover,
+format-text::shadow a:hover,
 .notification a:hover, {
   text-decoration: underline;
 }
 
-linkify-text::shadow a:visited:not(.internal) {
+format-text::shadow a:visited:not(.internal) {
   color: #8055C8;
 }
 
-.theme-dark linkify-text::shadow a:visited:not(.internal) {
+.theme-dark format-text::shadow a:visited:not(.internal) {
   color: #8055C8;
 }
 
-linkify-text::shadow .mention {
+format-text::shadow .mention {
   color: rgb(245, 108, 0);
 }
 
-safe-html::shadow .mention {
+format-text::shadow .mention {
   color: rgb(245, 108, 0);
 }
 
 .no-photo {
   width: 40px;
   height: 40px;
+}
+
+format-text::shadow .emoji {
+  display: inline-block;
+  vertical-align: sub;
+  width: 1.5em;
+  height: 1.5em;
+  background-size: 1.5em;
+  background-repeat: no-repeat;
+  text-indent: -9999px;
 }
 
 @media all and (max-width: 800px)  {

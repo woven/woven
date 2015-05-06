@@ -8,7 +8,9 @@ import "package:polymer/polymer.dart";
 @CustomTag("safe-html")
 class SafeHtml extends PolymerElement  {
   @published NodeValidator validator = new NodeValidatorBuilder()
-    ..allowHtml5(uriPolicy: new DefaultUriPolicy());
+    ..allowHtml5(uriPolicy: new DefaultUriPolicy())
+    ..allowElement('a', attributes: ['on-click'])
+    ..allowImages(new DefaultUriPolicy());
 
   SafeHtml.created() : super.created();
 

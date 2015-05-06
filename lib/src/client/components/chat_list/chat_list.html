@@ -1,7 +1,7 @@
 <link rel="import" href="../../../../../../packages/polymer/polymer.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
 <link rel="import" href="../widgets/safe_html/safe_html.html">
-<link rel="import" href="../widgets/linkify_text/linkify_text.html">
+<link rel="import" href="../widgets/format_text/format_text.html">
 <link rel="import" href="../user_picture/user_picture.html">
 <polymer-element name="chat-list">
   <template>
@@ -30,13 +30,11 @@
                   </div>
                 </div>
                 <p class="{{(message['id'] == null) ? 'not-delivered' : ''}}">
-                  <linkify-text router="{{app.router}}">
-                    <safe-html>
-                      <template if="{{message != null}}">
-                        {{formatText(message['message'])}}
-                      </template>
-                    </safe-html>
-                  </linkify-text>
+                  <format-text router="{{app.router}}">
+                    <template if="{{message != null}}">
+                      {{message['message']}}
+                    </template>
+                  </format-text>
                 </p>
               </div>
             </div>

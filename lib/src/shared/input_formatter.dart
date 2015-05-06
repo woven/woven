@@ -86,21 +86,29 @@ class InputFormatter {
     }
   }
 
-  static String linkify(String content, {bool noExternalIcon: false, bool absolute: true}) {
-    if (content == null) content = '';
+  static String linkify(String text, {bool noExternalIcon: false, bool absolute: true, String internalHost}) {
+    if (text == null) text = '';
 
-    content = content.replaceAllMapped(new RegExp(RegexHelper.linkOrEmail), (Match match) {
+    text = text.replaceAllMapped(new RegExp(RegexHelper.linkOrEmail), (Match match) {
       var address = match.group(0);
       var label = match.group(0);
+      bool isInternal = false;
 
       var isEmail = address.contains('@') && !address.contains('://');
-      if (!isEmail && absolute && address.startsWith('http') == false) address = 'http://$address';
-      if (isEmail && absolute && address.startsWith('mailto:') == false) address = ' mailto:$address';
+      if (!isEmail  && address.startsWith('http') == false) address = 'http://$address';
+      if (isEmail && address.startsWith('mailto:') == false) address = ' mailto:$address';
 
-      return '<a href="$address" target="_blank" class="${noExternalIcon ? 'no-icon' : ''}">$label</a>';
+      var uri = Uri.parse(address);
+      if (uri.host == internalHost) {
+        isInternal = true;
+        address = uri.path;
+        return '<a href="$address" class="internal" on-click="{{changePage}}">$label</a>';
+      }
+
+      return '<a href="$address" target="_blank">$label</a>';
     });
 
-    return content;
+    return text;
   }
 
   /**

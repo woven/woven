@@ -91,7 +91,6 @@ class ChatBox extends PolymerElement {
     .then((HttpRequest res) {
       // Set up the response as an object.
       var response = Response.fromJson(JSON.decode(res.responseText));
-      var messageId = response.data;
       // TODO: Handle response.success true/false later.
 
       // Update details on the community.
