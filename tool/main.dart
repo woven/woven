@@ -16,12 +16,12 @@ import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:googleapis/storage/v1.dart' as storage;
 import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
 import 'package:woven/src/shared/response.dart';
-
+import 'package:woven/src/server/mail_sender.dart';
 
 final googleServiceAccountCredentials = new auth.ServiceAccountCredentials.fromJson(config['google']['serviceAccountCredentials']);
 final googleApiScopes = [storage.StorageApi.DevstorageFullControlScope];
 var googleApiClient;
-final firebaseSecret = 'uY8p08LpEK6eF8JnB1ijFPdLQOoNpeJEgQEFJ3cI';
+final firebaseSecret = config['datastore']['firebaseSecret'];
 
 main() async {
 //  updateAllItemsMoveOtherToMessages();
@@ -34,10 +34,13 @@ main() async {
 //changeAllUsersToLowercase();
 //migrateAllUsersOnboardingState();
 //  changeAllUsersDateToEpochFormat();
-  createEmailIndex();
+//  createEmailIndex();
+//  fixItemsNotProperlyDuplicated2();
 
 //  dumpDataToFile();
 //  doMigration();
+//updateAllUsersAddPriority();
+  getAllUsersMissingPassword();
 }
 
 /**
@@ -82,6 +85,20 @@ updateAllUsersAddPriority() {
       Firebase.put('/users/${username.toLowerCase()}.json', v);
       print(username);
     });
+  });
+}
+
+getAllUsersMissingPassword() async {
+  Map users = await Firebase.get('/users.json');
+  print(users.length);
+  return;
+  users.forEach((k, v) {
+    Map user = v;
+    if (user['onboardingState'] == 'signUpComplete' && user['password'] == null) {
+      Firebase.delete('/users/${user['username'].toLowerCase()}.json');
+      print('$k: ${user['disabled']}');
+//      MailSender.sendFixPasswordEmail(user['username']);
+    }
   });
 }
 
@@ -157,6 +174,99 @@ updateAllItemsMoveOtherToMessages() {
       });
     });
   });
+}
+
+/**
+ * Fix items that exist in /items but not properly duplicated to /items_by*.
+ */
+fixItemsNotProperlyDuplicated() async {
+  Map items = await Firebase.get('/items.json?format=export');
+  List itemsAsList = [];
+  int count = 0;
+  items.forEach((k, v) {
+    Map item = v;
+    item['id'] = k;
+    Map communities = item['communities'];
+    if (communities == null) {
+      print('NULL FOUND: ' + item['id']);
+      return;
+    }
+    communities.keys.forEach((community) async {
+      Map itemsBy = await Firebase.get('/items_by_community_by_type/$community/${item['type']}/${item['id']}.json');
+      print(itemsBy);
+      return;
+      if (itemsBy == null) {
+        count++;
+        var priority = item['.priority'].toString();
+        priority = priority.replaceAll('.0', '');
+        item['.priority'] = priority;
+
+        if (item['type'] == 'event') {
+          var startPriority = DateTime.parse(item['startDateTime']).millisecondsSinceEpoch;
+          item['startDateTimePriority'] = startPriority;
+          print(item['startDateTimePriority']);
+        }
+
+//        print(count.toString() + ': ' + item['id'] + ' / ' + item['.priority'].toString() + ' / ' + item['startDateTimePriority'].toString());
+
+        Map itemToSave = new Map.from(item);
+        itemToSave.remove('communities');
+        itemToSave.remove('activities');
+        itemToSave.remove('id');
+        //Firebase.put('/items_by_community_by_type/$community/${item['type']}/${item['id']}.json', itemToSave, auth: firebaseSecret);
+      }
+    });
+  });
+}
+
+/**
+ * Fix items that exist in /items but not properly duplicated to /items_by*.
+ */
+fixItemsNotProperlyDuplicated2() async {
+  Map items = await Firebase.get('/items.json?format=export');
+  List itemsAsList = [];
+  int count = 0;
+
+  items.forEach((k,v) {
+    Map item = v;
+    item['id'] = k;
+//    Map communities = item['communities'];
+//    if (communities == null) {
+//      print('NULL FOUND: ' + item['id']);
+//      return;
+//    }
+    itemsAsList.add(item);
+  });
+
+  Future.forEach(itemsAsList,(Map item) {
+      if (item['type'] == 'event' && item['startDateTime'] != null) {
+        var newPriority = DateTime.parse(item['startDateTime']).toUtc().millisecondsSinceEpoch.toString();
+
+          Firebase.patch('/items/${item['id']}.json', {'startDateTimePriority': newPriority}, auth: firebaseSecret);
+
+        Map communities = item['communities'];
+
+        if (communities == null) return;
+
+//        item['.priority'] = DateTime.parse(item['createdDate'])
+
+        communities.keys.forEach((community) {
+          Map itemToSave = new Map.from(item);
+          itemToSave.remove('communities');
+          itemToSave.remove('activities');
+          itemToSave.remove('id');
+
+          new Timer(new Duration(milliseconds: count * 800), () {
+            print('$count. ${item['id']}');
+            Firebase.put('/items_by_community_by_type/$community/${item['type']}/${item['id']}.json', itemToSave, auth: firebaseSecret);
+          });
+          count++;
+        });
+      }
+  });
+
+
+
 }
 
 /**
