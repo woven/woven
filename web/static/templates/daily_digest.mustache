@@ -4,21 +4,17 @@
 <head>
 <title></title>
 </head>
+
 <body>
   <div id="content-container" style="max-width:800px;margin:auto;">
-    <!--<div class="message-area" style="border-radius:3px;margin-bottom:22px;padding: 13px 23px;background-color: #259b24;color: #fff;font-size: 1.2em;font-family: 'Georgia', serif;">-->
-      <!--Hey, *|FNAME|* *|LNAME|*! Your email is *|EMAIL|*.-->
-
-      <!--“Success is walking from failure to failure with no loss of enthusiasm.”-->
-        <!--- Winston Churchill-->
-      <!--<div style="font-family: 'Arial', sans-serif;margin-top:20px;">Please take a moment this week to let a fellow community member know about the new Woven.</div>-->
-    <!--</div>-->
 <div id="header" style="margin: 0 15px 0 15px;">
-  <div style="vertical-align: middle;font-family: Georgia, Times, serif;font-size: 1.7em;margin-bottom: 15px;text-align: center;">Today in Miami Tech</div>
-  <div style="font-family: 'Arial', sans-serif;margin-top:20px;padding: 20px;background-color: lemonchiffon;border-radius: 4px;border: solid 1px #eee;margin-bottom: 20px;text-align: center;">Please take a moment this week to let a fellow community member know about the new Woven.</div>
+  <div style="vertical-align: middle;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif; font-size: 1.7em;margin-bottom: 15px;text-align: center;">{{communityName}}</div>
+  <div style="font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;margin-top:20px;padding: 20px;background-color: lemonchiffon;border-radius: 4px;border: solid 1px #eee;margin-bottom: 20px;text-align: center;">
+    *|FNAME|*, here's the latest from the <strong>{{community}}</strong> channel.
+  </div>
 </div>
 <div id="title">
-  <div style="vertical-align: middle;font-family: Arial, Helvetica, sans-serif;font-size: 1.7em;margin-left: 15px;margin-bottom: 15px;">Events today</div>
+  <div style="vertical-align: middle;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif; font-size: 1.7em;margin-left: 15px;margin-bottom: 15px;">Events today</div>
 </div>
 {{#events}}
   <div class="item-wrapper" style="">
@@ -45,11 +41,11 @@
     </div>
   </div>
   {{/events}}
+  {{^events}}
+    <p style="margin-left: 15px; color: gray;">No events happening today.</p>
+  {{/events}}
 
   <div id="title">
-    <!--<div style="display:inline;">-->
-    <!--<img src="web/static/images/types/icon_type_events.png" style="width:40px;height:40px;display:inline;">-->
-    <!--</div>-->
     <div style="vertical-align: middle;font-family: Arial, Helvetica, sans-serif;font-size: 1.7em;margin-left: 15px;margin-bottom: 15px;margin-top:25px;">News today</div>
   </div>
   {{#news}}
@@ -77,20 +73,13 @@
       </div>
     </div>
   {{/news}}
+  {{^news}}
+    <p style="margin-left: 15px; color: gray;">No news posted today.</p>
+  {{/news}}
   <div style="text-align:center;margin:40px 0">
-    <a style="text-decoration:none;background:#0a8f08;border-radius:2px;padding:12px 24px;font-size:18px;color:#fff;font-family:Georgia"
-       href="http://woven.co/miamitech/events" target="_blank">Keep exploring</a>
+    <a style="text-decoration: none;background: #4A9E2E;border-radius: 2px;padding: 10px 20px;font-size: 18px;color: #fff;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;"
+       href="http://woven.co/{{community}}" target="_blank">Go to the channel</a>
   </div>
-  <div style="text-align:center;font-size:0.8em;font-family:Arial, Helvetica, sans-serif;color:#666;margin:5px;">
-    <p>Woven is a community collaboration platform powered by you.</p>
-
-    <!--<p style="margin-top:16px;">Please take a moment to reply to this email and let us-->
-      <!--know how we can do better.</p>-->
-
-    <div id="logo" style="text-align:center;margin-top:30px;"><a href="http://woven.co/?utm_source=dailydigest&utm_medium=email&utm_campaign=digest_logo" target="_blank"><img style="width:175px" src="http://woven.co/static/images/woven_logo_together_trans_retina.png" alt="Woven – together."></a></div>
-  </div>
-
-
 </div>
 </body>
 </html>

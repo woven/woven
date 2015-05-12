@@ -7,6 +7,13 @@ import 'dart:async';
 
 class CommunityModel extends shared.CommunityModel {
   /**
+   * Get the name of the community, e.g. "The Break Shop" for "breakshop".
+   */
+  static Future<String> getCommunityName(String community) async {
+    return await Firebase.get('/communities/$community/name.json');
+  }
+
+  /**
    * Get the participants (users) for a given community.
    *
    * Returns a list of user objects.
