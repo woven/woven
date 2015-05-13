@@ -65,7 +65,7 @@ class Firebase {
 //          return response.statusCode; // TODO: I want more here.
 
     } catch(error, stack) {
-      print("Error $error\n\n$stack");
+      print("Error: $error\n\n$stack");
     }
   }
 
