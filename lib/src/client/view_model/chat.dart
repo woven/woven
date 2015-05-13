@@ -160,7 +160,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       var existingItem = messages.firstWhere((i) => (i['id'] != null)
         ? (i['id'] == newItem['id'])
-        : (i['user'] == newItem['user'] && i['message'] == sanitizer.convert(newItem['message'])), orElse: () => null);
+        : (i['user'] == newItem['user'] && i['message'] != null && i['message'] == sanitizer.convert(newItem['message'])), orElse: () => null);
 
       // If we already have the item, get out of here.
       if (existingItem != null) {
