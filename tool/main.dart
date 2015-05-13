@@ -40,7 +40,8 @@ main() async {
 //  dumpDataToFile();
 //  doMigration();
 //updateAllUsersAddPriority();
-  getAllUsersMissingPassword();
+updateAllMessagesAddPriority();
+//  getAllUsersMissingPassword();
 }
 
 /**
@@ -82,8 +83,28 @@ updateAllUsersAddPriority() {
     users.forEach((k, v) {
       String username = k;
       v['_priority'] = (v['createdDate'] != null) ? -DateTime.parse(v['createdDate']).millisecondsSinceEpoch : null;
-      Firebase.put('/users/${username.toLowerCase()}.json', v);
+      Firebase.patch('/users/${username.toLowerCase()}.json', v);
       print(username);
+    });
+  });
+}
+
+updateAllMessagesAddPriority() {
+  int count = 0;
+  Firebase.get('/messages_by_community.json').then((Map communities) {
+    print(communities);
+    communities.forEach((k, v) {
+      String community = k;
+      Map messagesInCommunity = v;
+      messagesInCommunity.forEach((k, v) {
+        count++;
+        String messageId = k;
+        v['_priority2'] = (v['createdDate'] != null) ? DateTime.parse(v['createdDate']).millisecondsSinceEpoch : null;
+        new Timer(new Duration(milliseconds: count * 100), () {
+          Firebase.patch('/messages_by_community2/$community/$messageId.json', v, auth: firebaseSecret);
+          print('$community/$messageId');
+        });
+      });
     });
   });
 }
