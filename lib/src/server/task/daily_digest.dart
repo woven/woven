@@ -4,18 +4,19 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:mustache/mustache.dart' as mustache;
+import 'package:intl/intl.dart';
 
+import 'task.dart';
+import '../model/community.dart';
+import '../mailer/mailer.dart';
 import 'package:woven/src/server/firebase.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/shared_util.dart';
-import 'task.dart';
 import 'package:woven/src/shared/model/user.dart';
-import '../model/community.dart';
-import '../mailer/mailer.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 17, 10); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7am EST.
 
   DailyDigestTask();
 
@@ -58,12 +59,14 @@ class DailyDigestTask extends Task {
           .replaceAll(r'*|EMAIL|*', user.email);
 
           DateTime now = new DateTime.now();
+          var formatter = new DateFormat('E M/d/yy');
+          String formattedToday = formatter.format(now);
 
           // Generate and send the email.
           var envelope = new Envelope()
             ..from = "Woven <hello@woven.co>"
             ..to = ['${user.firstName} ${user.lastName} <${user.email}>']
-            ..subject = '[${community.alias}] Today\'s activity'
+            ..subject = '${community.name} – Today\'s activity – $formattedToday'
             ..html = '$mergedDigest';
 
           Map res = await Mailgun.send(envelope);
