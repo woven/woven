@@ -12,7 +12,7 @@
 
 .theme-dark .activity-card {
   background-color: rgb(45, 45, 45);
-  color: white;
+  color: #F2F2F2;
   border: none;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .activity-card #content {
-  padding: 10px 10px 10px 13px;
+  padding: 10px 10px 5px 15px;
   white-space: inherit;
   word-wrap: break-word;
   line-height: 18px;
@@ -49,6 +49,14 @@
   background-color: transparent;
   border: none;
   padding-top: 5px;
+  padding-left: 50px;
+}
+
+.message {
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.2pt;
+  margin-bottom: 8px;
 }
 
 .message.notification {
@@ -69,6 +77,10 @@ user-picture::shadow .user-photo {
   font-size: 15px;
   color: #444;
   font-weight: bold;
+}
+
+.user.group-header {
+  padding-bottom: 4px;
 }
 
 .theme-dark .user {

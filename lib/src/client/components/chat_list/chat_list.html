@@ -17,13 +17,17 @@
       <!--<div id="loading-indicator"><a on-tap="{{loadNextPage}}">Load more</a></div>-->
       <template if="{{viewModel.groups != null}}" repeat="{{group in viewModel.groups}}">
         <div layout horizontal>
-          <div class="user-area" vertical layout>
-            <user-picture app="{{app}}" username="{{group.user}}"></user-picture>
-          </div>
-          <div class="activity-card" flex>
+          <template if="{{!group.isNotification}}">
+            <div class="user-area" vertical layout>
+              <user-picture app="{{app}}" username="{{group.user}}"></user-picture>
+            </div>
+          </template>
+          <div class="activity-card {{group.isNotification ? 'notification' : ''}}" flex>
             <div id="content">
               <div class="card-top" horizontal layout>
-                <div flex class="user">{{group.user}} *</div>
+                <template if="{{!group.isNotification}}">
+                  <div flex class="user group-header">{{group.usernameForDisplay}}</div>
+                </template>
                 <div class="date-time">
                   <!--<live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>-->
                 </div>
@@ -39,16 +43,18 @@
                   </div>
                 </template>
                 <template if="{{message.type != null}}">
-                  <div flex class="message {{message.type}}">
-                    <template if="{{message.data != null}}">
-                      <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a> to the feed.
-                    </template>
-                    <template if="{{message.data == null}}">
-                      {{message.message}}
-                    </template>
-                  </div>
-                  <div class="date-time">
-                    <live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                  <div layout horizontal>
+                    <div flex class="message {{message.type}}">
+                      <template if="{{message.data != null}}">
+                        <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a> to the feed.
+                      </template>
+                      <template if="{{message.data == null}}">
+                        {{message.message}}
+                      </template>
+                    </div>
+                    <div class="date-time">
+                      <live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                    </div>
                   </div>
                 </template>
               </template>

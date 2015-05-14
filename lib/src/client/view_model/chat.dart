@@ -29,7 +29,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   // TODO: Use this later for date separators between messages.
 
-  int pageSize = 25;
+  int pageSize = 50;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   @observable bool isScrollPosAtBottom = false;
@@ -397,6 +397,8 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   void process(Message item) {
+    print(item.toJson());
+
     if (item.message != null) item.message = sanitizer.convert(item.message);
 
     DateTime now = new DateTime.now().toUtc();
@@ -419,7 +421,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     var group = groups.firstWhere((group) => group.isDateWithin(item.createdDate), orElse: () => null);
 
     if (group != null) {
-      if (group.hasSameUser(item)) {
+      if (!group.needsNewGroup(item)) {
         group.put(toObservable(item));
       } else {
         // Damn, we'd like to put the item in this group, but diff user!
@@ -451,12 +453,12 @@ class ChatViewModel extends BaseViewModel with Observable {
         // No groups at all!
         groups.add(new ItemGroup(item));
       } else if (groupBefore != null && groupAfter != null) {
-        if (groupBefore.hasDifferentUser(item) && groupAfter.hasDifferentUser(item)) {
+        if (groupBefore.needsNewGroup(item) && groupAfter.needsNewGroup(item)) {
           // The item does not belong in either groups,
           // so it has to go in between them in its own group.
           var index = groups.indexOf(groupAfter);
           groups.insert(index, new ItemGroup(item));
-        } else if (groupBefore.hasSameUser(item)) {
+        } else if (!groupBefore.needsNewGroup(item)) {
           // We do not belong to groupAfter, but we belong to groupBefore!
           groupBefore.put(item);
         } else {
@@ -467,7 +469,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         // There was no group before this item, but one after.
         // Thus if we belong to groupAfter, let's go there,
         // otherwise we need a new group at the top.
-        if (groupAfter.hasSameUser(item)) {
+        if (!groupAfter.needsNewGroup(item)) {
           groupAfter.put(item);
         } else {
           groups.insert(0, new ItemGroup(item));
@@ -475,7 +477,7 @@ class ChatViewModel extends BaseViewModel with Observable {
       } else {
         // There was no group after this item, but one before.
         // Same as earlier, let's put it there or in a new group at the bottom.
-        if (groupBefore.hasSameUser(item)) {
+        if (!groupBefore.needsNewGroup(item)) {
           groupBefore.put(item);
         } else {
           groups.add(new ItemGroup(item));

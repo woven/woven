@@ -5,10 +5,12 @@ import 'item.dart';
 
 class ItemGroup extends Observable {
   String user;
+  String type;
   List<Item> items = toObservable([]);
 
   ItemGroup(Item item) {
     user = item.user;
+    type = item.type;
     items.add(item);
   }
 
@@ -45,6 +47,13 @@ class ItemGroup extends Observable {
     items.insert(indexOf(item), toObservable(item));
   }
 
-  bool hasSameUser(Item item) => item.user == user;
-  bool hasDifferentUser(Item item) => !hasSameUser(item);
+  /**
+   * Returns true if a) the user doesn't match the group's, b) this is a notification
+   * or c) this group is already holding a notification (we want one per group for styling purposes).
+   */
+  bool needsNewGroup(Item item) => item.user != user || item.type == 'notification' || this.isNotification;
+
+  bool get isNotification => items.first.type == 'notification';
+
+  String get usernameForDisplay => items.first.usernameForDisplay;
 }
