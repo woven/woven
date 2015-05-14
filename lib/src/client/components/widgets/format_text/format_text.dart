@@ -1,4 +1,4 @@
-library linkify_text;
+library format_text;
 
 import "dart:html";
 
@@ -12,6 +12,7 @@ import 'package:woven/src/client/routing/router.dart';
 @CustomTag("format-text")
 class FormatText extends PolymerElement {
   @published Router router;
+  @published String text;
 
   NodeValidator validator = new NodeValidatorBuilder()
     ..allowElement('a', attributes: ['on-click'])
@@ -24,16 +25,23 @@ class FormatText extends PolymerElement {
     return replaceWithEmojis(
         InputFormatter.formatMentions(
             InputFormatter.linkify(
-                this.text, internalHost: config['server']['domain']
+                text, internalHost: config['server']['domain']
             )
         )
     );
   }
 
-  attached() {
+  update() {
     Element container = this.shadowRoot.querySelector('#container');
     this.injectBoundHtml(format(), validator: validator, element: container);
   }
+
+  attached() {
+    super.attached();
+    update();
+  }
+
+  textChanged() => update();
 
   changePage(MouseEvent e) {
     e.stopPropagation();

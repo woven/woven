@@ -1,10 +1,9 @@
-library item_model_server;
+library server.model.post;
 
-import 'package:woven/src/shared/model/item.dart' as shared;
-import 'dart:async';
+import 'package:woven/src/shared/model/post.dart' as shared;
 import '../firebase.dart';
 
-class ItemModel extends shared.ItemModel {
+class Post extends shared.Post {
   /**
    * Update an item with provided [value].
    *

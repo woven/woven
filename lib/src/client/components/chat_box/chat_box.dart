@@ -9,7 +9,7 @@ import 'package:woven/config/config.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/client/view_model/chat.dart';
-import 'package:woven/src/shared/model/message.dart';
+import 'package:woven/src/client/model/message.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 
@@ -63,7 +63,7 @@ class ChatBox extends PolymerElement {
       return;
     }
 
-    var message = new MessageModel()
+    var message = new Message()
       ..message = messageText
       ..community = app.community.alias
       ..user = app.user.username.toLowerCase();
@@ -79,7 +79,7 @@ class ChatBox extends PolymerElement {
     // Insert the message instantly.
     Map messageMap = new Map.from(message.toJson());
     messageMap['usernameForDisplay'] = app.user.username;
-    viewModel.insertMessage(messageMap);
+    viewModel.process(new Message.fromJson(messageMap));
     Timer.run(() => chatView.scrollToBottom());
 
     // Save the message to Firebase server-side.

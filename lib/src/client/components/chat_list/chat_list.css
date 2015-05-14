@@ -21,7 +21,7 @@
 }
 
 .activity-card #content {
-  padding: 10px 10px 3px 10px;
+  padding: 10px 10px 10px 13px;
   white-space: inherit;
   word-wrap: break-word;
   line-height: 18px;
@@ -118,12 +118,21 @@ format-text::shadow a.internal:visited {
 }
 
 format-text::shadow a:hover,
-.notification a:hover, {
+format-text::shadow,
+.notification a.internal:hover {
   text-decoration: underline;
 }
 
 format-text::shadow a:visited:not(.internal) {
   color: #8055C8;
+}
+
+.notification format-text::shadow a.internal,
+format-text::shadow a.internal:visited,
+.notification a.internal,
+.notification a.internal:visited {
+  text-decoration: none;
+  color: rgb(245, 108, 0);
 }
 
 .theme-dark format-text::shadow a:visited:not(.internal) {

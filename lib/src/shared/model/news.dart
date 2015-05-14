@@ -1,9 +1,9 @@
-library news_model;
+library shared.model.news;
 
-import 'item.dart';
+import 'post.dart';
 import 'trait/link.dart';
 
-class NewsModel extends ItemModel with Link {
+class NewsModel extends Post with Link {
 
   Map encode() {
     var data = super.encode();

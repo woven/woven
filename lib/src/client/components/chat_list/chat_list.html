@@ -15,55 +15,46 @@
         <template if="{{viewModel.reachedEnd}}">You've reached the beginning of all time.</template>
       </div>
       <!--<div id="loading-indicator"><a on-tap="{{loadNextPage}}">Load more</a></div>-->
-      <template if="{{viewModel.messages != null}}" repeat="{{message in viewModel.messages}}">
-        <template if="{{message['type'] == null}}">
-          <div layout horizontal>
-            <div class="user-area" vertical layout>
-              <user-picture app="{{app}}" username="{{message['user']}}"></user-picture>
-            </div>
-            <div class="activity-card {{(message['highlighted']) ? 'highlight' : ''}}" flex>
-              <div id="content">
-                <div class="card-top" horizontal layout>
-                  <div flex class="user">{{message['usernameForDisplay']}}</div>
-                  <div class="date-time">
-                    <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
-                  </div>
-                </div>
-                <p class="{{(message['id'] == null) ? 'not-delivered' : ''}}">
-                  <format-text router="{{app.router}}">
-                    <template if="{{message != null}}">
-                      {{message['message']}}
-                    </template>
-                  </format-text>
-                </p>
-              </div>
-            </div>
+      <template if="{{viewModel.groups != null}}" repeat="{{group in viewModel.groups}}">
+        <div layout horizontal>
+          <div class="user-area" vertical layout>
+            <user-picture app="{{app}}" username="{{group.user}}"></user-picture>
           </div>
-        </template>
-        <template if="{{message['type'] != null}}">
-          <div layout horizontal>
-            <div class="user-area" vertical layout>
-              <div class="no-photo"></div>
-            </div>
-            <div class="activity-card {{(message['highlighted']) ? 'highlight' : ''}} {{message['type']}}" flex>
-              <div id="content">
-                <div class="card-top" horizontal layout>
-                  <div flex class="message {{message['type']}}">
-                    <template if="{{message['data'] != null}}">
-                        <strong>{{message['usernameForDisplay']}}</strong> {{message['data']['event']}} <a class="internal" _href="{{formatItemUrl(message['data']['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message['data']['type'])}} {{message['data']['type']}}</a> to the feed.
+          <div class="activity-card" flex>
+            <div id="content">
+              <div class="card-top" horizontal layout>
+                <div flex class="user">{{group.user}} *</div>
+                <div class="date-time">
+                  <!--<live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>-->
+                </div>
+              </div>
+              <template if="{{group.items != null}}" repeat="{{message in group.items}}">
+                <template if="{{message.type == null}}">
+                  <div class="message {{(message.isHighlighted) ? 'highlight' : ''}}" flex>
+                    <div class="{{(message.id == null) ? 'not-delivered' : ''}}">
+                      <format-text router="{{app.router}}"
+                                   text="{{message.message}}">
+                      </format-text>
+                    </div>
+                  </div>
+                </template>
+                <template if="{{message.type != null}}">
+                  <div flex class="message {{message.type}}">
+                    <template if="{{message.data != null}}">
+                      <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a> to the feed.
                     </template>
-                    <template if="{{message['data'] == null}}">
-                      {{message['message']}}
+                    <template if="{{message.data == null}}">
+                      {{message.message}}
                     </template>
                   </div>
                   <div class="date-time">
-                    <live-date-time value="{{message['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                    <live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>
                   </div>
-                </div>
-              </div>
+                </template>
+              </template>
             </div>
           </div>
-        </template>
+        </div>
       </template>
     </div>
   </template>

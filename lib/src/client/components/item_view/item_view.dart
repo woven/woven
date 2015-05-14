@@ -1,6 +1,10 @@
-import 'package:polymer/polymer.dart';
+library components.item_view.dart;
+
 import 'dart:html';
 import 'dart:async';
+
+import 'package:polymer/polymer.dart';
+
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/view_model/item.dart';

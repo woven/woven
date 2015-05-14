@@ -1,10 +1,10 @@
 library event_model;
 
-import 'item.dart';
+import 'post.dart';
 import 'trait/time_span.dart';
 import 'trait/link.dart';
 
-class EventModel extends ItemModel with TimeSpan, Link {
+class EventModel extends Post with TimeSpan, Link {
 
   Map encode() {
     var data = super.encode();

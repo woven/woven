@@ -15,7 +15,7 @@ import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/server/util/crawler_util.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
-import 'package:woven/src/server/model/item.dart';
+import 'package:woven/src/server/model/post.dart';
 
 class MainController {
   static serveApp(App app, HttpRequest request, [String path]) {
@@ -232,7 +232,7 @@ class MainController {
               if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
               // Update the item with a reference to the preview.
-              ItemModel.update(itemId, updates, authToken);
+              Post.update(itemId, updates, authToken);
 
               // Return the preview information.
               response.data = preview;
@@ -255,7 +255,7 @@ class MainController {
                     if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
                     // Update the item with a reference to the preview.
-                    ItemModel.update(itemId, updates, authToken);
+                    Post.update(itemId, updates, authToken);
 
                     // Convert and save the image.
                     var extension = path.extension(preview.imageOriginalUrl.toString()).split("?")[0];

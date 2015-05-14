@@ -1,19 +1,31 @@
-library message_model_client;
+library client.model.message;
 
-import 'package:woven/src/shared/model/message.dart' as shared;
 import 'dart:convert';
+
+import 'package:observe/observe.dart';
 import 'package:firebase/firebase.dart';
 
-class MessageModel extends shared.MessageModel {
+import 'package:woven/src/shared/model/message.dart' as shared;
+
+class Message extends shared.Message with Observable {
+  @observable bool isHighlighted = false;
+  @observable String priority;
+
+  Message();
+
   /**
    * Add a message from the current user.
    * TODO: Consider adding messages from Woven and bots later.
    */
-  static add(MessageModel message, Firebase f) {
+  static add(Message message, Firebase f) {
     var priority = new DateTime.now().toUtc().millisecondsSinceEpoch;
     var messagesRef = f.child('/messages').push();
     var messagesByCommunityRef = f.child('/messages_by_community/${message.community}/${messagesRef.key}');
     messagesRef.setWithPriority(message.toJson(), -priority);
     messagesByCommunityRef.setWithPriority(message.toJson(), -priority);
+  }
+
+  Message.fromJson(Map data) : super.fromJson(data) {
+    priority = data['.priority'];
   }
 }

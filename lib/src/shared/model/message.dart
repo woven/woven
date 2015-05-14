@@ -1,45 +1,46 @@
-library message_model;
+library shared.model.message;
 
-class MessageModel {
-  String id;
-  String user;
-  String message; // The user's message.
-  String type; // The type of message could be "notification" for example.
-  Map data; // Any extra data we might need to parse the message.
-  String community;
-  DateTime createdDate = new DateTime.now().toUtc();
-  DateTime updatedDate = new DateTime.now().toUtc();
+import 'package:observe/observe.dart';
 
-  MessageModel();
+import 'item.dart';
+
+class Message extends Observable implements Item {
+  @observable String id;
+  @observable String user;
+  @observable String usernameForDisplay;
+  @observable DateTime createdDate = new DateTime.now().toUtc();
+  @observable DateTime updatedDate = new DateTime.now().toUtc();
+
+  @observable String type; // The type of message could be "notification" for example.
+  @observable String message; // The user's message.
+  @observable Map data; // Any extra data we might need to parse the message.
+  @observable String community;
+
+  Message();
 
   Map toJson() {
     return {
-        "user": user,
-        "message": message,
-        "type": type,
-        "data": data,
-        "community": community,
-        "createdDate": createdDate.toString(),
-        "updatedDate": updatedDate.toString()
+      "id": id,
+      "user": user,
+      "message": message,
+      "type": type,
+      "data": data,
+      "community": community,
+      "createdDate": createdDate.toString(),
+      "updatedDate": updatedDate.toString(),
+      "usernameForDisplay": usernameForDisplay
     };
   }
 
-  static MessageModel fromJson(Map data) {
-    if (data == null) return null;
-    return new MessageModel()
-      ..user = data['user']
-      ..message = data['message']
-      ..type = data['type']
-      ..data = data['data']
-      ..community = data['community']
-      ..createdDate = data['createdDate']
-      ..updatedDate = data['updatedDate'];
+  Message.fromJson(Map json) {
+    id = json['id'];
+    user = json['user'];
+    message = json['message'];
+    type = json['type'];
+    data = json['data'];
+    community = json['community'];
+    createdDate = (json['createdDate'] != null ? DateTime.parse(json['createdDate']) : null);
+    updatedDate = (json['updatedDate'] != null ? DateTime.parse(json['updatedDate']) : null);
+    usernameForDisplay = json['usernameForDisplay'];
   }
-
-//  static MessageModel fromMessage(String message, {String type, String username}) {
-//    return new MessageModel()
-//      ..message = message
-//      ..type = type
-//      ..user = username;
-//  }
 }

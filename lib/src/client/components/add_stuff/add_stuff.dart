@@ -1,25 +1,24 @@
-library add_stuff;
+library components.add_stuff;
 
-import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:convert';
 import 'dart:async';
+
+import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
-import 'package:woven/src/client/app.dart';
-import 'package:woven/config/config.dart';
+import 'package:intl/intl.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
-import 'package:woven/src/shared/model/item.dart';
+
+import 'package:woven/src/client/app.dart';
+import 'package:woven/config/config.dart';
+import 'package:woven/src/shared/model/post.dart';
 import 'package:woven/src/shared/model/event.dart';
 import 'package:woven/src/shared/model/news.dart';
-import 'package:intl/intl.dart';
 import 'package:woven/src/shared/shared_util.dart';
-import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/model/message.dart';
-import 'package:woven/src/shared/model/uri_preview.dart';
-import 'package:woven/src/shared/response.dart';
 
 @CustomTag('add-stuff')
 class AddStuff extends PolymerElement {
@@ -141,10 +140,10 @@ class AddStuff extends PolymerElement {
 
     var now = new DateTime.now().toUtc();
 
-    ItemModel item;
+    Post item;
     if (selectedType == 'event') item = new EventModel();
     else if (selectedType == 'news') item = new NewsModel();
-    else item = new ItemModel();
+    else item = new Post();
 
     item
       ..user = app.user.username.toLowerCase()
@@ -234,7 +233,7 @@ class AddStuff extends PolymerElement {
           }
 
           // Notify lobby about new item.
-          var message = new MessageModel()
+          var message = new Message()
             ..type = 'notification'
             ..data = {
               'event': 'added',
@@ -244,7 +243,7 @@ class AddStuff extends PolymerElement {
             ..community = community
             ..user = app.user.username.toLowerCase();
 
-          MessageModel.add(message, f);
+          Message.add(message, f);
         });
       });
 
