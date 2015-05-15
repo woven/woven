@@ -1,6 +1,7 @@
 library format_text;
 
-import "dart:html";
+import 'dart:html';
+import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:emoji/emoji.dart';
@@ -19,13 +20,15 @@ class FormatText extends PolymerElement {
     ..allowHtml5(uriPolicy: new DefaultUriPolicy())
     ..allowImages(new DefaultUriPolicy());
 
+  var sanitizer = new HtmlEscape(HtmlEscapeMode.ELEMENT);
+
   FormatText.created() : super.created();
 
   format() {
     return replaceWithEmojis(
         InputFormatter.formatMentions(
             InputFormatter.linkify(
-                text, internalHost: config['server']['domain']
+                sanitizer.convert(text), internalHost: config['server']['domain']
             )
         )
     );

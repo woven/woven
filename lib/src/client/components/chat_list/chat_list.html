@@ -27,10 +27,10 @@
               <div class="card-top" horizontal layout>
                 <template if="{{!group.isNotification}}">
                   <div flex class="user group-header">{{group.usernameForDisplay}}</div>
+                  <div class="date-time">
+                    <live-date-time value="{{group.lastCreatedDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                  </div>
                 </template>
-                <div class="date-time">
-                  <!--<live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>-->
-                </div>
               </div>
               <template if="{{group.items != null}}" repeat="{{message in group.items}}">
                 <template if="{{message.type == null}}">

@@ -31,6 +31,10 @@
   color: gray;
 }
 
+.activity-card.notification#content {
+  padding-bottom: 0;
+}
+
 
 .activity-card .card-top {
   margin-bottom: 2px;

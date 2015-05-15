@@ -2,7 +2,6 @@ import 'dart:html' hide Notification;
 import 'dart:async';
 
 import 'package:polymer/polymer.dart';
-import 'package:emoji/emoji.dart';
 import 'package:notification/notification.dart';
 
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
@@ -80,19 +79,20 @@ class ChatList extends PolymerElement {
     });
   }
 
-  dismissHighlightedMessages() {
-    var indexOfLastItemSeen = viewModel.indexOfClosestItemByDate(app.timeOfLastFocus);
-    if (indexOfLastItemSeen == null) return; // No messages since last focus.
-    var lastItemSeen = viewModel.messages.elementAt(indexOfLastItemSeen);
-
-    int count = 0;
-    viewModel.messages.sublist(indexOfLastItemSeen).reversed.forEach((message) {
-      count++;
-      new Timer(new Duration(milliseconds: count*700), () {
-        message['highlighted'] = false;
-      });
-    });
-  }
+// TODO: Bring this back, re-work for group.items.
+//  dismissHighlightedMessages() {
+//    var indexOfLastItemSeen = viewModel.indexOfClosestItemByDate(app.timeOfLastFocus);
+//    if (indexOfLastItemSeen == null) return; // No messages since last focus.
+//    var lastItemSeen = viewModel.messages.elementAt(indexOfLastItemSeen);
+//
+//    int count = 0;
+//    viewModel.messages.sublist(indexOfLastItemSeen).reversed.forEach((message) {
+//      count++;
+//      new Timer(new Duration(milliseconds: count*700), () {
+//        message['highlighted'] = false;
+//      });
+//    });
+//  }
 
 
   attached() {
@@ -117,7 +117,7 @@ class ChatList extends PolymerElement {
         viewModel.isScrollPosAtBottom = chatView.scroller.scrollHeight - chatView.scroller.scrollTop <= chatView.scroller.clientHeight;
       }));
 
-      window.onFocus.listen((_) => dismissHighlightedMessages());
+//      window.onFocus.listen((_) => dismissHighlightedMessages());
     });
   }
 

@@ -64,7 +64,7 @@ class ChatViewModel extends BaseViewModel with Observable {
     .startAt(value: lastPriority)
     .limitToFirst(pageSize + 1);
 
-//    if (items.length == 0) onLoadCompleter.complete(true);
+    if (groups.expand((ItemGroup i) => i.items).length == 0) onLoadCompleter.complete(true);
 
     // Get the list of items, and listen for new ones.
     return messagesRef.once('value').then((snapshot) {
@@ -162,7 +162,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
       Message existingItem = groups.expand((ig) => ig.items).firstWhere((Message i) => (i.id != null)
         ? (i.id == message.id)
-        : (i.user == message.user && i.message != null && i.message == sanitizer.convert(message.message)), orElse: () => null);
+        : (i.user == message.user && i.message != null && i.message == message.message), orElse: () => null);
 
       // If we already have the item, get out of here.
       if (existingItem != null) {
@@ -191,7 +191,10 @@ class ChatViewModel extends BaseViewModel with Observable {
       }
 
       // If user is scrolled to bottom, keep it that way.
-      if (isScrollPosAtBottom || isFirstLoad && chatView != null) Timer.run(() => chatView.scrollToBottom());
+      if (isScrollPosAtBottom || isFirstLoad && chatView != null) {
+        Timer.run(() => chatView.scrollToBottom());
+      }
+
     });
 
     // Listen for changed items.
@@ -245,37 +248,6 @@ class ChatViewModel extends BaseViewModel with Observable {
   Future<String> usernameForDisplay(String username) {
     return UserModel.usernameForDisplay(username.toLowerCase(), f, app.cache)
     .then((String usernameForDisplay) => usernameForDisplay);
-  }
-
-  /**
-   * Prepare the message and insert it into the observed list.
-   */
-  insertMessage(Message message) {
-    if (message.message != null) message.message = sanitizer.convert(message.message);
-
-    DateTime now = new DateTime.now().toUtc();
-    DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
-
-    message.isHighlighted = false;
-    if (now.isAfter(gracePeriod) && !app.isFocused) message.isHighlighted = true;
-
-    // If no updated date, use the created date.
-    // TODO: We assume createdDate is never null!
-    if (message.updatedDate == null) message.updatedDate = message.createdDate;
-
-    // The live-date-time element needs parsed dates.
-//    message.updatedDate = DateTime.parse(message.updatedDate);
-//    message.createdDate = DateTime.parse(message.createdDate);
-
-    // If the message timestamp is after our local time,
-    // change it to now so messages aren't in the future.
-    DateTime localTime = new DateTime.now().toUtc();
-    if (message.updatedDate.isAfter(localTime)) message.updatedDate = localTime;
-    if (message.createdDate.isAfter(localTime)) message.createdDate = localTime;
-
-//    var index = indexOfClosestItemByDate(message['updatedDate']);
-//
-//    messages.insert(index == null ? messages.length : index, toObservable(message));
   }
 
 
@@ -399,7 +371,7 @@ class ChatViewModel extends BaseViewModel with Observable {
   void process(Message item) {
     print(item.toJson());
 
-    if (item.message != null) item.message = sanitizer.convert(item.message);
+//    if (item.message != null) item.message = sanitizer.convert(item.message);
 
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
@@ -485,6 +457,15 @@ class ChatViewModel extends BaseViewModel with Observable {
       }
     }
   }
+
+  /**
+   * Find the index of the item with the closest updated date.
+   */
+//  indexOfClosestItemByDate(date) {
+//    for (var message in messages) {
+//      if ((message['updatedDate'] as DateTime).isAfter(date)) return messages.indexOf(message);
+//    }
+//  }
 
   void paginate() {
     if (reloadingContent == false && reachedEnd == false) loadMessagesByPage();
