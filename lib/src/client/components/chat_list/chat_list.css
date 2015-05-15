@@ -134,7 +134,6 @@ format-text::shadow a.internal:visited {
 }
 
 format-text::shadow a:hover,
-format-text::shadow,
 .notification a.internal:hover {
   text-decoration: underline;
 }
