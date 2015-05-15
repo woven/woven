@@ -369,10 +369,6 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   void process(Message item) {
-    print(item.toJson());
-
-//    if (item.message != null) item.message = sanitizer.convert(item.message);
-
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
 
