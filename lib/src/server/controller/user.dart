@@ -32,7 +32,7 @@ class UserController {
 
     // Prepare the data for save and response.
     DateTime now = new DateTime.now().toUtc();
-    data['.priority'] = -now.millisecondsSinceEpoch;
+    data['_priority'] = -now.millisecondsSinceEpoch;
     data['createdDate'] = now.toString();
     data['password'] = hash(data['password']);
     data['disabled'] = data['invitation'] == null; // If we have don't have an invitation, user starts as disabled.
