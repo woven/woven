@@ -73,7 +73,6 @@ class UserController {
     data['onboardingState'] = 'signUpComplete';
 
     // Prepare the data before adding.
-    data.remove('authToken');
     data.remove('invitationCode');
 
     // Create the new user.
