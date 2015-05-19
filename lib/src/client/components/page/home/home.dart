@@ -319,7 +319,7 @@ class Home extends PolymerElement with Observable {
         'onboardingState': app.user.onboardingState,
         'invitation': app.user.invitation,
         'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null,
-        'invitationCode': invitationCode.value.trim()
+        'invitationCode': invitationCode.value.toLowerCase().trim()
       })
     );
 

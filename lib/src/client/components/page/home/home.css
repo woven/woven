@@ -2,6 +2,19 @@
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
+::-webkit-input-placeholder { /* WebKit browsers */
+  text-transform: none;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  text-transform: none;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  text-transform: none;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+  text-transform: none;
+}
+
 .cover {
   background-repeat: no-repeat;
   background-size: cover;
@@ -130,6 +143,10 @@
 .field-wrapper.only {
   border: solid 1px #ddd;
   border-radius: 3px;
+}
+
+#invitation-code {
+  text-transform: uppercase;
 }
 
 .button {
