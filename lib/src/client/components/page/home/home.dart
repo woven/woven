@@ -45,6 +45,7 @@ class Home extends PolymerElement with Observable {
   CoreInput get firstname => this.shadowRoot.querySelector('#firstname');
   CoreInput get lastname => this.shadowRoot.querySelector('#lastname');
   CoreInput get email => this.shadowRoot.querySelector('#email');
+  CoreInput get invitationCode => this.shadowRoot.querySelector('#invitation-code');
   Element get submitButton => this.shadowRoot.querySelector('#submit');
 
   Home.created() : super.created();
@@ -317,7 +318,8 @@ class Home extends PolymerElement with Observable {
         'email': email.value.trim(),
         'onboardingState': app.user.onboardingState,
         'invitation': app.user.invitation,
-        'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null
+        'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null,
+        'invitationCode': invitationCode.value.trim()
       })
     );
 
