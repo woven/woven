@@ -25,12 +25,12 @@ class FormatText extends PolymerElement {
   FormatText.created() : super.created();
 
   format() {
-    return replaceWithEmojis(
-        InputFormatter.formatMentions(
-            InputFormatter.linkify(
-                sanitizer.convert(text), internalHost: config['server']['domain']
-            )
+    return replaceEmojiCodesWithGlyphs(
+      InputFormatter.formatMentions(
+        InputFormatter.linkify(
+          sanitizer.convert(replaceEmoticonsWithEmojiCodes(text)), internalHost: config['server']['domain']
         )
+      )
     );
   }
 
