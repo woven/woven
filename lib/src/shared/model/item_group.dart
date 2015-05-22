@@ -7,6 +7,7 @@ class ItemGroup extends Observable {
   String user;
   String type;
   List<Item> items = toObservable([]);
+  @observable DateTime latestDate;
 
   ItemGroup(Item item) {
     user = item.user;
@@ -45,6 +46,7 @@ class ItemGroup extends Observable {
    */
   void put(Item item) {
     items.insert(indexOf(item), toObservable(item));
+    latestDate = getLatestDate();
   }
 
   /**
@@ -56,6 +58,4 @@ class ItemGroup extends Observable {
   bool get isNotification => items.first.type == 'notification';
 
   String get usernameForDisplay => items.first.usernameForDisplay;
-
-  DateTime get lastCreatedDate => items.last.createdDate;
 }
