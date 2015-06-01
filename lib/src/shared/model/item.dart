@@ -8,5 +8,5 @@ class Item {
   DateTime createdDate = new DateTime.now().toUtc();
   DateTime updatedDate = new DateTime.now().toUtc();
 
-  Item(this.id, this.user, this.usernameForDisplay); // TODO: Have to put all fields here?
+  Item(this.id, this.user, this.usernameForDisplay, this.createdDate, this.type, this.updatedDate); // TODO: Have to put all fields here?
 }

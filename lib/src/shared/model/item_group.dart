@@ -1,6 +1,6 @@
 library shared.model.item_group;
 
-import 'package:polymer/polymer.dart';
+import 'package:observe/observe.dart';
 import 'item.dart';
 
 class ItemGroup extends Observable {
@@ -47,6 +47,14 @@ class ItemGroup extends Observable {
   void put(Item item) {
     items.insert(indexOf(item), toObservable(item));
     latestDate = getLatestDate();
+  }
+
+  Map toJson() {
+    return {
+      'user': user,
+      'type': type,
+      'items': items
+    };
   }
 
   /**

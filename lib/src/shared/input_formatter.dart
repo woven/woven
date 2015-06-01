@@ -1,7 +1,11 @@
 library date_formatter;
 
 import 'dart:math';
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
+import 'package:emoji/emoji.dart';
+
 import 'date_group.dart';
 import 'regex.dart';
 import 'shared_util.dart' as sharedUtil;
@@ -594,6 +598,21 @@ class InputFormatter {
     content = content.replaceAllMapped(regExp, (Match m) => '${m.group(1)}<span class="mention">${m.group(2)}</span>${m.group(3)}');
 
     return content;
+  }
+
+  /**
+   * Formats user text like chat messages for HTML output and viewing.
+   */
+  static String formatUserText(String text) {
+    var sanitizer = new HtmlEscape(HtmlEscapeMode.ELEMENT);
+
+    return replaceEmojiCodesWithGlyphs(
+        InputFormatter.formatMentions(
+            InputFormatter.linkify(
+                sanitizer.convert(replaceEmoticonsWithEmojiCodes(text))
+            )
+        )
+    );
   }
 
   /**

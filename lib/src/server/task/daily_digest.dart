@@ -2,21 +2,27 @@ library daily_digest_task;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:mustache/mustache.dart' as mustache;
 import 'package:intl/intl.dart';
 
 import 'task.dart';
-import '../model/community.dart';
-import '../mailer/mailer.dart';
+import 'package:woven/src/server/model/community.dart';
+import 'package:woven/src/server/mailer/mailer.dart';
+import 'package:woven/src/shared/model/item_group.dart';
+import 'package:woven/src/shared/model/message.dart';
 import 'package:woven/src/server/firebase.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/shared_util.dart';
-import 'package:woven/src/shared/model/user.dart';
+import 'package:woven/src/server/model/user.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
   DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7am EST.
+
+  List<ItemGroup> groups = [];
+  List groupsB = [];
 
   DailyDigestTask();
 
@@ -48,7 +54,7 @@ class DailyDigestTask extends Task {
         // Send the digest to each user in the community.
         users.forEach((user) async {
           if (user == null) return;
-          if (user.username != 'dave') return;
+//          if (user.username != 'dave') return;
           // TODO: Temporarily limited to Dave.
 
           // Personalize the output using merge tokens.
@@ -88,6 +94,7 @@ class DailyDigestTask extends Task {
     Map jsonForTemplate = {};
     List events = [];
     List news = [];
+    List messages = [];
 
     String communityName = await CommunityModel.getCommunityName(community);
 
@@ -121,7 +128,7 @@ class DailyDigestTask extends Task {
 
       // Do some pre-processing.
       events.forEach((i) {
-        String teaser = InputFormatter.createTeaser(i['body'], 200);
+        String teaser = InputFormatter.createTeaser(i['body'], 100);
         // Convert the UTC start date to EST (UTC-5) for the newsletter.
         // TODO: Later, consider more timezones.
         DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 5));
@@ -153,7 +160,7 @@ class DailyDigestTask extends Task {
 
       // Do some pre-processing.
       news.forEach((i) {
-        String teaser = InputFormatter.createTeaser(i['body'], 200);
+        String teaser = InputFormatter.createTeaser(i['body'], 100);
 
         // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
         DateTime createdDate = DateTime.parse(i['createdDate']).subtract(new Duration(hours: 5));
@@ -169,14 +176,53 @@ class DailyDigestTask extends Task {
       return news;
     }
 
-    await Future.wait([findEvents(), findNews()]);
+    Future<List> findMessages() async {
+      var startAt = new DateTime.utc(yesterday.year, yesterday.month, yesterday.day, 12, 00, 00);
+      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59, 00); // TODO: Set back to 12 UTC.
+      var query = '/messages_by_community/$community.json?orderBy="createdDate"&startAt="$startAt"&endAt="$endAt"';
 
-    if (news.isEmpty && events.isEmpty) return null;
+      Map itemsMap = await Firebase.get(query);
+
+      if (itemsMap.isEmpty) return null;
+
+      applyEmojiStyles(String text) =>
+        text.replaceAll('class="emoji"','''style="display: inline-block;vertical-align: sub;width: 1.5em;height: 1.5em;background-size: 1.5em;background-repeat: no-repeat;text-indent: -9999px;"''');
+
+      itemsMap.forEach((k, v) {
+        // Add the key, which is the item ID, the map as well.
+        Message message = new Message.fromJson(v);
+        message.id = k;
+        if (message.type != 'notification' && message.message.isNotEmpty) {
+          message.message = applyEmojiStyles(InputFormatter.formatUserText(message.message));
+          messages.add(message);
+        }
+      });
+
+      await Future.forEach(messages, (Message message) async {
+        process(message);
+      });
+
+      await Future.forEach(groups, (ItemGroup group) async {
+        Map groupMap = group.toJson();
+        groupMap['usernameForDisplay'] = await UserModel.usernameForDisplay(groupMap['user']);
+        var getPicture = await UserModel.getFullPathToPicture(groupMap['user']);
+        groupMap['fullPathToPicture'] = (getPicture != null ? getPicture : null);
+
+        groupsB.add(groupMap);
+      });
+      return groupsB;
+    }
+
+    await Future.wait([findEvents(), findNews(), findMessages()]);
+
+    if (messages.isEmpty && events.isEmpty) return null;
 
     jsonForTemplate['communityName'] = communityName;
     jsonForTemplate['community'] = community;
     jsonForTemplate['events'] = events;
-    jsonForTemplate['news'] = news;
+    jsonForTemplate['news'] = []; // Empty list i.e. news disabled for now.
+    jsonForTemplate['messages'] = groupsB;
+    jsonForTemplate['has_messages'] = groupsB.isNotEmpty;
 
     String contents = await new File('web/static/templates/daily_digest.mustache').readAsString();
 
@@ -185,5 +231,91 @@ class DailyDigestTask extends Task {
     var output = template.renderString(jsonForTemplate);
 
     return output;
+  }
+
+  void processAll(List<Message> items) {
+    items.forEach(process);
+  }
+
+  void process(Message item) {
+    DateTime now = new DateTime.now().toUtc();
+
+    // If no updated date, use the created date.
+    // TODO: We assume createdDate is never null!
+    if (item.updatedDate == null) item.updatedDate = item.createdDate;
+
+    // If the message timestamp is after our local time,
+    // change it to now so messages aren't in the future.
+    DateTime localTime = new DateTime.now().toUtc();
+    if (item.updatedDate.isAfter(localTime)) item.updatedDate = localTime;
+    if (item.createdDate.isAfter(localTime)) item.createdDate = localTime;
+
+    // Retrieve the group that this item belongs to, if any.
+    var group = groups.firstWhere((group) => group.isDateWithin(item.createdDate), orElse: () => null);
+
+    if (group != null) {
+      if (!group.needsNewGroup(item)) {
+        group.put(item);
+      } else {
+        // Damn, we'd like to put the item in this group, but diff user!
+        // This means, we have to split an existing group into 2 halves,
+        // and then create 1 new for this item in between those halves.
+        var groupIndex = groups.indexOf(group);
+
+        var intersection = group.indexOf(item);
+        var topHalf = group.items.sublist(0, intersection);
+        var bottomHalf = group.items.sublist(intersection);
+
+        groups.remove(group); // Get rid of the old group, we need to split this thing!
+
+        groups.insert(groupIndex, new ItemGroup.fromItems(bottomHalf));
+        groups.insert(groupIndex, new ItemGroup(item));
+        groups.insert(groupIndex, new ItemGroup.fromItems(topHalf));
+      }
+    } else {
+      // Okay, so the item is not within ANY group.
+      // This leaves a few options:
+      // 1) The item belongs to the top or bottom position of some group (i.e. not within).
+      // 2) The item needs its own new group.
+
+      // Fetch the first groups that are after/before this item. i.e. surrounding the item.
+      var groupBefore = groups.reversed.firstWhere((group) => item.createdDate.isAfter(group.getLatestDate()), orElse: () => null);
+      var groupAfter = groups.firstWhere((group) => item.createdDate.isBefore(group.getOldestDate()), orElse: () => null);
+
+      if (groupBefore == null && groupAfter == null) {
+        // No groups at all!
+        groups.add(new ItemGroup(item));
+      } else if (groupBefore != null && groupAfter != null) {
+        if (groupBefore.needsNewGroup(item) && groupAfter.needsNewGroup(item)) {
+          // The item does not belong in either groups,
+          // so it has to go in between them in its own group.
+          var index = groups.indexOf(groupAfter);
+          groups.insert(index, new ItemGroup(item));
+        } else if (!groupBefore.needsNewGroup(item)) {
+          // We do not belong to groupAfter, but we belong to groupBefore!
+          groupBefore.put(item);
+        } else {
+          // We belong to groupAfter.
+          groupAfter.put(item);
+        }
+      } else if (groupBefore == null) {
+        // There was no group before this item, but one after.
+        // Thus if we belong to groupAfter, let's go there,
+        // otherwise we need a new group at the top.
+        if (!groupAfter.needsNewGroup(item)) {
+          groupAfter.put(item);
+        } else {
+          groups.insert(0, new ItemGroup(item));
+        }
+      } else {
+        // There was no group after this item, but one before.
+        // Same as earlier, let's put it there or in a new group at the bottom.
+        if (!groupBefore.needsNewGroup(item)) {
+          groupBefore.put(item);
+        } else {
+          groups.add(new ItemGroup(item));
+        }
+      }
+    }
   }
 }

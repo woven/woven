@@ -6,43 +6,191 @@
 </head>
 
 <body>
-  <div id="content-container" style="max-width:800px;margin:auto;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;">
-  <div id="header" style="margin: 0 15px 0 15px;">
-    <div style="vertical-align: middle;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
-    font-size: 1.7em;margin-bottom: 15px;text-align: center;">
+  <div id="content-container" style="max-width: 600px; margin:auto;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;">
+    <div style="
+    height: 5px;
+    width: 100%;
+    background: #2FA300;
+  ">
+    </div>
+  <div id="header">
+    <div style="
+      vertical-align: middle;
+      font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+      font-size: 30px;
+      text-align: center;
+      margin: 15px;
+    ">
         {{communityName}}
     </div>
-    <div style="font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;margin-top:20px;padding: 20px;background-color: lemonchiffon;border-radius: 4px;border: solid 1px #eee;margin-bottom: 20px;text-align: center;">
+    <div id="message"
+         style="
+      font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+      padding: 20px;
+      background-color: lemonchiffon;
+      border-radius: 4px;
+      border: solid 1px #eee;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 16px;
+    ">
     *|FNAME|*, here's the latest from the <strong>{{community}}</strong> channel.
     </div>
   </div>
+
+    <div id="title">
+      <div style="
+      vertical-align: middle;
+      font-family: 'Helvetica Neue','Liberation Sans',Arial,sans-serif;
+      margin-bottom: 15px;
+      padding: 7px 15px 7px;
+      color: #ffffff;
+      font-size: 18px;
+      letter-spacing: 0.3pt;
+      margin-top: 20px;
+      background: #1a9af5;
+      border-radius: 3px;
+    ">
+        Latest messages
+      </div>
+    </div>
+
+    {{#has_messages}}
+      <table style="width: 100%;">
+      {{#messages}}
+        <tr>
+          <td style="border: 0px solid rgb(0, 0, 0); vertical-align: top;">
+            <img src="{{fullPathToPicture}}"
+                style="
+                  width: 40px;
+                  height: 40px;
+                  background: #F5F5F5;
+                  /*border: solid 1px #E6E6E6;*/
+                  overflow:hidden;
+                  border-radius: 2px;
+                "/>
+          </td>
+          <td style="border: 0px solid rgb(0, 0, 0); vertical-align: top;">
+            <div style="
+              background-color: #F8F8F8;
+              margin: 0 auto 10px auto;
+              border-radius: 4px;
+              border: solid 1px #E5E5E5;
+              transition: background-color 2s;
+              font-size: 15px;
+              color: #2d2d2d;
+              padding: 5px 10px 0px;
+            ">
+              <table style="border: none; border-collapse: collapse; width: 100%;">
+                <tr>
+                  <td align="left" style="
+                    border: 0px solid rgb(0, 0, 0);
+                    vertical-align: top;
+                  ">
+                    <strong>{{usernameForDisplay}}</strong>
+                  </td>
+                  <td align="right" style="
+                    border: 0px solid rgb(0, 0, 0);
+                    vertical-align: top;
+                    width: 50px;
+                    font-size: 12px;
+                    padding-top: 3px;
+                    color: #666;
+                  ">
+                    <!--6h ago-->
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border: 0px solid rgb(0, 0, 0); vertical-align: top;">
+                    <div style="margin-top: 10px;">
+                      {{#items}}
+                        <div style="
+                          font-size: 16px;
+                          line-height: 20px;
+                          letter-spacing: 0.2pt;
+                          margin-bottom: 8px;
+                        ">
+                          {{{message}}}
+                        </div>
+                      {{/items}}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+        {{/messages}}
+      </table>
+    {{/has_messages}}
+
+    {{^messages}}
+      <p style="
+      margin-left: 15px;
+      color: gray;
+      font-size: 15px;
+    ">
+        No messages today.
+      </p>
+    {{/messages}}
+
+
   <div id="title">
-    <div style="vertical-align: middle;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
-    font-size: 1.7em;margin-left: 15px;margin-bottom: 15px;">
+    <div style="
+      vertical-align: middle;
+      font-family: 'Helvetica Neue','Liberation Sans',Arial,sans-serif;
+      margin-bottom: 15px;
+      padding: 7px 15px 7px;
+      color: #ffffff;
+      font-size: 18px;
+      letter-spacing: 0.3pt;
+      margin-top: 20px;
+      background: #1a9af5;
+      border-radius: 3px;
+  ">
       Events today
     </div>
   </div>
 
   {{#events}}
     <div class="item-wrapper">
-      <div class="item event" style="padding: 15px 10px 10px 15px;margin-bottom: 10px;background-color: white;
-      font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif; border: 1px solid #bbb;border-radius: 4px;">
-        <div class="item-container" style="overflow: hidden;width: 100%;">
+      <div class="item event" style="
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #FFF;
+        font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+        border: 1px solid #EBEBEB;
+        border-radius: 4px;
+      ">
+        <div class="item-container" style="overflow: hidden;width: 100%;
+        ">
           <div>
-            <span class="item-subject" style="border-bottom: solid 1px #EAEAEA;white-space: normal;margin-right: 5px;font-size: 18px;padding: 5px 0 0 0;margin-bottom: 5px;">
-              <a target="_blank" style="text-decoration:none; color: #3783DB;" href="http://woven.co/item/{{encodedId}}">
+            <span class="item-subject" style="
+              border-bottom: solid 1px #EAEAEA;
+              white-space: normal;
+              margin-right: 5px;
+              font-size: 18px;
+              padding: 5px 0 0 0;
+              margin-bottom: 5px;
+            ">
+              <a target="_blank" style="text-decoration:none; color: #3783db;" href="http://woven.co/item/{{encodedId}}">
                 {{subject}}
               </a>
             </span>
           </div>
-          <div class="item-body" style="color: #5c5c5c;font-size: 1em;white-space:normal;margin-bottom: 5px;">
+          <div class="item-body" style="
+            color: #5c5c5c;
+            font-size: 15px;
+            white-space: normal;
+            margin-bottom: 5px;
+            ">
             <div style="color:green;margin:12px 0 10px 0;">
               {{startDateTime}}
             </div>
             {{body}}
           </div>
-          <div class="item-type event" style="text-transform: capitalize;margin-right: 3px;margin-top: 15px;border-radius: 3px;font-size: 0.9em;color: #03a9f4;">
-            <span class="item-users" style="color: #212121;display: inline;margin-right: 2px;text-transform: none;font-weight: normal;">
+          <div class="item-type event" style="text-transform: capitalize;margin-right: 3px;margin-top: 15px;border-radius: 3px;font-size: 15px;color: #03a9f4;">
+            <span class="item-users" style="color: #5c5c5c;display: inline;margin-right: 2px;text-transform: none;font-weight: normal;">
               Posted by <strong>{{user}}</strong>
             </span>
           </div>
@@ -52,21 +200,44 @@
   {{/events}}
 
   {{^events}}
-    <p style="margin-left: 15px; color: gray;">
+    <p style="
+      margin-left: 15px;
+      color: gray;
+      font-size: 15px;
+      ">
       No events happening today.
     </p>
   {{/events}}
 
-  <div id="title">
-    <div style="vertical-align: middle;font-family: Arial, Helvetica, sans-serif;font-size: 1.7em;margin-left: 15px;margin-bottom: 15px;margin-top:25px;">
-      News today
+  {{#news}}
+    <div id="title">
+      <div style="
+        vertical-align: middle;
+        font-family: 'Helvetica Neue','Liberation Sans',Arial,sans-serif;
+        margin-bottom: 15px;
+        padding: 7px 15px 7px;
+        color: #ffffff;
+        font-size: 18px;
+        letter-spacing: 0.3pt;
+        margin-top: 20px;
+        background: #1a9af5;
+        border-radius: 3px;
+      ">
+        News today
+      </div>
     </div>
-  </div>
+  {{/news}}
 
   {{#news}}
     <div class="item-wrapper" style="">
-      <div class="item event" style="padding: 15px 10px 10px 15px;margin-bottom: 10px;background-color: white;font-family: 'Arial', sans-serif;
-  border: 1px solid #bbb;border-radius: 4px;">
+      <div class="item news" style="
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #F9F9F9;
+        font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+        border: 1px solid #EBEBEB;
+        border-radius: 4px;
+      ">
         <div class="item-container" style="overflow: hidden;width: 100%;">
           <div>
             <span class="item-subject" style="border-bottom: solid 1px #EAEAEA;white-space: normal;margin-right: 5px;font-weight: bold;font-size: 1.5em;padding: 5px 0 0 0;margin-bottom: 5px;">
@@ -91,18 +262,46 @@
     </div>
   {{/news}}
 
-  {{^news}}
-    <p style="margin-left: 15px; color: gray;">
-      No news posted today.
-    </p>
-  {{/news}}
+  <!--^news-->
+    <!--<p style="-->
+      <!--margin-left: 15px;-->
+      <!--color: gray;-->
+      <!--font-size: 15px;-->
+    <!--">-->
+      <!--No news posted today.-->
+    <!--</p>-->
+  <!--/news-->
 
-  <div style="text-align:center;margin:40px 0">
-    <a style="text-decoration: none;background: #4A9E2E;border-radius: 2px;padding: 10px 20px;
-    font-size: 18px;color: #fff;font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;"
-       href="http://woven.co/{{community}}" target="_blank">
+  <div style="
+    height: 10px;
+    width: 100%;
+    border-bottom: solid 1px #EBEBEB;
+  ">
+  </div>
+
+  <div style="
+    text-align:center;
+    margin:40px 0;
+    ">
+    <a href="http://woven.co/{{community}}" target="_blank"
+       style="
+        text-decoration: none;
+        background: #4A9E2E;
+        border-radius: 3px;
+        padding: 12px 20px;
+        font-size: 18px;
+        color: #fff;
+        font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+      ">
       Go to the channel
     </a>
+    <p style="
+    margin-top: 30px;
+    color: #666;
+    font-size: 15px;
+    ">
+    Feedback? Just reply to this email.
+    </p>
   </div>
 </div>
 </body>

@@ -44,8 +44,8 @@ main() async {
 
 //  dumpDataToFile();
 //  doMigration();
-//updateAllUsersAddPriority();
-updateAllMessagesAddPriority();
+updateAllUsersAddPriority();
+//updateAllMessagesAddPriority();
 //  getAllUsersMissingPassword();
 }
 
