@@ -2,7 +2,6 @@ library daily_digest_task;
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:mustache/mustache.dart' as mustache;
 import 'package:intl/intl.dart';
@@ -19,7 +18,7 @@ import 'package:woven/src/server/model/user.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 14, 06); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7 or 8am EST depending on DST.
 
   List<ItemGroup> groups = [];
   List groupsB = [];
@@ -35,7 +34,7 @@ class DailyDigestTask extends Task {
     List<Map> usersByCommunity = await CommunityModel.getCommunitiesWithUsers();
 
     // Loop over each community/users map.
-    usersByCommunity.forEach((Map communitiesWithUsers) async {
+    Future.forEach(usersByCommunity, (Map communitiesWithUsers) async {
       CommunityModel community = communitiesWithUsers['community'];
       List<UserModel> users = communitiesWithUsers['users'];
 
@@ -54,8 +53,7 @@ class DailyDigestTask extends Task {
         // Send the digest to each user in the community.
         users.forEach((user) async {
           if (user == null) return;
-          if (user.username != 'dave') return;
-          // TODO: Temporarily limited to Dave.
+//          if (user.username != 'dave') return; // TODO: Temporarily limited to Dave.
 
           var firstName = (user.firstName != null ? user.firstName : '[oops, we don\'t have your first name]');
           var lastName = (user.lastName != null ? user.lastName : '[egad, we don\'t have your last name]');
@@ -103,7 +101,9 @@ class DailyDigestTask extends Task {
     List events = [];
     List news = [];
     List messages = [];
-    List groupsB = [];
+
+    groups.clear();
+    groupsB.clear();
 
     String communityName = await CommunityModel.getCommunityName(community);
 
@@ -207,7 +207,7 @@ class DailyDigestTask extends Task {
         }
       });
 
-      await Future.forEach(messages, (Message message) async {
+      await Future.forEach(messages, (Message message) {
         process(message);
       });
 
