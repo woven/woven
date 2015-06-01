@@ -19,7 +19,7 @@ import 'package:woven/src/server/model/user.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 13, 55); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 14, 06); // Equivalent to 7am EST.
 
   List<ItemGroup> groups = [];
   List groupsB = [];
@@ -54,7 +54,7 @@ class DailyDigestTask extends Task {
         // Send the digest to each user in the community.
         users.forEach((user) async {
           if (user == null) return;
-//          if (user.username != 'dave') return;
+          if (user.username != 'dave') return;
           // TODO: Temporarily limited to Dave.
 
           var firstName = (user.firstName != null ? user.firstName : '[oops, we don\'t have your first name]');
@@ -103,6 +103,7 @@ class DailyDigestTask extends Task {
     List events = [];
     List news = [];
     List messages = [];
+    List groupsB = [];
 
     String communityName = await CommunityModel.getCommunityName(community);
 
