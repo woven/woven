@@ -57,11 +57,19 @@ class DailyDigestTask extends Task {
 //          if (user.username != 'dave') return;
           // TODO: Temporarily limited to Dave.
 
+          var firstName = (user.firstName != null ? user.firstName : '[oops, we don\'t have your first name]');
+          var lastName = (user.lastName != null ? user.lastName : '[egad, we don\'t have your last name]');
+
+          if (user.email == null) {
+            print('Skipped ${user.username} due to no email address...');
+            return;
+          }
+
           // Personalize the output using merge tokens.
           // We based our merge tokens off of MailChimp: http://goo.gl/xagsyk
           var mergedDigest = output
-          .replaceAll(r'*|FNAME|*', user.firstName)
-          .replaceAll(r'*|LNAME|*', user.lastName)
+          .replaceAll(r'*|FNAME|*', firstName)
+          .replaceAll(r'*|LNAME|*', lastName)
           .replaceAll(r'*|EMAIL|*', user.email);
 
           DateTime now = new DateTime.now();
@@ -71,7 +79,7 @@ class DailyDigestTask extends Task {
           // Generate and send the email.
           var envelope = new Envelope()
             ..from = "Woven <hello@woven.co>"
-            ..to = ['${user.firstName} ${user.lastName} <${user.email}>']
+            ..to = ['${firstName} ${lastName} <${user.email}>']
             ..subject = '${community.name} – Today\'s activity – $formattedToday'
             ..html = '$mergedDigest';
 
