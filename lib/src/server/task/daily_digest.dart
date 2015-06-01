@@ -19,7 +19,7 @@ import 'package:woven/src/server/model/user.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 13, 15); // Equivalent to 7am EST.
 
   List<ItemGroup> groups = [];
   List groupsB = [];
@@ -117,7 +117,7 @@ class DailyDigestTask extends Task {
       Map itemsMap = await Firebase.get(query);
 
       // If there are no items for the digest, get out of here.
-      if (itemsMap.isEmpty) return null;
+      if (itemsMap == null) return null;
 
       itemsMap.forEach((k, v) {
         // Add the key, which is the item ID, the map as well.
@@ -149,7 +149,7 @@ class DailyDigestTask extends Task {
 
       Map itemsMap = await Firebase.get(query);
 
-      if (itemsMap.isEmpty) return null;
+      if (itemsMap == null) return null;
 
       itemsMap.forEach((k, v) {
         // Add the key, which is the item ID, the map as well.
@@ -183,7 +183,7 @@ class DailyDigestTask extends Task {
 
       Map itemsMap = await Firebase.get(query);
 
-      if (itemsMap.isEmpty) return null;
+      if (itemsMap == null) return null;
 
       applyEmojiStyles(String text) =>
         text.replaceAll('class="emoji"','''style="display: inline-block;vertical-align: sub;width: 1.5em;height: 1.5em;background-size: 1.5em;background-repeat: no-repeat;text-indent: -9999px;"''');
