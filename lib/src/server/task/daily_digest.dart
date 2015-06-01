@@ -19,7 +19,7 @@ import 'package:woven/src/server/model/user.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 13, 40); // Equivalent to 7am EST.
+  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 13, 55); // Equivalent to 7am EST.
 
   List<ItemGroup> groups = [];
   List groupsB = [];
