@@ -140,7 +140,7 @@ class DailyDigestTask extends Task {
         String teaser = InputFormatter.createTeaser(i['body'], 100);
         // Convert the UTC start date to EST (UTC-5) for the newsletter.
         // TODO: Later, consider more timezones.
-        DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 5));
+        DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 4)); // TODO: Adjust for DST. Automate later.
         // TODO: Revisit this, it was causing exception as News don't have subjects now.
         if (i['subject'] == null) i['subject'] = '';
         i['body'] = teaser;
