@@ -28,7 +28,7 @@
                 <template if="{{!group.isNotification}}">
                   <div flex class="user group-header">{{group.usernameForDisplay}}</div>
                   <div class="date-time">
-                    <live-date-time value="{{group.latestDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                    <live-date-time value="{{group.lastCreatedDate}}" formatter="{{formatItemDate}}"></live-date-time>
                   </div>
                 </template>
               </div>

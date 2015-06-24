@@ -66,4 +66,7 @@ class ItemGroup extends Observable {
   bool get isNotification => items.first.type == 'notification';
 
   String get usernameForDisplay => items.first.usernameForDisplay;
+
+  // TODO: This duplicates getLatestDate() due to observe issues. Fix later.
+  DateTime get lastCreatedDate => items.last.createdDate;
 }
