@@ -56,7 +56,7 @@ class ChatViewModel extends BaseViewModel with Observable {
   /**
    * Load items pageSize at a time.
    */
-  Future loadMessagesByPage() {
+  Future loadMessagesByPage() async {
     reloadingContent = true;
     int count = 0;
 
@@ -67,57 +67,53 @@ class ChatViewModel extends BaseViewModel with Observable {
     if (groups.expand((ItemGroup i) => i.items).length == 0) onLoadCompleter.complete(true);
 
     // Get the list of items, and listen for new ones.
-    return messagesRef.once('value').then((snapshot) {
-      Map messages = snapshot.exportVal();
-      if (messages == null) {
-        reachedEnd = true;
-        return null;
-      }
-      List messagesAsList = [];
-      messages.forEach((k,v) {
-        Message message = new Message.fromJson(v);
-        message.id = k;
-        messagesAsList.add(message);
-      });
+    db.DataSnapshot snapshot = await messagesRef.once('value');
 
-      return Future.forEach(messagesAsList, (Message message) {
-        count++;
-        totalCount++;
+    Map messages = snapshot.exportVal();
+    if (messages == null) {
+      reachedEnd = true;
+      return null;
+    }
 
-        // Make sure we're using the collapsed username.
-        message.user = message.user.toLowerCase();
+    List messagesAsList = [];
 
-        // Track the snapshot's priority so we can paginate from the last one.
-        lastPriority = message.priority;
+    messages.forEach((k,v) {
+      Message message = new Message.fromJson(v);
+      message.id = k;
+      messagesAsList.add(message);
+    });
 
-        // Don't process the extra item we tacked onto pageSize in the limit() above.
-        if (count > pageSize) return null;
+    await Future.forEach(messagesAsList, (Message message) async {
+      count++;
+      totalCount++;
 
-        // Remember the priority of the last item, excluding the extra item which we ignore above.
-        secondToLastPriority = message.priority;
+      // Track the snapshot's priority so we can paginate from the last one.
+      lastPriority = message.priority;
 
-        return usernameForDisplay(message.user).then((String usernameForDisplay) {
-          message.usernameForDisplay = usernameForDisplay;
+      // Don't process the extra item we tacked onto pageSize in the limit() above.
+      if (count > pageSize) return null;
 
-          queue.add(message);
-        });
+      // Remember the priority of the last item, excluding the extra item which we ignore above.
+      secondToLastPriority = message.priority;
 
-      }).then((_) {
-        processAll(queue);
-        queue.clear();
-        relistenForItems();
+      await preProcess(message);
 
-        // If we received less than we tried to load, we've reached the end.
-        if (count <= pageSize) reachedEnd = true;
+      queue.add(message);
+    });
 
-        // Wait until the view is loaded, then scroll to bottom.
-        if (isScrollPosAtBottom || isFirstLoad && chatView != null) Timer.run(() => chatView.scrollToBottom());
-        isFirstLoad = false;
+    processAll(queue);
+    queue.clear();
+    relistenForItems();
 
-        new Timer(new Duration(seconds: 1), () {
-          reloadingContent = false;
-        });
-      });
+    // If we received less than we tried to load, we've reached the end.
+    if (count <= pageSize) reachedEnd = true;
+
+    // Wait until the view is loaded, then scroll to bottom.
+    if (isScrollPosAtBottom || isFirstLoad && chatView != null) Timer.run(() => chatView.scrollToBottom());
+    isFirstLoad = false;
+
+    new Timer(new Duration(seconds: 1), () {
+      reloadingContent = false;
     });
   }
 
@@ -181,9 +177,6 @@ class ChatViewModel extends BaseViewModel with Observable {
         if (existingItem.createdDate.isAfter(localTime)) existingItem.createdDate = localTime;
 
       } else {
-        // Insert each new item into the list.
-        message.usernameForDisplay = await usernameForDisplay(message.user);
-
         // Notify mentioned users, unless this is a notification message.
         if (message.type != 'notification') doNotifications(message);
 
@@ -194,7 +187,6 @@ class ChatViewModel extends BaseViewModel with Observable {
       if (isScrollPosAtBottom || isFirstLoad && chatView != null) {
         Timer.run(() => chatView.scrollToBottom());
       }
-
     });
 
     // Listen for changed items.
@@ -364,11 +356,35 @@ class ChatViewModel extends BaseViewModel with Observable {
     Timer.run(() => chatView.scrollToBottom());
   }
 
+  preProcess(Message item) async {
+    item.usernameForDisplay = await UserModel.usernameForDisplay(item.user.toLowerCase(), f, app.cache);
+
+    // If the message references an item, let's get it so we can show it inline.
+    if (item.data != null && item.data['id'] != null) {
+      var itemId = item.data['id'];
+      db.DataSnapshot itemQuery = await f.child('/items/$itemId').once('value');
+      var itemData = itemQuery.val();
+      item.data['items'] = {};
+      item.data['items'][itemId] = itemData;
+
+      if (itemData['uriPreviewId'] != null) {
+        db.DataSnapshot uriPreviewQuery = await f.child('/uri_previews/${itemData['uriPreviewId']}').once('value');
+        var uriPreviewData = uriPreviewQuery.val();
+        item.data['items'][itemId]['uriPreview'] = uriPreviewData;
+      }
+
+      print(item.data['items']);
+    }
+  }
+
   void processAll(List<Message> items) {
     items.forEach(process);
   }
 
-  void process(Message item) {
+  void process(Message item)  {
+    // Make sure we're using the collapsed username.
+    item.user = item.user.toLowerCase();
+
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
 
