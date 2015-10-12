@@ -2,157 +2,92 @@
 <link rel="import" href="../../../../../../../packages/core_elements/core_animation.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../../packages/core_elements/core_a11y_keys.html">
+<link rel="import" href="../../../../../../../packages/core_elements/core_icon.html">
+<link rel="import" href="../../../../../../../packages/core_elements/communication_icons.html">
+<link rel="import" href="../../../../../../../packages/core_elements/maps_icons.html">
+<link rel="import" href="../../widgets/custom_icons/custom_icons.html">
 
 <polymer-element name="x-home">
   <template>
     <link rel="stylesheet" href="home.css">
-    <div class="cover" layout vertical fit>
-      <template if="{{!app.isMobile}}"><div class="logo"></div></template>
-      <div class="cta {{app.homePageCta}}" self-center>
-        <div class="content-container" layout vertical>
-          <template if="{{app.isMobile}}"><div class="logo-solo"></div></template>
+    <custom-icons></custom-icons>
+    <header class="header">
+      <div horizontal layout>
+        <div>
+          <img src="/static/images/woven_logo_solo_35.png" class="logo" alt="Woven"/>
+        </div>
+        <div flex>
 
-          <template if="{{app.homePageCta == 'sign-up'}}">
-            <h2>Tap into the communities you care about.</h2>
-            <h3>Get informed. Get involved. Make a difference.</h3>
-
-            <div self-center>
-              <div class="field-wrapper only">
-                <input id="email" is="core-input" placeholder="Your email"
-                       autocomplete="off" autocorrect="off" autocapitalize="off">
-              </div>
-              <div id="submit" class="button" on-tap="{{getStarted}}">Get started</div>
-              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{getStarted}}"></core-a11y-keys>
-            </div>
-            <div class="footer" self-center>
-              <p>We protect your information. Leave anytime.</p>
-              <p class="links"><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
-            </div>
-          </template>
-
-          <template if="{{app.homePageCta == 'sign-in'}}">
-            <h3 class="first">Please sign in.</h3>
-
-            <div self-center>
-              <div class="field-wrapper first">
-                <input id="username" is="core-input" placeholder="Username"
-                       autocomplete="off" autocorrect="off" autocapitalize="off">
-              </div>
-              <div class="field-wrapper">
-                <input id="password" is="core-input" type="password" placeholder="Password"
-                       autocomplete="off" autocorrect="off" autocapitalize="off">
-              </div>
-              <div id="submit" class="button" on-tap="{{signIn}}">Sign in</div>
-              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signIn}}"></core-a11y-keys>
-            </div>
-            <div class="footer" self-center>
-              <p class="links"><a on-tap="{{showSignUp}}">Sign up</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
-            </div>
-          </template>
-
-          <template if="{{app.homePageCta == 'complete-sign-up'}}">
-            <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-              <h3 class="first">Please complete your sign up.</h3>
-            </template>
-            <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-              <h3>Please update your account.</h3>
-              <p>We're missing some pertinent details.</p>
-            </template>
-
-            <div self-center>
-              <div class="field-wrapper first">
-                <template if="{{app.user != null && app.user.email != null}}">
-                  <input is="core-input" id="email" placeholder="Your email"
-                         autocomplete="off" autocorrect="off" autocapitalize="off"
-                         value="{{(app.user != null) ? app.user.email : ''}}" disabled>
-                </template>
-                <template if="{{app.user == null || (app.user != null && app.user.email == null)}}">
-                  <input is="core-input" id="email" placeholder="Your email"
-                         autocomplete="off" autocorrect="off" autocapitalize="off"
-                         value="{{(app.user != null) ? app.user.email : ''}}">
-                </template>
-              </div>
-              <div class="field-wrapper">
-                <input is="core-input" id="username" placeholder="Choose a username"
-                       autocomplete="off" autocorrect="off" autocapitalize="off"
-                       value="{{(app.user != null && !app.user.disabled) ? app.user.username.toLowerCase() : ''}}">
-              </div>
-              <div class="field-wrapper">
-                <input is="core-input" id="password" placeholder="Choose a password"
-                       autocomplete="off" autocorrect="off" autocapitalize="off" type="password">
-              </div>
-              <div class="field-wrapper">
-                <input is="core-input" id="firstname" placeholder="Your first name" autocomplete="off"
-                       value="{{(app.user != null) ? app.user.firstName : ''}}">
-              </div>
-              <div class="field-wrapper {{app.user.invitation != null ? 'last' : ''}}">
-                <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
-                       value="{{(app.user != null) ? app.user.lastName : ''}}">
-              </div>
-              <template if="{{app.user.invitation == null}}">
-                <div class="field-wrapper last">
-                  <input is="core-input" id="invitation-code" placeholder="Got an invitation code? (optional)" autocomplete="off"
-                         value="{{(app.user != null) ? app.user.lastName : ''}}">
-                </div>
-              </template>
-              <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-                <div id="submit" class="button" on-tap="{{signUp}}">Sign up</div>
-                <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
-              </template>
-              <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-                <div id="submit" class="button" on-tap="{{updateExistingUser}}">Continue &#8594;</div>
-                <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
-              </template>
-            </div>
-          </template>
-
-          <template if="{{app.homePageCta == 'sign-up-note'}}">
-            <h3 class="first">Look out for an invitation...</h3>
-
-            <div self-center>
-              <p>
-                You've signed up and reserved your username. Woven is currently serving a few select
-                communities. The quickest way to get access is to ask a current participant to invite you. If you don't
-                know someone, you can reply to the email we just sent you to request access. Or, wait until we open up
-                to more communities. We can't wait to get you involved.
-              </p>
-              <div class="footer" self-center>
-                <p class="links"><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
-              </div>
-            </div>
-          </template>
-
-          <template if="{{app.homePageCta == 'get-started-note'}}">
-            <h3 class="first">Check your email...</h3>
-
-            <div self-center>
-              <p>
-                I just sent you an email with a link.
-              </p>
-              <p>
-                We'll be back together in no time.
-              </p>
-            </div>
-          </template>
-
-          <template if="{{app.homePageCta == 'disabled-note'}}">
-            <h3>Your account is not active.</h3>
-
-            <div self-center>
-              <p>
-                It looks like you're signed in with an inactive account. You may have recently requested an invitation
-                and do not yet have access, or your account is disabled for some other reason.
-              </p>
-              <p>
-                Want to discuss? hello@woven.co
-              </p>
-              <div class="footer" self-center>
-                <p class="links"><a on-tap="{{showSignIn}}">Sign in</a> <strong>&middot;</strong> <a on-tap="{{signInWithFacebook}}">Sign in with Facebook</a> <strong>&middot;</strong> <a on-tap="{{close}}">Just browse &#8594;</a></p>
-              </div>
-            </div>
-          </template>
+        </div>
+        <div>
+          <div class="button">
+            Sign in
+          </div>
         </div>
       </div>
+    </header>
+
+    <div class="heading">
+      <h1>Channels for your passions</h1>
+      <h2>Connect with others who share your interests, discover the best resources, and get involved.</h2>
+    </div>
+
+    <div vertical layout center-center>
+      <div class="get-started" vertical layout center-center>
+        <div horizontal layout>
+          <div class="field-wrapper">
+            <input id="email" is="core-input" placeholder="Your email"
+                     autocomplete="off" autocorrect="off" autocapitalize="off">
+          </div>
+          <div id="submit" class="button" on-tap="{{getStarted}}">Get started</div>
+          <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{getStarted}}"></core-a11y-keys>
+        </div>
+        <p>Woven is free to use – forever, and with no limits.</p>
+      </div>
+
+      <div horizontal layout center-center wrap hidden>
+        <div class="feature" horizontal layout>
+          <div class="icon">
+            <core-icon icon="communication:forum"></core-icon>
+          </div>
+          <div>
+            <h3>Messaging</h3>
+            <p>Talk and share as a community.</p>
+          </div>
+        </div>
+        <div class="feature" horizontal layout>
+          <div class="icon">
+            <core-icon icon="event"></core-icon>
+          </div>
+          <div>
+            <h3>Calendar</h3>
+            <p>Discover the best events.</p>
+          </div>
+        </div>
+
+      </div>
+      <div horizontal layout center-center wrap hidden>
+        <div class="feature" horizontal layout>
+          <div class="icon">
+            <core-icon icon="custom-icons:news"></core-icon>
+          </div>
+          <div>
+            <h3>News</h3>
+            <p>See what everyone's reading.</p>
+          </div>
+        </div>
+        <div class="feature" horizontal layout>
+          <div class="icon">
+            <core-icon icon="maps:store-mall-directory"></core-icon>
+          </div>
+          <div>
+            <h3>Directory</h3>
+            <p>Find the best resources.</p>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </template>
   <script type="application/dart" src="home.dart"></script>
