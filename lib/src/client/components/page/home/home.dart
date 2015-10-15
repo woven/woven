@@ -259,10 +259,11 @@ class Home extends PolymerElement with Observable {
         method: 'POST',
         sendData: JSON.encode({
           'email': email.value.trim()
-        }));
+        })).catchError((e) => print(e));
 
     // Set up the response as an object.
     Response response = Response.fromJson(JSON.decode(request.responseText));
+    print('DEBUG: $response');
 
     if (response.success) {
       toggleProcessingIndicator();
