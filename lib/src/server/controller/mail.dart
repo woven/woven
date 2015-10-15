@@ -306,6 +306,7 @@ http://woven.co
    * Generate a confirmation code and send a link to confirm user's email.
    */
   static sendConfirmEmail(App app, HttpRequest request) async {
+    print('debug1');
     String dataReceived;
 
     await request.listen((List<int> buffer) {
