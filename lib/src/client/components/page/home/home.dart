@@ -129,29 +129,26 @@ class Home extends PolymerElement with Observable {
   }
 
   toggleMain() {
-    new Timer(new Duration(milliseconds: 300), () {
-      toggleLogo();
-      new Timer(new Duration(milliseconds: 600), () async {
-        if (app.user != null) {
-          if (app.user.disabled && app.user.onboardingState == 'signUpComplete') {
-            app.homePageCta = 'sign-up-note';
-          }
-          if (app.user.onboardingState == 'temporaryUser') {
-            app.homePageCta = 'complete-sign-up';
-          }
-        } else {
-          Uri currentPath = Uri.parse(window.location.toString());
-
-          if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
-            var confirmId = currentPath.pathSegments[1].toString();
-            handleConfirm(confirmId);
-            app.router.dispatch(url: '/');
-          } else {
-            app.homePageCta = 'sign-up';
-          }
+    new Timer(new Duration(milliseconds: 600), () async {
+      if (app.user != null) {
+        if (app.user.disabled && app.user.onboardingState == 'signUpComplete') {
+          app.homePageCta = 'sign-up-note';
         }
-        toggleCta();
-      });
+        if (app.user.onboardingState == 'temporaryUser') {
+          app.homePageCta = 'complete-sign-up';
+        }
+      } else {
+        Uri currentPath = Uri.parse(window.location.toString());
+
+        if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
+          var confirmId = currentPath.pathSegments[1].toString();
+          handleConfirm(confirmId);
+          app.router.dispatch(url: '/');
+        } else {
+          app.homePageCta = 'sign-up';
+        }
+      }
+      toggleCta();
     });
   }
 
@@ -536,12 +533,12 @@ class Home extends PolymerElement with Observable {
   attached() {
     if (app.debugMode) print('+Home');
 
-    ImageElement coverImage = new ImageElement(src: 'http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg');
+    ImageElement coverImage = new ImageElement(src: 'https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg');
     document.body.classes.add('colored-bg');
     Timer.run(() => toggleCover());
     toggleMain();
     coverImage.onLoad.listen((e) {
-      cover.style.backgroundImage = 'url(http://storage.googleapis.com/woven/public/images/bg/wynwood_26st.jpg)';
+      document.body.style.backgroundImage = 'url(https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg)';
     });
 
     if (app.user != null && app.user.onboardingState == 'signUpIncomplete') {
@@ -553,6 +550,7 @@ class Home extends PolymerElement with Observable {
 
   detached() {
     if (app.debugMode) print('-Home');
+    document.body.style.backgroundImage = null;
     document.body.classes.remove('colored-bg');
   }
 }

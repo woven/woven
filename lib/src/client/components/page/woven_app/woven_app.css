@@ -52,7 +52,7 @@
 #page-title {
   opacity: 0;
   transition: .2s opacity;
-  font-size: 1.1em;
+  font-size: 20px;
   letter-spacing: .2pt;
   cursor: pointer;
 }
@@ -65,7 +65,7 @@
 #sidebar-title {
   opacity: 1;
   transition: .2s opacity;
-  font-size: 1.1em;
+  font-size: 20px;
   letter-spacing: .2pt;
 }
 

@@ -1,9 +1,9 @@
-@import url(http://fonts.googleapis.com/css?family=Bitter:400,700);
+@import url(https://fonts.googleapis.com/css?family=Bitter|Roboto|Varela+Round|Actor|Ek+Mukta|Mallanna);
 
 body {
   font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
   transition: opacity ease-in 0.2s;
-  font-size: 85%;
+  /*font-size: 85%;*/
   /*margin: auto;*/
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
@@ -14,7 +14,14 @@ body {
 }
 
 body.colored-bg {
-  background-color: #eee;
+  /*background: #00668B;*/
+  background: #1d1d1d;
+  /*background-image: url(https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg);*/
+  color: white;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  transition: background-image .8s;
 }
 
 /* This somehow fixes the disappearing dialog. */

@@ -1,17 +1,35 @@
 @import url(https://fonts.googleapis.com/css?family=Bitter|Roboto|Varela+Round|Actor|Ek+Mukta|Mallanna);
 
 body {
-  background: #1d1d1d;
+  background: #008899;
   margin: auto;
   -webkit-font-smoothing: antialiased;
   color: white;
 }
 
+.simple-content h2 {
+  font-size: 25px;
+  font-weight: normal;
+  margin: 40px 0 0 0;
+  text-align: center;
+}
+
+.simple-content p {
+  font-size: 18px;
+  max-width: 340px;
+  margin: 30px;
+  text-align: center;
+}
+
 header {
-  background: #000;
+  background: rgba(34, 34, 34, 0.4);
   height: 70px;
   width: 100%;
   border-bottom: solid 1px #3A3A3A;
+}
+
+header img {
+  cursor: pointer;
 }
 
 .logo {
@@ -20,9 +38,9 @@ header {
 }
 
 .header .button:hover {
-  border-color: #9DDAFF;
+  border-color: #294e9b;
   transition: border-color .1s, color .1s;
-  color: #9DDAFF;
+  color: #294e9b;
 }
 
 .header .button {
@@ -31,18 +49,23 @@ header {
   width: 100px;
   border-radius: 2px;
   border: solid 2px #00a2ff;
-  font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
   text-align: center;
   line-height: 33px;
   cursor: pointer;
   transition: border-color .1s, color .1s;
   font-weight: 600;
+  color: #00a2ff;
+}
+
+.heading {
+  margin: auto;
 }
 
 .heading h1 {
   font-family: 'Varela Round', sans-serif;
   font-size: 55px;
-  margin: 60px 0 0 0;
+  line-height: 55px;
+  margin: 50px 0 0 0;
   text-align: center;
   font-weight: normal;
   background: linear-gradient(330deg, #FFCB00 0%, #FFDF00 25%, #FFAF00 50%, #F9BC00 75%, #FFE903 100%);
@@ -50,23 +73,57 @@ header {
   -webkit-text-fill-color: transparent;
 }
 .heading h2 {
-  max-width: 640px;
-  font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
-  font-size: 27px;
-  margin: 10px auto 40px;
+  max-width: 580px;
+  font-size: 28px;
+  margin: 5px auto 0 auto;
   text-align: center;
   font-weight: normal;
 }
 
-.feature {
-  width: 350px;
-  height: 90px;
-  margin: 5px;
+.channels {
+  margin-top: 40px;
+  background: #052B3C;
+  padding: 20px;
 }
 
-.feature .icon {
-  margin: 0 15px;
+.channel {
+  width: 33%;
+  height: 250px;
+  /*margin: 8px;*/
+  background: #fff;
+  border-radius: 3px;
 }
+
+.channel .content {
+  color: #333;
+  padding: 8px 5px 0 12px;
+  text-align: left;
+}
+
+.channel .picture {
+  height: 125px;
+  background: #F2F2F2 url(http://i.huffpost.com/gen/935242/images/o-WYNWOOD-facebook.jpg);
+  border-radius: 2px 2px 0 0;
+  background-size: cover;
+}
+
+.features {
+  margin-top: 40px;
+  background: #052B3C;
+  padding: 20px;
+}
+
+/*.feature {*/
+  /*width: 33%;*/
+  /*height: 250px;*/
+  /*/!*margin: 8px;*!/*/
+  /*background: #fff;*/
+  /*border-radius: 3px;*/
+/*}*/
+
+/*.feature .icon {*/
+  /*margin: 0 15px;*/
+/*}*/
 
 core-icon[icon] {
   height: 55px;
@@ -91,26 +148,24 @@ core-icon[icon="maps:store-mall-directory"] {
   color: #f40028;
 }
 
-.feature h3 {
+.channel h3 {
   margin: 0 0 3px 0;
-  font-family: 'Bitter', sans-serif;
-  font-size: 27px;
-  font-weight: normal;
+  /* font-family: 'Bitter', sans-serif; */
+  font-size: 20px;
+  font-weight: 500;
 }
 
-.feature p {
-  font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
-  font-size: 18px;
+.channel p {
+  font-size: 16px;
   margin-top: 8px;
 }
 
 .get-started {
-  margin-top: 15px;
+  margin-top: 30px;
 }
 
 .get-started .field-wrapper {
-  height: 41px;
-  width: 250px;
+  height: 40px;
   padding: 0 0 0 10px;
   border-radius: 3px;
   margin-right: 5px;
@@ -118,10 +173,13 @@ core-icon[icon="maps:store-mall-directory"] {
 }
 
 .get-started input[is="core-input"] {
-  height: 41px;
-  width: 360px;
+  height: 40px;
   background: transparent;
   font-size: 18px;
+}
+
+.get-started .field-wrapper, .get-started input[is="core-input"] {
+  width: 250px;
 }
 
 .get-started .button {
@@ -144,4 +202,187 @@ core-icon[icon="maps:store-mall-directory"] {
 .get-started p {
   font-size: 18px;
   margin: 10px;
+  text-align: center;
+}
+
+.feature-area {
+  border-top: solid 1px #353535;
+  border-bottom: solid 1px #353535;
+  margin: 45px auto 40px auto;
+  max-width: 700px;
+}
+
+.feature-row.first {
+  border-bottom: solid 1px #353535;
+}
+
+.feature {
+  width: 50%;
+}
+
+.feature.first {
+  border-right: solid 1px #353535;
+}
+
+.feature h3 {
+  margin: 20px 10px 10px 25px;
+  font-family: 'Bitter', sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  color: #7AFF7E;
+}
+
+.feature p {
+  margin: 15px 10px 25px 25px;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+footer {
+  height: 120px;
+  border-top: solid 1px #353535;
+  margin-top: 50px;
+  background: transparent;
+}
+
+footer .column {
+  width: 100px;
+  margin: 0 0 0 50px;
+  padding: 10px;
+  color: #bbb;
+}
+
+footer .column.first {
+  border-left: none;
+}
+
+footer .column ul {
+  list-style: none;
+}
+
+footer .column li {
+  line-height: 25px;
+}
+
+footer a, footer a:visited {
+  text-decoration: none;
+  color: #bbb;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.form {
+  margin-top: 30px;
+}
+
+.form .field-wrapper {
+  height: 40px;
+  padding: 0;
+  border-radius: 3px;
+  margin-right: 5px;
+  background: white;
+  margin-bottom: 10px;
+}
+
+.form input[is="core-input"] {
+  height: 40px;
+  background: transparent;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+.form .field-wrapper, .get-started input[is="core-input"] {
+  width: 250px;
+}
+
+.form .button {
+  width: 250px;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  font-weight: 600;
+  background: #00a104;
+  /*transition: background-color .1s, color .1s;*/
+}
+
+.form .button:hover {
+  color: #d4d4d4;
+  background-color: #008104;
+  /*transition: background-color .1s, color .1s;*/
+}
+
+.form p {
+  font-size: 18px;
+  margin: 10px;
+  text-align: center;
+}
+
+@media (max-width: 750px) {
+  .heading {
+    max-width: 450px;
+  }
+
+  .heading h2 {
+    max-width: 360px;
+    margin-top: 10px;
+  }
+
+  .get-started p {
+    font-size: 16px;
+  }
+
+  .get-started .field-wrapper, .get-started input[is="core-input"] {
+    width: 220px;
+  }
+
+  .feature h3 {
+    font-size: 23px;
+    margin: 15px 10px 10px 15px;
+  }
+
+  .feature p {
+    margin-left: 15px;
+  }
+
+}
+
+@media (max-width: 650px) {
+  .feature-row {
+    display: block !important;
+  }
+
+  .feature-row.first {
+    border-bottom: none;
+  }
+
+  .feature {
+    width: 100%;
+    border-bottom: solid 1px #353535;
+  }
+
+  .heading {
+    max-width: 400px;
+  }
+
+  .heading h1 {
+    margin-top: 35px;
+    font-size: 50px;
+    line-height: 50px;
+  }
+
+  .feature h3 {
+    margin: 20px 10px 10px 20px;
+  }
+
+  .feature p {
+    margin-left: 20px;
+  }
+
+  .simple-content h2 {
+    font-size: 30px;
+    max-width: 250px;
+  }
 }
