@@ -112,8 +112,6 @@ class App {
     server.sessionTimeout = new DateTime.now().add(new Duration(days: 365)).toUtc().millisecondsSinceEpoch*1000;
 
     server.listen((HttpRequest request) {
-      print(request.uri.path.toString());
-
       addCorsHeaders(request.response);
 
       // Some redirects if coming from related domains.
