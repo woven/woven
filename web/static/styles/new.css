@@ -1,0 +1,78 @@
+@import url(https://fonts.googleapis.com/css?family=Bitter|Roboto|Varela+Round|Actor|Ek+Mukta|Mallanna);
+
+body {
+  background: #1d1d1d;
+  margin: auto;
+  -webkit-font-smoothing: antialiased;
+  color: white;
+}
+
+header {
+  background: #000;
+  height: 70px;
+  width: 100%;
+  border-bottom: solid 1px #3A3A3A;
+}
+
+.logo {
+  height: 37px;
+  margin: 15px;
+}
+
+.header .button:hover {
+  border-color: #9DDAFF;
+  transition: border-color .1s, color .1s;
+  color: #9DDAFF;
+}
+
+.header .button {
+  margin: 15px 15px;
+  height: 35px;
+  width: 100px;
+  border-radius: 2px;
+  border: solid 2px #00a2ff;
+  font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+  text-align: center;
+  line-height: 33px;
+  cursor: pointer;
+  transition: border-color .1s, color .1s;
+  font-weight: 600;
+}
+
+.heading h1 {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 55px;
+  margin: 60px 0 0 0;
+  text-align: center;
+  font-weight: normal;
+}
+.heading h2 {
+  font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+  font-size: 27px;
+  margin: 10px auto 40px;
+  text-align: center;
+  font-weight: normal;
+}
+
+.channel {
+  width: 300px;
+  height: 90px;
+  margin: 5px;
+}
+
+.channel .icon {
+  margin: 10px 10px;
+}
+
+.channel h3 {
+  margin: 0 0 3px 0;
+  font-family: 'Bitter', sans-serif;
+  font-size: 27px;
+  font-weight: normal;
+}
+
+.channel p {
+  font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+  font-size: 18px;
+  margin-top: 8px;
+}

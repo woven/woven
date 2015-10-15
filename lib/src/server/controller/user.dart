@@ -24,7 +24,7 @@ class UserController {
     String facebookId = data['facebookId']; // We may have a facebookId if they're a temporary user.
     String email = (data['email'] as String).toLowerCase();
     String invitationCode = data['invitationCode'];
-    data['disabled'] = true; // User is disabled by default, may be enabled below.
+    data['disabled'] = false; // User is disabled by default, may be enabled below.
 
     var lookForExistingUser = await findUserInfo(username);
     if (lookForExistingUser != null) return Response.fromError('That username is not available.'); // User already exists.
