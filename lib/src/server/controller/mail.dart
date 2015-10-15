@@ -353,8 +353,10 @@ http://woven.co
 
 
     // Save the confirmation hash to an index.
-    var result = await Firebase.put('/email_confirmation_index/$hash.json', data, auth: config['datastore']['firebaseSecret']);
-    print(result);
+    var result = await Firebase.put('/email_confirmation_index/$hash.json', data, auth: config['datastore']['firebaseSecret'])
+    .catchError((e) => print(e));
+
+    print('DEBUG: $result');
 
     var response = new Response();
     response.success = true;
