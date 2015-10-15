@@ -351,6 +351,7 @@ http://woven.co
 ''';
     Mailgun.send(envelope);
 
+    print('Got here');
 
     // Save the confirmation hash to an index.
     var result = await Firebase.put('/email_confirmation_index/$hash.json', data, auth: config['datastore']['firebaseSecret'])
