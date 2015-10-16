@@ -1,7 +1,7 @@
 .user-photo core-image {
   width: 40px;
   height: 40px;
-  background: #F5F5F5;
+  background: #CCCCCC;
   border-radius: 2px;
 }
 
@@ -12,7 +12,7 @@
 .user-photo {
   width: 40px;
   height: 40px;
-  background: #F5F5F5;
+  background: #ddd;
   /*border: solid 1px #E6E6E6;*/
   overflow:hidden;
   border-radius: 2px;
