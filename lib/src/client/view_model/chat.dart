@@ -381,11 +381,9 @@ class ChatViewModel extends BaseViewModel with Observable {
     items.forEach(process);
   }
 
-  process(Message item)  async {
+  process(Message item) {
     // Make sure we're using the collapsed username.
     item.user = item.user.toLowerCase();
-
-    item.usernameForDisplay = await UserModel.usernameForDisplay(item.user.toLowerCase(), f, app.cache);
 
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
