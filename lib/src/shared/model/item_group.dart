@@ -61,9 +61,11 @@ class ItemGroup extends Observable {
    * Returns true if a) the user doesn't match the group's, b) this is a notification
    * or c) this group is already holding a notification (we want one per group for styling purposes).
    */
-  bool needsNewGroup(Item item) => item.user != user || item.type == 'notification' || this.isNotification;
+  bool needsNewGroup(Item item) => item.user != user || item.type == 'notification' || this.isNotification || this.isItem;
 
   bool get isNotification => items.first.type == 'notification';
+
+  bool get isItem => items.first.type == 'item';
 
   String get usernameForDisplay => items.first.usernameForDisplay;
 
