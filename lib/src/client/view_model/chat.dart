@@ -219,6 +219,8 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     List mentions = [];
 
+    if (item.message == null) item.message = '';
+
     for (var mention in regExp.allMatches(item.message)) {
       if (mentions.contains(mention.group(2))) return;
       mentions.add(mention.group(2).replaceAll("@", "").toLowerCase());
@@ -372,8 +374,6 @@ class ChatViewModel extends BaseViewModel with Observable {
         var uriPreviewData = uriPreviewQuery.val();
         item.data['items'][itemId]['uriPreview'] = uriPreviewData;
       }
-
-      print(item.data['items']);
     }
   }
 
@@ -381,9 +381,11 @@ class ChatViewModel extends BaseViewModel with Observable {
     items.forEach(process);
   }
 
-  void process(Message item)  {
+  process(Message item)  async {
     // Make sure we're using the collapsed username.
     item.user = item.user.toLowerCase();
+
+    item.usernameForDisplay = await UserModel.usernameForDisplay(item.user.toLowerCase(), f, app.cache);
 
     DateTime now = new DateTime.now().toUtc();
     DateTime gracePeriod = app.timeOfLastFocus.add(new Duration(seconds: 2));
