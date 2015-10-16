@@ -1,10 +1,10 @@
 
 
 .activity-card {
-  background-color: #fff;
+  /*background-color: #fff;*/
   margin: 0 auto 10px auto;
   border-radius: 4px;
-  border: 1px solid #e5e5e5;
+  /*border: 1px solid #e5e5e5;*/
   transition: background-color 2s;
   font-size: 15px;
   color: #2d2d2d;
@@ -21,10 +21,10 @@
 }
 
 .activity-card #content {
-  padding: 10px 10px 5px 15px;
+  padding: 0 10px 5px 0;
   white-space: inherit;
   word-wrap: break-word;
-  line-height: 18px;
+  line-height: 13px;
 }
 
 .activity-card #content p.not-delivered {
@@ -66,6 +66,10 @@
 .message.notification {
   font-weight: normal;
   color: #2FA300;
+}
+
+.message.item {
+  font-size: 15px;
 }
 
 .user-area {

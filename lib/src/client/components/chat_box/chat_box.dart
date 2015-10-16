@@ -66,6 +66,7 @@ class ChatBox extends PolymerElement {
     var message = new Message()
       ..message = messageText
       ..community = app.community.alias
+      ..usernameForDisplay = app.user.username
       ..user = app.user.username.toLowerCase();
 
     // Handle commands.

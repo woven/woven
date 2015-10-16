@@ -3,6 +3,7 @@
 <link rel="import" href="../widgets/safe_html/safe_html.html">
 <link rel="import" href="../widgets/format_text/format_text.html">
 <link rel="import" href="../user_picture/user_picture.html">
+<link rel="import" href="../inline_item/inline_item.html">
 <polymer-element name="chat-list">
   <template>
     <link rel="stylesheet" href="chat_list.css">
@@ -25,7 +26,7 @@
           <div class="activity-card {{group.isNotification ? 'notification' : ''}}" flex>
             <div id="content">
               <div class="card-top" horizontal layout>
-                <template if="{{!group.isNotification}}">
+                <template if="{{!group.isNotification && !group.isItem}}">
                   <div flex class="user group-header">{{group.usernameForDisplay}}</div>
                   <div class="date-time">
                     <live-date-time value="{{group.lastCreatedDate}}" formatter="{{formatItemDate}}"></live-date-time>
@@ -33,6 +34,7 @@
                 </template>
               </div>
               <template if="{{group.items != null}}" repeat="{{message in group.items}}">
+
                 <template if="{{message.type == null}}">
                   <div class="message {{(message.isHighlighted) ? 'highlight' : ''}}" flex>
                     <div class="{{(message.id == null) ? 'not-delivered' : ''}}">
@@ -42,21 +44,23 @@
                     </div>
                   </div>
                 </template>
-                <template if="{{message.type != null}}">
+
+                <template if="{{message.type == 'item'}}">
                   <div layout horizontal>
                     <div flex class="message {{message.type}}">
                       <template if="{{message.data != null}}">
-                        <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a> to the feed.
-                      </template>
-                      <template if="{{message.data == null}}">
-                        {{message.message}}
+                        <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a>.
                       </template>
                     </div>
                     <div class="date-time">
                       <live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>
                     </div>
                   </div>
+                  <div flex class="message {{message.type}}">
+                    <inline-item app="{{app}}" itemId="{{message.data['id']}}"></inline-item>
+                  </div>
                 </template>
+
               </template>
             </div>
           </div>
