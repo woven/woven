@@ -1,6 +1,7 @@
 .idea
 .idea*
 packages
+.packages
 web/packages
 web/static/images/user
 build
