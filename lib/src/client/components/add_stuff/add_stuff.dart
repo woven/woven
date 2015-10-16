@@ -234,13 +234,14 @@ class AddStuff extends PolymerElement {
 
           // Notify lobby about new item.
           var message = new Message()
-            ..type = 'notification'
+            ..type = 'item'
             ..data = {
               'event': 'added',
               'type': '${item.type}',
               'id': '$itemId'
             }
             ..community = community
+            ..usernameForDisplay = app.user.username
             ..user = app.user.username.toLowerCase();
 
           Message.add(message, f);
@@ -274,13 +275,13 @@ class AddStuff extends PolymerElement {
 
     // After add, jump to an appropriate page.
     // TODO: Better handle use case where channel you added to isn't the one you're in.
-    if (app.community != null) {
-      // TODO: Jump to the actual item...
-      app.router.selectedPage = 'feed';
-      app.router.dispatch(url: '/${app.community.alias}/feed');
-    }
-    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}/feed' : '/');
-    app.showMessage('Your ${selectedType == 'message' || selectedType == null ? 'message' : selectedType} was added.');
+//    if (app.community != null) {
+//      // TODO: Jump to the actual item...
+//      app.router.selectedPage = 'feed';
+//      app.router.dispatch(url: '/${app.community.alias}/feed');
+//    }
+//    app.router.dispatch(url: (app.community != null) ? '/${app.community.alias}/feed' : '/');
+//    app.showMessage('Your ${selectedType == 'message' || selectedType == null ? 'message' : selectedType} was added.');
   }
 
   updateInput(Event e, var detail, CoreInput sender) {
