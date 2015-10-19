@@ -47,8 +47,6 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   db.Firebase get f => app.f;
 
-  AudioContext audioContext = new AudioContext();
-
   ChatViewModel({this.app}) {
     loadMessagesByPage();
   }
@@ -254,18 +252,18 @@ class ChatViewModel extends BaseViewModel with Observable {
    * Play the notification sound.
    */
   playNotificationSound() async {
-    GainNode gainNode = audioContext.createGain();
+    GainNode gainNode = app.audioContext.createGain();
 
     // get the audio file
     HttpRequest request = await HttpRequest.request(app.serverPath + "/static/audio/beep_short_on.wav", responseType: "arraybuffer");
     // decode it
-    AudioBuffer buffer = await audioContext.decodeAudioData(request.response);
-    AudioBufferSourceNode source = audioContext.createBufferSource();
+    AudioBuffer buffer = await app.audioContext.decodeAudioData(request.response);
+    AudioBufferSourceNode source = app.audioContext.createBufferSource();
     source.buffer = buffer;
-    source.connectNode(audioContext.destination);
+    source.connectNode(app.audioContext.destination);
 
     // play it now
-    source.start(audioContext.currentTime);
+    source.start(app.audioContext.currentTime);
   }
 
   /**
@@ -359,7 +357,9 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   preProcess(Message item) async {
-    item.usernameForDisplay = await UserModel.usernameForDisplay(item.user.toLowerCase(), f, app.cache);
+  // TODO: Look into not waiting for this lookup; show UI sooner w/ x-username element doing the lookup.
+//    item.usernameForDisplay = await UserModel.usernameForDisplay(item.user.toLowerCase(), f, app.cache);
+    item.usernameForDisplay = item.user;
 
     // If the message references an item, let's get it so we can show it inline.
     if (item.data != null && item.data['id'] != null) {

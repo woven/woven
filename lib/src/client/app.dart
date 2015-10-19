@@ -13,6 +13,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
 import 'package:core_elements/core_header_panel.dart';
 import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
+import 'dart:web_audio';
 import 'cache.dart';
 import 'util.dart';
 
@@ -37,6 +38,7 @@ class App extends Observable {
   String sessionId;
   Firebase f;
   String cloudStoragePath;
+  AudioContext audioContext = new AudioContext();
 
   App() {
     f = new Firebase(config['datastore']['firebaseLocation']);
