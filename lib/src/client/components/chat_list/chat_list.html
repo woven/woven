@@ -45,11 +45,24 @@
                   </div>
                 </template>
 
+                <template if="{{message.type == 'notification'}}">
+                  <div layout horizontal>
+                    <div flex class="message {{message.type}}">
+                      {{message.message}}
+                    </div>
+                    <div class="date-time">
+                      <live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                    </div>
+                  </div>
+                </template>
+
+
                 <template if="{{message.type == 'item'}}">
                   <div layout horizontal>
                     <div flex class="message {{message.type}}">
                       <template if="{{message.data != null}}">
-                        <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a>.
+                        <!--<strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a>.-->
+                        <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} {{formatWordArticle(message.data['type'])}} {{message.data['type']}}
                       </template>
                     </div>
                     <div class="date-time">
