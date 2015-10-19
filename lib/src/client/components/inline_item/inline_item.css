@@ -288,8 +288,8 @@ core-item core-icon {
 }
 
 .item-wrapper {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 0;
+  margin-bottom: 5px;
 }
 
 .event-date {
