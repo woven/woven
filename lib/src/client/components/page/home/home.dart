@@ -263,7 +263,6 @@ class Home extends PolymerElement with Observable {
 
     // Set up the response as an object.
     Response response = Response.fromJson(JSON.decode(request.responseText));
-    print('DEBUG: $response');
 
     if (response.success) {
       toggleProcessingIndicator();
