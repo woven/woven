@@ -127,7 +127,7 @@ user-picture::shadow .user-photo {
   color: #0061BB;
 }
 
-::shadow a {
+format-text::shadow a {
   text-decoration: none;
   color: rgb(34, 110, 223);
 }
