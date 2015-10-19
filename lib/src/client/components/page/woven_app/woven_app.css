@@ -154,7 +154,7 @@ core-drawer-panel:not([narrow]) #menu-button {
 
 core-item {
   padding: 6px 13px 6px 13px;
-  border-bottom: 1px solid rgb(226, 226, 226);
+  border-bottom: 1px solid #E7E7E7;
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
@@ -178,7 +178,7 @@ core-menu core-item:hover {
 }
 
 #side-panel {
-  background-color: #eee;
+  background-color: #FCFCFC;
   box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
 
   /* Disable iOS highlighting the element on tap. */
