@@ -40,6 +40,7 @@ core-item core-icon {
 }
 
 .item {
+  max-width: 640px;
   margin: 0;
   padding: 0;
   border: 1px solid #D8D8D8;
