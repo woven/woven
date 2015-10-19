@@ -175,8 +175,8 @@ class ChatViewModel extends BaseViewModel with Observable {
         if (existingItem.createdDate.isAfter(localTime)) existingItem.createdDate = localTime;
 
       } else {
-        // Notify mentioned users, unless this is a notification message.
-        if (message.type != 'notification') doNotifications(message);
+        // Notify mentioned users if this is a typical message (i.e. no special type).
+        if (message.type == null) doNotifications(message);
 
         process(message);
       }
