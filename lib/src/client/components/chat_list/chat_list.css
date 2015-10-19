@@ -11,7 +11,7 @@
 }
 
 .theme-dark .activity-card {
-  background-color: rgb(45, 45, 45);
+  /*background-color: rgb(45, 45, 45);*/
   color: #F2F2F2;
   border: none;
 }
@@ -40,14 +40,14 @@
   margin-bottom: 2px;
 }
 
-.activity-card.highlight {
-  background-color: #FFEDC2;
-  transition: background-color 1s;
-}
+/*.activity-card.highlight {*/
+  /*background-color: #FFEDC2;*/
+  /*transition: background-color 1s;*/
+/*}*/
 
-.theme-dark .activity-card.highlight {
-  background-color: #28402c;
-}
+/*.theme-dark .activity-card.highlight {*/
+  /*background-color: #28402c;*/
+/*}*/
 
 .activity-card.notification {
   background-color: transparent;

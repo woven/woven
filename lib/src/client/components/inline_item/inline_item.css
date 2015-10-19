@@ -74,25 +74,25 @@ core-item core-icon {
 
 .theme-dark .item.compact {
   background-color: transparent;
-  border: solid 1px #444;
+  border: solid 1px #2E2E2E;
 }
 
 .item:hover {
   cursor: pointer;
   overflow: hidden;
-  border: 1px solid #C5C5C5;
-  background-color: #FAFAFA;
-  transition: border .2s, background-color .2s;
+  /*border: 1px solid #C5C5C5;*/
+  /*background-color: #FAFAFA;*/
+  /*transition: border .2s, background-color .2s;*/
 }
 
 .theme-dark .item:hover {
-  border: none;
-  background: #2D2D2D;
+  /*border: none;*/
+  /*background: #2D2D2D;*/
 }
 
 .item.compact:hover {
-  transition: border 0s;
-  border: 1px solid #e5e5e5;
+  /*transition: border 0s;*/
+  /*border: 1px solid #e5e5e5;*/
   /*background-color: transparent;*/
 }
 
@@ -101,7 +101,7 @@ core-item core-icon {
 }
 
 .theme-dark .item.compact:hover {
-  border-color: #444;
+  /*border-color: #444;*/
 }
 
 .item.inside:hover {
@@ -289,7 +289,7 @@ core-item core-icon {
 }
 
 .item-wrapper {
-  margin-top: 0;
+  margin-top: 10px;
   margin-bottom: 5px;
 }
 
@@ -336,7 +336,7 @@ core-item core-icon {
 
 .theme-dark .content-footer {
   background: transparent;
-  border-top: 1px solid #444;
+  border-top: 1px solid #2E2E2E;
 }
 
 .item.compact .content-footer {

@@ -26,6 +26,10 @@
   border-radius: 3px;
 }
 
+.theme-dark .date-group-header {
+  background-color: #003A62;
+}
+
 .cta {
   background: #333;
   border-radius: 2px;

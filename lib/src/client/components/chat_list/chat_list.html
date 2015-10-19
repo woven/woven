@@ -25,14 +25,14 @@
           </template>
           <div class="activity-card {{group.isNotification ? 'notification' : ''}}" flex>
             <div id="content">
-              <div class="card-top" horizontal layout>
-                <template if="{{!group.isNotification && !group.isItem}}">
-                  <div flex class="user group-header">{{group.usernameForDisplay}}</div>
-                  <div class="date-time">
-                    <live-date-time value="{{group.lastCreatedDate}}" formatter="{{formatItemDate}}"></live-date-time>
-                  </div>
-                </template>
-              </div>
+              <template if="{{!group.isNotification && !group.isItem}}">
+                <div class="card-top" horizontal layout>
+                    <div flex class="user group-header">{{group.usernameForDisplay}}</div>
+                    <div class="date-time">
+                      <live-date-time value="{{group.lastCreatedDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                    </div>
+                </div>
+              </template>
               <template if="{{group.items != null}}" repeat="{{message in group.items}}">
 
                 <template if="{{message.type == null}}">
@@ -58,8 +58,8 @@
 
 
                 <template if="{{message.type == 'item'}}">
-                  <div layout horizontal>
-                    <div flex class="message {{message.type}}">
+                  <div class="card-top" layout horizontal>
+                    <div flex class="user {{message.type}}">
                       <template if="{{message.data != null}}">
                         <!--<strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} <a class="internal" _href="{{formatItemUrl(message.data['id'])}}" on-click="{{changePage}}">{{formatWordArticle(message.data['type'])}} {{message.data['type']}}</a>.-->
                         <strong>{{message.usernameForDisplay}}</strong> {{message.data['event']}} {{formatWordArticle(message.data['type'])}} {{message.data['type']}}

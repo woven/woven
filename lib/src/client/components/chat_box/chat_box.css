@@ -31,7 +31,7 @@ core-field input {
 }
 
 .field-wrapper {
-  padding: 12px 10px 6px 10px;
+  padding: 10px 10px 6px 10px;
   border: solid 1px #e6e6e6;
   background-color: #fff;
 }
@@ -102,7 +102,7 @@ core-tooltip::shadow .core-tooltip {
   /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
   padding: 8px;
   border-top: solid 1px #ddd;
-  height: 40px;
+  /*height: 40px;*/
 }
 
 #post-container.theme-dark  {

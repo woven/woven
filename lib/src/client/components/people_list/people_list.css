@@ -57,7 +57,7 @@ core-icon {
 
 .theme-dark .item   {
   background: rgba(45, 45, 45, 0.5);
-  border: none;
+  border-bottom: solid 1px #2E2E2E;
   color: white;
 }
 

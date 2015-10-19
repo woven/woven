@@ -199,12 +199,11 @@ core-menu core-item:hover {
 }
 
 #main-panel {
-  background: rgb(233, 234, 237);
+  background: #fbfbfb;
 }
 
 .theme-dark #main-panel {
   background-color: #1F1F1F;
-  /*transition: background-color .2s;*/
 }
 
 #rightPanel {
