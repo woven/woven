@@ -26,7 +26,7 @@ class AddStuff extends PolymerElement {
 
   @published App app;
   @published bool opened = false;
-  @observable var selectedType;
+  @observable var selectedType = 'news';
   @observable Map formData = toObservable({});
   List validShareToOptions = config['appSettings']['validShareToOptions']; // TODO: Fixed for now, change later.
 
