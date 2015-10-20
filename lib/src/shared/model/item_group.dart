@@ -2,6 +2,7 @@ library shared.model.item_group;
 
 import 'package:observe/observe.dart';
 import 'item.dart';
+import 'target_group_enum.dart';
 
 class ItemGroup extends Observable {
   String user;
@@ -61,7 +62,54 @@ class ItemGroup extends Observable {
    * Returns true if a) the user doesn't match the group's, b) this is a notification
    * or c) this group is already holding a notification (we want one per group for styling purposes).
    */
-  bool needsNewGroup(Item item) => item.user != user || item.type == 'notification' || this.isNotification || this.isItem;
+  bool needsNewGroup(Item item) {
+    var i = indexOf(item);
+    if (item.user != user || item.type == 'notification' || this.isNotification || this.isItem) return true;
+
+    print('debug: $i');
+    if (i > 0) {
+      Item previousItem = items[i - 1];
+      DateTime previousDate = previousItem.createdDate;
+
+      if (item.createdDate.isAfter(previousDate.add(new Duration(seconds: 20)))) return true;
+
+      if (i < items.length) {
+        Item nextItem = items[i + 1];
+        DateTime nextDate = nextItem.createdDate;
+
+        if (item.createdDate.isBefore(nextDate.subtract(new Duration(seconds: 20)))) return true;
+      }
+    }
+  }
+
+  /**
+   * Returns TargetGroup, which specifies where the item belongs to.
+   */
+  TargetGroup determineTargetGroup(Item item) {
+    var index = indexOf(item);
+    var lastIndex = items.length - 1;
+
+    bool farFromAboveItem = index > 0 && items[index - 1].createdDate.difference(item.createdDate).inSeconds.abs() > 300;
+    bool farFromBelowItem = index < lastIndex && items[index + 1].createdDate.difference(item.createdDate).inSeconds.abs() > 300;
+
+    if (item.user != user || item.type == 'notification' || this.isNotification || this.isItem) {
+      return TargetGroup.New;
+    }
+
+    if (!farFromAboveItem && !farFromBelowItem) {
+      return TargetGroup.Same;
+    }
+
+    if (!farFromAboveItem && farFromBelowItem) {
+      return TargetGroup.Above;
+    }
+
+    if (!farFromAboveItem && !farFromBelowItem) {
+      return TargetGroup.Below;
+    }
+
+    return TargetGroup.New;
+  }
 
   bool get isNotification => items.first.type == 'notification';
 

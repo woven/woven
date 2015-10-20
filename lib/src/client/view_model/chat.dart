@@ -20,6 +20,7 @@ import 'package:woven/src/shared/regex.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/item_group.dart';
+import 'package:woven/src/shared/model/target_group_enum.dart';
 
 class ChatViewModel extends BaseViewModel with Observable {
   final App app;
@@ -394,27 +395,37 @@ class ChatViewModel extends BaseViewModel with Observable {
     if (item.updatedDate.isAfter(localTime)) item.updatedDate = localTime;
     if (item.createdDate.isAfter(localTime)) item.createdDate = localTime;
 
-    // Retrieve the group that this item belongs to, if any.
+    // Retrieve the group within this item belongs to, if any.
     var group = groups.firstWhere((group) => group.isDateWithin(item.createdDate), orElse: () => null);
 
     if (group != null) {
-      if (!group.needsNewGroup(item)) {
-        group.put(toObservable(item));
+      TargetGroup target = group.determineTargetGroup(item);
+      if (target == TargetGroup.Same) {
+        group.put(item);
       } else {
-        // Damn, we'd like to put the item in this group, but diff user!
-        // This means, we have to split an existing group into 2 halves,
-        // and then create 1 new for this item in between those halves.
         var groupIndex = groups.indexOf(group);
-
         var intersection = group.indexOf(item);
+
         var topHalf = group.items.sublist(0, intersection);
         var bottomHalf = group.items.sublist(intersection);
 
         groups.remove(group); // Get rid of the old group, we need to split this thing!
 
-        groups.insert(groupIndex, new ItemGroup.fromItems(bottomHalf));
-        groups.insert(groupIndex, new ItemGroup(item));
-        groups.insert(groupIndex, new ItemGroup.fromItems(topHalf));
+        if (target == TargetGroup.New) {
+          groups.insert(groupIndex, new ItemGroup.fromItems(bottomHalf));
+          groups.insert(groupIndex, new ItemGroup(item));
+          groups.insert(groupIndex, new ItemGroup.fromItems(topHalf));
+        } else if (target == TargetGroup.Above) {
+          topHalf.add(item);
+          groups.insert(groupIndex, new ItemGroup.fromItems(bottomHalf));
+          groups.insert(groupIndex, new ItemGroup.fromItems(topHalf));
+        } else if (target == TargetGroup.Below) {
+          bottomHalf.insert(0, item);
+          groups.insert(groupIndex, new ItemGroup.fromItems(bottomHalf));
+          groups.insert(groupIndex, new ItemGroup.fromItems(topHalf));
+        } else {
+          throw 'Unknown target group!';
+        }
       }
     } else {
       // Okay, so the item is not within ANY group.
@@ -430,12 +441,12 @@ class ChatViewModel extends BaseViewModel with Observable {
         // No groups at all!
         groups.add(new ItemGroup(item));
       } else if (groupBefore != null && groupAfter != null) {
-        if (groupBefore.needsNewGroup(item) && groupAfter.needsNewGroup(item)) {
+        if (groupBefore.determineTargetGroup(item) == TargetGroup.New && groupAfter.determineTargetGroup(item) == TargetGroup.New) {
           // The item does not belong in either groups,
           // so it has to go in between them in its own group.
           var index = groups.indexOf(groupAfter);
           groups.insert(index, new ItemGroup(item));
-        } else if (!groupBefore.needsNewGroup(item)) {
+        } else if (groupBefore.determineTargetGroup(item) == TargetGroup.Same) {
           // We do not belong to groupAfter, but we belong to groupBefore!
           groupBefore.put(item);
         } else {
@@ -446,7 +457,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         // There was no group before this item, but one after.
         // Thus if we belong to groupAfter, let's go there,
         // otherwise we need a new group at the top.
-        if (!groupAfter.needsNewGroup(item)) {
+        if (groupAfter.determineTargetGroup(item) == TargetGroup.Same) {
           groupAfter.put(item);
         } else {
           groups.insert(0, new ItemGroup(item));
@@ -454,7 +465,7 @@ class ChatViewModel extends BaseViewModel with Observable {
       } else {
         // There was no group after this item, but one before.
         // Same as earlier, let's put it there or in a new group at the bottom.
-        if (!groupBefore.needsNewGroup(item)) {
+        if (groupBefore.determineTargetGroup(item) == TargetGroup.Same) {
           groupBefore.put(item);
         } else {
           groups.add(new ItemGroup(item));
