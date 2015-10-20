@@ -43,9 +43,8 @@ core-item core-icon {
   max-width: 640px;
   margin: 0;
   padding: 0;
-  border: 1px solid #D8D8D8;
   background-color: #FAFAFA;
-  /*border: 1px solid #e5e5e5;*/
+  border: 1px solid #e5e5e5;
   /*background-color: white;*/
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
@@ -167,7 +166,7 @@ core-item core-icon {
   color: #212121;
   font-weight: bold;
   font-size: 16px;
-  padding: 5px 0 0 0;
+  padding: 0;
   margin-bottom: 10px;
 }
 

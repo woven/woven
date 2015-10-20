@@ -87,6 +87,10 @@ class InlineItem extends PolymerElement with Observable {
           queuedItem['defaultImage'] = 'custom-icons:news';
           break;
         case 'message':
+          if (queuedItem['subject'] == null) queuedItem['subject'] = InputFormatter.createTeaser(queuedItem['message'], 75);
+          if (queuedItem['body'] == null) queuedItem['body'] = queuedItem['message'];
+//          queuedItem['subject'] ??= queuedItem['message']; // TODO Why don't null-aware operators work?
+          break;
         case 'other':
           break;
         default:

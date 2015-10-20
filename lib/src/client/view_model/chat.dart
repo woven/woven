@@ -362,18 +362,11 @@ class ChatViewModel extends BaseViewModel with Observable {
     item.usernameForDisplay = item.user;
 
     // If the message references an item, let's get it so we can show it inline.
-    if (item.data != null && item.data['id'] != null) {
+    if (item.data != null && item.data['event'] == 'added' && item.data['id'] != null) {
       var itemId = item.data['id'];
-      db.DataSnapshot itemQuery = await f.child('/items/$itemId').once('value');
-      var itemData = itemQuery.val();
-      item.data['items'] = {};
-      item.data['items'][itemId] = itemData;
 
-      if (itemData['uriPreviewId'] != null) {
-        db.DataSnapshot uriPreviewQuery = await f.child('/uri_previews/${itemData['uriPreviewId']}').once('value');
-        var uriPreviewData = uriPreviewQuery.val();
-        item.data['items'][itemId]['uriPreview'] = uriPreviewData;
-      }
+      // Let's handle older 'notification' messages which reference an item.
+      item.type = 'item';
     }
   }
 
