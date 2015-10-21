@@ -6,14 +6,14 @@
 <link rel="import" href="../../../../../../packages/core_elements/communication_icons.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
 <link rel="import" href="../widgets/live_date_time/live_date_time.html">
-<link rel="import" href="../widgets/custom_icons/custom_icons.html">
+<!--<link rel="import" href="../widgets/custom_icons/custom_icons.html">-->
 <link rel="import" href="../widgets/uri_preview/uri_preview.html">
 <link rel="import" href="../user_picture/user_picture.html">
 
 <polymer-element name="x-item">
   <template>
     <link rel="stylesheet" href="item.css">
-    <custom-icons></custom-icons>
+    <!--<custom-icons></custom-icons>-->
     <div class="item-wrapper {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" data-id="{{item['id']}}">
         <div class="item-container" vertical layout>
