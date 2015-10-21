@@ -123,6 +123,10 @@ class App extends Observable {
               pageTitle = 'Events';
               router.selectedPage = 'events';
               break;
+            case 'news':
+              pageTitle = 'News';
+              router.selectedPage = 'news';
+              break;
             case 'feed':
               pageTitle = 'Feed';
               router.selectedPage = 'feed';

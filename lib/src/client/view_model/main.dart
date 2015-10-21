@@ -95,6 +95,20 @@ class MainViewModel extends BaseViewModel with Observable {
     return feedViewModels[id];
   }
 
+  @observable FeedViewModel get newsViewModel {
+    if (app.community == null) return null;
+
+    var id = app.community.alias + '_news';
+
+    if (id == null) return null;
+
+    if (!feedViewModels.containsKey(id)) {
+      var vm = new FeedViewModel(app: app, typeFilter: 'news');
+      feedViewModels[id] = vm;
+    }
+    return feedViewModels[id];
+  }
+
   @observable FeedViewModel get eventViewModel {
     if (app.community == null) return null;
 

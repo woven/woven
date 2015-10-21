@@ -10,16 +10,18 @@
   <template>
     <link rel="stylesheet" href="inbox_list.css">
     <div id="content-container" class="{{viewModel.typeFilter != null ? 'compact' : null}} {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
-      <template if="{{viewModel.typeFilter == 'event'}}">
+      <template if="{{viewModel.typeFilter == 'event' || viewModel.typeFilter == 'news'}}">
         <template repeat="{{groupDate in viewModel.groupedItems.keys}}">
         <div class="date-group-header">{{groupDate}}</div>
         <template repeat="{{item in viewModel.groupedItems[groupDate]}}">
           <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>
+          <!--<inline-item itemId="{{item['id']}}" app="{{app}}"></inline-item>-->
         </template>
       </template>
     </template>
-    <template if="{{viewModel.typeFilter != 'event'}}">
+    <template if="{{viewModel.typeFilter != 'event' || viewModel.typeFilter != 'news'}}">
       <template repeat="{{item in viewModel.items}}">
+        <!--<inline-item itemId="{{item['id']}}" app="{{app}}"></inline-item>-->
         <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>
       </template>
     </template>

@@ -6,6 +6,7 @@ import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/date_group.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'dart:async';
 import 'base.dart';
@@ -94,7 +95,7 @@ class FeedViewModel extends BaseViewModel with Observable {
         items.add(toObservable(processItem(itemSnapshot)));
       });
 
-      updateEventView();
+      updateGroupedView();
 
       listenForNewItems(startAt: topPriority, endAt: secondToLastPriority);
 
@@ -153,14 +154,18 @@ class FeedViewModel extends BaseViewModel with Observable {
       var existingItem = items.firstWhere((i) => i['id'] == e.snapshot.key, orElse: () => null);
       if (existingItem != null) return;
 
+      print('debug: ADDED: $newItem');
+
       var index = indexOfClosestItemByDate(DateTime.parse(newItem['updatedDate']));
 
       items.insert(index == null ? 0 : index, toObservable(processItem(e.snapshot)));
 
-      if (typeFilter == 'event') {
+
+
+      if (typeFilter == 'event' || typeFilter == 'news') {
         // Sort the list by the event's startDateTime.
 //        items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
-        updateEventView();
+        updateGroupedView();
       }
     });
 
@@ -171,6 +176,8 @@ class FeedViewModel extends BaseViewModel with Observable {
 
       // Make sure we're using the collapsed username.
       newData['user'] = (newData['user'] as String).toLowerCase();
+
+      print('debug: CHANGED: $newData');
 
       Future processData = new Future.sync(() {
         // First pre-process some things.
@@ -186,7 +193,7 @@ class FeedViewModel extends BaseViewModel with Observable {
             var previewData = e.val();
             UriPreview preview = UriPreview.fromJson(previewData);
             newData['uriPreview'] = preview.toJson();
-            newData['uriPreview']['imageSmallLocation'] = (newData['uriPreview']['imageSmallLocation'] != null) ? '${config['google']['cloudStoragePath']}/${newData['uriPreview']['imageSmallLocation']}' : null;
+            newData['uriPreview']['imageSmallLocation'] = (newData['uriPreview']['imageSmallLocation'] != null) ? '${ config['google']['cloudStoragePath']}/${newData['uriPreview']['imageSmallLocation']}' : null;
             newData['uriPreviewTried'] = true;
 
             // If item's subject/body are empty, use any title/teaser from URI preview instead.
@@ -206,7 +213,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       var movedItem = e.snapshot.val();
 
       if (typeFilter == 'event') {
-        updateEventView();
+        updateGroupedView();
         // Sort the list by the event's startDateTime.
         items.sort((m1, m2) => m1["startDateTime"].compareTo(m2["startDateTime"]));
       } else {
@@ -224,8 +231,8 @@ class FeedViewModel extends BaseViewModel with Observable {
   }
 
   // Group items by date group (Today, Tomorrow, etc.) and store in a separate list.
-  updateEventView() {
-    if (typeFilter == 'event') {
+  updateGroupedView() {
+    if (typeFilter == 'event' || typeFilter == 'news') {
       groupedItems.clear();
       items.forEach((item) {
         var key = item['dateGroup'];
@@ -294,6 +301,8 @@ class FeedViewModel extends BaseViewModel with Observable {
       item['uriPreviewTried'] = true;
     }
 
+    item['formattedBody'] = InputFormatter.createTeaser(item['body'], 75);
+
     // Prepare the domain name.
     if (item['url'] != null && isValidUrl(item['url'])) {
       String uriHost = Uri.parse(item['url']).host;
@@ -305,6 +314,12 @@ class FeedViewModel extends BaseViewModel with Observable {
     // by today, tomorrow, this week, etc.
     if (typeFilter == "event") {
       item['dateGroup'] = DateGroup.getDateGroupName(item['startDateTime']);
+    }
+
+    // If we're filtering for just events, let's also get a date group so we can group events
+    // by today, tomorrow, this week, etc.
+    if (typeFilter == "news") {
+      item['dateGroup'] = DateGroup.getDateGroupName(item['createdDate']);
     }
 
     // Use the Firebase snapshot ID as our ID.

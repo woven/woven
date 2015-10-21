@@ -28,11 +28,13 @@
 <link rel="import" href="../../../../../../../packages/core_elements/social_icons.html">
 <link rel="import" href="../../../../../../../packages/core_elements/communication_icons.html">
 <link rel="import" href="../../../../../../../packages/woven/src/client/components/page/home/home.html">
+<link rel="import" href="../../../../../../../packages/woven/src/client/components/widgets/custom_icons/custom_icons.html">
 
 
 <polymer-element name="woven-app">
   <template>
     <link rel="stylesheet" href="woven_app.css">
+    <custom-icons></custom-icons>
     <template if="{{app.hasTriedLoadingUser && app.showHomePage}}">
       <x-home app="{{app}}"></x-home>
     </template>
@@ -59,10 +61,10 @@
                            on-tap="{{switchPage}}" data-page="lobby" data-url="/{{app.community.alias}}"></core-item>
                 <core-item hidden label="Feed" icon="view-stream" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="feed" data-url="/{{app.community.alias}}/feed"></core-item>
+                <core-item label="News" icon="custom-icons:news" horizontal center layout class="item"
+                           on-tap="{{switchPage}}" data-page="news" data-url="/{{app.community.alias}}/news"></core-item>
                 <core-item label="Events" icon="event" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="events" data-url="/{{app.community.alias}}/events"></core-item>
-                <!--<core-item label="Announcements" icon="announcement" horizontal center layout class="item" active-->
-                           <!--on-tap="{{switchPage}}" data-page="announcements" data-url="/{{app.community.alias}}/announcements"></core-item>-->
                 <core-item label="People" icon="account-circle" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="people" data-url="/{{app.community.alias}}/people"></core-item>
                 <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->
@@ -150,6 +152,11 @@
               <section data-page="events">
                 <template if="{{app.community != null && app.router.selectedPage == 'events'}}">
                   <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></inbox-list>
+                </template>
+              </section>
+              <section data-page="news">
+                <template if="{{app.community != null && app.router.selectedPage == 'news'}}">
+                  <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.newsViewModel}}"></inbox-list>
                 </template>
               </section>
               <section data-page="announcements">
