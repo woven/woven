@@ -71,13 +71,13 @@ class ItemGroup extends Observable {
       Item previousItem = items[i - 1];
       DateTime previousDate = previousItem.createdDate;
 
-      if (item.createdDate.isAfter(previousDate.add(new Duration(seconds: 20)))) return true;
+      if (item.createdDate.isAfter(previousDate.add(new Duration(seconds: 180)))) return true;
 
       if (i < items.length) {
         Item nextItem = items[i + 1];
         DateTime nextDate = nextItem.createdDate;
 
-        if (item.createdDate.isBefore(nextDate.subtract(new Duration(seconds: 20)))) return true;
+        if (item.createdDate.isBefore(nextDate.subtract(new Duration(seconds: 180)))) return true;
       }
     }
   }
@@ -89,8 +89,8 @@ class ItemGroup extends Observable {
     var index = indexOf(item);
     var lastIndex = items.length - 1;
 
-    bool farFromAboveItem = index > 0 && items[index - 1].createdDate.difference(item.createdDate).inSeconds.abs() > 300;
-    bool farFromBelowItem = index < lastIndex && items[index + 1].createdDate.difference(item.createdDate).inSeconds.abs() > 300;
+    bool farFromAboveItem = index > 0 && items[index - 1].createdDate.difference(item.createdDate).inSeconds.abs() > 20;
+    bool farFromBelowItem = index < lastIndex && items[index + 1].createdDate.difference(item.createdDate).inSeconds.abs() > 20;
 
     if (item.user != user || item.type == 'notification' || this.isNotification || this.isItem) {
       return TargetGroup.New;
@@ -104,7 +104,7 @@ class ItemGroup extends Observable {
       return TargetGroup.Above;
     }
 
-    if (!farFromAboveItem && !farFromBelowItem) {
+    if (farFromAboveItem && !farFromBelowItem) {
       return TargetGroup.Below;
     }
 
