@@ -9,26 +9,34 @@ packages:
     description: args
     source: hosted
     version: "0.12.2+6"
+  async:
+    description: async
+    source: hosted
+    version: "1.3.0"
   barback:
     description: barback
     source: hosted
-    version: "0.15.2+4"
+    version: "0.15.2+7"
   browser:
     description: browser
     source: hosted
     version: "0.10.0+2"
+  charcode:
+    description: charcode
+    source: hosted
+    version: "1.1.0"
   cli_util:
     description: cli_util
     source: hosted
-    version: "0.0.1+1"
+    version: "0.0.1+2"
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.8"
+    version: "0.2.9+3"
   collection:
     description: collection
     source: hosted
-    version: "1.1.0"
+    version: "1.1.3"
   core_elements:
     description: core_elements
     source: hosted
@@ -36,11 +44,11 @@ packages:
   crypto:
     description: crypto
     source: hosted
-    version: "0.9.0"
+    version: "0.9.1"
   csslib:
     description: csslib
     source: hosted
-    version: "0.12.0"
+    version: "0.12.1"
   custom_element_apigen:
     description: custom_element_apigen
     source: hosted
@@ -52,15 +60,15 @@ packages:
   emoji:
     description: emoji
     source: hosted
-    version: "1.0.3"
+    version: "1.1.2"
   firebase:
     description: firebase
     source: hosted
-    version: "0.5.1"
+    version: "0.6.4"
   glob:
     description: glob
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   googleapis:
     description: googleapis
     source: hosted
@@ -72,7 +80,7 @@ packages:
   html:
     description: html
     source: hosted
-    version: "0.12.1+1"
+    version: "0.12.2"
   html5lib:
     description: html5lib
     source: hosted
@@ -80,11 +88,11 @@ packages:
   http:
     description: http
     source: hosted
-    version: "0.11.2"
+    version: "0.11.3+2"
   http_parser:
     description: http_parser
     source: hosted
-    version: "0.0.2+6"
+    version: "1.0.0"
   http_server:
     description: http_server
     source: hosted
@@ -96,7 +104,7 @@ packages:
   intl:
     description: intl
     source: hosted
-    version: "0.12.2+1"
+    version: "0.12.4+2"
   jwt:
     description: jwt
     source: hosted
@@ -136,11 +144,11 @@ packages:
   path:
     description: path
     source: hosted
-    version: "1.3.5"
+    version: "1.3.6"
   petitparser:
     description: petitparser
     source: hosted
-    version: "1.3.7"
+    version: "1.5.0"
   polymer:
     description: polymer
     source: hosted
@@ -152,7 +160,7 @@ packages:
   pool:
     description: pool
     source: hosted
-    version: "1.0.1"
+    version: "1.2.0"
   query_string:
     description: query_string
     source: hosted
@@ -176,15 +184,15 @@ packages:
   source_span:
     description: source_span
     source: hosted
-    version: "1.1.2"
+    version: "1.2.1"
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.3.2"
+    version: "1.4.2"
   string_scanner:
     description: string_scanner
     source: hosted
-    version: "0.1.3+1"
+    version: "0.1.4"
   template_binding:
     description: template_binding
     source: hosted
@@ -200,7 +208,7 @@ packages:
   watcher:
     description: watcher
     source: hosted
-    version: "0.9.5"
+    version: "0.9.7"
   web_components:
     description: web_components
     source: hosted
@@ -216,4 +224,4 @@ packages:
   yaml:
     description: yaml
     source: hosted
-    version: "2.1.2"
+    version: "2.1.7"
