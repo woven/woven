@@ -296,6 +296,9 @@ class InboxList extends PolymerElement with Observable {
       case 'events':
         app.pageTitle = 'Events';
         break;
+      case 'news':
+        app.pageTitle = 'News';
+        break;
       case 'announcements':
         app.pageTitle = 'Announcements';
         break;
