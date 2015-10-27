@@ -1,6 +1,9 @@
 library util;
 
 import '../shared/shared_util.dart' as sharedUtil;
+import 'package:shelf/shelf.dart' as shelf;
+import 'dart:convert';
+
 
 /**
  * Returns true if the given status code was "success".
@@ -17,4 +20,8 @@ String correctUrl(String url) {
   url = sharedUtil.htmlDecode(url);
 
   return url;
+}
+
+shelf.Response respond(content, {statusCode: 200}) {
+  return new shelf.Response(statusCode, body: JSON.encode(content));
 }

@@ -1,7 +1,7 @@
 library admin_controller;
 
-import 'dart:io';
-import 'dart:async';
+import 'package:shelf/shelf.dart' as shelf;
+
 import '../app.dart';
 import 'package:woven/src/server/task/daily_digest.dart';
 import 'package:woven/src/shared/csv.dart';
@@ -11,7 +11,7 @@ class AdminController {
   /**
    * Format: admin/generatedigest?community=miamitech&from=2014-12-29T00:00:00-05:00&to=2014-12-29T23:59:59-05:00
    */
-  static generateDigest(App app, HttpRequest request) {
+  static generateDigest(App app, shelf.Request request) async {
     var community = request.requestedUri.queryParameters['community'];
     var from = request.requestedUri.queryParameters['from'];
     var to = request.requestedUri.queryParameters['to'];
@@ -20,47 +20,48 @@ class AdminController {
       // Parse the strings.
       if (from != null) from = DateTime.parse(from);
       if (to != null) to = DateTime.parse(to);
-    } catch(error) {
+    } catch (error) {
       return "Error parsing those dates: $error";
     }
 
     // Generate a new daily digest.
     var digest = new DailyDigestTask();
-    var digestOutput = digest.generateDigest(community, from: from as DateTime, to: to as DateTime);
-    request.response.headers.contentType = ContentType.HTML;
-    return digestOutput;
+    var digestOutput = await digest.generateDigest(community,
+        from: from as DateTime, to: to as DateTime);
+
+    shelf.Response response = new shelf.Response.ok(digestOutput,
+        headers: {'content-type': 'text/html'});
+
+    return response;
   }
 
-  static exportUsers(App app, HttpRequest request) {
-    createCsv(List users) {
-      var data = [['Username', 'First name', 'Last name', 'Email']];
-
-      users.forEach((user) {
-        data.add([user['username'], user['firstName'], user['lastName'], user['email']]);
-      });
-
-      request.response.headers.add(HttpHeaders.CONTENT_TYPE, 'text/csv;charset=utf-8');
-      request.response.headers.add('Content-Disposition', 'attachment; filename="woven-users.csv"');
-
-      return Csv.listToCsv(data);
-    }
-
-    return new Future(() {
+  static exportUsers(App app, shelf.Request request) async {
 //    TODO: Bring back export per community.
 //      var id = request.uri.queryParameters['communityId'];
 
-      return Firebase.get('/users.json').then((res) {
-        Map userBlob = res;
-        List users = [];
+    Map usersMap = await Firebase.get('/users.json');
+    List users = [];
 
-        userBlob.forEach((k, v) {
-          // Add the key, which is the item ID, the map as well.
-          var userMap = v;
-          users.add(userMap);
-        });
+    usersMap.values.forEach(users.add);
 
-        return createCsv(users);
-      });
+    var data = [
+      ['Username', 'First name', 'Last name', 'Email']
+    ];
+
+    users.forEach((user) {
+      data.add([
+        user['username'],
+        user['firstName'],
+        user['lastName'],
+        user['email']
+      ]);
     });
+
+    var headers = {
+      'content-type': 'text/html',
+      'Content-Disposition': 'attachment; filename="woven-users.csv"'
+    };
+
+    return new shelf.Response.ok(Csv.listToCsv(data), headers: headers);
   }
 }

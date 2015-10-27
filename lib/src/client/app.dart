@@ -29,7 +29,7 @@ class App extends Observable {
   bool isFocused = true;
   bool debugMode;
   List reservedPaths = ['people', 'events', 'item', 'confirm'];
-  final String serverPath = config['server']['serverPath'];
+  final String serverPath = config['server']['path'];
 
   Router router;
   MainViewModel mainViewModel;
@@ -246,6 +246,18 @@ class App extends Observable {
     signInDialog.toggleOverlay();
   }
 
+  signOut() async {
+    await HttpRequest.request(
+        serverPath +
+        Routes.signOut.toString(),
+        method: 'GET');
+    document.body.classes.add('no-transition');
+    user = null;
+    new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+
+    mainViewModel.invalidateUserState();
+  }
+
   void signInWithFacebook() {
     var cfg = config['authentication']['facebook'];
     var appId = cfg['appId'];
@@ -278,4 +290,6 @@ class App extends Observable {
 
     return _isMobile;
   }
+
+  logError(String error, [StackTrace stack]) => window.console.error("$error\n\n${stack != null ? stack : ''}");
 }

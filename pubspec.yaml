@@ -24,6 +24,9 @@ dependencies:
   jwt: ">=0.1.4 <0.2.0"
   notification: ">=0.0.1 <0.1.0"
   emoji: ">=1.0.3 <2.0.0"
+  shelf: "^0.6.3+1"
+  shelf_cors: "^0.2.1"
+  shelf_static: "^0.2.3+1"
 transformers:
 - polymer:
     entry_points:

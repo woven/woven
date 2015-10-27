@@ -17,14 +17,16 @@ class Routes {
   static final getUriPreview = new UrlPattern(r'/_geturipreview');
   static final addItem = new UrlPattern(r'/_additem');
   static final addMessage = new UrlPattern(r'/_addmessage');
-  static final generateDigest = new UrlPattern(r'/admin/generatedigest');
-  static final exportUsers = new UrlPattern(r'/admin/exportusers');
   static final signIn = new UrlPattern(r'/_signin');
   static final signOut = new UrlPattern(r'/_signout');
   static final createNewUser = new UrlPattern(r'/_createnewuser');
   static final sendConfirmEmail = new UrlPattern(r'/_sendconfirmemail');
   static final confirmEmail = new UrlPattern(r'/confirm/(.+)');
   static final inviteUserToChannel = new UrlPattern(r'/_inviteusertochannel');
+
+  // Admin functions
+  static final generateDigest = new UrlPattern(r'/admin/generatedigest');
+  static final exportUsers = new UrlPattern(r'/admin/exportusers');
 }
 
 class NoMatchingRoute {}

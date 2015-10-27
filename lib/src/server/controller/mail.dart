@@ -4,8 +4,11 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:shelf/shelf.dart' as shelf;
+
 import '../app.dart';
 import '../firebase.dart';
+import '../util.dart';
 import '../mailer/mailer.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
@@ -13,14 +16,16 @@ import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/shared/regex.dart';
 
 class MailController {
-  static sendNotificationsForItem(App app, HttpRequest request) {
+  static sendNotificationsForItem(App app, shelf.Request request) {
     Map data = request.requestedUri.queryParameters;
     sendNotifications('item', data, app);
+    return new shelf.Response.ok(null);
   }
 
-  static sendNotificationsForComment(App app, HttpRequest request) {
+  static sendNotificationsForComment(App app, shelf.Request request) {
     Map data = request.requestedUri.queryParameters;
     sendNotifications('comment', data, app);
+    return new shelf.Response.ok(null);
   }
 
   /**
@@ -30,30 +35,39 @@ class MailController {
     bool isItem = (type == 'item') ? true : false;
     bool isComment = (type == 'comment') ? true : false;
     bool isMessage = (type == 'message') ? true : false;
-    var id = data['id']; // The id of the item/comment/message we're notifying about.
-    var item = (type == 'item') ? id : data['itemid']; // If this isn't an item, we still might have/need the item id.
+    var id =
+        data['id']; // The id of the item/comment/message we're notifying about.
+    var item = (type == 'item')
+        ? id
+        : data[
+            'itemid']; // If this isn't an item, we still might have/need the item id.
 
     Map notificationData = {};
 
     Future findItem() {
       return Firebase.get('/items/$item.json').then((itemData) {
         notificationData['itemSubject'] = itemData['subject'];
-        notificationData['itemAuthor'] = (itemData['user'] as String).toLowerCase();
+        notificationData['itemAuthor'] =
+            (itemData['user'] as String).toLowerCase();
         notificationData['itemBody'] = itemData['body'];
         notificationData['message'] = itemData['message'];
         var encodedItem = base64Encode(id);
-        notificationData['itemLink'] = "http://${config['server']['displayDomain']}/item/$encodedItem";
+        notificationData['itemLink'] =
+            "http://${config['server']['displayDomain']}/item/$encodedItem";
 
         if (isItem) return;
 
         // Find all the unique users who have commented on this item.
         Map comments = itemData['activities']['comments'];
-        notificationData['participants'] = comments.values.map((v) => v['user']).toSet();
+        notificationData['participants'] =
+            comments.values.map((v) => v['user']).toSet();
       });
     }
 
     Future findItemAuthorInfo(_) {
-      return Firebase.get('/users/${notificationData['itemAuthor']}.json').then((userData) {
+      return Firebase
+          .get('/users/${notificationData['itemAuthor']}.json')
+          .then((userData) {
         if (isItem) {
           notificationData['itemAuthorEmail'] = userData['email'];
           notificationData['itemAuthorFirstName'] = userData['firstName'];
@@ -64,14 +78,18 @@ class MailController {
 
     Future findCommentAuthorInfo(_) {
       if (isItem) return null;
-      return Firebase.get('/users/${notificationData['commentAuthor']}.json').then((userData) {
+      return Firebase
+          .get('/users/${notificationData['commentAuthor']}.json')
+          .then((userData) {
         notificationData['commentAuthorFirstName'] = userData['firstName'];
         notificationData['commentAuthorLastName'] = userData['lastName'];
       });
     }
 
     Future findMessageAuthorInfo(_) {
-      return Firebase.get('/users/${notificationData['messageAuthor']}.json').then((userData) {
+      return Firebase
+          .get('/users/${notificationData['messageAuthor']}.json')
+          .then((userData) {
         notificationData['messageAuthorFirstName'] = userData['firstName'];
         notificationData['messageAuthorLastName'] = userData['lastName'];
       });
@@ -79,17 +97,22 @@ class MailController {
 
     Future findCommentInfo() {
       if (isItem) return null;
-      return Firebase.get('/items/$item/activities/comments/$id.json').then((commentData) {
+      return Firebase
+          .get('/items/$item/activities/comments/$id.json')
+          .then((commentData) {
         notificationData['commentBody'] = commentData['comment'];
-        notificationData['commentAuthor'] = (commentData['user'] as String).toLowerCase();
+        notificationData['commentAuthor'] =
+            (commentData['user'] as String).toLowerCase();
       });
     }
 
     Future findMessage() {
       return Firebase.get('/messages/$id.json').then((messageData) {
         notificationData['message'] = messageData['message'];
-        notificationData['messageAuthor'] = (messageData['user'] as String).toLowerCase();
-        notificationData['itemLink'] = "http://${config['server']['displayDomain']}/${messageData['community']}";
+        notificationData['messageAuthor'] =
+            (messageData['user'] as String).toLowerCase();
+        notificationData['itemLink'] =
+            "http://${config['server']['displayDomain']}/${messageData['community']}";
       });
     }
 
@@ -101,38 +124,46 @@ class MailController {
       if (isComment) {
         _notifyAuthor(app, notificationData);
         _notifyOtherParticipants(app, notificationData);
-      };
+      }
+      ;
     }
 
     // Logic for handling the notifications.
     if (isItem) {
       return findItem()
-      .then((_) => Future.wait([findItemAuthorInfo(_)]))
-      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
-      .then((success) => new Response(success))
-      .catchError((error) => print("Error sending notifications: $error"));
+          .then((_) => Future.wait([findItemAuthorInfo(_)]))
+          .then(notify)
+          .catchError((error, stack) =>
+              print("Error in notify:\n$error\n\nStack trace:\n$stack"))
+          .then((success) => new Response(success))
+          .catchError((error) => print("Error sending notifications: $error"));
     }
     if (isComment) {
       return findItem()
-      .then((_) => Future.wait([findItemAuthorInfo(_), findCommentInfo()]))
-      .then(findCommentAuthorInfo)
-      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
-      .then((success) => new Response(success))
-      .catchError((error) => print("Error sending notifications: $error"));
+          .then((_) => Future.wait([findItemAuthorInfo(_), findCommentInfo()]))
+          .then(findCommentAuthorInfo)
+          .then(notify)
+          .catchError((error, stack) =>
+              print("Error in notify:\n$error\n\nStack trace:\n$stack"))
+          .then((success) => new Response(success))
+          .catchError((error) => print("Error sending notifications: $error"));
     }
     if (isMessage) {
       return findMessage()
-      .then((_) => Future.wait([findMessageAuthorInfo(_)]))
-      // TODO: Get the community details, like the name.
-      .then(notify).catchError((error, stack) => print("Error in notify:\n$error\n\nStack trace:\n$stack"))
-      .then((success) => new Response(success))
-      .catchError((error) => print("Error sending notifications: $error"));
+          .then((_) => Future.wait([findMessageAuthorInfo(_)]))
+          // TODO: Get the community details, like the name.
+          .then(notify)
+          .catchError((error, stack) =>
+              print("Error in notify:\n$error\n\nStack trace:\n$stack"))
+          .then((success) => new Response(success))
+          .catchError((error) => print("Error sending notifications: $error"));
     }
   }
 
   static _notifyAuthor(App app, Map notificationData) {
     // Don't send this notification when we've already notified the author that someone mentioned him.
-    if (notificationData['itemAuthorMentioned'] != null && notificationData['itemAuthorMentioned'] == true) return;
+    if (notificationData['itemAuthorMentioned'] != null &&
+        notificationData['itemAuthorMentioned'] == true) return;
 
     // Don't send notifications when the item author comments on their own post.
     if (notificationData['itemAuthor'] != notificationData['commentAuthor']) {
@@ -144,9 +175,12 @@ class MailController {
       // Send notification.
       var envelope = new Envelope()
         ..from = "Woven <hello@woven.co>"
-        ..to = ['$itemAuthorFirstName $itemAuthorLastName <${notificationData['itemAuthorEmail']}>']
+        ..to = [
+          '$itemAuthorFirstName $itemAuthorLastName <${notificationData['itemAuthorEmail']}>'
+        ]
         ..bcc = ['David Notik <davenotik@gmail.com>']
-        ..subject = '$commentAuthorFirstName $commentAuthorLastName commented on your post'
+        ..subject =
+            '$commentAuthorFirstName $commentAuthorLastName commented on your post'
         ..text = '''
 Hey $itemAuthorFirstName,
 
@@ -172,12 +206,12 @@ http://woven.co
 
     // Notify participants.
     participants.forEach((participant) {
-
       // If participant mentioned and thus already notified, don't notify again.
       if (mentions.contains(participant)) return;
 
       // Don't notify the author of the original item (whom we email above) or said comment.
-      if (participant != notificationData['itemAuthor'] && participant != notificationData['commentAuthor']) {
+      if (participant != notificationData['itemAuthor'] &&
+          participant != notificationData['commentAuthor']) {
         // Get the participant's user details.
         Firebase.get('/users/$participant.json').then((userData) {
           if (userData == null) return;
@@ -185,19 +219,25 @@ http://woven.co
           var participantFirstName = userData['firstName'];
           var participantLastName = userData['lastName'];
           var participantEmail = userData['email'];
-          var commentAuthorFirstName = notificationData['commentAuthorFirstName'];
+          var commentAuthorFirstName =
+              notificationData['commentAuthorFirstName'];
           var commentAuthorLastName = notificationData['commentAuthorLastName'];
-          var referToItemAuthorAs = "${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])}";
+          var referToItemAuthorAs =
+              "${notificationData['itemAuthorFirstName']} ${formatPossessive(notificationData['itemAuthorLastName'])}";
 
           // Don't ever say "Dave commented on Dave's post". Later we'll know his or her.
-          if (notificationData['commentAuthor'] == notificationData['itemAuthor']) referToItemAuthorAs = "their";
+          if (notificationData['commentAuthor'] ==
+              notificationData['itemAuthor']) referToItemAuthorAs = "their";
 
           // Send notification.
           var envelope = new Envelope()
             ..from = "Woven <hello@woven.co>"
-            ..to = ['$participantFirstName $participantLastName <$participantEmail>']
+            ..to = [
+              '$participantFirstName $participantLastName <$participantEmail>'
+            ]
             ..bcc = ['David Notik <davenotik@gmail.com>']
-            ..subject = "$commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAuthorAs post"
+            ..subject =
+                "$commentAuthorFirstName $commentAuthorLastName also commented on $referToItemAuthorAs post"
             ..text = '''
 Hey $participantFirstName,
 
@@ -228,7 +268,8 @@ http://woven.co
 
     // Combine message and item body fields for purpose of parsing all @mentions in either.
     String postText;
-    if (isItem) postText = '${notificationData['message']}\n===\n${notificationData['itemBody']}';
+    if (isItem) postText =
+        '${notificationData['message']}\n===\n${notificationData['itemBody']}';
     if (isComment) postText = notificationData['commentBody'];
     if (isMessage) postText = notificationData['message'];
 
@@ -248,7 +289,8 @@ http://woven.co
       if (user == notificationData['commentAuthor']) return;
 
       // If the item author is mentioned, remember it so we don't also send other notifications.
-      if (user == notificationData['itemAuthor']) notificationData['itemAuthorMentioned'] = true;
+      if (user == notificationData['itemAuthor']) notificationData[
+          'itemAuthorMentioned'] = true;
 
       // Get the user data. TODO: Address case sensitivity of usernames.
       Firebase.get('/users/$user.json').then((userData) {
@@ -263,20 +305,20 @@ http://woven.co
 
         if (isItem) {
           notificationText = '';
-          postAuthorFirstName =  notificationData['itemAuthorFirstName'];
-          postAuthorLastName =  notificationData['itemAuthorLastName'];
+          postAuthorFirstName = notificationData['itemAuthorFirstName'];
+          postAuthorLastName = notificationData['itemAuthorLastName'];
         }
 
         if (isComment) {
           notificationText = '\n${notificationData['commentBody']}\n';
-          postAuthorFirstName =  notificationData['commentAuthorFirstName'];
-          postAuthorLastName =  notificationData['commentAuthorLastName'];
+          postAuthorFirstName = notificationData['commentAuthorFirstName'];
+          postAuthorLastName = notificationData['commentAuthorLastName'];
         }
 
         if (isMessage) {
           notificationText = '\n${notificationData['message']}\n';
-          postAuthorFirstName =  notificationData['messageAuthorFirstName'];
-          postAuthorLastName =  notificationData['messageAuthorLastName'];
+          postAuthorFirstName = notificationData['messageAuthorFirstName'];
+          postAuthorLastName = notificationData['messageAuthorLastName'];
         }
 
         // Send notification.
@@ -284,7 +326,8 @@ http://woven.co
           ..from = "Woven <hello@woven.co>"
           ..to = ['$firstName $lastName <$email>']
           ..bcc = ['David Notik <davenotik@gmail.com>']
-          ..subject = "$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
+          ..subject =
+              "$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
           ..text = '''
 Hey $firstName,
 
@@ -297,7 +340,6 @@ Woven
 http://woven.co
 ''';
         Mailgun.send(envelope);
-
       });
     });
   }
@@ -305,14 +347,8 @@ http://woven.co
   /**
    * Generate a confirmation code and send a link to confirm user's email.
    */
-  static sendConfirmEmail(App app, HttpRequest request) async {
-    String dataReceived;
-
-    await request.listen((List<int> buffer) {
-      dataReceived = new String.fromCharCodes(buffer);
-    }).asFuture();
-
-    Map data = JSON.decode(dataReceived);
+  static sendConfirmEmail(App app, shelf.Request request) async {
+    Map data = JSON.decode(await request.readAsString());
 
     // Prepare the data for save and response.
     data['email'] = (data['email'] as String).toLowerCase();
@@ -320,15 +356,17 @@ http://woven.co
     data['createdDate'] = now.toString();
     data['.priority'] = -now.millisecondsSinceEpoch;
 
-    var checkForExistingEmail = await Firebase.get('/email_index/${encodeFirebaseKey(data['email'])}.json');
-    if (checkForExistingEmail != null) return Response.fromError('There\'s already an account associated with that email address. Perhaps you sign in with Facebook?');
-
+    var checkForExistingEmail = await Firebase
+        .get('/email_index/${encodeFirebaseKey(data['email'])}.json');
+    if (checkForExistingEmail != null) return respond(Response.fromError(
+        'There\'s already an account associated with that email address. Perhaps you sign in with Facebook?'));
 
     // Kill any existing session if the user signs up again.
-    app.sessionManager.deleteCookie(request);
+//    app.sessionManager.deleteCookie(request);
 
     var hash = generateRandomHash();
-    var confirmLink = "http://${config['server']['displayDomain']}/confirm/$hash";
+    var confirmLink =
+        "http://${config['server']['displayDomain']}/confirm/$hash";
 
     print(hash);
 
@@ -352,27 +390,24 @@ http://woven.co
     Mailgun.send(envelope);
 
     // Save the confirmation hash to an index.
-    var result = await Firebase.put('/email_confirmation_index/$hash.json', data, auth: config['datastore']['firebaseSecret'])
-    .catchError((e) => print(e));
+    var result = await Firebase
+        .put('/email_confirmation_index/$hash.json', data,
+            auth: config['datastore']['firebaseSecret'])
+        .catchError((e) => print(e));
 
     var response = new Response();
     response.success = true;
-    return response;
+    return respond(response);
   }
 
   /**
    * Generate a confirmation code and send a link to confirm user's email.
    */
-  static inviteUserToChannel(App app, HttpRequest request) async {
-    String dataReceived;
+  static inviteUserToChannel(App app, shelf.Request request) async {
+    Map data = JSON.decode(await request.readAsString());
 
-    await request.listen((List<int> buffer) {
-      dataReceived = new String.fromCharCodes(buffer);
-    }).asFuture();
-
-    Map data = JSON.decode(dataReceived);
-
-    if (!isValidEmail(data['email'])) return Response.fromError('That doesn\'t look like a valid email address.');
+    if (!isValidEmail(data['email'])) return Response
+        .fromError('That doesn\'t look like a valid email address.');
 
     var getData = await Future.wait([
       Firebase.get('/users/${data['fromUser']}.json'),
@@ -390,7 +425,8 @@ http://woven.co
     data.remove('authToken');
 
     var hash = generateRandomHash();
-    var confirmLink = "http://${config['server']['displayDomain']}/confirm/$hash";
+    var confirmLink =
+        "http://${config['server']['displayDomain']}/confirm/$hash";
 
     print(hash);
 
@@ -413,12 +449,12 @@ http://woven.co
 ''';
     Mailgun.send(envelope);
 
-
     // Save the confirmation hash to an index.
-    Firebase.put('/email_confirmation_index/$hash.json', data, auth: config['datastore']['firebaseSecret']);
+    Firebase.put('/email_confirmation_index/$hash.json', data,
+        auth: config['datastore']['firebaseSecret']);
 
     var response = new Response();
     response.success = true;
-    return response;
+    return respond(response);
   }
 }

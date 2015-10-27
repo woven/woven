@@ -39,22 +39,9 @@ class WovenApp extends PolymerElement with Observable {
     (app.community != null) ? app.router.selectedPage = app.router.previousPage : app.router.selectedPage = 'channels';
   }
 
-  signInWithFacebook() {
-    app.signInWithFacebook();
-  }
+  signInWithFacebook() => app.signInWithFacebook();
 
-  void signOut() {
-    HttpRequest.request(
-        app.serverPath +
-        Routes.signOut.toString(),
-        method: 'GET').then((_) {
-      document.body.classes.add('no-transition');
-      app.user = null;
-      new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
-
-      app.mainViewModel.invalidateUserState();
-    });
-  }
+  signOut() => app.signOut();
 
   // Greet the user upon sign in.
   greetUser() {
@@ -103,11 +90,12 @@ class WovenApp extends PolymerElement with Observable {
     app.toggleSignIn();
   }
 
-  attached() {
+  attached() async {
     // Whenever we load the app, try to see what's the current user (i.e. have we signed in?).
-//    Timer.run(() => app.showMessage('Signing you in...'));
-    HttpRequest.getString(app.serverPath + Routes.currentUser.reverse([])).then((String contents) {
-      var response = Response.fromJson(JSON.decode(contents));
+    try {
+      var currentUser = await HttpRequest.getString(app.serverPath + Routes.currentUser.reverse([]));
+
+      var response = Response.fromJson(JSON.decode(currentUser));
       if (response.success && response.data != null) {
         app.authToken = response.data['auth_token'];
         app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
@@ -154,7 +142,10 @@ class WovenApp extends PolymerElement with Observable {
           }
         }
       }
-    });
+    } catch(error, stack) {
+      app.hasTriedLoadingUser = true;
+      app.logError(error, stack);
+    }
 
     // Listen for App changes so we can do some things.
     app.changes.listen((List<ChangeRecord> records) {

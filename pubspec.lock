@@ -173,6 +173,18 @@ packages:
     description: route
     source: hosted
     version: "0.4.6"
+  shelf:
+    description: shelf
+    source: hosted
+    version: "0.6.3+1"
+  shelf_cors:
+    description: shelf_cors
+    source: hosted
+    version: "0.2.1"
+  shelf_static:
+    description: shelf_static
+    source: hosted
+    version: "0.2.3+1"
   smoke:
     description: smoke
     source: hosted

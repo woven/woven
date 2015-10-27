@@ -252,6 +252,9 @@ class Home extends PolymerElement with Observable {
 
     toggleProcessingIndicator();
 
+    // Kill any existing session since the user appears to be signing up again.
+    app.signOut();
+
     // Check credentials and sign the user in server side.
     HttpRequest request = await HttpRequest.request(
         app.serverPath +
