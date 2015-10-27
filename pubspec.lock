@@ -228,7 +228,7 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.11.4+2"
+    version: "0.12.0+3"
   when:
     description: when
     source: hosted
