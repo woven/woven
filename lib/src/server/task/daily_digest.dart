@@ -53,7 +53,7 @@ class DailyDigestTask extends Task {
         // Send the digest to each user in the community.
         users.forEach((user) async {
           if (user == null) return;
-//          if (user.username != 'dave') return; // TODO: Temporarily limited to Dave.
+          if (user.username != 'dave') return; // TODO: Temporarily limited to Dave.
 
           var firstName = (user.firstName != null ? user.firstName : '[oops, we don\'t have your first name]');
           var lastName = (user.lastName != null ? user.lastName : '[egad, we don\'t have your last name]');
