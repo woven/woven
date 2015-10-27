@@ -157,6 +157,7 @@ class App {
     try {
 //      shelf.Response response = new shelf.Response.ok('okkk');
       shelf.Response response = await router.dispatch(request);
+      response = response.change(headers: {'Transfer-Encoding': 'chunked'});
       return response;
 //      print('dispatch returned: ' + response.readAsString());
     } catch (error, trace) {
@@ -174,8 +175,10 @@ class App {
       var alias = Uri.parse(request.url.path).pathSegments[0];
 
       if (await aliasExists(alias)) {
-        return staticHandler(new shelf.Request(
+        var response =  staticHandler(new shelf.Request(
             'GET', Uri.parse(serverPath + '/')));
+        response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+        return response;
       }
     }
     return new shelf.Response.notFound('That alias was not found.');
