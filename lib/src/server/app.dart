@@ -135,8 +135,10 @@ class App {
     });
   }
 
-  Future<shelf.Response> _handleFile(shelf.Request request) {
-    return this.staticHandler(request);
+  Future<shelf.Response> _handleFile(shelf.Request request) async {
+    shelf.Response response = await this.staticHandler(request);
+    response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+    return response;
   }
 
   Future<shelf.Response> _handleRoute(shelf.Request request) async {
