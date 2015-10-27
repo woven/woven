@@ -4,7 +4,7 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
   browser: any
-  polymer: ">=0.15.0 <0.16.0"
+  polymer: ">=0.16.0 <0.17.0"
   core_elements: ">=0.6.0+3 <0.7.0"
   paper_elements: ">=0.6.0+4 <0.7.0"
   firebase: "^0.6.3"
