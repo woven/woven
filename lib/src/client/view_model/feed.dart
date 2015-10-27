@@ -154,8 +154,6 @@ class FeedViewModel extends BaseViewModel with Observable {
       var existingItem = items.firstWhere((i) => i['id'] == e.snapshot.key, orElse: () => null);
       if (existingItem != null) return;
 
-      print('debug: ADDED: $newItem');
-
       var index = indexOfClosestItemByDate(DateTime.parse(newItem['updatedDate']));
 
       items.insert(index == null ? 0 : index, toObservable(processItem(e.snapshot)));
@@ -176,8 +174,6 @@ class FeedViewModel extends BaseViewModel with Observable {
 
       // Make sure we're using the collapsed username.
       newData['user'] = (newData['user'] as String).toLowerCase();
-
-      print('debug: CHANGED: $newData');
 
       Future processData = new Future.sync(() {
         // First pre-process some things.

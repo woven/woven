@@ -95,7 +95,7 @@ class UserController {
 
   static Future<shelf.Response> getCurrentUser(App app, shelf.Request request) async {
     var sessionCookie = app.sessionManager.getSessionCookie(request);
-    if (sessionCookie == null) return respond(Response.fromError('No session cookie found.'), statusCode: 401);
+    if (sessionCookie == null) return respond(Response.fromError('No session cookie found.'));
     if (sessionCookie.value == null) return respond(Response.fromError('The id in the session cookie was null.'), statusCode: 401);
 
     var sessionId = sessionCookie.value;
