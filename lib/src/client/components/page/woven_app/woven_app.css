@@ -38,6 +38,8 @@
 .theme-dark .toolbar {
   background-color: #0B0B0B;
   transition: background-color .2s;
+  border-bottom: none;
+  color: white;
 }
 
 .toolbar span {
@@ -47,7 +49,6 @@
 
 .toolbar.has-logo {
   /*transition: background-color .8s;*/
-  background-color: #FAFAFA;
 }
 
 #page-title {
@@ -141,7 +142,7 @@ core-drawer-panel:not([narrow]) #menu-button {
 }
 
 #toolbar-main {
-  background-color: #fff;
+  background-color: #F5F5F5;
   border-bottom: solid 1px #ddd;
   /*background-image: url(/static/images/patt_2.png);*/
   background-repeat: repeat;
@@ -155,6 +156,8 @@ core-drawer-panel:not([narrow]) #menu-button {
 .theme-dark #toolbar-main {
   background-color: #171717;
   transition: background-color .2s;
+  border-bottom: none;
+  color: white;
 }
 
 core-item {
