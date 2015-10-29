@@ -22,12 +22,13 @@
 
 .toolbar {
   padding: 0 0 0 8px;
+  border-bottom: solid 1px #ddd;
   /*background-image: url(/static/images/patt_1.png);*/
-  background-color: #2FA300;
+  background-color: #fff;
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;
-  color: #fff;
+  color: #2d2d2d;
   text-align: center;
   align-content: center;
   width: 100%;
@@ -89,12 +90,14 @@ core-drawer-panel:not([narrow]) #menu-button {
 /*}*/
 
 .btn.primary {
-  fill: #f1f1f1 !important;
+  fill: #2C9800 !important;
+  color: #2C9800;
   /*background-color: rgb(45, 104, 214) !important;*/
 }
 
 .btn.primary:hover {
-  fill: #fff !important;
+  fill: #297800 !important;
+  color: #297800;
   /*background-color: rgb(41, 78, 155) !important;*/
 }
 
@@ -137,12 +140,13 @@ core-drawer-panel:not([narrow]) #menu-button {
 }
 
 #toolbar-main {
-  background-color: #2C9800;
+  background-color: #FAFAFA;
+  border-bottom: solid 1px #ddd;
   /*background-image: url(/static/images/patt_2.png);*/
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;
-  color: white;
+  color: #2d2d2d;
   text-align: center;
   width: 100%;
 }
