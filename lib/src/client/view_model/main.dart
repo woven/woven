@@ -284,17 +284,16 @@ class MainViewModel extends BaseViewModel with Observable {
    */
   void invalidateUserState() {
     loadUserStarredCommunityInformation();
-
-    if (itemViewModel != null) {
-      itemViewModel.loadItemUserStarredLikedInformation();
-    }
+//    if (itemViewModel != null) {
+//      itemViewModel.loadItemUserStarredLikedInformation();
+//    }
 
     // TODO: This is causing feedViewModel to load even if we loaded an eventViewModel.
     // TODO: It's also causing it to call the model twice.
     if (app.community != null && feedViewModel != null) {
-      feedViewModel.loadUserStarredItemInformation();
+//      feedViewModel.loadUserStarredItemInformation();
 
-//      feedViewModel.loadUserLikedItemInformation();
+      feedViewModel.loadUserLikedItemInformation();
     }
 
     if (app.user != null) {
