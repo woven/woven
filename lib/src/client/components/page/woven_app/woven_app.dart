@@ -33,10 +33,18 @@ class WovenApp extends PolymerElement with Observable {
 
   void goBack(Event e, var detail, Element target) {
     // TODO: Clean this up.
-    if (app.router.previousPage == 'lobby') app.router.dispatch(url: (app.community != null ? '/${app.community.alias}' : '/'));
-    if (app.router.previousPage == 'feed') app.router.dispatch(url: (app.community != null ? '/${app.community.alias}/feed' : '/feed'));
-    if (app.router.previousPage == 'events') app.router.dispatch(url: (app.community != null ? '/${app.community.alias}/events' : '/events'));
-    (app.community != null) ? app.router.selectedPage = app.router.previousPage : app.router.selectedPage = 'channels';
+    if (app.router.previousPage == 'lobby') app.router.dispatch(
+        url: (app.community != null ? '/${app.community.alias}' : '/'));
+    if (app.router.previousPage == 'feed') app.router.dispatch(
+        url:
+            (app.community != null ? '/${app.community.alias}/feed' : '/feed'));
+    if (app.router.previousPage == 'events') app.router.dispatch(
+        url: (app.community != null
+            ? '/${app.community.alias}/events'
+            : '/events'));
+    (app.community != null)
+        ? app.router.selectedPage = app.router.previousPage
+        : app.router.selectedPage = 'channels';
   }
 
   signInWithFacebook() => app.signInWithFacebook();
@@ -83,8 +91,8 @@ class WovenApp extends PolymerElement with Observable {
 
     AddStuff addStuff = this.shadowRoot.querySelector('add-stuff');
     addStuff.toggleOverlay();
-
   }
+
 // Toggle the sign in dialog.
   toggleSignIn() {
     app.toggleSignIn();
@@ -93,12 +101,15 @@ class WovenApp extends PolymerElement with Observable {
   attached() async {
     // Whenever we load the app, try to see what's the current user (i.e. have we signed in?).
     try {
-      var currentUser = await HttpRequest.getString(app.serverPath + Routes.currentUser.reverse([]));
+      var currentUser = await HttpRequest
+          .getString(app.serverPath + Routes.currentUser.reverse([]));
 
       var response = Response.fromJson(JSON.decode(currentUser));
       if (response.success && response.data != null) {
         app.authToken = response.data['auth_token'];
-        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+        app.f
+            .authWithCustomToken(app.authToken)
+            .catchError((error) => print(error));
 
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);
@@ -106,7 +117,8 @@ class WovenApp extends PolymerElement with Observable {
 
         document.body.classes.add('no-transition');
         app.user.settings = toObservable(app.user.settings);
-        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+        new Timer(new Duration(seconds: 1),
+            () => document.body.classes.remove('no-transition'));
 
         app.cache.users[app.user.username.toLowerCase()] = app.user;
       }
@@ -121,7 +133,8 @@ class WovenApp extends PolymerElement with Observable {
       } else {
         if (!user.disabled && user.onboardingState != 'temporaryUser') {
           if (user.onboardingState == 'signUpIncomplete') {
-            app.showHomePage = true; // Show homepage regardless of path condition above.
+            app.showHomePage =
+                true; // Show homepage regardless of path condition above.
             app.homePageCta = 'complete-sign-up';
           } else {
             app.showHomePage = false;
@@ -142,7 +155,7 @@ class WovenApp extends PolymerElement with Observable {
           }
         }
       }
-    } catch(error, stack) {
+    } catch (error, stack) {
       app.hasTriedLoadingUser = true;
       app.logError(error, stack);
     }
@@ -151,7 +164,8 @@ class WovenApp extends PolymerElement with Observable {
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
 
-      if (app.debugMode) print("${record.name} changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
+      if (app.debugMode) print(
+          "${record.name} changed from ${record.oldValue} (${record.oldValue.runtimeType}) to ${record.newValue} (${record.newValue.runtimeType})");
 
       // If page title changes, show it awesomely.
       if (record.name == new Symbol("pageTitle")) {

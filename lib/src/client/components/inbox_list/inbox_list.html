@@ -10,16 +10,17 @@
   <template>
     <link rel="stylesheet" href="inbox_list.css">
     <div id="content-container" class="{{viewModel.typeFilter != null ? 'compact' : null}} {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
-      <template if="{{viewModel.typeFilter == 'event' || viewModel.typeFilter == 'news'}}">
+      <template if="{{(viewModel.typeFilter == 'event' || viewModel.typeFilter == 'news')}}">
         <template repeat="{{groupDate in viewModel.groupedItems.keys}}">
         <div class="date-group-header">{{groupDate}}</div>
         <template repeat="{{item in viewModel.groupedItems[groupDate]}}">
+          <!--<div>{{item['id']}} &#45;&#45; {{item['startDateTime']}} &#45;&#45; {{item['startDateTimePriority']}} // createdDate: {{item['createdDate']}}</div>-->
           <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>
           <!--<inline-item itemId="{{item['id']}}" app="{{app}}"></inline-item>-->
         </template>
       </template>
     </template>
-    <template if="{{viewModel.typeFilter != 'event' || viewModel.typeFilter != 'news'}}">
+    <template if="{{!(viewModel.typeFilter == 'event' || viewModel.typeFilter == 'news')}}">
       <template repeat="{{item in viewModel.items}}">
         <!--<inline-item itemId="{{item['id']}}" app="{{app}}"></inline-item>-->
         <x-item item="{{item}}" app="{{app}}" viewModel="{{viewModel}}"></x-item>

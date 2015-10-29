@@ -33,7 +33,6 @@ class InboxList extends PolymerElement with Observable {
     app.router.previousPage = app.router.selectedPage;
     app.router.selectedItem = item;
 
-
     var str = target.dataset['id'];
     var bytes = UTF8.encode(str);
     var base64 = CryptoUtils.bytesToBase64(bytes);
@@ -281,7 +280,7 @@ class InboxList extends PolymerElement with Observable {
   initializeInfiniteScrolling() {
     var scroller = app.scroller;
     HtmlElement element = $['content-container'];
-    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller);
+    var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
 
     subscriptions.add(scroll.onScroll.listen((_) {
 //      print("DEBUG: ${viewModel.reloadingContent} // ${viewModel.reachedEnd}");

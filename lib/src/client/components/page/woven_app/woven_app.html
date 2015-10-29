@@ -165,11 +165,11 @@
                 </template>
               </section>
               <section data-page="feed">
-                <!--<template if="{{app.router.selectedPage === 7}}">-->
+                <template if="{{app.router.selectedPage === 7}}">
                   <template if="{{app.community != null && app.router.selectedPage == 'feed'}}">
                     <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.feedViewModel}}"></inbox-list>
                   </template>
-                <!--</template>-->
+                </template>
               </section>
             </core-animated-pages>
           </div>

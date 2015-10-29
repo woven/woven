@@ -31,6 +31,7 @@ class MainViewModel extends BaseViewModel with Observable {
   Firebase get f => app.f;
 
   MainViewModel(this.app) {
+    if (app.debugMode) print('DEBUG: MainViewModel constructed');
     loadCommunities();
   }
 
@@ -80,6 +81,7 @@ class MainViewModel extends BaseViewModel with Observable {
 
   // Get the view model for the current inbox.
   @observable FeedViewModel get feedViewModel {
+    if (app.debugMode) print('feedViewModel getter called // community: ${app.community}');
     if (app.community == null) return null;
 
     var id = app.community.alias;
@@ -109,12 +111,15 @@ class MainViewModel extends BaseViewModel with Observable {
     return feedViewModels[id];
   }
 
-  @observable FeedViewModel get eventViewModel {
+  FeedViewModel get eventViewModel {
+    if (app.debugMode) print('DEBUG: eventViewModel getter called // community: ${app.community}');
+
     if (app.community == null) return null;
+    if (app.community.alias == null) return null;
 
     var id = app.community.alias + '_events';
 
-    if (id == null) return null;
+    if (app.debugMode) print('DEBUG: vm id: $id');
 
     if (!feedViewModels.containsKey(id)) {
       var vm = new FeedViewModel(app: app, typeFilter: 'event');
@@ -283,15 +288,17 @@ class MainViewModel extends BaseViewModel with Observable {
     if (itemViewModel != null) {
       itemViewModel.loadItemUserStarredLikedInformation();
     }
+
     // TODO: This is causing feedViewModel to load even if we loaded an eventViewModel.
     // TODO: It's also causing it to call the model twice.
     if (app.community != null && feedViewModel != null) {
-//      feedViewModel.loadUserStarredItemInformation();
-      feedViewModel.loadUserLikedItemInformation();
+      feedViewModel.loadUserStarredItemInformation();
+
+//      feedViewModel.loadUserLikedItemInformation();
     }
 
     if (app.user != null) {
-      starredViewModel.loadStarredItemsForUser();
+//      starredViewModel.loadStarredItemsForUser();
     }
     // Add more cases later as we need.
   }
