@@ -21,10 +21,10 @@
 }
 
 .toolbar {
+  background-color: #FAFAFA;
   padding: 0 0 0 8px;
   border-bottom: solid 1px #ddd;
   /*background-image: url(/static/images/patt_1.png);*/
-  background-color: #fff;
   background-repeat: repeat;
   background-size: inherit;
   background-blend-mode: inherit;
@@ -47,7 +47,7 @@
 
 .toolbar.has-logo {
   /*transition: background-color .8s;*/
-  background-color: #000;
+  background-color: #FAFAFA;
 }
 
 #page-title {
@@ -92,6 +92,7 @@ core-drawer-panel:not([narrow]) #menu-button {
 .btn.primary {
   fill: #2C9800 !important;
   color: #2C9800;
+  border: solid 1px #2C9800;
   /*background-color: rgb(45, 104, 214) !important;*/
 }
 
@@ -140,7 +141,7 @@ core-drawer-panel:not([narrow]) #menu-button {
 }
 
 #toolbar-main {
-  background-color: #FAFAFA;
+  background-color: #fff;
   border-bottom: solid 1px #ddd;
   /*background-image: url(/static/images/patt_2.png);*/
   background-repeat: repeat;
