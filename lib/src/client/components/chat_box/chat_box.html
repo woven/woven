@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="chat_box.css">
     <div id="post-container" layout horizontal class="{{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
         <template if="{{app.user != null}}">
-          <div class="user-area">
-            <user-picture app="{{app}}" username="{{app.user.username.toLowerCase()}}"></user-picture>
-          </div>
+          <!--<div class="user-area">-->
+            <!--<user-picture app="{{app}}" username="{{app.user.username.toLowerCase()}}"></user-picture>-->
+          <!--</div>-->
           <div id="message-box" class="field-wrapper full-height" flex>
             <paper-autogrow-textarea
                 maxRows="7"
