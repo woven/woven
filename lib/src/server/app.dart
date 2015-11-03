@@ -155,7 +155,6 @@ class App {
     }
 
     try {
-//      shelf.Response response = new shelf.Response.ok('okkk');
       shelf.Response response = await router.dispatch(request);
       response = response.change(headers: {'Transfer-Encoding': 'chunked'});
       return response;

@@ -19,7 +19,8 @@ import 'package:woven/src/server/util.dart';
 
 class MainController {
   static serveApp(App app, shelf.Request request, [String path]) {
-    return app.staticHandler(request);
+    return app.staticHandler(
+        new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
   }
 
   static confirmEmail(App app, shelf.Request request, String confirmId) {
