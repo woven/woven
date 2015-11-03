@@ -69,14 +69,14 @@
                            on-tap="{{switchPage}}" data-page="people" data-url="/{{app.community.alias}}/people"></core-item>
                 <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->
                            <!--on-tap="{{switchPage}}" data-page="2" data-url="/saved" ></core-item>-->
-                <core-item label="Channels" icon="social:communities" horizontal center layout class="item channels last" active
+                <core-item label="Channels" icon="chevron-left" horizontal center layout class="item channels last" active
                            on-tap="{{switchPage}}" data-page="channels" data-url="/" ></core-item>
 
               </template>
               <template if="{{app.community == null}}">
                 <core-item label="Channels" icon="social:communities" horizontal center layout class="item" active
                            on-tap="{{switchPage}}" data-page="channels" data-url="/" ></core-item>
-                <core-item label="People" icon="account-circle" horizontal center layout class="item"
+                <core-item label="People" icon="account-circle" horizontal center layout class="item last"
                            on-tap="{{switchPage}}" data-page="people" data-url="/people"></core-item>
                 <!--<core-item label="Saved" icon="star" horizontal center layout class="item"-->
                            <!--on-tap="{{switchPage}}" data-page="2" data-url="/saved" ></core-item>-->

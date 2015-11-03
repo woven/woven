@@ -201,8 +201,8 @@ core-menu core-item:hover {
 }
 
 #side-panel {
-  background-color: #FCFCFC;
-  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+  background-color: #eee;
+  /*box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);*/
 
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
