@@ -98,7 +98,8 @@ user-picture::shadow .user-photo {
 .date-time {
   color: #666;
   font-size: 13px;
-  margin-left: 15px;
+  margin-left: 12px;
+  line-height: 15px;
 }
 
 .theme-dark .date-time {
