@@ -131,6 +131,8 @@ class SessionManager {
 
   /**
    * Add the session id to the session_index.
+   *
+   * TODO: Allow for signed out sessions too, i.e. username optional?
    */
   Future addSessionToIndex(String session, String username) {
     var authToken = generateFirebaseToken({'uid': username});

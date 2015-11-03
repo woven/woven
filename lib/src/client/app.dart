@@ -308,7 +308,12 @@ class App extends Observable {
 
   loadUserForSession() async {
     var currentUser = await HttpRequest
-        .getString(serverPath + Routes.currentUser.reverse([]));
+        .getString(serverPath + Routes.currentUser.reverse([]))
+        .catchError((e) {
+      hasTriedLoadingUser = true;
+    });
+
+    if (currentUser == null) return;
 
     var response = Response.fromJson(JSON.decode(currentUser));
     if (response.success && response.data != null) {
@@ -321,8 +326,6 @@ class App extends Observable {
       signIn();
     } else {
       hasTriedLoadingUser = true;
-      var path = window.location.pathname;
-      showHomePage = path == '/' || path.contains('/confirm');
     }
   }
 
