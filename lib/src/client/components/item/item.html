@@ -44,7 +44,7 @@
 
           <div class="content-footer">
             <div class="item-col1" horizontal layout>
-              <core-icon-button icon="{{app.user != null && item['liked'] == true ? 'favorite' : 'favorite-outline'}}"
+              <core-icon-button icon="favorite"
                                 id="icon-fav" on-tap="{{toggleLike}}"
                                 class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
                                 data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>

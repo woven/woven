@@ -105,7 +105,7 @@ core-drawer-panel:not([narrow]) #menu-button {
   background: transparent;
 }
 
-core-tooltip::shadow  {
+core-tooltip::shadow .core-tooltip {
  font-size: 14px;
 }
 
