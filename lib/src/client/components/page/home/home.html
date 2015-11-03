@@ -124,19 +124,7 @@
           </div>
         </div>
       </section>
-
-      <div class="get-started">
-        <div horizontal layout center-center>
-          <div class="field-wrapper">
-            <input id="email" is="core-input" placeholder="Your email"
-                   autocomplete="off" autocorrect="off" autocapitalize="off">
-          </div>
-          <div id="submit" class="button" on-tap="{{getStarted}}">Join now</div>
-          <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{getStarted}}"></core-a11y-keys>
-        </div>
-        <p>Why wait? Give it a try.</p>
-      </div>
-
+      
     </template>
 
     <template if="{{app.homePageCta == 'sign-in'}}">
@@ -239,6 +227,11 @@
             <ul>
               <li>hello@woven.co</li>
               <li><a href="http://twitter.com/wovenco" target="_blank">@WovenCo</a></li>
+            </ul>
+          </div>
+          <div class="column last">
+            <ul>
+              <li><a href="http://github.com/woven/tracker" target="_blank">Issues &amp; Roadmap</a></li>
             </ul>
           </div>
         </div>

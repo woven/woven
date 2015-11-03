@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Bitter|Roboto|Varela+Round|Actor|Ek+Mukta|Mallanna);
+@import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
 body {
   background: #008899;
@@ -38,9 +38,9 @@ header img {
 }
 
 .header .button:hover {
-  border-color: #294e9b;
+  border-color: #ddd;
   transition: border-color .1s, color .1s;
-  color: #294e9b;
+  color: #ddd;
 }
 
 .header .button {
@@ -48,13 +48,13 @@ header img {
   height: 35px;
   width: 100px;
   border-radius: 2px;
-  border: solid 2px #00a2ff;
+  border: solid 1px white;
   text-align: center;
   line-height: 33px;
   cursor: pointer;
   transition: border-color .1s, color .1s;
   font-weight: 600;
-  color: #00a2ff;
+  color: white;
 }
 
 .heading {
@@ -63,15 +63,15 @@ header img {
 
 .heading h1 {
   font-family: 'Varela Round', sans-serif;
-  font-size: 55px;
+  font-size: 60px;
   line-height: 55px;
   margin: 50px 0 0 0;
   text-align: center;
   font-weight: normal;
-  background: linear-gradient(330deg, #FFCB00 0%, #FFDF00 25%, #FFAF00 50%, #F9BC00 75%, #FFE903 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: white;
+  letter-spacing: -1.5pt;
 }
+
 .heading h2 {
   max-width: 580px;
   font-size: 28px;
@@ -226,10 +226,11 @@ core-icon[icon="maps:store-mall-directory"] {
 
 .feature h3 {
   margin: 20px 10px 10px 25px;
-  font-family: 'Bitter', sans-serif;
+  font-family: 'Varela Round', sans-serif;
   font-size: 25px;
-  font-weight: 500;
-  color: #7AFF7E;
+  font-weight: 600;
+  color: white;
+  letter-spacing: -0.8pt;
 }
 
 .feature p {
@@ -246,7 +247,7 @@ footer {
 }
 
 footer .column {
-  width: 100px;
+  /*width: 100px;*/
   margin: 0 0 0 50px;
   padding: 10px;
   color: #bbb;

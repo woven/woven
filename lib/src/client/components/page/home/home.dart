@@ -517,13 +517,13 @@ class Home extends PolymerElement with Observable {
   attached() {
     if (app.debugMode) print('+Home');
 
-    ImageElement coverImage = new ImageElement(src: 'https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg');
+//    ImageElement coverImage = new ImageElement(src: 'https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg');
     document.body.classes.add('colored-bg');
     Timer.run(() => toggleCover());
     toggleMain();
-    coverImage.onLoad.listen((e) {
-      document.body.style.backgroundImage = 'url(https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg)';
-    });
+//    coverImage.onLoad.listen((e) {
+//      document.body.style.backgroundImage = 'url(https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg)';
+//    });
 
     if (app.user != null && app.user.onboardingState == 'signUpIncomplete') {
       username.disabled = true;
