@@ -85,7 +85,7 @@ class InlineItem extends PolymerElement with Observable {
           queuedItem['defaultImage'] = 'announcement';
           break;
         case 'news':
-          queuedItem['defaultImage'] = 'custom-icons:news';
+          queuedItem['defaultImage'] = 'custom-icons-fix:news';
           break;
         case 'message':
           queuedItem['defaultImage'] = 'communication:message';

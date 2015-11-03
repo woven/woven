@@ -40,7 +40,7 @@ packages:
   core_elements:
     description: core_elements
     source: hosted
-    version: "0.6.1+2"
+    version: "0.7.1+4"
   crypto:
     description: crypto
     source: hosted
@@ -49,10 +49,6 @@ packages:
     description: csslib
     source: hosted
     version: "0.12.1"
-  custom_element_apigen:
-    description: custom_element_apigen
-    source: hosted
-    version: "0.1.7+1"
   dart_style:
     description: dart_style
     source: hosted
@@ -140,7 +136,7 @@ packages:
   paper_elements:
     description: paper_elements
     source: hosted
-    version: "0.6.2+3"
+    version: "0.7.1+1"
   path:
     description: path
     source: hosted
