@@ -1,12 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Varela+Round);
-
-body {
-  background: #008899;
-  margin: auto;
-  -webkit-font-smoothing: antialiased;
-  color: white;
-}
-
 .simple-content h2 {
   font-size: 25px;
   font-weight: normal;

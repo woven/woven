@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_drawer_panel.dart';
+import 'package:core_elements/core_tooltip.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';

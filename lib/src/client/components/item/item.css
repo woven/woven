@@ -348,11 +348,9 @@ core-item core-icon {
 }
 
 .action-button {
-  background-color: #fff;
   fill: #666;
   color: #666;
   box-shadow: none;
-  border: 1px solid #ddd;
   display: inline-block;
   cursor: pointer;
   font-size: 13px;
@@ -372,9 +370,11 @@ core-item core-icon {
   height:20px;
 }
 
-.action-button:hover {
+.action-button:hover,
+.action-button:active {
   box-shadow: none;
   color: #2d2d2d;
+  background-color: transparent;
 }
 
 .theme-dark .action-button:hover,
@@ -385,7 +385,6 @@ core-item core-icon {
 }
 
 .action-button.selected, .action-button.selected:active, .action-button:active {
-  background-color: #fff;
 }
 
 .like-button {
@@ -398,7 +397,7 @@ core-item core-icon {
   color: #ff1706;
 }
 
-.theme-dark .like-button.selected:not([disabled]) {
+.like-button.selected:not([disabled]) {
   background-color: transparent;
 }
 

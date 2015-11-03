@@ -105,6 +105,10 @@ core-drawer-panel:not([narrow]) #menu-button {
   background: transparent;
 }
 
+core-tooltip::shadow  {
+ font-size: 14px;
+}
+
 .menu {
   color: #444;
   font-size: 18px;
