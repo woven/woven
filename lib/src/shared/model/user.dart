@@ -23,13 +23,15 @@ class UserModel {
   OnboardingState onboardingState;
 
   // Return the path to the small picture if we have it, otherwise the original picture.
-  String get fullPathToPicture => picture != null ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}" : null;
+  String get fullPathToPicture => picture != null
+      ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}"
+      : null;
 
   Map toJson() {
     return {
       "username": username,
       "password": password,
-      "firstName":firstName,
+      "firstName": firstName,
       "lastName": lastName,
       "email": email,
       "facebookId": facebookId,
@@ -71,9 +73,12 @@ class UserModel {
  */
 String enumToName(OnboardingState onboardingState) {
   if (onboardingState == OnboardingState.temporaryUser) return 'temporaryUser';
-  if (onboardingState == OnboardingState.signUpComplete) return 'signUpComplete';
-  if (onboardingState == OnboardingState.signUpIncomplete) return 'signUpIncomplete';
-  if (onboardingState == OnboardingState.onboardingComplete) return 'onboardingComplete';
+  if (onboardingState ==
+      OnboardingState.signUpComplete) return 'signUpComplete';
+  if (onboardingState ==
+      OnboardingState.signUpIncomplete) return 'signUpIncomplete';
+  if (onboardingState ==
+      OnboardingState.onboardingComplete) return 'onboardingComplete';
 }
 
 /**

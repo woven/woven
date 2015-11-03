@@ -34,6 +34,8 @@ class FeedViewModel extends BaseViewModel with Observable {
       childMovedSubscriber,
       childRemovedSubscriber;
 
+  List<StreamSubscription> userSubscriptions = [];
+
   FeedViewModel({this.app, this.typeFilter}) {
     if (typeFilter == 'event') {
       var now = new DateTime.now();
@@ -46,6 +48,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
     if (app.debugMode) print(
         'DEBUG: Called feedViewModel constructor // typeFilter: $typeFilter');
+
     loadItemsByPage();
   }
 
@@ -400,38 +403,37 @@ class FeedViewModel extends BaseViewModel with Observable {
     // Use the Firebase snapshot ID as our ID.
     item['id'] = snapshot.key;
 
-    // Sort the list by the item's updatedDate.
-//      items.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
-
-    // Listen for realtime changes to the star count.
-    f.child('/items/' + item['id'] + '/star_count').onValue.listen((e) {
-      item['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-    });
-
-    // Listen for realtime changes to the like count.
+    // Listen for changes to the like count.
     f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
       item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
     });
 
-    if (app.user != null) {
-      var starredItemsRef = f.child('/starred_by_user/' +
-          app.user.username.toLowerCase() +
-          '/items/' +
-          item['id']);
+
+    listenForLikedState() {
       var likedItemsRef = f.child('/liked_by_user/' +
-          app.user.username.toLowerCase() +
-          '/items/' +
-          item['id']);
-      starredItemsRef.onValue.listen((e) {
-        item['starred'] = e.snapshot.val() != null;
-      });
-      likedItemsRef.onValue.listen((e) {
+      app.user.username.toLowerCase() +
+      '/items/' +
+      item['id']);
+
+      userSubscriptions.add(likedItemsRef.onValue.listen((e) {
         item['liked'] = e.snapshot.val() != null;
-      });
-    } else {
-      item['starred'] = false;
-      item['liked'] = false;
+      }));
     }
+
+    if (app.user != null) {
+      listenForLikedState();
+    }
+
+    // If and when we have a user, see if they liked the item.
+    app.onUserChanged.listen((UserModel user) {
+      if (user == null) {
+        item['liked'] = false;
+        userSubscriptions.forEach((s) => s.cancel());
+        userSubscriptions.clear();
+      } else {
+        listenForLikedState();
+      }
+    });
 
     return item;
   }
@@ -558,35 +560,32 @@ class FeedViewModel extends BaseViewModel with Observable {
     }
   }
 
-  void loadUserStarredItemInformation() {
-    items.forEach((item) {
-      if (app.user != null) {
-        var starredItemsRef = f.child('/starred_by_user/' +
-            app.user.username.toLowerCase() +
-            '/items/' +
-            item['id']);
-        starredItemsRef.onValue.listen((e) {
-          item['starred'] = e.snapshot.val() != null;
-        });
-      } else {
-        item['starred'] = false;
-      }
-    });
-  }
+//  void loadUserStarredItemInformation() {
+//    items.forEach((item) {
+//      if (app.user != null) {
+//        var starredItemsRef = f.child('/starred_by_user/' +
+//            app.user.username.toLowerCase() +
+//            '/items/' +
+//            item['id']);
+//        starredItemsRef.onValue.listen((e) {
+//          item['starred'] = e.snapshot.val() != null;
+//        });
+//      } else {
+//        item['starred'] = false;
+//      }
+//    });
+//  }
 
   void loadUserLikedItemInformation() {
+    if (app.user == null) return;
     items.forEach((item) {
-      if (app.user != null) {
-        var starredItemsRef = f.child('/liked_by_user/' +
-            app.user.username.toLowerCase() +
-            '/items/' +
-            item['id']);
-        starredItemsRef.onValue.listen((e) {
-          item['liked'] = e.snapshot.val() != null;
-        });
-      } else {
-        item['liked'] = false;
-      }
+      var starredItemsRef = f.child('/liked_by_user/' +
+          app.user.username.toLowerCase() +
+          '/items/' +
+          item['id']);
+      starredItemsRef.onValue.listen((e) {
+        item['liked'] = e.snapshot.val() != null;
+      });
     });
   }
 

@@ -1,18 +1,21 @@
 library main_view_model;
 
 import 'dart:html';
+import 'dart:async';
+
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
+
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/model/user.dart';
+import 'package:woven/src/shared/model/community.dart';
 import 'feed.dart';
 import 'chat.dart';
 import 'people.dart';
 import 'item.dart';
 import 'list.dart';
 import 'base.dart';
-
-import 'package:woven/src/shared/model/community.dart';
 
 class MainViewModel extends BaseViewModel with Observable {
   final App app;
@@ -27,6 +30,8 @@ class MainViewModel extends BaseViewModel with Observable {
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
+
+  List<StreamSubscription> userSubscriptions = [];
 
   Firebase get f => app.f;
 
@@ -206,14 +211,26 @@ class MainViewModel extends BaseViewModel with Observable {
       // Sort the list by the item's updatedDate.
       communities.sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
 
-      if (app.user != null) {
+      listenForStarredState() {
         var starredCommunitiesRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/communities/' + community['id']);
-        starredCommunitiesRef.onValue.listen((e) {
+        userSubscriptions.add(starredCommunitiesRef.onValue.listen((e) {
           community['starred'] = e.snapshot.val() != null;
-        });
-      } else {
-        community['starred'] = false;
+        }));
       }
+
+      if (app.user != null) {
+        listenForStarredState();
+      }
+
+      app.onUserChanged.listen((UserModel user) {
+        if (user == null) {
+          community['starred'] = false;
+          userSubscriptions.forEach((s) => s.cancel());
+          userSubscriptions.clear();
+        } else {
+          listenForStarredState();
+        }
+      });
     });
 
     // When a community changes, let's update it.
@@ -277,41 +294,5 @@ class MainViewModel extends BaseViewModel with Observable {
       // Update the list of users who starred.
       f.child('/users_who_starred/community/' + community['id'] + '/' + app.user.username.toLowerCase()).set(true);
     }
-  }
-
-  /**
-   * Whenever user signs in/out, we should call this to trigger any necessary updates.
-   */
-  void invalidateUserState() {
-    loadUserStarredCommunityInformation();
-//    if (itemViewModel != null) {
-//      itemViewModel.loadItemUserStarredLikedInformation();
-//    }
-
-    // TODO: This is causing feedViewModel to load even if we loaded an eventViewModel.
-    // TODO: It's also causing it to call the model twice.
-    if (app.community != null && feedViewModel != null) {
-//      feedViewModel.loadUserStarredItemInformation();
-
-      feedViewModel.loadUserLikedItemInformation();
-    }
-
-    if (app.user != null) {
-//      starredViewModel.loadStarredItemsForUser();
-    }
-    // Add more cases later as we need.
-  }
-
-  void loadUserStarredCommunityInformation() {
-    communities.forEach((community) {
-      if (app.user != null) {
-        var starredCommunityRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/communities/' + community['id']);
-        starredCommunityRef.onValue.listen((e) {
-          community['starred'] = e.snapshot.val() != null;
-        });
-      } else {
-        community['starred'] = false;
-      }
-    });
   }
 }

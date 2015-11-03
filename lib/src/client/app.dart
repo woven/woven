@@ -3,18 +3,20 @@ library application;
 import 'dart:html';
 import 'dart:async';
 import 'dart:web_audio';
+import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'package:firebase/firebase.dart';
+import 'package:core_elements/core_header_panel.dart';
 
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/routing/router.dart';
 import 'package:woven/src/shared/routing/routes.dart';
+import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/main.dart';
-import 'package:core_elements/core_header_panel.dart';
 import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
 import 'cache.dart';
 import 'util.dart';
@@ -41,6 +43,9 @@ class App extends Observable {
   Firebase f;
   String cloudStoragePath;
   AudioContext audioContext = new AudioContext();
+
+  Stream onUserChanged;
+  StreamController _controllerUserChanged;
 
   App() {
     f = new Firebase(config['datastore']['firebaseLocation']);
@@ -87,6 +92,11 @@ class App extends Observable {
 
     router.onNotFound.listen(notFound);
     router.onDispatch.listen(globalHandler);
+
+    _controllerUserChanged = new StreamController();
+    onUserChanged = _controllerUserChanged.stream.asBroadcastStream();
+
+    loadUserForSession();
   }
 
   void home(String path) {
@@ -262,15 +272,102 @@ class App extends Observable {
     signInDialog.toggleOverlay();
   }
 
+  // Greet the user upon sign in.
+  greetUser() {
+    var greeting;
+    DateTime now = new DateTime.now();
+
+    if (now.hour < 12) {
+      greeting = "Good morning";
+    } else {
+      if (now.hour >= 12 && now.hour <= 17) {
+        greeting = "Good afternoon";
+      } else if (now.hour > 17 && now.hour <= 24) {
+        greeting = "Good evening";
+      } else {
+        greeting = "Hello";
+      }
+    }
+
+    showMessage("$greeting, ${user.firstName}.");
+  }
+
   signOut() async {
     await HttpRequest.request(serverPath + Routes.signOut.toString(),
         method: 'GET');
     document.body.classes.add('no-transition');
+
     user = null;
+
+    // Broadcast the user change to any listeners.
+    _controllerUserChanged.add(user);
+
+    new Timer(new Duration(seconds: 1),
+        () => document.body.classes.remove('no-transition'));
+  }
+
+  loadUserForSession() async {
+    var currentUser = await HttpRequest
+        .getString(serverPath + Routes.currentUser.reverse([]));
+
+    var response = Response.fromJson(JSON.decode(currentUser));
+    if (response.success && response.data != null) {
+      authToken = response.data['auth_token'];
+      f.authWithCustomToken(authToken).catchError(print);
+
+      // Set up the user object.
+      user = UserModel.fromJson(response.data);
+
+      signIn();
+    } else {
+      hasTriedLoadingUser = true;
+      var path = window.location.pathname;
+      showHomePage = path == '/' || path.contains('/confirm');
+    }
+  }
+
+  signIn() async {
+    if (user == null) logError('Tried to sign in with null user.');
+    if (user.settings == null) user.settings = {};
+
+    document.body.classes.add('no-transition');
+    user.settings = toObservable(user.settings);
     new Timer(new Duration(seconds: 1),
         () => document.body.classes.remove('no-transition'));
 
-    mainViewModel.invalidateUserState();
+    cache.users[user.username.toLowerCase()] = user;
+
+    try {
+      // TODO: https://gist.github.com/kaisellgren/75f1aa96abb9c8cc56ae
+      // TODO: Keep refactoring this!
+      if (!user.disabled && user.onboardingState != 'temporaryUser') {
+        if (user.onboardingState == 'signUpIncomplete') {
+          // Show homepage regardless of path condition above.
+          showHomePage = true;
+          homePageCta = 'complete-sign-up';
+        } else {
+          showHomePage = false;
+          skippedHomePage = true;
+
+          // Broadcast the user change to any listeners.
+          _controllerUserChanged.add(user);
+
+          // On sign in, greet the user.
+          if (user.isNew != true) Timer.run(() => greetUser());
+        }
+      } else {
+        if (user.onboardingState == 'temporaryUser') {
+          homePageCta = 'complete-sign-up';
+        } else {
+          homePageCta = 'disabled-note';
+          user = null;
+        }
+      }
+      hasTriedLoadingUser = true;
+    } catch (error, stack) {
+      hasTriedLoadingUser = true;
+      logError(error, stack);
+    }
   }
 
   void signInWithFacebook() {

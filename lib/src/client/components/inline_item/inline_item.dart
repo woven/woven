@@ -18,13 +18,14 @@ class InlineItem extends PolymerElement with Observable {
   @published String itemId;
   @published App app;
 //  @published FeedViewModel viewModel;
-  @observable Map item;
+  @observable Map item = {};
 
   db.Firebase get f => app.f;
 
   get itemRef => f.child('/items/' + itemId);
 
   List<StreamSubscription> subscriptions = [];
+  List<StreamSubscription> userSubscriptions = [];
 
   InlineItem.created() : super.created();
 
@@ -56,7 +57,7 @@ class InlineItem extends PolymerElement with Observable {
    * Get the item.
    */
   getItem() {
-    StreamSubscription subscription = itemRef.onValue.listen((e) {
+    StreamSubscription onValue = itemRef.onValue.listen((e) {
       var queuedItem = toObservable(e.snapshot.val());
 
       // Make sure we're using the collapsed username.
@@ -87,6 +88,7 @@ class InlineItem extends PolymerElement with Observable {
           queuedItem['defaultImage'] = 'custom-icons:news';
           break;
         case 'message':
+          queuedItem['defaultImage'] = 'communication:message';
           if (queuedItem['subject'] == null) queuedItem['subject'] = InputFormatter.createTeaser(queuedItem['message'], 75);
           if (queuedItem['body'] == null) queuedItem['body'] = queuedItem['message'];
 //          queuedItem['subject'] ??= queuedItem['message']; // TODO Why don't null-aware operators work?
@@ -94,11 +96,12 @@ class InlineItem extends PolymerElement with Observable {
         case 'other':
           break;
         default:
+          queuedItem['defaultImage'] = '';
       }
 
       // Handle any URI previews the item may have.
       if (queuedItem['uriPreviewId'] != null) {
-        f.child('/uri_previews/${queuedItem['uriPreviewId']}').onValue.listen((e) {
+        var onValue = f.child('/uri_previews/${queuedItem['uriPreviewId']}').onValue.listen((e) {
           var previewData = e.snapshot.val();
           UriPreview preview = UriPreview.fromJson(previewData);
           queuedItem['uriPreview'] = preview.toJson();
@@ -109,6 +112,7 @@ class InlineItem extends PolymerElement with Observable {
           if (queuedItem['subject'] == null) queuedItem['subject'] = toObservable(preview.title);
           if (queuedItem['body'] == null) queuedItem['body'] = toObservable(preview.teaser);;
         });
+        subscriptions.add(onValue);
       } else {
         queuedItem['uriPreviewTried'] = true;
       }
@@ -126,91 +130,55 @@ class InlineItem extends PolymerElement with Observable {
 
       queuedItem['formattedBody'] = InputFormatter.createTeaser(queuedItem['body'], 75);
 
-      // Listen for realtime changes to the star count.
-      f.child('/items/' + queuedItem['id'] + '/star_count').onValue.listen((e) {
-        queuedItem['star_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-      });
+      queuedItem['comment_count'] = (queuedItem['comment_count'] != null) ? queuedItem['comment_count'] : 0;
 
-      // Listen for realtime changes to the like count.
-      f.child('/items/' + queuedItem['id'] + '/like_count').onValue.listen((e) {
-        queuedItem['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-      });
+      queuedItem['like_count'] = (queuedItem['like_count'] != null) ? queuedItem['like_count'] : 0;
 
-      // Listen for realtime changes to the comment count.
-      f.child('/items/' + queuedItem['id'] + '/comment_count').onValue.listen((e) {
-        queuedItem['comment_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
-      });
+      queuedItem['liked'] = false;
+
+
+      listenForLikedState() {
+        var likedItemsRef = f.child('/liked_by_user/' +
+        app.user.username.toLowerCase() +
+        '/items/' +
+        queuedItem['id']);
+
+        var likeStream = likedItemsRef.onValue.listen((e) {
+          queuedItem['liked'] = e.snapshot.val() != null;
+        });
+        userSubscriptions.add(likeStream);
+      }
+
+      if (app.user != null) {
+        listenForLikedState();
+      }
 
       item = queuedItem;
 
-      loadItemUserStarredLikedInformation();
-    });
+      // If and when we have a user, see if they liked the item.
+      var onUserChanged = app.onUserChanged.listen((UserModel user) {
+        userSubscriptions.forEach((s) => s.cancel());
+        userSubscriptions.clear();
 
-    subscriptions.add(subscription);
+        if (user == null) {
+          item['liked'] = false;
+        } else {
+          var likedItemsRef = f.child('/liked_by_user/' +
+          app.user.username.toLowerCase() +
+          '/items/' +
+          item['id']);
 
-//    listenForChanges();
-  }
-
-  /* Deprecated at the moment. */
-  listenForChanges()  {
-    // Listen for changed items.
-
-    var onChildChanged = itemRef.onChildChanged.listen((e) {
-      Map currentData = item;
-      Map newData = e.snapshot.val();
-
-      // Make sure we're using the collapsed username.
-      newData['user'] = (newData['user'] as String).toLowerCase();
-
-      Future processData = new Future.sync(() {
-        // First pre-process some things.
-        if (newData['createdDate'] != null) newData['createdDate'] = DateTime.parse(newData['createdDate']);
-        if (newData['updatedDate'] != null) newData['updatedDate'] = DateTime.parse(newData['updatedDate']);
-        if (newData['startDateTime'] != null) newData['startDateTime'] = DateTime.parse(newData['startDateTime']);
-        if (newData['star_count'] == null) newData['star_count'] = 0;
-        if (newData['like_count'] == null) newData['like_count'] = 0;
-
-        if (newData['uriPreviewId'] != null) {
-          // Get the associated URI preview.
-          return f.child('/uri_previews/${newData['uriPreviewId']}').once('value').then((e) {
-            var previewData = e.val();
-            UriPreview preview = UriPreview.fromJson(previewData);
-            newData['uriPreview'] = preview.toJson();
-            newData['uriPreview']['imageSmallLocation'] = (newData['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${newData['uriPreview']['imageSmallLocation']}' : null;
-            newData['uriPreviewTried'] = true;
-
-            // If item's subject/body are empty, use any title/teaser from URI preview instead.
-            if (newData['subject'] == null) newData['subject'] = preview.title;
-            if (newData['body'] == null) newData['body'] = preview.teaser;
-          });
+          userSubscriptions.add(likedItemsRef.onValue.listen((e) {
+            item['liked'] = e.snapshot.val() != null;
+          }));
         }
-      }).then((_) {
-        // Now that new data is pre-processed, update current data.
-        newData.forEach((k, v) => currentData[k] = v);
-        item = currentData;
       });
+      subscriptions.add(onUserChanged);
     });
-    subscriptions.add(onChildChanged);
+    subscriptions.add(onValue);
   }
 
-  void loadItemUserStarredLikedInformation() {
-    if (itemId == null) return;
-
-    if (app.user != null && !item.isEmpty) {
-      var starredItemsRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
-      var likedItemsRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
-      starredItemsRef.onValue.listen((e) {
-        item['starred'] = e.snapshot.val() != null;
-      });
-      likedItemsRef.onValue.listen((e) {
-        item['liked'] = e.snapshot.val() != null;
-      });
-    } else {
-      item['starred'] = false;
-      item['liked'] = false;
-    }
-  }
-
+  // Unused. No stars at the moment.
   void toggleStar() {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
@@ -259,13 +227,13 @@ class InlineItem extends PolymerElement with Observable {
   void toggleLike() {
     if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
 
-    var starredItemRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
+    var likedItemRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['liked']) {
-      // If it's starred, time to unstar it.
+      // If it's liked, time to unlike it.
       item['liked'] = false;
-      starredItemRef.remove();
+      likedItemRef.remove();
 
       // Update the star count.
       itemRef.child('/like_count').transaction((currentCount) {
@@ -281,9 +249,10 @@ class InlineItem extends PolymerElement with Observable {
       // Update the list of users who liked.
       f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
     } else {
-      // If it's not starred, time to star it.
+      // If it's not liked, time to like it.
       item['liked'] = true;
-      starredItemRef.set(true);
+
+      likedItemRef.set(true);
 
       // Update the star count.
       itemRef.child('/like_count').transaction((currentCount) {
@@ -315,5 +284,8 @@ class InlineItem extends PolymerElement with Observable {
 
   attached() => getItem();
 
-  detached() => subscriptions.forEach((subscription) => subscription.cancel());
+  detached() {
+    subscriptions.forEach((subscription) => subscription.cancel());
+    userSubscriptions.forEach((subscription) => subscription.cancel());
+  }
 }

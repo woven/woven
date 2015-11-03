@@ -459,26 +459,7 @@ class Home extends PolymerElement with Observable {
 
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);
-        if (app.user.settings == null) app.user.settings = {};
-
-        document.body.classes.add('no-transition');
-        app.user.settings = toObservable(app.user.settings);
-        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
-
-        app.cache.users[app.user.username.toLowerCase()] = app.user;
-
-        // Mark as new so the welcome pops up.
-        app.user.isNew = true;
-
-        // Trigger changes to app state in response to user sign in/out.
-        //TODO: Aha! This triggers a feedViewModel load.
-        app.mainViewModel.invalidateUserState();
-
-        // Hide the homepage and show the app.
-        app.showHomePage = false;
-        app.skippedHomePage = true;
-
-        Timer.run(() => greetUser());
+        app.signIn();
       } else {
         toggleProcessingIndicator();
         window.alert(response.message);
