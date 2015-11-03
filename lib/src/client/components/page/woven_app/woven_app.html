@@ -61,7 +61,7 @@
                            on-tap="{{switchPage}}" data-page="lobby" data-url="/{{app.community.alias}}"></core-item>
                 <core-item hidden label="Feed" icon="view-stream" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="feed" data-url="/{{app.community.alias}}/feed"></core-item>
-                <core-item label="News" icon="custom-icons:news" horizontal center layout class="item"
+                <core-item label="News" icon="custom-icons-fix:news" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="news" data-url="/{{app.community.alias}}/news"></core-item>
                 <core-item label="Events" icon="event" horizontal center layout class="item"
                            on-tap="{{switchPage}}" data-page="events" data-url="/{{app.community.alias}}/events"></core-item>
@@ -74,7 +74,7 @@
 
               </template>
               <template if="{{app.community == null}}">
-                <core-item label="Channels" icon="social:communities" horizontal center layout class="item" active
+                <core-item label="Channels" icon="custom-icons:communities" horizontal center layout class="item" active
                            on-tap="{{switchPage}}" data-page="channels" data-url="/" ></core-item>
                 <core-item label="People" icon="account-circle" horizontal center layout class="item last"
                            on-tap="{{switchPage}}" data-page="people" data-url="/people"></core-item>
