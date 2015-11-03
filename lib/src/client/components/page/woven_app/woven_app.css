@@ -99,7 +99,10 @@ core-drawer-panel:not([narrow]) #menu-button {
 .btn.primary:hover {
   fill: #bbb !important;
   color: #bbb;
-  border: solid 1px #bbb;
+}
+
+.btn.primary:active {
+  background: transparent;
 }
 
 .menu {
@@ -272,8 +275,7 @@ core-menu core-item:hover {
 }
 
 .theme-dark #user-area {
-  background-color: transparent;
-  border-top: solid 1px #323232;
+  background-color: #1C1C1C;
   color: white;
 }
 

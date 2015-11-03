@@ -101,13 +101,11 @@ core-tooltip::shadow .core-tooltip {
   background: #F0F0F0;
   /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
   padding: 8px;
-  border-top: solid 1px #ddd;
   /*height: 40px;*/
 }
 
 #post-container.theme-dark  {
-  background: transparent;
-  border-top: solid 1px #383838;
+  background: #171717;
 }
 
 .user-area {
