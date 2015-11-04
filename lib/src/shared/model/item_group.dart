@@ -1,6 +1,8 @@
 library shared.model.item_group;
 
 import 'package:observe/observe.dart';
+
+import 'package:woven/src/shared/input_formatter.dart';
 import 'item.dart';
 import 'target_group_enum.dart';
 
@@ -66,7 +68,6 @@ class ItemGroup extends Observable {
     var i = indexOf(item);
     if (item.user != user || item.type == 'notification' || this.isNotification || this.isItem) return true;
 
-    print('debug: $i');
     if (i > 0) {
       Item previousItem = items[i - 1];
       DateTime previousDate = previousItem.createdDate;
@@ -116,6 +117,8 @@ class ItemGroup extends Observable {
   bool get isItem => items.first.type == 'item';
 
   String get usernameForDisplay => items.first.usernameForDisplay;
+
+  String get fullCreatedDate => InputFormatter.formatDate(items.last.createdDate.toLocal());
 
   // TODO: This duplicates getLatestDate() due to observe issues. Fix later.
   DateTime get lastCreatedDate => items.last.createdDate;
