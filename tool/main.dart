@@ -56,7 +56,7 @@ doMigration() async {
 //  changeAllUsersToLowercase();
 //  updateAllUsersAddPriority();
 //  migrateAllUsersOnboardingState();
-  updateAllItemsMoveOtherToMessages();
+//  updateAllItemsMoveOtherToMessages();
 //
 //  try {
 //    await createPreviewForItemsWithUrls();
@@ -84,12 +84,25 @@ dumpDataToFile() {
 }
 
 updateAllUsersAddPriority() {
+  int count = 0;
   Firebase.get('/users.json').then((Map users) {
     users.forEach((k, v) {
+      count++;
       String username = k;
-      v['_priority'] = (v['createdDate'] != null) ? -DateTime.parse(v['createdDate']).millisecondsSinceEpoch : null;
-      Firebase.patch('/users/${username.toLowerCase()}.json', v);
-      print(username);
+
+      var newTry = (v['disabled'] != null && v['disabled'] == true) ? 'disabled' : -DateTime.parse(v['createdDate']).millisecondsSinceEpoch;
+
+      String disabledPart = (v['disabled'] != null && v['disabled'] == true) ? 'true' : 'false';
+      String createdPart = (v['createdDate'] != null) ? DateTime.parse(v['createdDate']).toString() : null;
+
+      String newCompositePriority = '$disabledPart:$createdPart';
+
+      new Timer(new Duration(milliseconds: count * 100), () {
+        Firebase.patch('/users/${username.toLowerCase()}.json', {'_priority': newTry}, auth: firebaseSecret);
+        print('Patching $username...\t\t$newCompositePriority');
+      });
+
+      print(username + '//' + newCompositePriority);
     });
   });
 }

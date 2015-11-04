@@ -12,7 +12,7 @@ import 'package:woven/src/client/app.dart';
 class PeopleViewModel extends BaseViewModel with Observable {
   final App app;
   final List items = toObservable([]);
-  int pageSize = 40;
+  int pageSize = 20;
   int pages = 0;
   @observable bool isLoading = false;
   @observable bool reachedEnd = false;
@@ -34,12 +34,12 @@ class PeopleViewModel extends BaseViewModel with Observable {
     var queryRef = f.child('/users')
       .orderByChild('_priority')
       .startAt(value: lastPriority)
+      .endAt(value: 0)
       .limitToFirst(pageSize + 1);
 
     // If we count any less than one more beyond the current page, we've reached the end.
-    int count = 0;
-    DataSnapshot results = await queryRef.once('value');
-    results.forEach((i) => count++ );
+    var results = await queryRef.once('value');
+    int count = results.numChildren;
     if (count <= pageSize) reachedEnd = true;
     isLoading = false;
 
