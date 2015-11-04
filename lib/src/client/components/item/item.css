@@ -39,6 +39,30 @@ core-item core-icon {
   fill: #f99b15;
 }
 
+core-tooltip::shadow .core-tooltip {
+  font-size: 14px;
+  opacity: 0;
+  -webkit-transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 0s;
+  transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 0s;
+  -webkit-transform: translate3d(0, -10px, 0);
+  transform: translate3d(0, -10px, 0);
+}
+
+core-tooltip:hover::shadow .core-tooltip,
+core-tooltip:focus::shadow .core-tooltip,
+core-tooltip[show]::shadow .core-tooltip {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 300ms;
+  transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 300ms;
+}
+
+.theme-dark core-tooltip::shadow .core-tooltip {
+  background: whitesmoke;
+  color: #2d2d2d;
+}
+
 .item {
   max-width: 640px;
   margin: 0;
@@ -295,6 +319,11 @@ core-item core-icon {
 .event-date {
   color: #008000;
   display: inline;
+}
+
+.item-date {
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .content-header {

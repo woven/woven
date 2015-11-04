@@ -378,6 +378,9 @@ class FeedViewModel extends BaseViewModel with Observable {
 
     item['formattedBody'] = InputFormatter.createTeaser(item['body'], 75);
 
+    var createdDate = item['createdDate'];
+    item['formattedCreatedDate'] = InputFormatter.formatDate(createdDate.toLocal(), direction: 'past');
+
     // Prepare the domain name.
     if (item['url'] != null && isValidUrl(item['url'])) {
       String uriHost = Uri.parse(item['url']).host;

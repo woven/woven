@@ -30,7 +30,14 @@
             </div>
             <div class="content-main" vertical layout flex>
               <div class="item-subject first">{{item['subject']}}</div>
-              <div class="item-body"><template if="{{item['type'] != null && item['type'] == 'event'}}"><div class="event-date"><live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time></div></template>{{item['formattedBody']}}</div>
+              <div class="item-body">
+                <template if="{{item['type'] != null && item['type'] == 'event'}}">
+                  <div class="event-date">
+                    <live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time>
+                  </div>
+                </template>
+                {{item['formattedBody']}}
+              </div>
               <template if="{{item['url'] != null}}">
                 <div class="item-url">
                   <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}"

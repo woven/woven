@@ -27,10 +27,12 @@
             <div id="content">
               <template if="{{!group.isNotification && !group.isItem}}">
                 <div class="card-top" horizontal layout>
-                    <div class="user group-header">{{group.usernameForDisplay}}</div>
-                    <div class="date-time">
+                  <div class="user group-header">{{group.usernameForDisplay}}</div>
+                  <div class="date-time">
+                    <core-tooltip label="{{group.fullCreatedDate}}" position="right">
                       <live-date-time value="{{group.lastCreatedDate}}" formatter="{{formatItemDate}}"></live-date-time>
-                    </div>
+                    </core-tooltip>
+                  </div>
                 </div>
               </template>
               <template if="{{group.items != null}}" repeat="{{message in group.items}}">
@@ -67,7 +69,9 @@
                       </template>
                     </div>
                     <div class="date-time">
-                      <live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                      <core-tooltip label="{{group.fullCreatedDate}}" position="right">
+                        <live-date-time value="{{message.createdDate}}" formatter="{{formatItemDate}}"></live-date-time>
+                      </core-tooltip>
                     </div>
                   </div>
                   <div flex class="message {{message.type}}">

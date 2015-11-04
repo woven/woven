@@ -1,11 +1,14 @@
-import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:polymer/polymer.dart';
+import 'package:crypto/crypto.dart';
+import 'package:core_elements/core_tooltip.dart';
+
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/view_model/feed.dart';
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 
 /**
  * A list of items.
@@ -21,12 +24,6 @@ class Item extends PolymerElement with Observable {
   Item.created() : super.created();
 
   InputElement get subject => $['subject'];
-
-  @ComputedProperty("item['body']")
-  String get formattedBody => InputFormatter.createTeaser(item['body'], 75);
-
-  @ComputedProperty("item['subject']")
-  String get formattedSubject => InputFormatter.createTeaser(item['subject'], 75);
 
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
@@ -69,9 +66,8 @@ class Item extends PolymerElement with Observable {
     return InputFormatter.formatWordArticle(content);
   }
 
-
   formatItemDate(DateTime value) {
-    return InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+    return InputFormatter.formatMomentDate(value, momentsAgo: true);
   }
 
   formatEventDate(DateTime startDate) {
