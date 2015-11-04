@@ -1,19 +1,6 @@
-<link rel="import" href="../../../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_image.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
-<link rel="import" href="../../../../../../packages/core_elements/communication_icons.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
-<link rel="import" href="../widgets/live_date_time/live_date_time.html">
-<!--<link rel="import" href="../widgets/custom_icons/custom_icons.html">-->
-<link rel="import" href="../widgets/uri_preview/uri_preview.html">
-<link rel="import" href="../user_picture/user_picture.html">
-
 <polymer-element name="inline-item">
   <template>
     <link rel="stylesheet" href="inline_item.css">
-    <!--<custom-icons></custom-icons>-->
     <div class="item-wrapper {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" data-id="{{item['id']}}">
         <div class="item-container" vertical layout>
@@ -21,15 +8,29 @@
             <div class="item-photo-area">
               <div class="item-photo-wrapper">
                 <template if="{{item['uriPreview']['imageSmallLocation'] != null}}">
-                  <core-image class="item-photo" sizing="cover" preload src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
+                  <core-image class="item-photo" sizing="cover" preload
+                              src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
                 </template>
-                <template if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
+                <template
+                    if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
                   <core-icon class="item-photo-icon-none" icon="{{item['defaultImage']}}"></core-icon>
                 </template>
               </div>
             </div>
             <div class="content-main" vertical layout flex>
-              <div class="item-subject first">{{item['subject']}}</div>
+              <div class="item-subject first">
+                <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}"
+                   on-tap="{{stopProp}}">
+                  {{item['subject']}}
+                </a>
+              </div>
+              <template if="{{item['type'] != null && item['type'] != 'event'}}">
+                <div class="item-date">
+                  <core-tooltip label="{{item['formattedCreatedDate']}}">
+                    <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                  </core-tooltip>
+                </div>
+              </template>
               <div class="item-body">
                 <template if="{{item['type'] != null && item['type'] == 'event'}}">
                   <div class="event-date">
@@ -48,7 +49,6 @@
               </template>
             </div>
           </div>
-
           <div class="content-footer">
             <div class="item-col1" horizontal layout>
               <core-icon-button icon="favorite"
@@ -56,16 +56,6 @@
                                 class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
                                 data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
               </core-icon-button>
-              <!--<core-icon-button icon="communication:comment"-->
-                                <!--id="icon-fav"-->
-                                <!--class="action-button"-->
-                                <!--data-id="{{item['id']}}">-->
-              <!--<span class="item-count">-->
-                <!--<template if="{{item['comment_count'] == null || item['comment_count'] == 0}}"><strong>Comment</strong></template>-->
-                <!--<template if="{{item['comment_count'] != null && item['comment_count'] == 1}}"><strong>{{item['comment_count']}} comment</strong></template>-->
-                <!--<template if="{{item['comment_count'] != null && item['comment_count'] > 1}}"><strong>{{item['comment_count']}} comments</strong></template>-->
-              <!--</span>-->
-              <!--</core-icon-button>-->
             </div>
           </div>
         </div>

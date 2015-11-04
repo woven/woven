@@ -130,6 +130,10 @@ core-tooltip[show]::shadow .core-tooltip {
   color: #666;
 }
 
+inline-item::shadow .item-wrapper {
+  margin-bottom: 20px;
+}
+
 #activity-wrapper {
   margin: 20px;
 }

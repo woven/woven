@@ -101,7 +101,6 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item:hover {
-  cursor: pointer;
   overflow: hidden;
   /*border: 1px solid #C5C5C5;*/
   /*background-color: #FAFAFA;*/
@@ -192,6 +191,16 @@ core-tooltip[show]::shadow .core-tooltip {
   font-size: 16px;
   padding: 0;
   margin-bottom: 10px;
+}
+
+.item-subject a {
+  text-decoration: none;
+  color: #2d2d2d;
+}
+
+.item-subject a:hover {
+  text-decoration: underline;
+  color: #000;
 }
 
 .theme-dark .item-subject, .theme-dark .item-body {
@@ -313,7 +322,6 @@ core-tooltip[show]::shadow .core-tooltip {
 
 .item-wrapper {
   margin-top: 10px;
-  margin-bottom: 20px;
 }
 
 .event-date {

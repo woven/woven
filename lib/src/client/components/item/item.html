@@ -8,15 +8,22 @@
             <div class="item-photo-area">
               <div class="item-photo-wrapper">
                 <template if="{{item['uriPreview']['imageSmallLocation'] != null}}">
-                  <core-image class="item-photo" sizing="cover" preload src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
+                  <core-image class="item-photo" sizing="cover" preload
+                              src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
                 </template>
-                <template if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
+                <template
+                    if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
                   <core-icon class="item-photo-icon-none" icon="{{item['defaultImage']}}"></core-icon>
                 </template>
               </div>
             </div>
             <div class="content-main" vertical layout flex>
-              <div class="item-subject first">{{item['subject']}}</div>
+              <div class="item-subject first">
+                <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}"
+                   on-tap="{{stopProp}}">
+                  {{item['subject']}}
+                </a>
+              </div>
               <template if="{{item['type'] != null && item['type'] != 'event'}}">
                 <div class="item-date">
                   <core-tooltip label="{{item['formattedCreatedDate']}}">
@@ -30,7 +37,8 @@
                     <live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time>
                   </div>
                 </template>
-                {{item['formattedBody']}}</div>
+                {{item['formattedBody']}}
+              </div>
               <template if="{{item['url'] != null}}">
                 <div class="item-url">
                   <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}"
@@ -41,7 +49,6 @@
               </template>
             </div>
           </div>
-
           <div class="content-footer">
             <div class="item-col1" horizontal layout>
               <core-icon-button icon="favorite"

@@ -130,6 +130,9 @@ class InlineItem extends PolymerElement with Observable {
 
       queuedItem['formattedBody'] = InputFormatter.createTeaser(queuedItem['body'], 75);
 
+      var createdDate = queuedItem['createdDate'];
+      queuedItem['formattedCreatedDate'] = InputFormatter.formatDate(createdDate.toLocal(), direction: 'past');
+
       queuedItem['comment_count'] = (queuedItem['comment_count'] != null) ? queuedItem['comment_count'] : 0;
 
       queuedItem['like_count'] = (queuedItem['like_count'] != null) ? queuedItem['like_count'] : 0;
