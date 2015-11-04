@@ -92,7 +92,7 @@ class FeedViewModel extends BaseViewModel with Observable {
         Map item = itemSnapshot.val();
 
         // Use the Firebase snapshot ID as our ID.
-        item['id'] = snapshot.key;
+        item['id'] = itemSnapshot.key;
 
         // Track the snapshot's priority so we can paginate from the last one.
         if (typeFilter == 'event') {
@@ -114,8 +114,8 @@ class FeedViewModel extends BaseViewModel with Observable {
           secondToLastPriority = itemSnapshot.getPriority();
         }
 
-        // Insert each new item into the list.
-        items.add(toObservable(processItem(item)));
+        // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
+        items.add(toObservable(processItem(itemSnapshot)));
       });
 
       updateGroupedView();
@@ -204,6 +204,9 @@ class FeedViewModel extends BaseViewModel with Observable {
       // Make sure we're using the collapsed username.
       newItem['user'] = (newItem['user'] as String).toLowerCase();
 
+      // Use the Firebase snapshot ID as our ID.
+      newItem['id'] = e.snapshot.key;
+
       var existingItem = items.firstWhere((i) => i['id'] == e.snapshot.key,
           orElse: () => null);
       if (existingItem != null) return;
@@ -218,7 +221,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       }
 
       items.insert(
-          index == null ? 0 : index, toObservable(processItem(newItem)));
+          index == null ? 0 : index, toObservable(processItem(e.snapshot)));
 
       if (typeFilter == 'event' || typeFilter == 'news') {
         updateGroupedView();
@@ -311,9 +314,8 @@ class FeedViewModel extends BaseViewModel with Observable {
     }
   }
 
-  processItem(Map item) {
-//    if (item['user'] == null) print(snapshot.key);
-
+  processItem(fb.DataSnapshot snapshot) {
+    var item = toObservable(snapshot.val());
     // Make sure we're using the collapsed username.
     item['user'] = (item['user'] as String).toLowerCase();
 
@@ -399,6 +401,9 @@ class FeedViewModel extends BaseViewModel with Observable {
     if (typeFilter == "news") {
       item['dateGroup'] = DateGroup.getDateGroupName(item['createdDate']);
     }
+
+    // Use the Firebase snapshot ID as our ID.
+    item['id'] = snapshot.key;
 
     // Listen for changes to the like count.
     f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {
