@@ -86,7 +86,7 @@ class InputFormatter {
     } else {
       var s = diff.inDays.abs() < 365 * 2 || short ? '' : 's';
 
-      if (diff.inDays < 0) return '${-diff.inDays ~/ 365} $yearText$s $ago'; else return 'in ${diff.inDays ~/ 365} $yearText$s';
+      if (diff.inDays < 0) return '${-diff.inDays ~/ 365}$yearText$s $ago'; else return 'in ${diff.inDays ~/ 365} $yearText$s';
     }
   }
 
