@@ -79,10 +79,7 @@ class WovenApp extends PolymerElement with Observable {
     app.toggleSignIn();
   }
 
-  attached() async {
-    // Whenever we load the app, let's see if we have a current user (i.e. have we signed in?).
-//    app.loadUserForSession();
-
+  ready() async {
     // Listen for App changes so we can do some things.
     app.changes.listen((List<ChangeRecord> records) {
       PropertyChangeRecord record = records[0] as PropertyChangeRecord;
@@ -100,18 +97,12 @@ class WovenApp extends PolymerElement with Observable {
             el.style.opacity = '1';
             el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
           });
+        } else {
+          //TODO: Move this stuff into app.changePageTitle().
+          if (app.debugMode )print('DEBUG: pageTitle is NULL!');
         }
       }
-
-      // If brand new user, greet them.
-      if (app.user != null && app.user.isNew == true) {
-        app.greetUser();
-        app.user.isNew = false;
-      }
     });
-
-    // A temporary place for some scripts I'm running.
-    //
   }
 
   detached() {

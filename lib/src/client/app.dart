@@ -356,7 +356,12 @@ class App extends Observable {
           _controllerUserChanged.add(user);
 
           // On sign in, greet the user.
-          if (user.isNew != true) Timer.run(() => greetUser());
+          if (user.isNew) {
+            Timer.run(() => showMessage('Welcome to Woven, ${user.username}!'));
+            user.isNew = false;
+          } else {
+            Timer.run(() => greetUser());
+          }
         }
       } else {
         if (user.onboardingState == 'temporaryUser') {

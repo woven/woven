@@ -77,9 +77,6 @@ class SignInDialog extends PolymerElement {
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);
 
-        // Mark as new so the welcome pops up.
-        app.user.isNew = true;
-
         app.signIn();
 
         toggleProcessingIndicator();
