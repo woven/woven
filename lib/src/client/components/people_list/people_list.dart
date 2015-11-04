@@ -38,11 +38,11 @@ class PeopleList extends PolymerElement with Observable {
   initializeInfiniteScrolling() {
     var scroller = app.scroller;
     HtmlElement element = $['content-container'];
-    var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
+    var scroll = new InfiniteScroll(pageSize: 30, element: element, scroller: scroller, threshold: 0);
 
     subscriptions = [];
     subscriptions.add(scroll.onScroll.listen((_) {
-      if (!viewModel.isLoading) viewModel.paginate();
+      if (!viewModel.reloadingContent) viewModel.paginate();
     }));
   }
 

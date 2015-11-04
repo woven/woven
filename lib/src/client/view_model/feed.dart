@@ -91,6 +91,9 @@ class FeedViewModel extends BaseViewModel with Observable {
         count++;
         Map item = itemSnapshot.val();
 
+        // Use the Firebase snapshot ID as our ID.
+        item['id'] = snapshot.key;
+
         // Track the snapshot's priority so we can paginate from the last one.
         if (typeFilter == 'event') {
           lastPriority = '${item['startDateTimePriority']}';
@@ -112,8 +115,7 @@ class FeedViewModel extends BaseViewModel with Observable {
         }
 
         // Insert each new item into the list.
-        // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
-        items.add(toObservable(processItem(itemSnapshot)));
+        items.add(toObservable(processItem(item)));
       });
 
       updateGroupedView();
@@ -216,7 +218,7 @@ class FeedViewModel extends BaseViewModel with Observable {
       }
 
       items.insert(
-          index == null ? 0 : index, toObservable(processItem(e.snapshot)));
+          index == null ? 0 : index, toObservable(processItem(newItem)));
 
       if (typeFilter == 'event' || typeFilter == 'news') {
         updateGroupedView();
@@ -284,7 +286,7 @@ class FeedViewModel extends BaseViewModel with Observable {
             indexOfClosestItemByDate(DateTime.parse(movedItem['updatedDate']));
 
         items.insert(
-            index == null ? 0 : index, toObservable(processItem(e.snapshot)));
+            index == null ? 0 : index, toObservable(processItem(movedItem)));
       }
     });
 
@@ -309,9 +311,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     }
   }
 
-  processItem(fb.DataSnapshot snapshot) {
-    var item = toObservable(snapshot.val());
-
+  processItem(Map item) {
 //    if (item['user'] == null) print(snapshot.key);
 
     // Make sure we're using the collapsed username.
@@ -399,9 +399,6 @@ class FeedViewModel extends BaseViewModel with Observable {
     if (typeFilter == "news") {
       item['dateGroup'] = DateGroup.getDateGroupName(item['createdDate']);
     }
-
-    // Use the Firebase snapshot ID as our ID.
-    item['id'] = snapshot.key;
 
     // Listen for changes to the like count.
     f.child('/items/' + item['id'] + '/like_count').onValue.listen((e) {

@@ -90,7 +90,7 @@ updateAllUsersAddPriority() {
       count++;
       String username = k;
 
-      var newTry = (v['disabled'] != null && v['disabled'] == true) ? 'disabled' : -DateTime.parse(v['createdDate']).millisecondsSinceEpoch;
+      var newTry = (v['disabled'] != null && v['disabled'] == true) ? 0 : -DateTime.parse(v['createdDate']).millisecondsSinceEpoch;
 
       String disabledPart = (v['disabled'] != null && v['disabled'] == true) ? 'true' : 'false';
       String createdPart = (v['createdDate'] != null) ? DateTime.parse(v['createdDate']).toString() : null;
