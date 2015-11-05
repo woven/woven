@@ -573,6 +573,8 @@ class FeedViewModel extends BaseViewModel with Observable {
   deleteItem(String id) async {
     await HttpRequest.request(app.serverPath + Routes.deleteItem.reverse([]), method: 'POST',
     sendData: JSON.encode({'id': id, 'authToken': app.authToken}));
+
+    groupedItems.values.forEach((List i) => i.removeWhere((i) => i['id'] == id));
   }
 
 //  void loadUserStarredItemInformation() {

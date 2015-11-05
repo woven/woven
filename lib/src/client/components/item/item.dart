@@ -65,10 +65,11 @@ class Item extends PolymerElement with Observable {
 
     viewModel.deleteItem(target.dataset['id']);
 
-    app.showMessage('Poof. All gone, ${app.user.firstName}.');
-
-    new Timer(new Duration(seconds: 1), () {
+    new Timer(new Duration(milliseconds: 500), () {
       this.style.display = 'none';
+      new Timer(new Duration(milliseconds: 500), () {
+        app.showMessage('Poof. All gone, ${app.user.firstName}.');
+      });
     });
   }
 
