@@ -1,4 +1,4 @@
-part of mailer;
+library mailer.util;
 
 /**
  * Sanitizes a generic header value.

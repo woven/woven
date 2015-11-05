@@ -1,4 +1,13 @@
-part of mailer;
+library mailer.mailgun;
+
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:woven/config/config.dart';
+import 'envelope.dart';
 
 class Mailgun {
 

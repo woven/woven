@@ -1,4 +1,6 @@
-part of mailer;
+library mailer.envelope;
+
+import 'package:woven/src/shared/shared_util.dart';
 
 /**
  * This class represents an envelope that can be sent to someone/some people.
