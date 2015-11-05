@@ -15,6 +15,10 @@ core-item core-icon {
   margin-right: 4px;
 }
 
+#icon-delete {
+  padding-right: 0;
+}
+
 #icon-fav svg {
   height: 24px !important;
   width: 22px !important;
