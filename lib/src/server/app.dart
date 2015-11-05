@@ -1,38 +1,31 @@
 library woven_server;
 
 import 'dart:async';
-import 'package:http_server/http_server.dart';
-import 'package:woven/config/config.dart';
 
-import '../shared/routing/routes.dart';
-
-import 'controller/main.dart';
-import 'controller/user.dart';
-import 'controller/admin.dart';
-import 'controller/mail.dart';
-import 'routing/router.dart';
-
-import 'firebase.dart';
-
-import 'package:woven/src/server/mailer/mailer.dart';
-import 'package:woven/src/server/task_scheduler.dart';
-
-import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:googleapis/storage/v1.dart' as storage;
-import 'package:woven/src/server/session_manager.dart';
-
-// Add parts.
-import 'package:woven/src/server/util/profile_picture_util.dart';
-import 'package:woven/src/server/util/cloud_storage_util.dart';
-
+import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_cors/shelf_cors.dart' as shelf_cors;
 import 'package:shelf_static/shelf_static.dart' as shelf_static;
 
+import 'package:woven/config/config.dart';
+import 'package:woven/src/server/mailer/mailer.dart';
+import 'package:woven/src/server/session_manager.dart';
+import 'package:woven/src/server/task_scheduler.dart';
+import 'package:woven/src/server/util/cloud_storage_util.dart';
+import 'package:woven/src/server/util/profile_picture_util.dart';
+
+import '../shared/routing/routes.dart';
+import 'controller/admin.dart';
+import 'controller/mail.dart';
+import 'controller/main.dart';
+import 'controller/user.dart';
+import 'firebase.dart';
+import 'routing/router.dart';
+
 class App {
   Router router;
-  VirtualDirectory virtualDirectory;
   Mailgun mailer;
   ProfilePictureUtil profilePictureUtil;
   CloudStorageUtil cloudStorageUtil;
@@ -136,6 +129,31 @@ class App {
     });
   }
 
+  Future<bool> aliasExists(String alias) {
+    if (!new RegExp('^[a-zA-Z0-9_-]+\$')
+        .hasMatch(alias)) return new Future.value(false);
+
+    return Firebase.get('/alias_index/$alias.json').then((res) {
+      return (res == null ? false : true);
+    });
+  }
+
+  void printError(error) => print("Error: $error");
+
+  Future<shelf.Response> _handleAlias(shelf.Request request) async {
+    if (Uri.parse(request.url.path).pathSegments.length > 0) {
+      var alias = Uri.parse(request.url.path).pathSegments[0];
+
+      if (await aliasExists(alias)) {
+        var response = staticHandler(
+            new shelf.Request('GET', Uri.parse(serverPath + '/')));
+        response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+        return response;
+      }
+    }
+    return new shelf.Response.notFound('That alias was not found.');
+  }
+
   Future<shelf.Response> _handleFile(shelf.Request request) async {
     shelf.Response response = await this.staticHandler(request);
     response = response.change(headers: {'Transfer-Encoding': 'chunked'});
@@ -169,29 +187,4 @@ class App {
               '<h1>Internal server error</h1><p>${error.toString().replaceAll("\n", "<br />")}</p>');
     }
   }
-
-  Future<shelf.Response> _handleAlias(shelf.Request request) async {
-    if (Uri.parse(request.url.path).pathSegments.length > 0) {
-      var alias = Uri.parse(request.url.path).pathSegments[0];
-
-      if (await aliasExists(alias)) {
-        var response =  staticHandler(new shelf.Request(
-            'GET', Uri.parse(serverPath + '/')));
-        response = response.change(headers: {'Transfer-Encoding': 'chunked'});
-        return response;
-      }
-    }
-    return new shelf.Response.notFound('That alias was not found.');
-  }
-
-  Future<bool> aliasExists(String alias) {
-    if (!new RegExp('^[a-zA-Z0-9_-]+\$')
-        .hasMatch(alias)) return new Future.value(false);
-
-    return Firebase.get('/alias_index/$alias.json').then((res) {
-      return (res == null ? false : true);
-    });
-  }
-
-  void printError(error) => print("Error: $error");
 }

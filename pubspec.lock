@@ -89,10 +89,6 @@ packages:
     description: http_parser
     source: hosted
     version: "1.0.0"
-  http_server:
-    description: http_server
-    source: hosted
-    version: "0.9.5+1"
   initialize:
     description: initialize
     source: hosted
