@@ -49,16 +49,24 @@
               </template>
             </div>
           </div>
-          <div class="content-footer">
-            <div class="item-col1" horizontal layout>
+          <div class="content-footer" horizontal layout>
+            <div class="item-col1" horizontal layout flex>
               <core-icon-button icon="favorite"
                                 id="icon-fav" on-tap="{{toggleLike}}"
                                 class="action-button like-button {{app.user != null && item['liked'] == true ? 'selected' : ''}}"
                                 data-id="{{item['id']}}"><span class="item-count">{{item['like_count']}}</span>
               </core-icon-button>
             </div>
+            <div>
+              <template if="{{app.user != null && app.user.isAdmin}}">
+                <core-icon-button icon="delete"
+                                  id="icon-delete" on-tap="{{deleteItem}}"
+                                  class="action-button"
+                                  data-id="{{item['id']}}">
+                </core-icon-button>
+              </template>
+            </div>
           </div>
-        </div>
       </core-item>
     </div>
   </template>

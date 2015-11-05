@@ -11,6 +11,7 @@ import '../app.dart';
 import '../firebase.dart';
 import '../util/file_util.dart';
 import '../util/image_util.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/server/util/crawler_util.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
@@ -35,7 +36,7 @@ class MainController {
   }
 
   /**
-   * Crawl for and get a preview for a given uri/link.
+   * Add an item.
    */
   static addItem(App app, shelf.Request request) async {
     Map data = JSON.decode(await request.readAsString());
@@ -49,12 +50,31 @@ class MainController {
   }
 
   /**
+   * Add an item.
+   */
+  static deleteItem(App app, shelf.Request request) async {
+    Map data = JSON.decode(await request.readAsString());
+
+    Map item = {};
+
+    // TODO: Allow delete per community. It deletes everywhere right now.
+    String id = data['id'];
+
+    // TODO: Switch to more nuanced auth later.
+    String authToken = config['datastore']['firebaseSecret'];
+
+    Post.delete(id, authToken);
+
+    var response = new Response();
+    response.success = true;
+
+    return respond(response);
+  }
+
+  /**
    * Add a chat message.
    */
   static addMessage(App app, shelf.Request request) async {
-//    var decoder = JSON.fuse(UTF8).decoder;
-//    var data = await decoder.bind(request).single;
-
     Map data = JSON.decode(await request.readAsString());
     Map message = data['model'];
     String authToken = data['authToken'];

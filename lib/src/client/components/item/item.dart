@@ -28,7 +28,8 @@ class Item extends PolymerElement with Observable {
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
     // id passed in the data-id attribute on the element.
-    var item = viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
+    var item =
+        viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.router.previousPage = app.router.selectedPage;
     app.router.selectedItem = item;
@@ -59,6 +60,18 @@ class Item extends PolymerElement with Observable {
     viewModel.toggleItemStar(target.dataset['id']);
   }
 
+  void deleteItem(Event e, var detail, Element target) {
+    e.stopPropagation();
+
+    viewModel.deleteItem(target.dataset['id']);
+
+    app.showMessage('Poof. All gone, ${app.user.firstName}.');
+
+    new Timer(new Duration(seconds: 1), () {
+      this.style.display = 'none';
+    });
+  }
+
   /**
    * Format the given string with "a" or "an" or none.
    */
@@ -72,13 +85,13 @@ class Item extends PolymerElement with Observable {
 
   formatEventDate(DateTime startDate) {
     // TODO: Bring back endDate, currently null.
-    return InputFormatter.formatDate(startDate.toLocal(), showHappenedPrefix: true, trimPast: true);
+    return InputFormatter.formatDate(startDate.toLocal(),
+        showHappenedPrefix: true, trimPast: true);
   }
 
   stopProp(Event e) {
     e.stopPropagation();
   }
-
 
   attached() {
     //

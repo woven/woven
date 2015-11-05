@@ -3,11 +3,13 @@ library session_manager;
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
-import 'firebase.dart';
-import 'package:woven/config/config.dart';
+
 import 'package:jwt/json_web_token.dart';
 import 'package:crypto/crypto.dart';
 import 'package:shelf/shelf.dart' as shelf;
+
+import 'firebase.dart';
+import 'package:woven/config/config.dart';
 
 /**
  * A generic session manager that works with HTTP and WebSocket requests.
@@ -24,14 +26,14 @@ class SessionManager {
     var cookie = new Cookie('session', sessionId);
     // Set the expire date to a year from now.
     DateTime now = new DateTime.now();
-    DateTime expireDate =  now.add(new Duration(days: 365));
+    DateTime expireDate = now.add(new Duration(days: 365));
 
     cookie.expires = expireDate;
     cookie.path = '/';
     cookie.domain = '.$domain';
     cookie.httpOnly = true;
 
-    return {'set-cookie': cookie.toString() };
+    return {'set-cookie': cookie.toString()};
   }
 
   Map<String, String> deleteCookie() {
@@ -40,14 +42,14 @@ class SessionManager {
     var cookie = new Cookie('session', '');
     // Set the expire date to yesterday so we kill our cookie.
     DateTime now = new DateTime.now();
-    DateTime expireDate =  now.add(new Duration(days: -1));
+    DateTime expireDate = now.add(new Duration(days: -1));
 
     cookie.expires = expireDate;
     cookie.path = '/';
     cookie.domain = '.${domain.replaceFirst('www.', '')}';
     cookie.httpOnly = true;
 
-    return {'set-cookie': cookie.toString() };
+    return {'set-cookie': cookie.toString()};
   }
 
   Cookie getSessionCookie(shelf.Request request) {
@@ -56,9 +58,9 @@ class SessionManager {
   }
 
   // From https://github.com/wstrange/shelf_simple_session/blob/master/lib/src/cookie.dart.
-  Map<String,Cookie> _parseCookies(Map<String,String> headers) {
+  Map<String, Cookie> _parseCookies(Map<String, String> headers) {
     // Parse a Cookie header value according to the rules in RFC 6265.
-    var cookies = new Map<String,Cookie>();
+    var cookies = new Map<String, Cookie>();
 
     void parseCookieString(String s) {
       int index = 0;
@@ -123,8 +125,7 @@ class SessionManager {
     }
 
     var c = headers[HttpHeaders.COOKIE];
-    if( c != null )
-      parseCookieString(c);
+    if (c != null) parseCookieString(c);
 
     return cookies;
   }
@@ -138,11 +139,14 @@ class SessionManager {
     var authToken = generateFirebaseToken({'uid': username});
     DateTime now = new DateTime.now().toUtc();
     var sessionData = {
-        'username': username,
-        'updatedDate': now.toString(),
-        'authToken': authToken,
-        '.priority': -now.millisecondsSinceEpoch};
-    return Firebase.put('/session_index/$session.json', sessionData, auth: authToken).then((_) {
+      'username': username,
+      'updatedDate': now.toString(),
+      'authToken': authToken,
+      '.priority': -now.millisecondsSinceEpoch
+    };
+    return Firebase
+        .put('/session_index/$session.json', sessionData, auth: authToken)
+        .then((_) {
       return sessionData;
     });
   }
@@ -173,13 +177,16 @@ class SessionManager {
    */
   String generateFirebaseToken(Map data) {
     // Encode (i.e. sign) a payload into a JWT token.
-    final jwt = new JsonWebTokenCodec(secret: config['datastore']['firebaseSecret']);
+    final jwt =
+        new JsonWebTokenCodec(secret: config['datastore']['firebaseSecret']);
     final payload = {
-        'iss': 'woven',
-        'exp': new DateTime.now().add(new Duration(days: 365)).millisecondsSinceEpoch,
-        'v': 0,
-        'iat': new DateTime.now().millisecondsSinceEpoch*1000,
-        'd': data
+      'iss': 'woven',
+      'exp': new DateTime.now()
+          .add(new Duration(days: 365))
+          .millisecondsSinceEpoch,
+      'v': 0,
+      'iat': new DateTime.now().millisecondsSinceEpoch * 1000,
+      'd': data,
     };
     final token = jwt.encode(payload);
     return token;

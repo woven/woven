@@ -9,34 +9,46 @@ class Post extends shared.Post {
    *
    * Performs a series of PATCHes using the Firebase REST API.
    */
-  static update(String itemId, Map value, String authToken) {
-    var type;
+  static update(String id, Map value, String authToken) async {
+    try {
+      var type = await Firebase.get('/items/$id/type.json');
+      Map getCommunities = await Firebase.get('/items/$id/communities.json');
+      List communities = getCommunities.keys;
 
-    // Update the item in /items.
-    Firebase.patch('/items/$itemId.json', value, auth: authToken).then((res) {
-      // Get the type of the item.
-      Firebase.get('/items/$itemId/type.json').then((String res) {
-        type = res;
-      }).then((_) {
-        // Get a list of the communities this item is in.
-        Firebase.get('/items/$itemId/communities.json').then((Map res) {
-          if (res == null) return null;
-          List communities = [];
-          res.forEach((k, v) {
-            communities.add(k);
-          });
-          return communities;
-        }).then((List communities) {
-          if (communities == null) return;
-          // For each community the item is in...
-          communities.forEach((community) {
-            // Update the item in items_by_community.
-            Firebase.patch('/items_by_community/$community/$itemId.json', value, auth: authToken);
-            // Update the item in items_by_community_by_type.
-            Firebase.patch('/items_by_community_by_type/$community/$type/$itemId.json', value, auth: authToken);
-          });
-        }).catchError(print);
+      Firebase.patch('/items/$id.json', value, auth: authToken);
+
+      if (communities.isEmpty) return null;
+
+      communities.forEach((community) {
+        Firebase.patch('/items_by_community/$community/$id.json', value, auth: authToken);
+        Firebase.patch('/items_by_community_by_type/$community/$type/$id.json', value, auth: authToken);
       });
-    });
+    } catch(error, stack) {
+      print('$error\n\n$stack');
+    }
+  }
+
+  /**
+   * Delete an item.
+   *
+   * Performs a series of DELETEs using the Firebase REST API.
+   */
+  static delete(String id, String authToken) async {
+    try {
+      var type = await Firebase.get('/items/$id/type.json');
+      Map getCommunities = await Firebase.get('/items/$id/communities.json');
+      List communities = getCommunities.keys;
+
+      var delete = Firebase.delete('/items/$id.json', auth: authToken);
+
+      if (communities.isEmpty) return null;
+
+      communities.forEach((community) {
+        Firebase.delete('/items_by_community/$community/$id.json', auth: authToken);
+        Firebase.delete('/items_by_community_by_type/$community/$type/$id.json', auth: authToken);
+      });
+    } catch(error, stack) {
+      print('$error\n\n$stack');
+    }
   }
 }

@@ -17,6 +17,7 @@ class UserModel {
   Map settings = {};
   String createdDate;
   bool isNew = false;
+  bool isAdmin = false;
   bool disabled = false;
   bool needsPassword = false;
   Map invitation;
@@ -42,6 +43,7 @@ class UserModel {
       "settings": settings,
       "createdDate": createdDate,
       "disabled": disabled,
+      "isAdmin": isAdmin,
       "needsPassword": needsPassword,
       "onboardingState": enumToName(onboardingState)
     };
@@ -63,6 +65,7 @@ class UserModel {
       ..settings = data['settings']
       ..createdDate = data['createdDate']
       ..disabled = data['disabled']
+      ..isAdmin = data['isAdmin']
       ..needsPassword = data['needsPassword']
       ..onboardingState = data['onboardingState'];
   }

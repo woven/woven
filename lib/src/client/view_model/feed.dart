@@ -1,15 +1,20 @@
 library feed_view_model;
 
+import 'dart:async';
+import 'dart:html';
+import 'dart:convert';
+
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as fb;
+
+import 'base.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/date_group.dart';
+import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/shared_util.dart';
-import 'dart:async';
-import 'base.dart';
 import 'package:woven/src/client/model/user.dart';
 
 class FeedViewModel extends BaseViewModel with Observable {
@@ -563,6 +568,11 @@ class FeedViewModel extends BaseViewModel with Observable {
               app.user.username.toLowerCase())
           .set(true);
     }
+  }
+
+  deleteItem(String id) async {
+    await HttpRequest.request(app.serverPath + Routes.deleteItem.reverse([]), method: 'POST',
+    sendData: JSON.encode({'id': id, 'authToken': app.authToken}));
   }
 
 //  void loadUserStarredItemInformation() {

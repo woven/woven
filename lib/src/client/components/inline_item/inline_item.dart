@@ -18,7 +18,8 @@ class InlineItem extends PolymerElement with Observable {
   @published String itemId;
   @published App app;
 //  @published FeedViewModel viewModel;
-  @observable Map item = {};
+  @observable Map item;
+  @observable bool hasTriedLoadingItem;
 
   db.Firebase get f => app.f;
 
@@ -59,6 +60,11 @@ class InlineItem extends PolymerElement with Observable {
   getItem() {
     StreamSubscription onValue = itemRef.onValue.listen((e) {
       var queuedItem = toObservable(e.snapshot.val());
+
+      if (queuedItem == null) {
+        hasTriedLoadingItem = true;
+        return;
+      }
 
       // Make sure we're using the collapsed username.
       queuedItem['user'] = (queuedItem['user'] as String).toLowerCase();
@@ -156,6 +162,7 @@ class InlineItem extends PolymerElement with Observable {
         listenForLikedState();
       }
 
+      hasTriedLoadingItem = true;
       item = queuedItem;
 
       // If and when we have a user, see if they liked the item.

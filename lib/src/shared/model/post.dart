@@ -5,6 +5,7 @@ import 'item.dart';
 class Post implements Item {
   String id;
   String user;
+  String usernameForDisplay;
   DateTime createdDate = new DateTime.now().toUtc();
   DateTime updatedDate = new DateTime.now().toUtc();
 

@@ -16,6 +16,7 @@ class Routes {
   static final sendNotificationsForComment = new UrlPattern(r'/_notifyforcomment');
   static final getUriPreview = new UrlPattern(r'/_geturipreview');
   static final addItem = new UrlPattern(r'/_additem');
+  static final deleteItem = new UrlPattern(r'/_deleteitem');
   static final addMessage = new UrlPattern(r'/_addmessage');
   static final signIn = new UrlPattern(r'/_signin');
   static final signOut = new UrlPattern(r'/_signout');

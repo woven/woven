@@ -78,6 +78,7 @@ class App {
       ..routes[Routes.generateDigest] = AdminController.generateDigest
       ..routes[Routes.exportUsers] = AdminController.exportUsers
       ..routes[Routes.addItem] = MainController.addItem
+      ..routes[Routes.deleteItem] = MainController.deleteItem
       ..routes[Routes.addMessage] = MainController.addMessage
       ..routes[Routes.signIn] = UserController.signIn
       ..routes[Routes.signOut] = UserController.signOut

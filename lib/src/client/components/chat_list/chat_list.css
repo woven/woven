@@ -66,6 +66,8 @@
 .message.notification {
   font-weight: normal;
   color: #2FA300;
+  line-height: 14px;
+  font-size: 16px;
 }
 
 .message.item {
