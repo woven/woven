@@ -7,6 +7,7 @@ import 'package:mustache/mustache.dart' as mustache;
 import 'package:intl/intl.dart';
 
 import 'task.dart';
+import '../task_scheduler.dart';
 import 'package:woven/src/server/model/community.dart';
 import 'package:woven/src/server/mailer/mailer.dart';
 import 'package:woven/src/shared/model/item_group.dart';
@@ -30,7 +31,7 @@ class DailyDigestTask extends Task {
    */
   Future run() async {
     DateTime now = new DateTime.now().toUtc();
-    print("Starting daily digest task at $now...");
+    TaskScheduler.log("Running the daily digest task");
     List<Map> usersByCommunity = await CommunityModel.getCommunitiesWithUsers();
 
     // Loop over each community/users map.

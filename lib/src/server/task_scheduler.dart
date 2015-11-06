@@ -2,6 +2,7 @@ library task_scheduler;
 
 import 'dart:async';
 import 'task/daily_digest.dart';
+import 'task/crawler.dart';
 import 'task/task.dart';
 import 'app.dart';
 
@@ -11,9 +12,7 @@ import 'app.dart';
 class TaskScheduler {
   App app;
 
-  List<Task> tasks = [
-  new DailyDigestTask()
-  ];
+  List<Task> tasks = [new DailyDigestTask(), new CrawlerTask()];
 
   TaskScheduler(this.app);
 
@@ -31,21 +30,24 @@ class TaskScheduler {
             var now = new DateTime.now().toUtc();
 
             var runAtTime = task.runAtDailyTime;
-            var runAtTimeToToday = new DateTime.utc(now.year, now.month, now.day, runAtTime.hour, runAtTime.minute);
+            var runAtTimeToToday = new DateTime.utc(
+                now.year, now.month, now.day, runAtTime.hour, runAtTime.minute);
             var diff = now.difference(runAtTimeToToday);
 
 //            print("now: $now / runAtTime: $runAtTime / runAtTimeToToday: $runAtTimeToToday / diff: $diff / diff.inSeconds: ${diff.inSeconds}");
 
             // If we're not within a minute of the scheduled time, get out of here.
             // TODO: What about edge cases like server restarts? We'll have to save last send to db.
-            if (diff.inSeconds > 60 || diff.inSeconds <= 0) { // We match this diff to the task run interval in task.dart.
+            if (diff.inSeconds > 60 || diff.inSeconds <= 0) {
+              // We match this diff to the task run interval in task.dart.
               return;
             }
           }
 
           if (task.onceADay) {
             var now = new DateTime.now();
-            var diff = now.difference(new DateTime(now.year, now.month, now.day + 1, 0, 0, 0));
+            var diff = now.difference(
+                new DateTime(now.year, now.month, now.day + 1, 0, 0, 0));
             if (diff.inMinutes >= 0 || diff.inMinutes < -15) {
               return;
             }
@@ -76,5 +78,9 @@ class TaskScheduler {
       }
     });
   }
-}
 
+  static log(String message) {
+    DateTime now = new DateTime.now().toUtc();
+    print('[$now]\t$message');
+  }
+}
