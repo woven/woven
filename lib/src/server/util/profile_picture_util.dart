@@ -1,3 +1,5 @@
+library profile_picture_util;
+
 import 'dart:io';
 import 'dart:async';
 import 'package:path/path.dart' as path;
@@ -10,9 +12,9 @@ import 'package:woven/src/shared/response.dart';
 import '../app.dart';
 
 class ProfilePictureUtil {
-  App app;
+  dynamic app;
 
-  ProfilePictureUtil(this.app);
+  ProfilePictureUtil(app);
 
   /**
    * Downloads profile picture from Facebook to the cloud and returns the filename.

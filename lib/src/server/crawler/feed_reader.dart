@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 
-import 'feed_item.dart';
+import '../model/feed_item.dart';
 import 'rss_reader.dart';
 import '../util.dart' as util;
 
@@ -17,9 +17,9 @@ class FeedReader {
     url = util.correctUrl(url);
   }
 
+  // TODO: Not respecting limit?
   Future<List<FeedItem>> load({int limit: 10}) async {
-    // Used to use our own httpRead. See https://goo.gl/TsmG57.
-    var contents = await http.read(url);
+    var contents = await util.readHttp(url);
 
     if (contents == null) throw 'Loading $url was empty.';
 

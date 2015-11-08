@@ -10,13 +10,14 @@ import 'package:woven/src/shared/model/uri_preview.dart';
 
 import 'task.dart';
 import '../task_scheduler.dart';
-import '../feed/feed_reader.dart';
-import '../feed/feed_item.dart';
+import 'package:woven/src/server/crawler/crawler.dart';
+import 'package:woven/src/server/crawler/feed_reader.dart';
+import 'package:woven/src/server/model/feed_item.dart';
 
 class CrawlerTask extends Task {
   bool runImmediately = true;
 
-  final Map<String, List<String>> feeds = {
+  final Map<String, List<String>> urlsToCrawl = {
     'miamitech': ['http://miamiherald.typepad.com/the-starting-gate/rss.xml'],
     'breakshop': []
   };
@@ -29,10 +30,22 @@ class CrawlerTask extends Task {
   Future run() async {
     TaskScheduler.log("Running the crawler task");
 
-    feeds.forEach((community, feeds) {
-      Future.forEach(feeds, (feed) async {
-        var feedReader = new FeedReader(url: feed);
-        var feedItems = await feedReader.load();
+    urlsToCrawl.forEach((community, urls) {
+      Future.forEach(urls, (url) async {
+
+        var crawler = new Crawler(url);
+
+        print('debug0: $url');
+
+        var feedUrl = await crawler.findFeedUrl();
+
+        if (feedUrl == null) {
+          TaskScheduler.log('No feed found for $url');
+          return;
+        }
+
+        var feedReader = new FeedReader(url: feedUrl);
+        var feedItems = await feedReader.load(limit: 2);
         feedItems.forEach((FeedItem item) {
           print('''
             ${item.title}

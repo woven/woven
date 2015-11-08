@@ -37,7 +37,7 @@ class Post extends shared.Post {
     try {
       var type = await Firebase.get('/items/$id/type.json');
       Map getCommunities = await Firebase.get('/items/$id/communities.json');
-      List communities = getCommunities.keys;
+      List communities = getCommunities?.keys;
 
       var delete = Firebase.delete('/items/$id.json', auth: authToken);
 

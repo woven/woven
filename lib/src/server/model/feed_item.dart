@@ -1,6 +1,6 @@
 library feed_item;
 
-import 'rss_item.dart';
+import 'package:woven/src/server/model/rss_item.dart';
 
 /**
  * This class represents one item from either RSS or ATOM.

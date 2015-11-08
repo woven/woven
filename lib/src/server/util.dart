@@ -2,10 +2,11 @@ library util;
 
 import 'dart:convert';
 import 'dart:async';
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 import '../shared/shared_util.dart' as sharedUtil;
 
@@ -129,5 +130,83 @@ int timeZoneOffsetToMinutes(String offset) {
   }
 
   return 0;
+}
+
+/**
+ * A utility method that reads HTTP response body and returns it as a string.
+ *
+ * The difference to http.read() is: send good headers, handle encodings better and have a timeout.
+ */
+Future<String> readHttp(String url, {bool requestAsChrome: false}) {
+  var completer = new Completer();
+
+  // Act like any normal browser.
+  var headers = {
+    'Accept-Language': 'en-US,en;q=0.8',
+    'Accept-Encoding': 'gzip,deflate',
+    //'Accept': 'text/html,application/xhtml+xml,application/xml',
+  };
+
+  // Masquerades as a browser so we can crawl... blame on Facebook.
+  if (requestAsChrome || url.contains('facebook.com')) {
+    headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36';
+  }
+
+  var timer = new Timer(new Duration(seconds: 8), () {
+    if (completer.isCompleted == false) completer.completeError('Timed out reading URL $url');
+  });
+
+  if (url == null) {
+    completer.completeError('Empty URL.');
+  }
+
+  headers['host'] = Uri.parse(url).host;
+
+  // Handle letter cases. Lower-casify the hostname, but not anything else.
+  url = url.replaceFirst(Uri.parse(url).host, Uri.parse(url).host.toLowerCase());
+
+  http.get(url, headers: headers).then((response) {
+    if (completer.isCompleted == false) {
+      timer.cancel();
+
+      if ((response.statusCode < 200 || response.statusCode >= 300) && response.statusCode != 304) {
+        completer.completeError('Website returned status code ${response.statusCode}');
+        return;
+      }
+
+      var contentType = response.headers[HttpHeaders.CONTENT_TYPE];
+      if (contentType == null) contentType = response.headers[HttpHeaders.CONTENT_TYPE.toLowerCase()];
+
+      var charset;
+      if (contentType != null) {
+        charset = ContentType.parse(contentType).charset;
+      } else {
+        charset = 'utf-8';
+      }
+
+      var c = '';
+
+      if (charset == null || charset.toLowerCase() == 'utf-8') {
+        try {
+          c = UTF8.decode(response.bodyBytes);
+        } catch (e) {
+          c = new String.fromCharCodes(response.bodyBytes);
+        }
+      } else {
+        c = new String.fromCharCodes(response.bodyBytes);
+      }
+
+      completer.complete(c);
+    }
+  }).catchError((e) {
+    print('Error reading website contents $url: $e');
+
+    if (completer.isCompleted == false) {
+      timer.cancel();
+      completer.complete(null);
+    }
+  });
+
+  return completer.future;
 }
 

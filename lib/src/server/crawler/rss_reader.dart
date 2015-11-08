@@ -1,11 +1,12 @@
 library rss_reader;
 
 import 'dart:async';
-import 'rss_item.dart';
+import '../model/rss_item.dart';
 
 import 'package:xml/xml.dart';
 
 import '../util.dart' as util;
+import 'crawler.dart';
 
 class RssReader {
   var contents;
@@ -23,6 +24,7 @@ class RssReader {
       if (contents == null) return [];
 
       // First we have to get rid of some data, because of the lack of support in the XML package.
+      // TODO: Still needed now that we're using the new xml lib?
 
       // Get rid of the top-level <?xml ?> line.
       contents = contents.replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '');
@@ -67,11 +69,11 @@ class RssReader {
             ..image = image
             ..copyright = (element.findElements('copyright').length > 0) ? element.findElements('copyright').single.text : null;
 
-//          if (item.image is String) {
-//            futures.add(Crawler.isImageBigEnough(item.image).then((size) {
-//              if (size == false) item.image = null;
-//            }));
-//          }
+          if (item.image is String) {
+            futures.add(Crawler.isImageBigEnough(item.image).then((size) {
+              if (size == false) item.image = null;
+            }));
+          }
 
           // Build a list of categories (List<String>) based on the XML tree.
           List categories = element.findElements('category');
