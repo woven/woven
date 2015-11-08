@@ -14,7 +14,7 @@ import 'package:woven/src/shared/model/item_group.dart';
 import 'package:woven/src/shared/model/message.dart';
 import 'package:woven/src/server/firebase.dart';
 import 'package:woven/src/shared/input_formatter.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/server/model/user.dart';
 
 class DailyDigestTask extends Task {

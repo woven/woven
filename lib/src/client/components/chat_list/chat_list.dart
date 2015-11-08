@@ -9,7 +9,7 @@ import 'package:woven/src/client/view_model/chat.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:woven/src/shared/input_formatter.dart';
-import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
+import 'package:woven/src/shared/util.dart' as sharedUtil;
 
 
 @CustomTag('chat-list')

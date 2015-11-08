@@ -16,7 +16,7 @@ import 'package:http/http.dart' as http;
 //import 'package:query_string/query_string.dart';
 //import '../config/config.dart';
 import '../util.dart' as util;
-import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
+import 'package:woven/src/shared/util.dart' as sharedUtil;
 //import 'readability.dart';
 //import 'open_graph/open_graph.dart';
 //import 'model/server/models.dart' as model;

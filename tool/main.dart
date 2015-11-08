@@ -18,7 +18,7 @@ import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/server/util/file_util.dart';
 import 'package:woven/src/server/util/image_util.dart';
 import 'package:woven/src/server/util/cloud_storage_util.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/server/mail_sender.dart';

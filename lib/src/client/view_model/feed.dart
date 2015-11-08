@@ -14,7 +14,7 @@ import 'package:woven/src/shared/date_group.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/shared/input_formatter.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/client/model/user.dart';
 
 class FeedViewModel extends BaseViewModel with Observable {

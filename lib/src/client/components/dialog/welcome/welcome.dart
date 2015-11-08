@@ -10,7 +10,7 @@ import 'package:woven/config/config.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
 import 'package:woven/src/shared/model/user.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';

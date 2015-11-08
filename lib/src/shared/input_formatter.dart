@@ -8,7 +8,7 @@ import 'package:emoji/emoji.dart';
 
 import 'date_group.dart';
 import 'regex.dart';
-import 'shared_util.dart' as sharedUtil;
+import 'util.dart' as sharedUtil;
 
 /**
  * A useful utility class for formatting input.

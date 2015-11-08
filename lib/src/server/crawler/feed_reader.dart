@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 
-import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
+import 'package:woven/src/shared/util.dart' as sharedUtil;
 
 import '../model/feed_item.dart';
 import 'rss_reader.dart';

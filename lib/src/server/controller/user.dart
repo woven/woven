@@ -12,7 +12,7 @@ import '../firebase.dart';
 import '../util.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 
 class UserController {
   static createNewUser(App app, shelf.Request request) async {

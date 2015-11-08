@@ -13,13 +13,12 @@ import 'package:core_elements/core_selector.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
 import 'package:woven/src/shared/model/item.dart';
 import 'package:woven/src/shared/model/post.dart';
 import 'package:woven/src/shared/model/event.dart';
 import 'package:woven/src/shared/model/news.dart';
 import 'package:woven/src/shared/model/feed.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/model/message.dart';
 
@@ -115,7 +114,7 @@ class AddStuff extends PolymerElement {
     }
 
     if (urlInput != null) {
-      urlInput.value = sharedUtil.prefixHttp(urlInput.value);
+      urlInput.value = prefixHttp(urlInput.value);
     }
 
     if (urlInput != null && !isValidUrl(urlInput.value)) {

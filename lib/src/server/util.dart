@@ -8,7 +8,7 @@ import 'package:shelf/shelf.dart' as shelf;
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-import '../shared/shared_util.dart' as sharedUtil;
+import '../shared/util.dart' as sharedUtil;
 
 /**
  * Returns true if the given status code was "success".

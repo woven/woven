@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
-import '../../shared/shared_util.dart' as sharedUtil;
+import '../../shared/util.dart' as sharedUtil;
 import 'package:crypto/crypto.dart';
 import '../util.dart';
 

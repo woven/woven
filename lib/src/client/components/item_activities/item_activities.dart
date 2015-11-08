@@ -7,7 +7,7 @@ import 'package:woven/src/shared/input_formatter.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/uri_policy.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/client/model/user.dart';
 
 import 'package:paper_elements/paper_autogrow_textarea.dart';

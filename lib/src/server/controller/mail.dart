@@ -12,7 +12,7 @@ import '../util.dart';
 import '../mailer/mailer.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/shared/regex.dart';
 
 class MailController {

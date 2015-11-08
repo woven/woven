@@ -7,7 +7,7 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart';
 
 import 'package:woven/src/client/app.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'feed.dart';
