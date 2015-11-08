@@ -1,9 +1,9 @@
 library server.model.post;
 
-import 'package:woven/src/shared/model/post.dart' as shared;
+import 'package:woven/src/shared/model/item.dart' as shared;
 import '../firebase.dart';
 
-class Post extends shared.Post {
+class Item extends shared.Item {
   /**
    * Update an item with provided [value].
    *

@@ -1,41 +1,40 @@
-library shared.model.news;
+library shared.model.feed;
 
 import 'item.dart';
 
-class NewsModel implements Item {
+class FeedModel implements Item {
   String id;
   String user;
   String usernameForDisplay;
   String type;
   DateTime createdDate = new DateTime.now().toUtc();
   DateTime updatedDate = new DateTime.now().toUtc();
-  String subject;
-  String body;
   String url;
-  String uriPreviewId;
+  String siteUrl; // The user's message.
+  DateTime lastCrawledDate; // The attached content's subject.
 
   Map encode() {
     return {
       "user": user,
-      "subject": subject,
       "type": type,
-      "body": body,
       "createdDate": createdDate.toString(),
       "updatedDate": updatedDate.toString(),
       "url": url,
-      "uriPreviewId": uriPreviewId
+      "siteUrl": siteUrl,
+      // TODO: https://goo.gl/NpR6Xe
+      "lastCrawledDate":
+          (lastCrawledDate != null ? lastCrawledDate.toString() : null)
     };
   }
 
-  static NewsModel decode(Map data) {
-    return new NewsModel()
+  static FeedModel decode(Map data) {
+    return new FeedModel()
       ..user = data['user']
       ..type = data['type']
-      ..subject = data['subject']
-      ..body = data['body']
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate']
       ..url = data['url']
-      ..uriPreviewId = data['uriPreviewId'];
+      ..url = data['siteUrl']
+      ..url = data['lastCrawledDate'];
   }
 }

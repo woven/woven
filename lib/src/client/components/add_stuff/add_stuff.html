@@ -35,6 +35,7 @@
               <!--<li value="message">Message</li>-->
               <li value="news">News</li>
               <li value="event">Event</li>
+              <template if="{{app.user.isAdmin}}"><li value="feed">Feed</li></template>
               <!--<li value="announcement">Announcement</li>-->
               <!--<li value="project">Project</li>-->
               <!--<li value="other">Other</li>-->
@@ -51,8 +52,8 @@
           <!--</div>-->
         </div>
         <div id="content-container">
-          <template if="{{selectedType == 'event' || selectedType == 'news'}}">
-            <div class="field-wrapper {{(selectedType == 'news') ? 'last' : ''}}">
+          <template if="{{selectedType == 'event' || selectedType == 'news' || selectedType == 'feed'}}">
+            <div class="field-wrapper {{(selectedType == 'news' || selectedType == 'feed') ? 'last' : ''}}">
               <input is="core-input" id="url" placeholder="Link to the {{selectedType}}" autocomplete="off" value="{{formData['url']}}">
             </div>
           </template>
@@ -60,16 +61,14 @@
             <div class="field-wrapper">
               <input is="core-input" id="subject" placeholder="Title" autocomplete="off" value="{{formData['subject']}}">
             </div>
-            <template if="{{selectedType == 'event'}}">
-              <div class="field-wrapper">
-                <input is="core-input" id="event-start-date" placeholder="When is the event?" autocomplete="off"
-                       on-focus="{{updateInput}}" value="{{formData['event-start-date']}}">
-              </div>
-              <div class="field-wrapper">
-                <input is="core-input" id="event-start-time" placeholder="What time does it start?" autocomplete="off"
-                       on-focus="{{updateInput}}" value="{{formData['event-start-time']}}">
-              </div>
-            </template>
+            <div class="field-wrapper">
+              <input is="core-input" id="event-start-date" placeholder="When is the event?" autocomplete="off"
+                     on-focus="{{updateInput}}" value="{{formData['event-start-date']}}">
+            </div>
+            <div class="field-wrapper">
+              <input is="core-input" id="event-start-time" placeholder="What time does it start?" autocomplete="off"
+                     on-focus="{{updateInput}}" value="{{formData['event-start-time']}}">
+            </div>
             <div class="field-wrapper last">
               <paper-autogrow-textarea
                   id="body"

@@ -29,19 +29,6 @@ String correctUrl(String url) {
 }
 
 /**
- * Adds HTTP if no protocol found.
- */
-String prefixHttp(String text) {
-  if (text == null) return '';
-
-  if (text.startsWith('http') == false) {
-    return 'http://$text';
-  }
-
-  return text;
-}
-
-/**
  * Adds a prefix to the string if it's not already there.
  */
 String prefix(String text, String prefix) =>

@@ -82,6 +82,7 @@ String enumToName(OnboardingState onboardingState) {
       OnboardingState.signUpIncomplete) return 'signUpIncomplete';
   if (onboardingState ==
       OnboardingState.onboardingComplete) return 'onboardingComplete';
+  return null;
 }
 
 /**

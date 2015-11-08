@@ -13,9 +13,12 @@ import 'package:core_elements/core_selector.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
+import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
+import 'package:woven/src/shared/model/item.dart';
 import 'package:woven/src/shared/model/post.dart';
 import 'package:woven/src/shared/model/event.dart';
 import 'package:woven/src/shared/model/news.dart';
+import 'package:woven/src/shared/model/feed.dart';
 import 'package:woven/src/shared/shared_util.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/client/model/message.dart';
@@ -28,22 +31,27 @@ class AddStuff extends PolymerElement {
   @published bool opened = false;
   @observable var selectedType = 'news';
   @observable Map formData = toObservable({});
-  List validShareToOptions = config['appSettings']['validShareToOptions']; // TODO: Fixed for now, change later.
+  List validShareToOptions = config['appSettings']
+      ['validShareToOptions']; // TODO: Fixed for now, change later.
 
   db.Firebase get f => app.f;
 
   CoreOverlay get overlay => $['overlay'];
 
-  Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('add-stuff');
+  Element get elRoot =>
+      document.querySelector('woven-app').shadowRoot.querySelector('add-stuff');
 
-  CoreInput get messageInput => elRoot.shadowRoot.querySelector('#message-textarea');
+  CoreInput get messageInput =>
+      elRoot.shadowRoot.querySelector('#message-textarea');
 
   CoreInput get subjectInput => elRoot.shadowRoot.querySelector('#subject');
   CoreInput get bodyInput => elRoot.shadowRoot.querySelector('#body-textarea');
   CoreInput get shareToInput => elRoot.shadowRoot.querySelector('#share-to');
 
-  CoreInput get eventStartDateInput => elRoot.shadowRoot.querySelector('#event-start-date');
-  CoreInput get eventStartTimeInput => elRoot.shadowRoot.querySelector('#event-start-time');
+  CoreInput get eventStartDateInput =>
+      elRoot.shadowRoot.querySelector('#event-start-date');
+  CoreInput get eventStartTimeInput =>
+      elRoot.shadowRoot.querySelector('#event-start-time');
   CoreInput get urlInput => elRoot.shadowRoot.querySelector('#url');
 
   /**
@@ -59,9 +67,13 @@ class AddStuff extends PolymerElement {
   handleOpen() {
     // Add the current community to the share to field.
     shareToInput.value.replaceAll(r',[\s]+', ',');
-    List shareTos = (!shareToInput.value.isEmpty) ? shareToInput.value.trim().split(',') : [];
+    List shareTos = (!shareToInput.value.isEmpty)
+        ? shareToInput.value.trim().split(',')
+        : [];
 
-    if (app.community != null && (!shareTos.contains(app.community.alias.trim()) || shareTos.isEmpty)) shareTos.add(app.community.alias.trim());
+    if (app.community != null &&
+        (!shareTos.contains(app.community.alias.trim()) ||
+            shareTos.isEmpty)) shareTos.add(app.community.alias.trim());
     shareToInput.value = shareTos.join(',').trim().toString();
 
     // Focus the subject field.
@@ -92,13 +104,18 @@ class AddStuff extends PolymerElement {
     });
 
     if (invalidShareTos.length > 0) {
-      window.alert("You've tagged an invalid community.\n\nInvalid: ${invalidShareTos.join(', ')}");
+      window.alert(
+          "You've tagged an invalid community.\n\nInvalid: ${invalidShareTos.join(', ')}");
       return false;
     }
 
     if (selectedType == 'message' && messageInput.value.trim().isEmpty) {
       window.alert("Add a message or choose another type.");
       return false;
+    }
+
+    if (urlInput != null) {
+      urlInput.value = sharedUtil.prefixHttp(urlInput.value);
     }
 
     if (urlInput != null && !isValidUrl(urlInput.value)) {
@@ -109,7 +126,6 @@ class AddStuff extends PolymerElement {
     // Validate other fields only if user selected a type to attach.
     // TODO: Other fields limited to event type for now.
     if (selectedType == 'event') {
-
       // Validate other stuff.
       if (subjectInput.value.trim().isEmpty) {
         window.alert("The title is empty.");
@@ -123,13 +139,15 @@ class AddStuff extends PolymerElement {
 
       if (selectedType == "event") {
         if (parseDate(eventStartDateInput.value) == null) {
-
-          window.alert("That's not a valid start date. Ex: " + new DateFormat("M/dd/yyyy").format(new DateTime.now()));
+          window.alert("That's not a valid start date. Ex: " +
+              new DateFormat("M/dd/yyyy").format(new DateTime.now()));
           return false;
         }
         if (parseTime(eventStartTimeInput.value) == null) {
-
-          window.alert("That's not a valid start time. Ex: " + new DateFormat("h:mm a").format(new DateTime.now()) + ', ' + new DateFormat("h a").format(new DateTime.now()));
+          window.alert("That's not a valid start time. Ex: " +
+              new DateFormat("h:mm a").format(new DateTime.now()) +
+              ', ' +
+              new DateFormat("h a").format(new DateTime.now()));
           return false;
         }
       }
@@ -140,17 +158,15 @@ class AddStuff extends PolymerElement {
 
     var now = new DateTime.now().toUtc();
 
-    Post item;
+    var item;
     if (selectedType == 'event') item = new EventModel();
     else if (selectedType == 'news') item = new NewsModel();
+    else if (selectedType == 'feed') item = new FeedModel();
     else item = new Post();
 
     item
       ..user = app.user.username.toLowerCase()
-      ..message = (messageInput != null && !messageInput.value.trim().isEmpty) ? messageInput.value : null
-      ..subject = (subjectInput != null && !subjectInput.value.trim().isEmpty) ? subjectInput.value : null
       ..type = (selectedType != null) ? selectedType : 'message'
-      ..body = (bodyInput != null && !bodyInput.value.trim().isEmpty) ? bodyInput.value : null
       ..createdDate = now
       ..updatedDate = now;
 
@@ -158,17 +174,27 @@ class AddStuff extends PolymerElement {
       // Combine the separate date and time fields into one DateTime object.
       DateTime date = parseDate(eventStartDateInput.value);
       DateTime time = parseTime(eventStartTimeInput.value);
-      DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc();
+      DateTime startDateTime = new DateTime(
+          date.year, date.month, date.day, time.hour, time.minute).toUtc();
       int eventPriority = startDateTime.millisecondsSinceEpoch;
       (item as EventModel)
         ..startDateTime = startDateTime
         ..startDateTimePriority = eventPriority
-        ..url = urlInput.value;
+        ..url = urlInput.value
+        ..subject = (subjectInput != null && !subjectInput.value.trim().isEmpty)
+            ? subjectInput.value
+            : null
+        ..body = (bodyInput != null && !bodyInput.value.trim().isEmpty)
+            ? bodyInput.value
+            : null;
     }
 
     if (item is NewsModel) {
-      (item as NewsModel)
-        ..url = urlInput.value;
+      (item as NewsModel)..url = urlInput.value;
+    }
+
+    if (item is FeedModel) {
+      (item as FeedModel)..url = urlInput.value;
     }
 
     var encodedItem = item.encode();
@@ -178,10 +204,10 @@ class AddStuff extends PolymerElement {
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
-      // Use a priority so Firebase sorts. Use a negative so latest is at top.
-      // TODO: Beef this up in case items have same exact timestamp.
-      DateTime time = DateTime.parse("$now");
-      var priority = time.millisecondsSinceEpoch;
+    // Use a priority so Firebase sorts. Use a negative so latest is at top.
+    // TODO: Beef this up in case items have same exact timestamp.
+    DateTime time = DateTime.parse("$now");
+    var priority = time.millisecondsSinceEpoch;
 
 //      // TODO: In progress server-side saving.
 //      var req = new HttpRequest();
@@ -194,77 +220,71 @@ class AddStuff extends PolymerElement {
 //          ..send(encodedItem)
 //          ..onReadyStateChange.listen(onData);
 
-      // Update the main item, then...
-      itemRef.setWithPriority(encodedItem, -priority).then((e) {
-        var itemId = itemRef.key;
+    // Update the main item, then...
+    itemRef.setWithPriority(encodedItem, -priority).then((e) {
+      var itemId = itemRef.key;
 
-        // Loop over all communities shared to.
-        shareTos.forEach((community) {
-          community = community.trim();
-          // Add to items_by_community.
-          f.child('/items_by_community/' + community + '/' + itemId)
-            ..setWithPriority(encodedItem, -priority);
+      // Loop over all communities shared to.
+      shareTos.forEach((community) {
+        community = community.trim();
+        // Add to items_by_community.
+        f.child('/items_by_community/' + community + '/' + itemId)
+          ..setWithPriority(encodedItem, -priority);
 
-          // Only in the main /items location, store a simple list of its parent communities.
-          f.child('/items/' + itemId + '/communities/' + community)
-            ..set(true);
+        // Only in the main /items location, store a simple list of its parent communities.
+        f.child('/items/' + itemId + '/communities/' + community)..set(true);
 
-          // Update the community itself.
-          f.child('/communities/' + community).update({
-              'updatedDate': '$now'
-          });
+        // Update the community itself.
+        f.child('/communities/' + community).update({'updatedDate': '$now'});
 
-          // Add to items_by_community_by_type.
-          var itemsByTypeRef = f.child('/items_by_community_by_type/' + community + '/$selectedType/' + itemId);
+        // Add to items_by_community_by_type.
+        var itemsByTypeRef = f.child('/items_by_community_by_type/' +
+            community +
+            '/$selectedType/' +
+            itemId);
 
-          // Use a priority based on the start date/time when storing the event in items_by_community_by_type.
-          if (selectedType == 'event') {
-            // Combine the separate date and time fields into one DateTime object.
-            DateTime date = parseDate(eventStartDateInput.value);
-            DateTime time = parseTime(eventStartTimeInput.value);
-            DateTime startDateTime = new DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc();
+        // Use a priority based on the start date/time when storing the event in items_by_community_by_type.
+        if (selectedType == 'event') {
+          // Combine the separate date and time fields into one DateTime object.
+          DateTime date = parseDate(eventStartDateInput.value);
+          DateTime time = parseTime(eventStartTimeInput.value);
+          DateTime startDateTime = new DateTime(
+              date.year, date.month, date.day, time.hour, time.minute).toUtc();
 
-            var eventPriority = startDateTime.millisecondsSinceEpoch;
+          var eventPriority = startDateTime.millisecondsSinceEpoch;
 
-            itemsByTypeRef.setWithPriority(encodedItem, eventPriority);
+          itemsByTypeRef.setWithPriority(encodedItem, eventPriority);
+        } else {
+          itemsByTypeRef.setWithPriority(encodedItem, -priority);
+        }
 
-          } else {
-            itemsByTypeRef.setWithPriority(encodedItem, -priority);
-          }
+        // Notify lobby about new item.
+        var message = new Message()
+          ..type = 'item'
+          ..data = {'event': 'added', 'type': '${item.type}', 'id': '$itemId'}
+          ..community = community
+          ..usernameForDisplay = app.user.username
+          ..user = app.user.username.toLowerCase();
 
-          // Notify lobby about new item.
-          var message = new Message()
-            ..type = 'item'
-            ..data = {
-              'event': 'added',
-              'type': '${item.type}',
-              'id': '$itemId'
-            }
-            ..community = community
-            ..usernameForDisplay = app.user.username
-            ..user = app.user.username.toLowerCase();
-
-          Message.add(message, f);
-        });
+        Message.add(message, f);
       });
+    });
 
     // Reference to the item.
     var itemId = itemRef.key;
 
     // For event and news items, let's get URL previews.
     if (item is EventModel || item is NewsModel) {
-
       var dataJson = {'itemId': itemId, 'authToken': app.authToken};
       // Start a crawl for a URI preview. The return is handled in onChildChanged.
-      HttpRequest.request(
-          app.serverPath +
-          Routes.getUriPreview.toString(),
-          method: 'POST',
-          sendData: JSON.encode(dataJson));
+      HttpRequest.request(app.serverPath + Routes.getUriPreview.toString(),
+          method: 'POST', sendData: JSON.encode(dataJson));
     }
 
     // Send a notification email to anybody mentioned in the item.
-    HttpRequest.request(app.serverPath + Routes.sendNotificationsForItem.toString() + "?id=$itemId");
+    HttpRequest.request(app.serverPath +
+        Routes.sendNotificationsForItem.toString() +
+        "?id=$itemId");
 
     overlay.toggle();
 
@@ -297,7 +317,7 @@ class AddStuff extends PolymerElement {
 
   attached() {
     if (app.community != null) {
-       shareToInput.value = app.community.alias;
+      shareToInput.value = app.community.alias;
     }
 
     // Update the selectedType var when a type is selected.

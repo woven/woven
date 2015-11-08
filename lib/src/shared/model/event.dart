@@ -1,21 +1,36 @@
-library event_model;
+library shared.model.event;
 
-import 'post.dart';
-import 'trait/time_span.dart';
-import 'trait/link.dart';
+import 'item.dart';
 
-class EventModel extends Post with TimeSpan, Link {
+class EventModel implements Item {
+  String id;
+  String user;
+  String usernameForDisplay;
+  String type;
+  DateTime createdDate = new DateTime.now().toUtc();
+  DateTime updatedDate = new DateTime.now().toUtc();
+  String subject;
+  String body;
+  String url;
+  String uriPreviewId;
+  DateTime startDateTime;
+  int startDateTimePriority;
 
   Map encode() {
-    var data = super.encode();
-    data['startDateTime'] = startDateTime.toString();
-    data['startDateTimePriority'] = startDateTimePriority.toString();
-    data['url'] = url;
-    data['uriPreviewId'] = uriPreviewId;
-    return data;
+    return {
+      "user": user,
+      "subject": subject,
+      "type": type,
+      "body": body,
+      "createdDate": createdDate.toString(),
+      "updatedDate": updatedDate.toString(),
+      "url": url,
+      "uriPreviewId": uriPreviewId,
+      "startDateTime": startDateTime.toString(),
+      "startDateTimePriority": startDateTimePriority
+    };
   }
 
-  // TODO: Can I eliminate/inherit some of this? Mirrors.
   static EventModel decode(Map data) {
     return new EventModel()
       ..user = data['user']
@@ -24,7 +39,6 @@ class EventModel extends Post with TimeSpan, Link {
       ..body = data['body']
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate']
-
       ..startDateTime = data['startDateTime']
       ..startDateTimePriority = data['startDateTimePriority']
       ..url = data['url']

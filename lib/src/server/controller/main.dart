@@ -11,11 +11,12 @@ import '../app.dart';
 import '../firebase.dart';
 import '../util/file_util.dart';
 import '../util/image_util.dart';
+
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/server/util/crawler_util.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
-import 'package:woven/src/server/model/post.dart';
+import 'package:woven/src/server/model/item.dart';
 import 'package:woven/src/server/util.dart';
 
 class MainController {
@@ -63,7 +64,7 @@ class MainController {
     // TODO: Switch to more nuanced auth later.
     String authToken = config['datastore']['firebaseSecret'];
 
-    Post.delete(id, authToken);
+    Item.delete(id, authToken);
 
     var response = new Response();
     response.success = true;
@@ -214,7 +215,7 @@ class MainController {
       if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
       // Update the item with a reference to the preview.
-      Post.update(itemId, updates, authToken);
+      Item.update(itemId, updates, authToken);
 
       // Return the preview information.
       response.data = preview;
@@ -243,7 +244,7 @@ class MainController {
       if (itemMap['body'] == null) updates['body'] = preview.teaser;
 
       // Update the item with a reference to the preview.
-      Post.update(itemId, updates, authToken);
+      Item.update(itemId, updates, authToken);
 
       // Convert and save the image.
       var extension =

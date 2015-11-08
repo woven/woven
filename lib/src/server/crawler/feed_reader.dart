@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 
+import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
+
 import '../model/feed_item.dart';
 import 'rss_reader.dart';
 import '../util.dart' as util;
@@ -12,7 +14,7 @@ class FeedReader {
   String url;
 
   FeedReader({this.url}) {
-    if (url != null) url = util.prefixHttp(url);
+    if (url != null) url = sharedUtil.prefixHttp(url);
 
     url = util.correctUrl(url);
   }

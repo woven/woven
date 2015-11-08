@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 //import 'package:query_string/query_string.dart';
 //import '../config/config.dart';
 import '../util.dart' as util;
+import 'package:woven/src/shared/shared_util.dart' as sharedUtil;
 //import 'readability.dart';
 //import 'open_graph/open_graph.dart';
 //import 'model/server/models.dart' as model;
@@ -29,7 +30,7 @@ class Crawler {
   static const int MINIMUM_IMAGE_SIZE = 2000;
 
   Crawler(this.url, {this.app}) {
-    url = util.prefixHttp(url);
+    url = sharedUtil.prefixHttp(url);
   }
 
   static String findGoogleCalendarUrlFromPage(String contents) {
@@ -221,7 +222,7 @@ class Crawler {
     return new Future(() {
       if (contents == null && url == null) return null;
 
-      url = util.prefixHttp(url);
+      url = sharedUtil.prefixHttp(url);
 
       Future continueProcessing(contents) {
         return new Future(() {

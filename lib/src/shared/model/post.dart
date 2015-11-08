@@ -2,6 +2,7 @@ library model.post;
 
 import 'item.dart';
 
+// TODO: Consider killing, as we've been weaning off this.
 class Post implements Item {
   String id;
   String user;

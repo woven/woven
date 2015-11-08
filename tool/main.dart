@@ -13,7 +13,7 @@ import 'package:googleapis/common/common.dart' show DownloadOptions, Media;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/server/util/crawler_util.dart';
 import 'package:woven/src/server/firebase.dart';
-import 'package:woven/src/server/model/post.dart';
+import 'package:woven/src/server/model/item.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/server/util/file_util.dart';
 import 'package:woven/src/server/util/image_util.dart';
@@ -205,7 +205,7 @@ updateAllItemsMoveOtherToMessages() {
     Future.forEach(itemsAsList,(Map item) {
       new Future.delayed(const Duration(seconds: 1), () {
         if (item['type'] != 'event' && item['type'] != 'news') {
-          Post.update(item['id'], {
+          Item.update(item['id'], {
               'message': item['body']
           }, firebaseSecret);
           print(item['id']);
@@ -376,7 +376,7 @@ createPreviewForItemsWithUrls() async {
           if (item['subject'] == null) updates['subject'] = preview.title;
           if (item['body'] == null) updates['body'] = preview.teaser;
           // Update the item with a reference to the preview.
-          await Post.update(item['id'], updates, firebaseSecret);
+          await Item.update(item['id'], updates, firebaseSecret);
 
         } else {
           // Resize and save a small preview image.
@@ -412,7 +412,7 @@ createPreviewForItemsWithUrls() async {
 
           // Update the item with a reference to the preview.
           try {
-            await Post.update(item['id'], updates, firebaseSecret);
+            await Item.update(item['id'], updates, firebaseSecret);
           } catch (error) {
             print('DEBUG3: $error');
           }

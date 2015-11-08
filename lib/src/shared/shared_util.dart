@@ -151,6 +151,19 @@ removeNullsFromMap(Map map) {
 }
 
 /**
+ * Adds HTTP if no protocol found.
+ */
+String prefixHttp(String text) {
+  if (text == null) return '';
+
+  if (text.startsWith('http') == false) {
+    return 'http://$text';
+  }
+
+  return text;
+}
+
+/**
  * Check if given string is a valid URL.
  */
 bool isValidUrl(String url) {
