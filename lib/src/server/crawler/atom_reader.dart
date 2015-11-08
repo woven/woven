@@ -45,7 +45,9 @@ class AtomReader {
             element.findElements('summary').single.text;
 
         // Try to find images.
-        var logo = (element.findElements('logo').length > 0) ? element.findElements('logo').single.text : null;
+        var logo = (element.findElements('logo').length > 0)
+            ? element.findElements('logo').single.text
+            : null;
         if (logo == null) {
           var imageMatcher =
               new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false);
@@ -58,12 +60,18 @@ class AtomReader {
 
         // We are inside one <item></item>.
         var item = new AtomItem()
-          ..title = (element.findElements('title').length > 0) ? element.findElements('title').single.text : null
-          ..language = (element.findElements('language').length > 0) ? element.findElements('language').single.text : null
+          ..title = (element.findElements('title').length > 0)
+              ? element.findElements('title').single.text
+              : null
+          ..language = (element.findElements('language').length > 0)
+              ? element.findElements('language').single.text
+              : null
           ..content = content
           ..link = element.findElements('link').first.getAttribute('href')
           ..logo = logo
-          ..rights = (element.findElements('rights').length > 0) ? element.findElements('rights').single.text : null;
+          ..rights = (element.findElements('rights').length > 0)
+              ? element.findElements('rights').single.text
+              : null;
 
         if (item.title == null || item.title == '') return;
 

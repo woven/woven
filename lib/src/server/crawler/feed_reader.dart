@@ -25,11 +25,17 @@ class FeedReader {
     if (contents == null) throw 'Loading $url was empty.';
 
     // ATOM.
-    if (contents.replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '').substring(0, 10).contains('feed')) {
+    if (contents
+        .replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '')
+        .substring(0, 10)
+        .contains('feed')) {
 //      throw 'Atom not supported just yet.';
       var reader = new AtomReader(contents: contents, url: url);
       var results = await reader.getItems();
-      return results.fold([], (previous, current) => previous..add(new FeedItem.fromAtomItem(current)));
+      return results.fold(
+          [],
+          (previous, current) =>
+              previous..add(new FeedItem.fromAtomItem(current)));
     }
 
     // RSS.
@@ -37,7 +43,10 @@ class FeedReader {
       var reader = new RssReader(contents: contents, url: url);
       var results = await reader.getItems();
       if (results == null) return new Future.value({});
-      return results.fold([], (previous, current) => previous..add(new FeedItem.fromRssItem(current)));
+      return results.fold(
+          [],
+          (previous, current) =>
+              previous..add(new FeedItem.fromRssItem(current)));
     }
   }
 }

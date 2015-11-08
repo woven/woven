@@ -31,7 +31,8 @@ class RssReader {
 
       // Get rid of some stuff like "atom:link" and turn it into "link".
       contents = contents.replaceAll(new RegExp('<content:.*?>'), '<content>');
-      contents = contents.replaceAll(new RegExp('</content:.*?>'), '</content>');
+      contents =
+          contents.replaceAll(new RegExp('</content:.*?>'), '</content>');
       contents = contents.replaceAll(new RegExp('<[a-zA-Z0-9]+:'), '<');
       contents = contents.replaceAll(new RegExp('</[a-zA-Z0-9]+:'), '</');
       contents = contents.replaceAll(new RegExp('xml:base=".*?"'), '');
@@ -44,9 +45,9 @@ class RssReader {
       try {
         try {
           XmlDocument xml = parse(contents);
-        } on ArgumentError catch(e) {
+        } on ArgumentError catch (e) {
           print('Invalid RSS feed for $url');
-          return;
+          return null;
         }
         var items = xml.findAllElements('item').forEach((XmlElement element) {
           var image;
@@ -57,7 +58,8 @@ class RssReader {
 //          description = sharedUtil.htmlDecode(description);
 
           // Try to find images.
-          var imageMatcher = new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false);
+          var imageMatcher =
+              new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false);
           var matches = imageMatcher.allMatches(description).toList();
           if (matches.length > 0) {
             description = description.replaceAll(imageMatcher, '');
@@ -69,10 +71,14 @@ class RssReader {
             ..title = element.findElements('title').single.text
             ..link = element.findElements('link').single.text
             // TODO: Bad state, handle better?
-            ..language = (element.findElements('language').length > 0) ? element.findElements('language').single.text : null
+            ..language = (element.findElements('language').length > 0)
+                ? element.findElements('language').single.text
+                : null
             ..description = description
             ..image = image
-            ..copyright = (element.findElements('copyright').length > 0) ? element.findElements('copyright').single.text : null;
+            ..copyright = (element.findElements('copyright').length > 0)
+                ? element.findElements('copyright').single.text
+                : null;
 
           if (item.image is String) {
             futures.add(Crawler.isImageBigEnough(item.image).then((size) {
@@ -86,13 +92,16 @@ class RssReader {
 
           // There can be additional information in the permalink.
           var additionalInfoUrl = element.findElements('guid').single.text;
-          if (additionalInfoUrl != null && additionalInfoUrl.startsWith('http')) {
+          if (additionalInfoUrl != null &&
+              additionalInfoUrl.startsWith('http')) {
             item.link = additionalInfoUrl;
           }
 
           // Parse the date.
 
-          futures.add(util.parseDate(element.findElements('pubDate').first.text).then((result) {
+          futures.add(util
+              .parseDate(element.findElements('pubDate').first.text)
+              .then((result) {
             if (result is DateTime) {
               item.publicationDate = result;
             } else {
@@ -100,7 +109,8 @@ class RssReader {
             }
 
             // We don't want published dates to be in the future.
-            if (item.publicationDate.compareTo(new DateTime.now()) == 1) item.publicationDate = new DateTime.now();
+            if (item.publicationDate.compareTo(new DateTime.now()) ==
+                1) item.publicationDate = new DateTime.now();
           }).catchError((e) {}));
 
           if (item.title != null && item.title != '') rssItems.add(item);
