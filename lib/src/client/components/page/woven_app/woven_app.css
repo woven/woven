@@ -222,6 +222,7 @@ core-item::shadow #icon {
 
 core-menu core-item:hover {
   cursor: pointer !important;
+  color: black;
 }
 
 #side-panel {
