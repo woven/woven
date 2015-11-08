@@ -1,4 +1,4 @@
-library rss_reader;
+library server.crawler.rss_reader;
 
 import 'dart:async';
 import '../model/rss_item.dart';
@@ -42,7 +42,12 @@ class RssReader {
       var futures = [];
 
       try {
-        XmlDocument xml = parse(contents);
+        try {
+          XmlDocument xml = parse(contents);
+        } on ArgumentError catch(e) {
+          print('Invalid RSS feed for $url');
+          return;
+        }
         var items = xml.findAllElements('item').forEach((XmlElement element) {
           var image;
           var description = element.findElements('description').single.text;

@@ -5,11 +5,14 @@ import 'dart:async';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase/firebase_io.dart';
 
 import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/shared/model/feed.dart';
 
 import 'task.dart';
 import '../task_scheduler.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/server/crawler/crawler.dart';
 import 'package:woven/src/server/crawler/feed_reader.dart';
 import 'package:woven/src/server/model/feed_item.dart';
@@ -22,6 +25,9 @@ class CrawlerTask extends Task {
     'breakshop': []
   };
 
+  FirebaseClient firebase = new FirebaseClient(config['datastore']['firebaseSecret']);
+  String firebaseUrl = config['datastore']['firebaseLocation'];
+
   CrawlerTask();
 
   /**
@@ -30,13 +36,20 @@ class CrawlerTask extends Task {
   Future run() async {
     TaskScheduler.log("Running the crawler task");
 
-    urlsToCrawl.forEach((community, urls) {
-      Future.forEach(urls, (url) async {
+    Map communities = await firebase.get(Uri.parse('$firebaseUrl/communities.json'));
+
+    communities.keys.forEach((community) async {
+      Map feedsToCrawl = await firebase.get(Uri.parse('$firebaseUrl/items_by_community_by_type/$community/feed.json'));
+
+      if (feedsToCrawl == null) return;
+
+      Future.forEach(feedsToCrawl.values, (feedData) async {
+        var feed = FeedModel.decode(feedData);
+        var url = feed.url;
 
         var crawler = new Crawler(url);
 
-        print('debug0: $url');
-
+        // Turns it into an actual feed URL. TODO: Re-work soon.
         var feedUrl = await crawler.findFeedUrl();
 
         if (feedUrl == null) {
@@ -46,6 +59,7 @@ class CrawlerTask extends Task {
 
         var feedReader = new FeedReader(url: feedUrl);
         var feedItems = await feedReader.load(limit: 2);
+        if (feedItems.length == 0) return;
         feedItems.forEach((FeedItem item) {
           print('''
             ${item.title}

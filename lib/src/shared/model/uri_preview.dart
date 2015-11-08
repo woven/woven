@@ -1,3 +1,5 @@
+library shared.model.uri_preview;
+
 class UriPreview {
   Uri uri;
   String title;

@@ -34,7 +34,7 @@ class FeedModel implements Item {
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate']
       ..url = data['url']
-      ..url = data['siteUrl']
-      ..url = data['lastCrawledDate'];
+      ..siteUrl = data['siteUrl']
+      ..lastCrawledDate = data['lastCrawledDate'];
   }
 }

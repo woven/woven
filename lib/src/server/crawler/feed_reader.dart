@@ -1,13 +1,12 @@
-library server.rss_crawler;
+library server.crawler.feed_reader;
 
 import 'dart:async';
-
-import 'package:http/http.dart' as http;
 
 import 'package:woven/src/shared/util.dart' as sharedUtil;
 
 import '../model/feed_item.dart';
 import 'rss_reader.dart';
+import 'atom_reader.dart';
 import '../util.dart' as util;
 
 class FeedReader {
@@ -27,17 +26,17 @@ class FeedReader {
 
     // ATOM.
     if (contents.replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '').substring(0, 10).contains('feed')) {
-      throw 'Atom not supported just yet.';
-//      var reader = new AtomReader(contents: contents, url: url);
-//      return reader.getItems().then((results) {
-//        return results.fold([], (previous, current) => previous..add(new FeedItem.fromAtomItem(current)));
-//      });
+//      throw 'Atom not supported just yet.';
+      var reader = new AtomReader(contents: contents, url: url);
+      var results = await reader.getItems();
+      return results.fold([], (previous, current) => previous..add(new FeedItem.fromAtomItem(current)));
     }
 
     // RSS.
     else {
       var reader = new RssReader(contents: contents, url: url);
       var results = await reader.getItems();
+      if (results == null) return new Future.value({});
       return results.fold([], (previous, current) => previous..add(new FeedItem.fromRssItem(current)));
     }
   }
