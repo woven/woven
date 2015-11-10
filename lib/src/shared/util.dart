@@ -114,6 +114,20 @@ base64Decode(String encodedText) {
 }
 
 /**
+ * TODO: Consider moving to base class, models extend it.
+ */
+encode(data) {
+  if (data is DateTime) {
+    // TODO: null-aware .? not working, see https://goo.gl/NpR6Xe.
+    return data.toString();
+  }
+
+  // Handle other types when needed.
+
+  return data != null ? data.toString() : null;
+}
+
+/**
  * Handle possessives nicely.
  *
  * James' beer, not James's beer.

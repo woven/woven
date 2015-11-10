@@ -49,7 +49,8 @@ class CrawlerTask extends Task {
 
         var crawler = new Crawler(url);
 
-        // Turns it into an actual feed URL. TODO: Re-work soon.
+        // Turns it into an actual feed URL, if it isn't already.
+        // TODO: Store the feed URL or the user-entered URL or both in db?
         var feedUrl = await crawler.findFeedUrl();
 
         if (feedUrl == null) {

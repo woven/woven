@@ -1,6 +1,7 @@
 library shared.model.feed;
 
 import 'item.dart';
+import '../util.dart' as util;
 
 class FeedModel implements Item {
   String id;
@@ -17,13 +18,12 @@ class FeedModel implements Item {
     return {
       "user": user,
       "type": type,
-      "createdDate": createdDate.toString(),
-      "updatedDate": updatedDate.toString(),
+      "createdDate": util.encode(createdDate),
+      "updatedDate": util.encode(updatedDate),
       "url": url,
       "siteUrl": siteUrl,
       // TODO: https://goo.gl/NpR6Xe
-      "lastCrawledDate":
-          (lastCrawledDate != null ? lastCrawledDate.toString() : null)
+      "lastCrawledDate": util.encode(lastCrawledDate)
     };
   }
 
