@@ -1,4 +1,4 @@
-library server.model.post;
+library server.model.item;
 
 import 'package:woven/src/shared/model/item.dart' as shared;
 import '../firebase.dart';
@@ -47,6 +47,25 @@ class Item extends shared.Item {
         Firebase.delete('/items_by_community/$community/$id.json', auth: authToken);
         Firebase.delete('/items_by_community_by_type/$community/$type/$id.json', auth: authToken);
       });
+    } catch(error, stack) {
+      print('$error\n\n$stack');
+    }
+  }
+
+  /**
+   * Add an item with a given [value] to the given [community].
+   */
+  static add(String community, Map value, String authToken) async {
+    try {
+      value['communities'] = {community : true};
+      var type = value['type'];
+
+      var id = await Firebase.post('/items.json', value, auth: authToken);
+      print(id);
+
+      Firebase.put('/items_by_community/$community/$id.json', value, auth: authToken);
+      Firebase.put('/items_by_community_by_type/$community/$type/$id.json', value, auth: authToken);
+
     } catch(error, stack) {
       print('$error\n\n$stack');
     }

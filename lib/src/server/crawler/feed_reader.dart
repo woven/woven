@@ -21,7 +21,12 @@ class FeedReader {
   // TODO: Not respecting limit?
   Future<List<FeedItem>> load({int limit: 10}) {
     return new Future(() async {
-      var contents = await util.readHttp(url);
+    var contents;
+      try {
+        contents = await util.readHttp(url);
+      } catch(error, stack) {
+        print('$error\n\n$stack');
+      }
 
       if (contents == null) throw 'Loading $url was empty.';
 
@@ -32,6 +37,7 @@ class FeedReader {
           .contains('feed')) {
         var reader = new AtomReader(contents: contents, url: url);
         var results = await reader.getItems();
+        if (results == null) return new Future.value([]);
         return results.fold(
             [],
             (previous, current) =>

@@ -9,6 +9,9 @@ import 'package:firebase/firebase_io.dart';
 
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/shared/model/feed.dart';
+import 'package:woven/src/shared/model/news.dart';
+import 'package:woven/src/server/model/item.dart';
+import 'package:woven/src/shared/util.dart' as util;
 
 import 'task.dart';
 import '../task_scheduler.dart';
@@ -25,7 +28,8 @@ class CrawlerTask extends Task {
     'breakshop': []
   };
 
-  FirebaseClient firebase = new FirebaseClient(config['datastore']['firebaseSecret']);
+  FirebaseClient firebase =
+      new FirebaseClient(config['datastore']['firebaseSecret']);
   String firebaseUrl = config['datastore']['firebaseLocation'];
 
   CrawlerTask();
@@ -36,17 +40,19 @@ class CrawlerTask extends Task {
   Future run() async {
     TaskScheduler.log("Running the crawler task");
 
-    Map communities = await firebase.get(Uri.parse('$firebaseUrl/communities.json'));
+    Map communities =
+        await firebase.get(Uri.parse('$firebaseUrl/communities.json'));
 
     communities.keys.forEach((community) async {
-      Map feedsToCrawl = await firebase.get(Uri.parse('$firebaseUrl/items_by_community_by_type/$community/feed.json'));
+      Map feedsToCrawl = await firebase.get(Uri.parse(
+          '$firebaseUrl/items_by_community_by_type/$community/feed.json'));
 
       if (feedsToCrawl == null) return;
 
       Future.forEach(feedsToCrawl.values, (feedData) async {
         var feed = FeedModel.decode(feedData);
-        var url = feed.url;
 
+        var url = feed.url;
         var crawler = new Crawler(url);
 
         // Turns it into an actual feed URL, if it isn't already.
@@ -60,18 +66,38 @@ class CrawlerTask extends Task {
 
         var feedReader = new FeedReader(url: feedUrl);
         var feedItems = await feedReader.load(limit: 2);
+
         if (feedItems.length == 0) return;
-        feedItems.forEach((FeedItem item) {
-          print('''
-            ${item.title}
-            ${item.description}
-            ${item.link}
-            ${item.categories}
-            ${item.publicationDate}
-            ${item.image}
-            ${item.copyright}
-            =================
-          ''');
+        feedItems.forEach((FeedItem feedItem) async {
+          var encodedKey = util.encodeFirebaseKey(feedItem.link);
+          print('$firebaseUrl/url_index/$encodedKey.json');
+          print('$firebaseUrl/url_index/${encodeKey(feedItem.link)}.json');
+          var checkIfUrlExists = await firebase.get(
+              Uri.parse('$firebaseUrl/url_index/$encodedKey.json'));
+
+          if (checkIfUrlExists == null) {
+
+            firebase.put(
+                Uri.parse(
+                    '$firebaseUrl/url_index/$encodedKey.json'),
+                {'lastCrawledDate': new DateTime.now().toUtc().toString()});
+
+            // TODO: Crawl the feed item's URL, generate a uriPreview, etc.
+            NewsModel newsItem = new NewsModel();
+            newsItem
+              ..url = feedItem.link
+              ..subject = feedItem.title
+              ..body = feedItem.description
+              ..createdDate = new DateTime.now().toUtc()
+              ..user = 'dave'
+              ..type = 'news';
+
+            // TODO: Use firebase_io lib in ItemModel?
+            Item.add(community, newsItem.encode(), config['datastore']['firebaseSecret']);
+
+          } else {
+            TaskScheduler.log('URL already crawled: ${feedItem.link}');
+          }
         });
       });
     });

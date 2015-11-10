@@ -81,6 +81,7 @@ class AtomReader {
 
         if (date != null) {
           futures.add(util.parseDate(date).then((result) {
+            print('debug1');
             if (result is DateTime) {
               item.published = result;
 
@@ -90,14 +91,14 @@ class AtomReader {
 
               items.add(item);
             }
-          }).catchError((e) {}));
+          }).catchError((error, stack) => print('$error\n\n$stack')));
         } else {
           items.add(item);
         }
       });
-    } catch (e, stack) {
+    } catch (error, stack) {
       completer
-          .completeError('Exception during parsing of ATOM feed: $e $stack');
+          .completeError('Exception during parsing of ATOM feed: $error\n\n$stack');
       return completer.future;
     }
 

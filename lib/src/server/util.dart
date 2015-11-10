@@ -64,6 +64,7 @@ Future<DateTime> parseDate(String dateString) {
 
     for (var i = 0, length = formats.length; i < length; i++) {
       try {
+        print(dateString);
         DateTime date = formats[i].parse(dateString);
 
         var m = new RegExp('(\\+|-)([0-9]){4}\$').firstMatch(dateString);
@@ -74,8 +75,8 @@ Future<DateTime> parseDate(String dateString) {
         }
 
         return date;
-      } catch (e) {
-        print(e);
+      } catch (error) {
+        print('parseDate() error: $error');
       }
     }
 

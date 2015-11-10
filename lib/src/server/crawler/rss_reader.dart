@@ -12,7 +12,7 @@ class RssReader {
   var contents;
   var url;
   var message = '';
-  var xml;
+  XmlDocument xml;
 
   RssReader({this.contents, this.url});
 
@@ -27,16 +27,16 @@ class RssReader {
       // TODO: Still needed now that we're using the new xml lib?
 
       // Get rid of the top-level <?xml ?> line.
-      contents = contents.replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '');
-
-      // Get rid of some stuff like "atom:link" and turn it into "link".
-      contents = contents.replaceAll(new RegExp('<content:.*?>'), '<content>');
-      contents =
-          contents.replaceAll(new RegExp('</content:.*?>'), '</content>');
-      contents = contents.replaceAll(new RegExp('<[a-zA-Z0-9]+:'), '<');
-      contents = contents.replaceAll(new RegExp('</[a-zA-Z0-9]+:'), '</');
-      contents = contents.replaceAll(new RegExp('xml:base=".*?"'), '');
-      contents = contents.replaceAll(new RegExp('xmlns:atom=".*?"'), '');
+//      contents = contents.replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '');
+//
+//      // Get rid of some stuff like "atom:link" and turn it into "link".
+//      contents = contents.replaceAll(new RegExp('<content:.*?>'), '<content>');
+//      contents =
+//          contents.replaceAll(new RegExp('</content:.*?>'), '</content>');
+//      contents = contents.replaceAll(new RegExp('<[a-zA-Z0-9]+:'), '<');
+//      contents = contents.replaceAll(new RegExp('</[a-zA-Z0-9]+:'), '</');
+//      contents = contents.replaceAll(new RegExp('xml:base=".*?"'), '');
+//      contents = contents.replaceAll(new RegExp('xmlns:atom=".*?"'), '');
 
       // Parse the RSS message.
       var rssItems = [];
@@ -44,11 +44,20 @@ class RssReader {
 
       try {
         try {
-          XmlDocument xml = parse(contents);
-        } on ArgumentError catch (e) {
+//          if (url.contains('techcrunch.com')) {
+//            print(contents.substring(0, 500));
+//          }
+          xml = parse(contents);
+
+        } on ArgumentError catch (e, s) {
+          print('$e\n\n$s');
+          // TODO: How do I get this to bubble up so my CrawlerTask can handle it?
           print('Invalid RSS feed for $url');
           return null;
         }
+//        print('$xml XDDD');
+//        print(url);
+//        return null;
         var items = xml.findAllElements('item').forEach((XmlElement element) {
           var image;
           var description = element.findElements('description').single.text;
