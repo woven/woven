@@ -1,5 +1,7 @@
 library server.model.item;
 
+import 'dart:async';
+
 import 'package:woven/src/shared/model/item.dart' as shared;
 import '../firebase.dart';
 
@@ -20,10 +22,16 @@ class Item extends shared.Item {
       if (communities.isEmpty) return null;
 
       communities.forEach((community) {
-        Firebase.patch('/items_by_community/$community/$id.json', value, auth: authToken);
-        Firebase.patch('/items_by_community_by_type/$community/$type/$id.json', value, auth: authToken);
+        Firebase.patch('/items_by_community/$community/$id.json', value,
+            auth: authToken);
+        Firebase.patch(
+            '/items_by_community_by_type/$community/$type/$id.json', value,
+            auth: authToken);
       });
-    } catch(error, stack) {
+
+      // TODO: Update updatedDate for community?
+
+    } catch (error, stack) {
       print('$error\n\n$stack');
     }
   }
@@ -44,10 +52,12 @@ class Item extends shared.Item {
       if (communities.isEmpty) return null;
 
       communities.forEach((community) {
-        Firebase.delete('/items_by_community/$community/$id.json', auth: authToken);
-        Firebase.delete('/items_by_community_by_type/$community/$type/$id.json', auth: authToken);
+        Firebase.delete('/items_by_community/$community/$id.json',
+            auth: authToken);
+        Firebase.delete('/items_by_community_by_type/$community/$type/$id.json',
+            auth: authToken);
       });
-    } catch(error, stack) {
+    } catch (error, stack) {
       print('$error\n\n$stack');
     }
   }
@@ -55,18 +65,28 @@ class Item extends shared.Item {
   /**
    * Add an item with a given [value] to the given [community].
    */
-  static add(String community, Map value, String authToken) async {
+  static Future<String> add(
+      String community, Map value, String authToken) async {
     try {
-      value['communities'] = {community : true};
+      value['communities'] = {community: true};
       var type = value['type'];
 
       var id = await Firebase.post('/items.json', value, auth: authToken);
-      print(id);
 
-      Firebase.put('/items_by_community/$community/$id.json', value, auth: authToken);
-      Firebase.put('/items_by_community_by_type/$community/$type/$id.json', value, auth: authToken);
+      Firebase.put('/items_by_community/$community/$id.json', value,
+          auth: authToken);
+      Firebase.put(
+          '/items_by_community_by_type/$community/$type/$id.json', value,
+          auth: authToken);
 
-    } catch(error, stack) {
+      var now = new DateTime.now().toUtc();
+
+      Firebase.patch('/communities/$community.json',
+          {'updatedDate': now.toString()},
+          auth: authToken);
+
+      return id;
+    } catch (error, stack) {
       print('$error\n\n$stack');
     }
   }

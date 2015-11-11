@@ -12,6 +12,7 @@ import 'package:woven/src/shared/model/feed.dart';
 import 'package:woven/src/shared/model/news.dart';
 import 'package:woven/src/server/model/item.dart';
 import 'package:woven/src/shared/util.dart' as util;
+import 'package:logging/logging.dart';
 
 import 'task.dart';
 import '../task_scheduler.dart';
@@ -21,12 +22,9 @@ import 'package:woven/src/server/crawler/feed_reader.dart';
 import 'package:woven/src/server/model/feed_item.dart';
 
 class CrawlerTask extends Task {
-  bool runImmediately = true;
+  Duration interval = const Duration(seconds: 120);
 
-  final Map<String, List<String>> urlsToCrawl = {
-    'miamitech': ['http://miamiherald.typepad.com/the-starting-gate/rss.xml'],
-    'breakshop': []
-  };
+  final Logger logger = new Logger('CrawlerTask');
 
   FirebaseClient firebase =
       new FirebaseClient(config['datastore']['firebaseSecret']);
@@ -38,7 +36,7 @@ class CrawlerTask extends Task {
    * Runs the task.
    */
   Future run() async {
-    TaskScheduler.log("Running the crawler task");
+    logger.info("Running the crawler task");
 
     Map communities =
         await firebase.get(Uri.parse('$firebaseUrl/communities.json'));
@@ -57,21 +55,29 @@ class CrawlerTask extends Task {
 
         // Turns it into an actual feed URL, if it isn't already.
         // TODO: Store the feed URL or the user-entered URL or both in db?
+
         var feedUrl = await crawler.findFeedUrl();
 
         if (feedUrl == null) {
-          TaskScheduler.log('No feed found for $url');
+          logger.warning('No feed found for $url');
           return;
         }
 
         var feedReader = new FeedReader(url: feedUrl);
         var feedItems = await feedReader.load(limit: 2);
 
-        if (feedItems.length == 0) return;
-        feedItems.forEach((FeedItem feedItem) async {
+        if (feedItems.length == 0) {
+          logger.warning('Empty or misunderstood feed found at $feedUrl');
+          return;
+        }
+
+        var count = 0;
+        Future.forEach(feedItems, (FeedItem feedItem) async {
           var encodedKey = util.encodeFirebaseKey(feedItem.link);
-          print('$firebaseUrl/url_index/$encodedKey.json');
-          print('$firebaseUrl/url_index/${encodeKey(feedItem.link)}.json');
+          // TODO: Tell kevmoo his encodeKey() not encoding properly.
+//          print('$firebaseUrl/url_index/$encodedKey.json');
+//          print('$firebaseUrl/url_index/${encodeKey(feedItem.link)}.json');
+          try {
           var checkIfUrlExists = await firebase.get(
               Uri.parse('$firebaseUrl/url_index/$encodedKey.json'));
 
@@ -88,25 +94,26 @@ class CrawlerTask extends Task {
               ..url = feedItem.link
               ..subject = feedItem.title
               ..body = feedItem.description
-              ..createdDate = new DateTime.now().toUtc()
+              ..createdDate = feedItem.publicationDate
               ..user = 'dave'
               ..type = 'news';
 
             // TODO: Use firebase_io lib in ItemModel?
-            Item.add(community, newsItem.encode(), config['datastore']['firebaseSecret']);
-
-          } else {
-            TaskScheduler.log('URL already crawled: ${feedItem.link}');
+            Item.add(community, newsItem.encode(), config['datastore']['firebaseSecret']).then((id) {
+              count++;
+            });
           }
+          } catch(e, s) {
+           print('$e\n\n$s');
+          }
+        }).then((_) {
+          if (count > 0) logger.info('Retrieved $count new items from $feedUrl');
         });
+
+      }).catchError((error, stack) {
+        logger.severe('Unhandled exception crawling feeds', error, stack);
       });
     });
-  }
-
-  // TODO: Unused atm.
-  Future processFeed(Uri uri) async {
-    String contents = await http.read(uri);
-    print(contents);
   }
 
   Future getPreview(Uri uri) async {

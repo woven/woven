@@ -163,6 +163,9 @@ class Crawler {
 
           if (match2 != null) {
             var realFeedUrl = match2.group(1);
+
+            if (realFeedUrl.trim().isEmpty) return null;
+
             if (realFeedUrl.startsWith('http') == false) {
               var extraSlash = '';
               if (url.endsWith('/') == false && realFeedUrl.startsWith('/') == false) extraSlash = '/';

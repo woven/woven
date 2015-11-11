@@ -4,6 +4,7 @@ import 'dart:async';
 import '../model/rss_item.dart';
 
 import 'package:xml/xml.dart';
+import 'package:logging/logging.dart';
 
 import '../util.dart' as util;
 import 'crawler.dart';
@@ -13,6 +14,8 @@ class RssReader {
   var url;
   var message = '';
   XmlDocument xml;
+
+  final Logger logger = new Logger('RssReader');
 
   RssReader({this.contents, this.url});
 
@@ -43,21 +46,8 @@ class RssReader {
       var futures = [];
 
       try {
-        try {
-//          if (url.contains('techcrunch.com')) {
-//            print(contents.substring(0, 500));
-//          }
-          xml = parse(contents);
+        xml = parse(contents);
 
-        } on ArgumentError catch (e, s) {
-          print('$e\n\n$s');
-          // TODO: How do I get this to bubble up so my CrawlerTask can handle it?
-          print('Invalid RSS feed for $url');
-          return null;
-        }
-//        print('$xml XDDD');
-//        print(url);
-//        return null;
         var items = xml.findAllElements('item').forEach((XmlElement element) {
           var image;
           var description = element.findElements('description').single.text;
@@ -107,25 +97,31 @@ class RssReader {
           }
 
           // Parse the date.
-
           futures.add(util
               .parseDate(element.findElements('pubDate').first.text)
               .then((result) {
             if (result is DateTime) {
               item.publicationDate = result;
             } else {
-              item.publicationDate = new DateTime.now();
+              // No publication date, so let's just skip this item.
+              logger.warning("No publication date for item: ${item.link}");
+              return;
+//              item.publicationDate = new DateTime.now();
             }
 
             // We don't want published dates to be in the future.
             if (item.publicationDate.compareTo(new DateTime.now()) ==
                 1) item.publicationDate = new DateTime.now();
-          }).catchError((e) {}));
+          }).catchError((error, stack) {
+            logger.warning('Error parsing date for RSS item', error, stack);
+            return;
+          }));;
 
           if (item.title != null && item.title != '') rssItems.add(item);
         });
       } catch (error, stack) {
         throw 'Exception during parsing of RSS feed: $error\n\n$stack';
+        logger.severe('Exception during parsing of RSS feed', error, stack);
       }
 
       return Future.wait(futures).then((values) => rssItems);

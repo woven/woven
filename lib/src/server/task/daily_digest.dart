@@ -31,7 +31,7 @@ class DailyDigestTask extends Task {
    */
   Future run() async {
     DateTime now = new DateTime.now().toUtc();
-    TaskScheduler.log("Running the daily digest task");
+//    TaskScheduler.log("Running the daily digest task");
     List<Map> usersByCommunity = await CommunityModel.getCommunitiesWithUsers();
 
     // Loop over each community/users map.

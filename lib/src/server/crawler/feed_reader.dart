@@ -3,6 +3,7 @@ library server.crawler.feed_reader;
 import 'dart:async';
 
 import 'package:woven/src/shared/util.dart' as sharedUtil;
+import 'package:logging/logging.dart';
 
 import '../model/feed_item.dart';
 import 'rss_reader.dart';
@@ -11,6 +12,8 @@ import '../util.dart' as util;
 
 class FeedReader {
   String url;
+
+  final Logger logger = new Logger('FeedReader');
 
   FeedReader({this.url}) {
     if (url != null) url = sharedUtil.prefixHttp(url);
@@ -21,14 +24,17 @@ class FeedReader {
   // TODO: Not respecting limit?
   Future<List<FeedItem>> load({int limit: 10}) {
     return new Future(() async {
-    var contents;
-      try {
-        contents = await util.readHttp(url);
-      } catch(error, stack) {
-        print('$error\n\n$stack');
-      }
+      var contents;
+//      try {
+      contents = await util.readHttp(url);
+//      } catch(error, stack) {
+//        print('$error\n\n$stack');
+//      }
 
-      if (contents == null) throw 'Loading $url was empty.';
+      if (contents == null) {
+        logger.warning('Loading $url was empty');
+        return new Future.value([]);
+      }
 
       // ATOM.
       if (contents
@@ -41,7 +47,7 @@ class FeedReader {
         return results.fold(
             [],
             (previous, current) =>
-        previous..add(new FeedItem.fromAtomItem(current)));
+                previous..add(new FeedItem.fromAtomItem(current)));
       }
 
       // RSS.
@@ -52,9 +58,10 @@ class FeedReader {
         return results.fold(
             [],
             (previous, current) =>
-        previous..add(new FeedItem.fromRssItem(current)));
+                previous..add(new FeedItem.fromRssItem(current)));
       }
+    }).catchError((e) {
+      return new Future.value([]);
     });
-
   }
 }

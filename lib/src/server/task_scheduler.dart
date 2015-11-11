@@ -4,21 +4,17 @@ import 'dart:async';
 import 'task/daily_digest.dart';
 import 'task/crawler.dart';
 import 'task/task.dart';
-import 'app.dart';
 
 /**
  * A very simple task scheduler.
  */
 class TaskScheduler {
-  App app;
-
   List<Task> tasks = [new DailyDigestTask(), new CrawlerTask()];
 
-  TaskScheduler(this.app);
+  TaskScheduler();
 
   run() {
     tasks.forEach((task) {
-      task.app = app; // Inject app dependency.
       if (task.runImmediately) {
         task.run();
       } else {
@@ -79,8 +75,8 @@ class TaskScheduler {
     });
   }
 
-  static log(String message) {
-    DateTime now = new DateTime.now().toUtc();
-    print('[$now]\t$message');
-  }
+//  static log(String message) {
+//    DateTime now = new DateTime.now().toUtc();
+//    print('[$now]\t$message');
+//  }
 }

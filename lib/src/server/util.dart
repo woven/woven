@@ -64,7 +64,6 @@ Future<DateTime> parseDate(String dateString) {
 
     for (var i = 0, length = formats.length; i < length; i++) {
       try {
-        print(dateString);
         DateTime date = formats[i].parse(dateString);
 
         var m = new RegExp('(\\+|-)([0-9]){4}\$').firstMatch(dateString);
@@ -76,18 +75,18 @@ Future<DateTime> parseDate(String dateString) {
 
         return date;
       } catch (error) {
-        print('parseDate() error: $error');
+        // Try generic.
+        try {
+          var date = DateTime.parse(dateString);
+
+          date = date.add(date.timeZoneOffset);
+
+          return date;
+        } catch (e) {
+          throw 'Exception parsing date';
+        }
       }
     }
-
-    // Try generic.
-    try {
-      var date = DateTime.parse(dateString);
-
-      date = date.add(date.timeZoneOffset);
-
-      return date;
-    } catch (e) {}
 
     return null;
   });
