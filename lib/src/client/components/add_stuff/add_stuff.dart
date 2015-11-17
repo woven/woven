@@ -37,8 +37,12 @@ class AddStuff extends PolymerElement {
 
   CoreOverlay get overlay => $['overlay'];
 
-  Element get elRoot =>
-      document.querySelector('woven-app').shadowRoot.querySelector('add-stuff');
+  Element get elRoot => document
+      .querySelector('woven-app')
+      .shadowRoot
+      .querySelector('x-main')
+      .shadowRoot
+      .querySelector('add-stuff');
 
   CoreInput get messageInput =>
       elRoot.shadowRoot.querySelector('#message-textarea');

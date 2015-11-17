@@ -6,7 +6,7 @@ import 'package:polymer/polymer.dart';
 import 'package:route/url_pattern.dart';
 
 class Router extends Observable {
-  StreamController _onDispatchController = new StreamController();
+  StreamController _onDispatchController = new StreamController.broadcast();
   Stream get onDispatch => _onDispatchController.stream;
 
   StreamController _onNotFoundController = new StreamController();
@@ -21,6 +21,8 @@ class Router extends Observable {
   @observable var selectedPage;
   @observable var previousPage = null;
 
+  var aliasHandler;
+
   Router() {
     // This is fired when the browser goes back or forward through the URL history.
     window.onPopState.listen((PopStateEvent e) {
@@ -30,26 +32,47 @@ class Router extends Observable {
     Timer.run(resolve);
   }
 
-  void resolve() {
-    var matchingPattern = routes.keys.firstWhere((UrlPattern pattern) => pattern.matches(currentPath), orElse: () => null);
+  void switchPage(String url) {
+    dispatch(url: '$url');
+  }
+
+  resolve() async {
+    print('debug2: resolve');
+    var matchingPattern = routes.keys.firstWhere(
+        (UrlPattern pattern) => pattern.matches(currentPath),
+        orElse: () => null);
     if (matchingPattern == null) {
-      // For now, dispatch even if no matching pattern
-      // so we can handle aliases which aren't defined as route patterns.
-      _onNotFoundController.add(currentPath);
+      print('debug3: no matching pattern');
+      bool foundAlias = await aliasHandler(currentPath);
+      if (foundAlias) {
+        print('debug: foundAlias');
+        _onDispatchController.add(currentPath);
+      } else {
+        print('debug: did not foundAlias');
+        _onNotFoundController.add(currentPath);
+      }
       return;
     }
 
     route = matchingPattern;
 
+    print('debug4: dispatched');
     _onDispatchController.add(currentPath);
 
     var action = routes[matchingPattern];
     if (action != null) action(currentPath); // Call the route handler.
   }
 
-  void dispatch({String url, String title, bool flash: false, bool alwaysDispatch: false}) {
+  void dispatch(
+      {String url,
+      String title,
+      bool flash: false,
+      bool alwaysDispatch: false}) {
+    print('debug0');
     // Determine if we should just reload instead.
-    if (Uri.parse(url).host != window.location.hostname && Uri.parse(url).host != '') {
+    if (Uri.parse(url).host != window.location.hostname &&
+        Uri.parse(url).host != '') {
+      print('debug1');
       window.location.href = url;
       return;
     }
@@ -76,7 +99,6 @@ class Router extends Observable {
 
     window.history.pushState(null, title, url);
     resolve();
-
   }
 
 //  I used this method like this in Woven:

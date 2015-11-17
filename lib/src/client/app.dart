@@ -47,6 +47,9 @@ class App extends Observable {
   Stream onUserChanged;
   StreamController _controllerUserChanged;
 
+  Stream onTitleChanged;
+  StreamController _controllerTitleChanged;
+
   App() {
     f = new Firebase(config['datastore']['firebaseLocation']);
     cloudStoragePath = config['google']['cloudStoragePath'];
@@ -71,10 +74,10 @@ class App extends Observable {
     router = new Router()
       // Every route has to be registered... but if we don't need a handler, pass null.
       ..routes[Routes.home] = home
-      ..routes[Routes.starred] = starred
       ..routes[Routes.people] = people
-      ..routes[Routes.showItem] = showItem
-      ..routes[Routes.confirmEmail] = home;
+      ..routes[Routes.showItem] = handleAliasPage
+      ..routes[Routes.confirmEmail] = home
+      ..aliasHandler = handleAliasPage;
 
     // On load, check to see if there's a community in the URL.
     // Use the first part of the path as the alias.
@@ -90,8 +93,8 @@ class App extends Observable {
       });
     }
 
-    router.onNotFound.listen(notFound);
-    router.onDispatch.listen(globalHandler);
+//    router.onNotFound.listen(notFound);
+    router.onDispatch.listen(handleAliasPage);
 
     _controllerUserChanged = new StreamController();
     onUserChanged = _controllerUserChanged.stream.asBroadcastStream();
@@ -100,6 +103,7 @@ class App extends Observable {
   }
 
   void home(String path) {
+    pageTitle = 'Channels';
     // Home goes to the community list for now.
     router.selectedPage = 'channels';
     changeCommunity(null);
@@ -107,27 +111,31 @@ class App extends Observable {
         true;
   }
 
-  void starred(String path) {
-    router.selectedPage = 'starred';
-    pageTitle = "Starred";
-  }
-
   void people(String path) {
+    pageTitle = 'People';
     router.selectedPage = 'people';
   }
 
   // We're using this as a kind of placeholder for various routes.
-  void notFound(String path) {
+  Future<bool> handleAliasPage(String path) {
     var pathUri = Uri.parse(path);
+
     if (pathUri.pathSegments.length > 0) showHomePage = false;
+
     if (pathUri.pathSegments.length > 0 &&
         !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
       String alias = Uri.parse(path).pathSegments[0];
+
       // Check the app cache for the community.
-      changeCommunity(alias).then((bool success) {
+      return changeCommunity(alias).then((success) {
+        if (!success) return false;
+
         if (pathUri.pathSegments.length == 1) {
+          pageTitle = "Lobby";
           router.selectedPage = 'lobby';
-        } else {
+        }
+
+        if (pathUri.pathSegments.length > 1) {
           // If we're at <community>/<something>, see if <something> is a valid page.
           switch (pathUri.pathSegments[1]) {
             case 'people':
@@ -151,12 +159,13 @@ class App extends Observable {
               router.selectedPage = 'announcements';
               break;
             default:
-              pageTitle = "default";
-              print('404: ' + path);
+              return false;
           }
         }
+        return true;
       });
     }
+    return new Future.value(false);
   }
 
   void showItem(String path) {
@@ -242,6 +251,8 @@ class App extends Observable {
   void showMessage(String message, [String severity]) {
     PaperToast toastElement = document
         .querySelector('woven-app')
+        .shadowRoot
+        .querySelector('x-main')
         .shadowRoot
         .querySelector('#toast-message');
 

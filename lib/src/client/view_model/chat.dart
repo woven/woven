@@ -395,7 +395,15 @@ class ChatViewModel extends BaseViewModel with Observable {
     if (item.updatedDate.isAfter(localTime)) item.updatedDate = localTime;
     if (item.createdDate.isAfter(localTime)) item.createdDate = localTime;
 
-    // Retrieve the group within this item belongs to, if any.
+    // TODO: Can we get the inline item as part of the chat vm?
+    // Problem is we;d have to dupe item processing from feed vm.
+//    if (item.type == 'item') {
+//      f.child('/items/' + item.data['id']).onValue.listen((e) {
+//
+//      });
+//    }
+
+    // Retrieve the group that this item belongs to, if any.
     var group = groups.firstWhere((group) => group.isDateWithin(item.createdDate), orElse: () => null);
 
     if (group != null) {

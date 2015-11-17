@@ -1,5 +1,7 @@
 library community_model;
 
+import '../util.dart' as util;
+
 class CommunityModel {
   String id;
   String alias;
@@ -16,8 +18,8 @@ class CommunityModel {
         "alias": community.alias,
         "name": community.name,
         "shortDescription": community.shortDescription,
-        "createdDate": community.createdDate.toString(),
-        "updatedDate": community.updatedDate.toString(),
+        "createdDate": util.encode(community.createdDate),
+        "updatedDate": util.encode(community.updatedDate),
         "star_count": community.starCount,
         "disabled": community.disabled
     };
@@ -28,8 +30,8 @@ class CommunityModel {
       ..alias = data['alias']
       ..name = data['name']
       ..shortDescription = data['shortDescription']
-      ..createdDate = DateTime.parse(data['createdDate'])
-      ..updatedDate = DateTime.parse(data['updatedDate'])
+      ..createdDate = data['createdDate']
+      ..updatedDate = data['updatedDate']
       ..starCount = data['star_count']
       ..disabled = data['disabled'];
   }

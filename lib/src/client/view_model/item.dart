@@ -5,7 +5,7 @@ import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/client/view_model/base.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/client/model/user.dart';
@@ -27,6 +27,8 @@ class ItemViewModel extends BaseViewModel with Observable {
 //    if (app.selectedItem == null) return '';
 //    return "${InputFormatter.nl2br(app.selectedItem['body'])}";
 //  }
+
+  //TODO: QUESTION is what ViewModel should I set up that holds the inline items? Or just load in inline_item attached and has its own VM?
 
   /**
    * Get the item.

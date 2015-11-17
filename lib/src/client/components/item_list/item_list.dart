@@ -60,7 +60,6 @@ class ItemList extends PolymerElement with Observable {
 
   attached() {
     print("+Starred");
-    app.pageTitle = "Saved";
 
     // We only attach this when we have a user,
     // so this should always run.

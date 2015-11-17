@@ -56,7 +56,7 @@ class CommunityList extends PolymerElement with Observable {
 
   attached() {
     if (app.debugMode) print("+CommunityList");
-    app.pageTitle = "Channels";
+//    app.pageTitle = "Channels";
   }
 
   detached() {

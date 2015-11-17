@@ -1,0 +1,398 @@
+#core_header_panel {
+  width: 300px;
+  height: 400px;
+  left: 0;
+  top: 0;
+  position: absolute;
+}
+
+.content {
+  height: 100%;
+}
+
+.main {
+  /*overflow: auto;*/
+}
+
+.fixed-area {
+  background-color: #1A9AF5;
+  padding: 5px;
+  width: 100%;
+}
+
+.toolbar {
+  background-color: #2FA300;
+  padding: 0 0 0 8px;
+  /*background-image: url(/static/images/patt_1.png);*/
+  background-repeat: repeat;
+  background-size: inherit;
+  background-blend-mode: inherit;
+  color: white;
+  text-align: center;
+  align-content: center;
+  width: 100%;
+  /*transition: background-color .8s;*/
+}
+
+.theme-dark .toolbar {
+  background-color: #0B0B0B;
+  transition: background-color .2s;
+  border-bottom: none;
+  color: white;
+}
+
+.toolbar span {
+  width: 100%;
+  cursor: pointer;
+}
+
+.toolbar.has-logo {
+  background-color: #000;
+  /*transition: background-color .8s;*/
+}
+
+#page-title {
+  opacity: 0;
+  transition: .2s opacity;
+  font-size: 20px;
+  letter-spacing: .2pt;
+  cursor: pointer;
+}
+
+#page-title:hover {
+  color: #ddd;
+  transition: color .2s;
+}
+
+#sidebar-title {
+  opacity: 1;
+  transition: .2s opacity;
+  font-size: 20px;
+  letter-spacing: .2pt;
+}
+
+#sidebar-title.has-logo {
+  opacity: 1;
+}
+
+#woven-logo {
+  width: 125px;
+}
+
+/* drawer is always visible on a wide screen
+   so menu button isn't required */
+core-drawer-panel:not([narrow]) #menu-button {
+  visibility: hidden;
+}
+
+/*core-drawer-oanel #menu-button:active {*/
+/*background-color: #333;*/
+/*box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.12);*/
+/*}*/
+
+.btn.primary {
+  fill: white !important;
+  color: white;
+  box-shadow: none;
+}
+
+.btn.primary:hover {
+  fill: #bbb !important;
+  color: #bbb;
+}
+
+.btn.primary:active {
+  background: transparent;
+}
+
+core-tooltip::shadow .core-tooltip {
+  font-size: 14px;
+  opacity: 0;
+  -webkit-transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 0s;
+  transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 0s;
+  -webkit-transform: translate3d(0, -10px, 0);
+  transform: translate3d(0, -10px, 0);
+}
+
+core-tooltip:hover::shadow .core-tooltip,
+core-tooltip:focus::shadow .core-tooltip,
+core-tooltip[show]::shadow .core-tooltip {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 300ms;
+  transition: all 200ms cubic-bezier(0,1.92,.99,1.07) 300ms;
+}
+
+.theme-dark core-tooltip::shadow .core-tooltip {
+  background: whitesmoke;
+  color: #2d2d2d;
+}
+
+.menu {
+  color: #444;
+  font-size: 18px;
+}
+
+.menu-section {
+  margin-top: 15px;
+}
+
+.menu-section .item {
+  border: none;
+}
+
+.container {
+  display: table;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.panel {
+  display: table-cell;
+}
+
+#panel-main {
+  border-left: solid 1px #333;
+}
+
+#panel-view {
+  width: 350px;
+  border-left: solid 1px black;
+}
+
+/* Hack as per http://goo.gl/Tnj7Us */
+.ng-cloak {
+  display: none;
+}
+
+#toolbar-main {
+  background-color: #2C9800;
+  /*background-image: url(/static/images/patt_2.png);*/
+  background-repeat: repeat;
+  background-size: inherit;
+  background-blend-mode: inherit;
+  color: white;
+  text-align: center;
+  width: 100%;
+}
+
+.theme-dark #toolbar-main {
+  background-color: #171717;
+  transition: background-color .2s;
+  border-bottom: none;
+  color: white;
+}
+
+core-item {
+  padding: 6px 13px 6px 13px;
+  border-bottom: 1px solid #E7E7E7;
+  /* Disable iOS highlighting the element on tap. */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu .item.channels {
+  margin-top: 25px;
+  border-top: 5px solid #E7E7E7;
+}
+
+.theme-dark .menu .item.channels {
+  margin-top: 25px;
+  border-top: 5px solid rgb(48, 48, 48);
+}
+
+.menu .item.last {
+  border-bottom: none;
+}
+
+.theme-dark .menu core-item::shadow #icon {
+  color:#ddd;
+}
+
+.theme-dark .menu core-item {
+  color:#ddd;
+  border-bottom: 1px solid rgb(48, 48, 48);
+}
+
+core-item::shadow #icon {
+  color:#455a64;
+}
+
+core-menu core-item:hover {
+  cursor: pointer !important;
+  color: black;
+}
+
+#side-panel {
+  background-color: #eee;
+  /*box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);*/
+
+  /* Disable iOS highlighting the element on tap. */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.theme-dark #side-panel {
+  background-color: #222;
+  transition: background-color .2s;
+}
+
+#main-panel {
+  background: #fbfbfb;
+}
+
+.theme-dark #main-panel {
+  background-color: #1F1F1F;
+}
+
+#rightPanel {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  overflow: hidden;
+  background: white;
+  padding: 30px 42px;
+  outline: 1px solid rgba(143, 135, 135, 0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 6;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  width: 340px;
+}
+
+.page-wrapper {
+  margin: 18px;
+}
+
+#bottom-area {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#button-area {
+  /*padding: auto 5px auto 5px;*/
+  /*position: absolute;*/
+  /*bottom: 9px;*/
+  width: 100%;
+  padding: 8px;
+}
+
+#user-area {
+  padding: 8px;
+  background-color: #f5f5f5;
+  /*border-top: solid 1px #ddd;*/
+  /*padding: auto 5px auto 5px;*/
+}
+
+.theme-dark #user-area {
+  background-color: #1C1C1C;
+  color: white;
+}
+
+#user-area .user-area-text {
+  margin-left: 10px;
+}
+
+#user-area .user-area-text {
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+#user-area .user-area-text .sub-links {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+#user-area .user-area-text .sub-links span {
+  color: dimgray;
+}
+
+#user-area .user-area-text .sub-links span:hover {
+  color: #000;
+  cursor: pointer;
+  transition: color .3s;
+}
+
+.button-sign-in {
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  width: 220px;
+  margin: 0 0 3px 10px;
+  color: #fff;
+  background-color: #247BA1;
+}
+
+#button-sign-in:hover {
+  background-color: #269BCF;
+}
+
+paper-toast {
+  right: 10px;
+  left: auto;
+  background: forestgreen;
+}
+
+paper-toast.important {
+  background: #ef4206;
+  letter-spacing: .2pt;
+  font-size: 15px;
+}
+
+#sign-in-overlay {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  overflow: hidden;
+  /*padding: 30px;*/
+  outline: 1px solid rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  width: 400px;
+  min-height: 400px;
+}
+
+#message {
+  opacity: 1;
+  transition: opacity 2s;
+  font-size: 13px;
+  display: inline;
+  margin-bottom: 8px;
+}
+
+.flashing-fix {
+  /* Fix for flashing text, see http://goo.gl/dtbpK. */
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+@media all and (max-width: 800px)  {
+  .page-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+}

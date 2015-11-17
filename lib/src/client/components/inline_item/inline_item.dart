@@ -23,7 +23,7 @@ class InlineItem extends PolymerElement with Observable {
 
   db.Firebase get f => app.f;
 
-  get itemRef => f.child('/items/' + itemId);
+  db.Query get itemRef => f.child('/items/' + itemId);
 
   List<StreamSubscription> subscriptions = [];
   List<StreamSubscription> userSubscriptions = [];
@@ -79,6 +79,8 @@ class InlineItem extends PolymerElement with Observable {
       }
 
       // The live-date-time element needs parsed dates.
+      print(e.snapshot.key);
+      print(queuedItem['createdDate']);
       queuedItem['createdDate'] = DateTime.parse(queuedItem['createdDate']);
       queuedItem['updatedDate'] = DateTime.parse(queuedItem['updatedDate']);
 

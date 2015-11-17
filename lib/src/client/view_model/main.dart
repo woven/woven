@@ -102,7 +102,7 @@ class MainViewModel extends BaseViewModel with Observable {
     return feedViewModels[id];
   }
 
-  @observable FeedViewModel get newsViewModel {
+  FeedViewModel get newsViewModel {
     if (app.community == null) return null;
 
     var id = app.community.alias + '_news';

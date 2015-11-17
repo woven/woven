@@ -47,23 +47,23 @@ class PeopleList extends PolymerElement with Observable {
   }
 
   attached() {
-    if (app.debugMode) print('+PeopleList');
-    app.pageTitle = "People";
-
-    initializeInfiniteScrolling();
-
-    // Once the view is loaded, handle scroll position.
-    viewModel.onLoad.then((_) {
-      // Wait one event loop, so the view is truly loaded, then jump to last known position.
-      Timer.run(() {
-        app.scroller.scrollTop = viewModel.lastScrollPos;
-      });
-
-      // On scroll, record new scroll position.
-      subscriptions.add(app.scroller.onScroll.listen((e) {
-        viewModel.lastScrollPos = app.scroller.scrollTop;
-      }));
-    });
+//    if (app.debugMode) print('+PeopleList');
+//    app.pageTitle = "People";
+//
+//    initializeInfiniteScrolling();
+//
+//    // Once the view is loaded, handle scroll position.
+//    viewModel.onLoad.then((_) {
+//      // Wait one event loop, so the view is truly loaded, then jump to last known position.
+//      Timer.run(() {
+//        app.scroller.scrollTop = viewModel.lastScrollPos;
+//      });
+//
+//      // On scroll, record new scroll position.
+//      subscriptions.add(app.scroller.onScroll.listen((e) {
+//        viewModel.lastScrollPos = app.scroller.scrollTop;
+//      }));
+//    });
   }
 
   detached() {

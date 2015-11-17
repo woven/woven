@@ -13,7 +13,7 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
-import 'package:woven/src/shared/shared_util.dart';
+import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/shared/regex.dart';
 
 @CustomTag('x-home')
@@ -81,7 +81,13 @@ class Home extends PolymerElement with Observable {
     });
   }
 
-  showSignIn() => changeCta('sign-in');
+  showSignIn() {
+    changeCta('sign-in');
+    Timer.run(() {
+      InputElement username = querySelector('#username');
+      if (!app.isMobile) username.autofocus = true;
+    });
+  }
 
   showSignUp() => changeCta('sign-up');
 
@@ -341,23 +347,8 @@ class Home extends PolymerElement with Observable {
 
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);
-        if (app.user.settings == null) app.user.settings = {};
-
-        document.body.classes.add('no-transition');
-        app.user.settings = toObservable(app.user.settings);
-        new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
-
-        app.cache.users[app.user.username.toLowerCase()] = app.user;
-
-        // Trigger changes to app state in response to user sign in/out.
-        //TODO: Aha! This triggers a feedViewModel load.
-        app.mainViewModel.invalidateUserState();
-
-        // Hide the homepage and show the app.
-        app.showHomePage = false;
-        app.skippedHomePage = true;
-
-        Timer.run(() => app.showMessage('Welcome to Woven, ${app.user.username}!'));
+        app.user.isNew = true;
+        app.signIn();
       }
 
     } else {
@@ -418,10 +409,6 @@ class Home extends PolymerElement with Observable {
 
     app.cache.users[app.user.username.toLowerCase()] = app.user;
 
-    // Trigger changes to app state in response to user sign in/out.
-    //TODO: Aha! This triggers a feedViewModel load.
-    app.mainViewModel.invalidateUserState();
-
     toggleProcessingIndicator();
 
     // Hide the homepage and show the app.
@@ -466,26 +453,6 @@ class Home extends PolymerElement with Observable {
         window.alert(response.message);
       }
     });
-  }
-
-  // Greet the user upon sign in.
-  greetUser() {
-    var greeting;
-    DateTime now = new DateTime.now();
-
-    if (now.hour < 12) {
-      greeting = "Good morning";
-    } else {
-      if (now.hour >= 12 && now.hour <= 17) {
-        greeting = "Good afternoon";
-      } else if (now.hour > 17 && now.hour <= 24) {
-        greeting = "Good evening";
-      } else {
-        greeting = "Hello";
-      }
-    }
-
-    app.showMessage("$greeting, ${app.user.firstName}.");
   }
 
   toggleProcessingIndicator() {

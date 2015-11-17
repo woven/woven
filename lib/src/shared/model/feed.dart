@@ -14,7 +14,7 @@ class FeedModel implements Item {
   String siteUrl; // The user's message.
   DateTime lastCrawledDate; // The attached content's subject.
 
-  Map encode() {
+  Map toJson() {
     return {
       "user": user,
       "type": type,
@@ -27,7 +27,7 @@ class FeedModel implements Item {
     };
   }
 
-  static FeedModel decode(Map data) {
+  static FeedModel fromJson(Map data) {
     return new FeedModel()
       ..user = data['user']
       ..type = data['type']

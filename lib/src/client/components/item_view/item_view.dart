@@ -32,7 +32,6 @@ class ItemView extends PolymerElement with Observable {
    *
    * Format line breaks, links, @mentions.
    */
-
   String get getFormattedBody {
     if (item['body'] == null || item['body'].trim().isEmpty) return 'Loading...';
     return InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(item['body'].trim())));
@@ -73,7 +72,7 @@ class ItemView extends PolymerElement with Observable {
   }
 
   attached() {
-    app.pageTitle = "";
+
 
     app.scroller.scrollTop = 0;
 

@@ -288,48 +288,53 @@ class InboxList extends PolymerElement with Observable {
     }));
   }
 
+  handlePageChange() {
+    if (app.router.selectedPage == 'news') {
+      initializeInfiniteScrolling();
+
+      // Once the view is loaded, handle scroll position.
+      viewModel.onLoad.then((_) {
+        // Wait one event loop, so the view is truly loaded, then jump to last known position.
+        Timer.run(() {
+          app.scroller.scrollTop = viewModel.lastScrollPos;
+        });
+
+        // On scroll, record new scroll position.
+        subscriptions.add(app.scroller.onScroll.listen((e) {
+          viewModel.lastScrollPos = app.scroller.scrollTop;
+        }));
+      });
+    } else {
+      subscriptions.forEach((subscription) => subscription.cancel());
+    }
+  }
+
   attached() {
     if (app.debugMode) print('+InboxList');
+//    handlePageChange();
 
-    switch (app.router.selectedPage) {
-      case 'events':
-        app.pageTitle = 'Events';
-        break;
-      case 'news':
-        app.pageTitle = 'News';
-        break;
-      case 'announcements':
-        app.pageTitle = 'Announcements';
-        break;
-      default:
-        app.pageTitle = 'Feed';
-        break;
-    }
-
-    initializeInfiniteScrolling();
-
-    // Once the view is loaded, handle scroll position.
-    viewModel.onLoad.then((_) {
-      // Wait one event loop, so the view is truly loaded, then jump to last known position.
-      Timer.run(() {
-        app.scroller.scrollTop = viewModel.lastScrollPos;
-      });
-
-      // On scroll, record new scroll position.
-      subscriptions.add(app.scroller.onScroll.listen((e) {
-        viewModel.lastScrollPos = app.scroller.scrollTop;
-      }));
+    app.router.onDispatch.listen((e) {
+      print('wow');
+//      handlePageChange();
     });
 
-//    scriptMakeItemsByCommunityByType(); // Run 1st, for each community.
-//    scriptAddPriorityOnItemsEverywhere(); // Run 2nd, may have some issues w/ items manually assigned to multiple communities.
-//    scriptUpdateCommentCounts(); // Run 3rd.
-//      scriptAddPriorityOnPeople(); // 4.
-  // Then, kill empty items in items_by_community.
 
-//    scriptAddPriorityOnItemsByCommunity(); // Deprecated.
-//    scriptAddPriorityOnItems(); // Deprecated.
 
+    // TODO move to own app-wide stream.
+//    switch (app.router.selectedPage) {
+//      case 'events':
+//        app.pageTitle = 'Events';
+//        break;
+//      case 'news':
+//        app.pageTitle = 'News';
+//        break;
+//      case 'announcements':
+//        app.pageTitle = 'Announcements';
+//        break;
+//      default:
+//        app.pageTitle = 'Feed';
+//        break;
+//    }
   }
 
   detached() {
