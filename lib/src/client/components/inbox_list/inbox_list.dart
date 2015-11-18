@@ -292,7 +292,9 @@ class InboxList extends PolymerElement with Observable {
     }));
   }
 
-  handlePageChange() {
+  attached() {
+    if (app.debugMode) print('+InboxList');
+
     initializeInfiniteScrolling();
 
     // Once the view is loaded, handle scroll position.
@@ -304,20 +306,8 @@ class InboxList extends PolymerElement with Observable {
 
       // On scroll, record new scroll position.
       subscriptions.add(app.scroller.onScroll.listen((e) {
-//        print('scrolled for ' + app.router.selectedPage);
-        if (viewModel.typeFilter != app.router.selectedPage) return;
         viewModel.lastScrollPos = app.scroller.scrollTop;
       }));
-    });
-  }
-
-  attached() {
-    if (app.debugMode) print('+InboxList');
-    handlePageChange();
-
-    app.router.onDispatch.listen((e) {
-//      print('DEBUG: inbox-list onDispatch listener called');
-//      handlePageChange();
     });
   }
 
