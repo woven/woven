@@ -4,13 +4,14 @@ import 'package:observe/observe.dart';
 
 import 'item.dart';
 
-class Message extends Observable implements Item {
+class Message extends Item with Observable {
   @observable String id;
   @observable String user;
   @observable String usernameForDisplay;
   @observable DateTime createdDate = new DateTime.now().toUtc();
   @observable DateTime updatedDate = new DateTime.now().toUtc();
 
+  @observable int priority;
   @observable String type; // The type of message could be "notification" for example.
   @observable String message; // The user's message.
   @observable Map data; // Any extra data we might need to parse the message.
@@ -24,6 +25,7 @@ class Message extends Observable implements Item {
       "user": user,
       "message": message,
       "type": type,
+      "priority": priority,
       "data": data,
       "community": community,
       "createdDate": createdDate.toString(),
@@ -37,6 +39,7 @@ class Message extends Observable implements Item {
     user = json['user'];
     message = json['message'];
     type = json['type'];
+    priority = json['priority'];
     data = json['data'];
     community = json['community'];
     createdDate = (json['createdDate'] != null ? DateTime.parse(json['createdDate']) : null);

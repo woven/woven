@@ -122,7 +122,7 @@ class DailyDigestTask extends Task {
 
       var startAt = from.millisecondsSinceEpoch;
       var endAt = to.millisecondsSinceEpoch;
-      var query = '/items_by_community_by_type/$community/event.json?orderBy="startDateTimePriority"&startAt="$startAt"&endAt="$endAt"';
+      var query = '/items_by_community_by_type/$community/event.json?orderBy="priority"&startAt="$startAt"&endAt="$endAt"';
 
       Map itemsMap = await Firebase.get(query);
 

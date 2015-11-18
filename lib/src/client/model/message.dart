@@ -9,7 +9,7 @@ import 'package:woven/src/shared/model/message.dart' as shared;
 
 class Message extends shared.Message with Observable {
   @observable bool isHighlighted = false;
-  @observable String priority;
+  @observable int priority;
 
   Message();
 

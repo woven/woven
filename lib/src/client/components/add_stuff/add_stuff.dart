@@ -160,6 +160,7 @@ class AddStuff extends PolymerElement {
     if (shareToInput.value == null) {}
 
     var now = new DateTime.now().toUtc();
+    var priority = now.millisecondsSinceEpoch;
 
     var item;
     if (selectedType == 'event') item = new EventModel();
@@ -167,9 +168,10 @@ class AddStuff extends PolymerElement {
     else if (selectedType == 'feed') item = new FeedModel();
     else item = new Post();
 
-    item
+    (item as Item)
       ..user = app.user.username.toLowerCase()
       ..type = (selectedType != null) ? selectedType : 'message'
+      ..priority = priority
       ..createdDate = now
       ..updatedDate = now;
 
@@ -182,7 +184,7 @@ class AddStuff extends PolymerElement {
       int eventPriority = startDateTime.millisecondsSinceEpoch;
       (item as EventModel)
         ..startDateTime = startDateTime
-        ..startDateTimePriority = eventPriority
+        ..priority = eventPriority
         ..url = urlInput.value
         ..subject = (subjectInput != null && !subjectInput.value.trim().isEmpty)
             ? subjectInput.value
@@ -209,8 +211,6 @@ class AddStuff extends PolymerElement {
     // We also want to be able to load the item when we don't know the community.
     // Use a priority so Firebase sorts. Use a negative so latest is at top.
     // TODO: Beef this up in case items have same exact timestamp.
-    DateTime time = DateTime.parse("$now");
-    var priority = time.millisecondsSinceEpoch;
 
 //      // TODO: In progress server-side saving.
 //      var req = new HttpRequest();
@@ -264,6 +264,7 @@ class AddStuff extends PolymerElement {
         // Notify lobby about new item.
         var message = new Message()
           ..type = 'item'
+          ..priority = priority
           ..data = {'event': 'added', 'type': '${item.type}', 'id': '$itemId'}
           ..community = community
           ..usernameForDisplay = app.user.username

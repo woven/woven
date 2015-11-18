@@ -77,7 +77,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     if (typeFilter == 'event') {
       itemsRef = f
           .child(dataLocation)
-          .orderByChild('startDateTimePriority')
+          .orderByChild('priority')
           .startAt(value: lastPriority)
           .limitToFirst(pageSize + 1);
     } else {
@@ -101,7 +101,7 @@ class FeedViewModel extends BaseViewModel with Observable {
 
         // Track the snapshot's priority so we can paginate from the last one.
         if (typeFilter == 'event') {
-          lastPriority = '${item['startDateTimePriority']}';
+          lastPriority = '${item['priority']}';
         } else {
           lastPriority = itemSnapshot.getPriority();
         }
@@ -113,11 +113,7 @@ class FeedViewModel extends BaseViewModel with Observable {
         if (count > pageSize) return;
 
         // Remember the priority of the last item, excluding the extra item which we ignore above.
-        if (typeFilter == 'event') {
-          secondToLastPriority = item['startDateTimePriority'];
-        } else {
-          secondToLastPriority = itemSnapshot.getPriority();
-        }
+        secondToLastPriority = item['priority'];
 
         // TODO: This seems weird. I do it so I can separate out the method for adding to the list.
         items.add(toObservable(processItem(itemSnapshot)));
@@ -186,19 +182,11 @@ class FeedViewModel extends BaseViewModel with Observable {
     // If this is the first item loaded, start listening for new items.
     fb.Firebase itemsRef;
 
-    if (typeFilter == 'event') {
-      itemsRef = f
-          .child(dataLocation)
-          .orderByChild('startDateTimePriority')
-          .startAt(value: startAt)
-          .endAt(value: endAt);
-    } else {
-      itemsRef = f
-          .child(dataLocation)
-          .orderByPriority()
-          .startAt(value: startAt)
-          .endAt(value: endAt);
-    }
+    itemsRef = f
+        .child(dataLocation)
+        .orderByChild('priority')
+        .startAt(value: startAt)
+        .endAt(value: endAt);
 
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((fb.Event e) {

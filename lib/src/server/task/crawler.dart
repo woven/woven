@@ -83,6 +83,9 @@ class CrawlerTask extends Task {
 
           if (checkIfUrlExists == null) {
 
+            var now = new DateTime.now().toUtc();
+            var priority = now.millisecondsSinceEpoch;
+
             firebase.put(
                 Uri.parse(
                     '$firebaseUrl/url_index/$encodedKey.json'),
@@ -96,7 +99,8 @@ class CrawlerTask extends Task {
               ..body = feedItem.description
               ..createdDate = feedItem.publicationDate
               ..user = 'dave'
-              ..type = 'news';
+              ..type = 'news'
+              ..priority = priority;
 
             // TODO: Use firebase_io lib in ItemModel?
             Item.add(community, newsItem.toJson(), config['datastore']['firebaseSecret']).then((id) {

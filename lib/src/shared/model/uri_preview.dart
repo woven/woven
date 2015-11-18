@@ -7,20 +7,18 @@ class UriPreview {
   String imageOriginalUrl;
   String imageSmallLocation;
 
-  UriPreview({Uri uri}) {
-    this.uri = uri;
-  }
+  UriPreview({this.uri});
 
   /**
    * Dart calls this method when encoding this object with JSON.encode.
    */
   Map toJson() {
     return {
-        'uri': uri.toString(),
-        'title': title,
-        'teaser': teaser,
-        'imageOriginalUrl': imageOriginalUrl,
-        'imageSmallLocation': imageSmallLocation
+      'uri': uri.toString(),
+      'title': title,
+      'teaser': teaser,
+      'imageOriginalUrl': imageOriginalUrl,
+      'imageSmallLocation': imageSmallLocation
     };
   }
 

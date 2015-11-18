@@ -11,6 +11,7 @@ class Post implements Item {
   DateTime updatedDate = new DateTime.now().toUtc();
 
   String type;
+  int priority;
   String message; // The user's message.
   String subject; // The attached content's subject.
   String body;

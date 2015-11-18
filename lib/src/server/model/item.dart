@@ -70,6 +70,7 @@ class Item extends shared.Item {
     try {
       value['communities'] = {community: true};
       var type = value['type'];
+      var priority = value['priority'];
 
       var id = await Firebase.post('/items.json', value, auth: authToken);
 
@@ -81,8 +82,8 @@ class Item extends shared.Item {
 
       var now = new DateTime.now().toUtc();
 
-      Firebase.patch('/communities/$community.json',
-          {'updatedDate': now.toString()},
+      Firebase.patch(
+          '/communities/$community.json', {'updatedDate': now.toString()},
           auth: authToken);
 
       return id;

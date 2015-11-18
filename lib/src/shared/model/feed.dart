@@ -8,6 +8,7 @@ class FeedModel implements Item {
   String user;
   String usernameForDisplay;
   String type;
+  int priority;
   DateTime createdDate = new DateTime.now().toUtc();
   DateTime updatedDate = new DateTime.now().toUtc();
   String url;
@@ -18,6 +19,7 @@ class FeedModel implements Item {
     return {
       "user": user,
       "type": type,
+      "priority": priority,
       "createdDate": util.encode(createdDate),
       "updatedDate": util.encode(updatedDate),
       "url": url,
@@ -31,6 +33,7 @@ class FeedModel implements Item {
     return new FeedModel()
       ..user = data['user']
       ..type = data['type']
+      ..priority = data['priority']
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate']
       ..url = data['url']
