@@ -13,7 +13,6 @@ import 'package:woven/src/client/model/user.dart';
 import 'package:paper_elements/paper_autogrow_textarea.dart';
 import 'package:core_elements/core_a11y_keys.dart';
 
-
 @CustomTag('item-activities')
 class ItemActivities extends PolymerElement {
   @published App app;
@@ -24,14 +23,21 @@ class ItemActivities extends PolymerElement {
   //TODO: Further explore this ViewModel stuff.
   //@observable ActivityCommentModel activity = new ActivityCommentModel();
 
-    NodeValidator get nodeValidator => new NodeValidatorBuilder()
-    ..allowHtml5(uriPolicy: new ItemUrlPolicy());
+  NodeValidator get nodeValidator =>
+      new NodeValidatorBuilder()..allowHtml5(uriPolicy: new ItemUrlPolicy());
 
-  String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+  String formatItemDate(DateTime value) =>
+      InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
 
-  Element get elRoot => document.querySelector('woven-app').shadowRoot.querySelector('item-activities');
+  Element get elRoot => document
+      .querySelector('woven-app')
+      .shadowRoot
+      .querySelector('x-main')
+      .shadowRoot
+      .querySelector('item-activities');
 
-  TextAreaElement get textarea => elRoot.shadowRoot.querySelector('#comment-textarea');
+  TextAreaElement get textarea =>
+      elRoot.shadowRoot.querySelector('#comment-textarea');
 
   /**
    * Get the activities for this item.
@@ -57,12 +63,15 @@ class ItemActivities extends PolymerElement {
       // Make sure we're using the collapsed username.
       comment['user'] = (comment['user'] as String).toLowerCase();
 
-      UserModel.usernameForDisplay(comment['user'], f, app.cache).then((String usernameForDisplay) {
+      UserModel
+          .usernameForDisplay(comment['user'], f, app.cache)
+          .then((String usernameForDisplay) {
         comment['usernameForDisplay'] = usernameForDisplay;
 
         // Insert each new item at top of list so the list is ascending.
         comments.insert(0, comment);
-        comments.sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
+        comments
+            .sort((m1, m2) => m1["createdDate"].compareTo(m2["createdDate"]));
       });
     });
   }
@@ -74,7 +83,8 @@ class ItemActivities extends PolymerElement {
    */
   formatText(String text) {
     if (text.trim().isEmpty) return 'Loading...';
-    String formattedText = InputFormatter.formatMentions(InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
+    String formattedText = InputFormatter.formatMentions(
+        InputFormatter.nl2br(InputFormatter.linkify(text.trim())));
     return formattedText;
   }
 
@@ -94,8 +104,10 @@ class ItemActivities extends PolymerElement {
   }
 
   resetCommentInput() {
-    PaperAutogrowTextarea commentInput = elRoot.shadowRoot.querySelector('#comment');
-    TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
+    PaperAutogrowTextarea commentInput =
+        elRoot.shadowRoot.querySelector('#comment');
+    TextAreaElement textarea =
+        elRoot.shadowRoot.querySelector('#comment-textarea');
     textarea.value = "";
     textarea.focus();
     commentInput.update();
@@ -111,7 +123,8 @@ class ItemActivities extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    TextAreaElement textarea = elRoot.shadowRoot.querySelector('#comment-textarea');
+    TextAreaElement textarea =
+        elRoot.shadowRoot.querySelector('#comment-textarea');
     String comment = textarea.value;
     if (comment.trim() == "") {
 //      window.alert("Your comment is empty.");
@@ -125,7 +138,11 @@ class ItemActivities extends PolymerElement {
 
     // Save the comment
     var id = f.child('/items/' + itemId + '/activities/comments').push();
-    var commentJson =  {'user': app.user.username.toLowerCase(), 'comment': comment, 'createdDate': '$now'};
+    var commentJson = {
+      'user': app.user.username.toLowerCase(),
+      'comment': comment,
+      'createdDate': '$now'
+    };
 
     // Set the item in multiple places because denormalization equals speed.
     // We also want to be able to load the item when we don't know the community.
@@ -138,9 +155,7 @@ class ItemActivities extends PolymerElement {
     // Update some details on the parent item.
     var parent = f.child('/items/' + itemId);
     Future updateParentItem(db.Firebase parentRef) {
-      parent.update({
-        'updatedDate': '$now'
-      }).then((e) {
+      parent.update({'updatedDate': '$now'}).then((e) {
         // Update the comment count on the parent.
         parent.child('comment_count').transaction((currentCount) {
           if (currentCount == null || currentCount == 0) {
@@ -165,22 +180,37 @@ class ItemActivities extends PolymerElement {
                 // Because denormalization means speed, we update the copy of the item in multiple places.
 
                 // Uodate the updated date.
-                f.child('/items_by_community/' + community + '/' + itemId).update({
-                    'updatedDate': '$now'
-                });
-                f.child('/items_by_community_by_type/' + community + '/$type/' + itemId).update({
-                    'updatedDate': '$now'
-                });
+                f
+                    .child('/items_by_community/' + community + '/' + itemId)
+                    .update({'updatedDate': '$now'});
+                f
+                    .child('/items_by_community_by_type/' +
+                        community +
+                        '/$type/' +
+                        itemId)
+                    .update({'updatedDate': '$now'});
 
                 // Uodate the comment count.
-                f.child('/items_by_community/' + community + '/' + itemId + '/comment_count').transaction((currentCount) {
+                f
+                    .child('/items_by_community/' +
+                        community +
+                        '/' +
+                        itemId +
+                        '/comment_count')
+                    .transaction((currentCount) {
                   if (currentCount == null || currentCount == 0) {
                     return 1;
                   } else {
                     return currentCount + 1;
                   }
                 });
-                f.child('/items_by_community_by_type/' + community + '/$type/' + itemId + '/comment_count').transaction((currentCount) {
+                f
+                    .child('/items_by_community_by_type/' +
+                        community +
+                        '/$type/' +
+                        itemId +
+                        '/comment_count')
+                    .transaction((currentCount) {
                   if (currentCount == null || currentCount == 0) {
                     return 1;
                   } else {
@@ -191,18 +221,25 @@ class ItemActivities extends PolymerElement {
                 // Update the priority sorting of the item to reflect updated date.
                 DateTime time = DateTime.parse("$now");
                 var epochTime = time.millisecondsSinceEpoch;
-                f.child('/items_by_community/' + community + '/' + itemId).setPriority(-epochTime);
+                f
+                    .child('/items_by_community/' + community + '/' + itemId)
+                    .setPriority(-epochTime);
                 // We don't want to mess with the priority sort for events in items_by_community_by_type.
                 if (type != 'event') {
-                  f.child('/items_by_community_by_type/' + community + '/$type/' + itemId).setPriority(-epochTime);
+                  f
+                      .child('/items_by_community_by_type/' +
+                          community +
+                          '/$type/' +
+                          itemId)
+                      .setPriority(-epochTime);
                 }
 
                 f.child('/items/' + itemId).setPriority(-epochTime);
 
                 // Update the community itself.
-                f.child('/communities/' + community).update({
-                    'updatedDate': '$now'
-                });
+                f
+                    .child('/communities/' + community)
+                    .update({'updatedDate': '$now'});
               });
             }
           });
@@ -214,7 +251,9 @@ class ItemActivities extends PolymerElement {
 
     var commentId = id.key;
     // Send a notification email to the item's author.
-    HttpRequest.request(app.serverPath + Routes.sendNotificationsForComment.toString() + "?id=$commentId&itemid=$itemId");
+    HttpRequest.request(app.serverPath +
+        Routes.sendNotificationsForComment.toString() +
+        "?id=$commentId&itemid=$itemId");
 
     // Reset the fields.
     resetCommentInput();
@@ -225,11 +264,13 @@ class ItemActivities extends PolymerElement {
   }
 
   fixItemCommunities() {
-      if (app.community != null) {
-          // Update the community's copy of the item.
-        f.child('/items/' + app.router.selectedItem['id'] + '/communities/' + app.community.alias)
-          ..set(true);
-      }
+    if (app.community != null) {
+      // Update the community's copy of the item.
+      f.child('/items/' +
+          app.router.selectedItem['id'] +
+          '/communities/' +
+          app.community.alias)..set(true);
+    }
   }
 
   attached() {

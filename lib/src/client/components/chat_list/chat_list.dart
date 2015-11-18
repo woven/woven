@@ -11,16 +11,21 @@ import 'package:woven/src/client/infinite_scroll.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/util.dart' as sharedUtil;
 
-
 @CustomTag('chat-list')
 class ChatList extends PolymerElement {
   @published ChatViewModel viewModel;
   @published App app;
   List<StreamSubscription> subscriptions = [];
 
-  String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+  String formatItemDate(DateTime value) =>
+      InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
 
-  ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('x-main').shadowRoot.querySelector('chat-view');
+  ChatView get chatView => document
+      .querySelector('woven-app')
+      .shadowRoot
+      .querySelector('x-main')
+      .shadowRoot
+      .querySelector('chat-view');
   Element get chatList => chatView.shadowRoot.querySelector('chat-list');
 
   /**
@@ -30,7 +35,8 @@ class ChatList extends PolymerElement {
    */
   formatText(String text) {
     if (text == null) return '';
-    String formattedText = InputFormatter.nl2br(InputFormatter.formatMentions(InputFormatter.nl2br(text.trim())));
+    String formattedText = InputFormatter.nl2br(
+        InputFormatter.formatMentions(InputFormatter.nl2br(text.trim())));
 
     return formattedText;
   }
@@ -59,10 +65,16 @@ class ChatList extends PolymerElement {
   initializeInfiniteScrolling() {
     var scroller = chatView.scroller;
     HtmlElement element = $['activity-wrapper'];
-    var scroll = new InfiniteScroll(pageSize: 10, element: element, scroller: scroller, reversed: true, threshold: 0);
+    var scroll = new InfiniteScroll(
+        pageSize: 10,
+        element: element,
+        scroller: scroller,
+        reversed: true,
+        threshold: 0);
 
     subscriptions.add(scroll.onScroll.listen((_) {
-      if (!viewModel.reloadingContent && !viewModel.reachedEnd) viewModel.paginate();
+      if (!viewModel.reloadingContent && !viewModel.reachedEnd) viewModel
+          .paginate();
     }));
   }
 
@@ -94,7 +106,6 @@ class ChatList extends PolymerElement {
 //    });
 //  }
 
-
   attached() {
     if (app.debugMode) print('+ChatList');
 
@@ -116,7 +127,9 @@ class ChatList extends PolymerElement {
         // ...record new scroll position.
         viewModel.lastScrollPos = chatView.scroller.scrollTop;
         // ...keep track of if we're scrolled to the bottom.
-        viewModel.isScrollPosAtBottom = chatView.scroller.scrollHeight - chatView.scroller.scrollTop <= chatView.scroller.clientHeight;
+        viewModel.isScrollPosAtBottom = chatView.scroller.scrollHeight -
+                chatView.scroller.scrollTop <=
+            chatView.scroller.clientHeight;
       }));
 
 //      window.onFocus.listen((_) => dismissHighlightedMessages());

@@ -281,6 +281,8 @@ class App extends Observable {
     SignInDialog signInDialog = document
         .querySelector('woven-app')
         .shadowRoot
+        .querySelector('x-main')
+        .shadowRoot
         .querySelector('sign-in-dialog');
     signInDialog.toggleOverlay();
   }

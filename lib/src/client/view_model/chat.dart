@@ -42,9 +42,17 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   var sanitizer = new HtmlEscape(HtmlEscapeMode.ELEMENT);
 
-  StreamSubscription childAddedSubscriber, childChangedSubscriber, childMovedSubscriber, childRemovedSubscriber;
+  StreamSubscription childAddedSubscriber,
+      childChangedSubscriber,
+      childMovedSubscriber,
+      childRemovedSubscriber;
 
-  ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
+  ChatView get chatView => document
+      .querySelector('woven-app')
+      .shadowRoot
+      .querySelector('x-main')
+      .shadowRoot
+      .querySelector('chat-view');
 
   db.Firebase get f => app.f;
 
@@ -59,11 +67,13 @@ class ChatViewModel extends BaseViewModel with Observable {
     reloadingContent = true;
     int count = 0;
 
-    var messagesRef = f.child('/messages_by_community/${app.community.alias}')
-    .startAt(value: lastPriority)
-    .limitToFirst(pageSize + 1);
+    var messagesRef = f
+        .child('/messages_by_community/${app.community.alias}')
+        .startAt(value: lastPriority)
+        .limitToFirst(pageSize + 1);
 
-    if (groups.expand((ItemGroup i) => i.items).length == 0) onLoadCompleter.complete(true);
+    if (groups.expand((ItemGroup i) => i.items).length == 0) onLoadCompleter
+        .complete(true);
 
     // Get the list of items, and listen for new ones.
     db.DataSnapshot snapshot = await messagesRef.once('value');
@@ -76,7 +86,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
     List messagesAsList = [];
 
-    messages.forEach((k,v) {
+    messages.forEach((k, v) {
       Message message = new Message.fromJson(v);
       message.id = k;
       messagesAsList.add(message);
@@ -108,7 +118,8 @@ class ChatViewModel extends BaseViewModel with Observable {
     if (count <= pageSize) reachedEnd = true;
 
     // Wait until the view is loaded, then scroll to bottom.
-    if (isScrollPosAtBottom || isFirstLoad && chatView != null) Timer.run(() => chatView.scrollToBottom());
+    if (isScrollPosAtBottom || isFirstLoad && chatView != null) Timer
+        .run(() => chatView.scrollToBottom());
     isFirstLoad = false;
 
     new Timer(new Duration(seconds: 1), () {
@@ -143,9 +154,10 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   listenForNewItems({startAt, endAt}) {
     // If this is the first item loaded, start listening for new items.
-    var itemsRef = f.child('/messages_by_community/${app.community.alias}')
-    .startAt(value: startAt)
-    .endAt(value: endAt);
+    var itemsRef = f
+        .child('/messages_by_community/${app.community.alias}')
+        .startAt(value: startAt)
+        .endAt(value: endAt);
 
     // Listen for new items.
     childAddedSubscriber = itemsRef.onChildAdded.listen((e) async {
@@ -155,9 +167,13 @@ class ChatViewModel extends BaseViewModel with Observable {
       // Make sure we're using the collapsed username.
       message.user = message.user.toLowerCase();
 
-      Message existingItem = groups.expand((ig) => ig.items).firstWhere((Message i) => (i.id != null)
-        ? (i.id == message.id)
-        : (i.user == message.user && i.message != null && i.message == message.message), orElse: () => null);
+      Message existingItem = groups.expand((ig) => ig.items).firstWhere(
+          (Message i) => (i.id != null)
+              ? (i.id == message.id)
+              : (i.user == message.user &&
+                  i.message != null &&
+                  i.message == message.message),
+          orElse: () => null);
 
       // If we already have the item, get out of here.
       if (existingItem != null) {
@@ -166,15 +182,16 @@ class ChatViewModel extends BaseViewModel with Observable {
 
         existingItem.createdDate = message.createdDate;
         existingItem.updatedDate = (message.updatedDate != null)
-                                     ? message.updatedDate
-                                     : message.createdDate;
+            ? message.updatedDate
+            : message.createdDate;
 
         // If the message timestamp is after our local time,
         // change it to now so messages aren't in the future.
         DateTime localTime = new DateTime.now().toUtc();
-        if (existingItem.updatedDate.isAfter(localTime)) existingItem.updatedDate = localTime;
-        if (existingItem.createdDate.isAfter(localTime)) existingItem.createdDate = localTime;
-
+        if (existingItem.updatedDate
+            .isAfter(localTime)) existingItem.updatedDate = localTime;
+        if (existingItem.createdDate
+            .isAfter(localTime)) existingItem.createdDate = localTime;
       } else {
         // Notify mentioned users if this is a typical message (i.e. no special type).
         if (message.type == null) doNotifications(message);
@@ -229,7 +246,11 @@ class ChatViewModel extends BaseViewModel with Observable {
       // Notify the user.
       if (!Notification.supported) return;
 
-      Notification notification = new Notification("${item.usernameForDisplay} mentioned you", body: InputFormatter.createTeaser(item.message.replaceAll('\n', ' '), 75), icon: '/static/images/w_button_trans_margin.png');
+      Notification notification = new Notification(
+          "${item.usernameForDisplay} mentioned you",
+          body: InputFormatter.createTeaser(
+              item.message.replaceAll('\n', ' '), 75),
+          icon: '/static/images/w_button_trans_margin.png');
       playNotificationSound();
       notification.addEventListener('click', notificationClicked);
       new Timer(new Duration(seconds: 8), () {
@@ -239,10 +260,10 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   Future<String> usernameForDisplay(String username) {
-    return UserModel.usernameForDisplay(username.toLowerCase(), f, app.cache)
-    .then((String usernameForDisplay) => usernameForDisplay);
+    return UserModel
+        .usernameForDisplay(username.toLowerCase(), f, app.cache)
+        .then((String usernameForDisplay) => usernameForDisplay);
   }
-
 
   /**
    * Handle clicks on web notifications.
@@ -256,9 +277,12 @@ class ChatViewModel extends BaseViewModel with Observable {
     GainNode gainNode = app.audioContext.createGain();
 
     // get the audio file
-    HttpRequest request = await HttpRequest.request(app.serverPath + "/static/audio/beep_short_on.wav", responseType: "arraybuffer");
+    HttpRequest request = await HttpRequest.request(
+        app.serverPath + "/static/audio/beep_short_on.wav",
+        responseType: "arraybuffer");
     // decode it
-    AudioBuffer buffer = await app.audioContext.decodeAudioData(request.response);
+    AudioBuffer buffer =
+        await app.audioContext.decodeAudioData(request.response);
     AudioBufferSourceNode source = app.audioContext.createBufferSource();
     source.buffer = buffer;
     source.connectNode(app.audioContext.destination);
@@ -276,29 +300,44 @@ class ChatViewModel extends BaseViewModel with Observable {
     // to the user, like in response to a command.
 //    message.type = 'local';
     message.type = 'notification';
-    String commandText =  message.message;
+    String commandText = message.message;
     String commandTop = commandText.split(' ').first;
-    String commandOptions = (commandText.split(' ').length > 1) ? commandText.substring(commandText.lastIndexOf(' ') + 1, commandText.length).trim() : null;
+    String commandOptions = (commandText.split(' ').length > 1)
+        ? commandText
+            .substring(commandText.lastIndexOf(' ') + 1, commandText.length)
+            .trim()
+        : null;
     switch (commandTop) {
       case '/theme':
         switch (commandOptions) {
           case 'dark':
             message.message = 'You went dark. I\'ve saved your preference.';
-            if (app.user.settings['theme'] == 'dark') message.message = 'You\'ve already gone dark.';
+            if (app.user.settings['theme'] == 'dark') message.message =
+                'You\'ve already gone dark.';
             document.body.classes.add('no-transition');
             process(message);
             Timer.run(() => app.user.settings['theme'] = 'dark');
-            f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('dark');
-            new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+            f
+                .child(
+                    '/users/${app.user.username.toLowerCase()}/settings/theme')
+                .set('dark');
+            new Timer(new Duration(seconds: 1),
+                () => document.body.classes.remove('no-transition'));
             break;
           case 'light':
-            message.message = 'Let there be light. I\'ve saved your preference.';
-            if (app.user.settings['theme'] == 'light') message.message = 'You\'re already lit up.';
+            message.message =
+                'Let there be light. I\'ve saved your preference.';
+            if (app.user.settings['theme'] == 'light') message.message =
+                'You\'re already lit up.';
             document.body.classes.add('no-transition');
             process(message);
             Timer.run(() => app.user.settings['theme'] = 'light');
-            f.child('/users/${app.user.username.toLowerCase()}/settings/theme').set('light');
-            new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+            f
+                .child(
+                    '/users/${app.user.username.toLowerCase()}/settings/theme')
+                .set('light');
+            new Timer(new Duration(seconds: 1),
+                () => document.body.classes.remove('no-transition'));
             break;
           default:
             message.message = 'I don\'t recognize that theme.';
@@ -317,8 +356,7 @@ class ChatViewModel extends BaseViewModel with Observable {
         }
 
         HttpRequest request = await HttpRequest.request(
-            app.serverPath +
-            Routes.inviteUserToChannel.toString(),
+            app.serverPath + Routes.inviteUserToChannel.toString(),
             method: 'POST',
             sendData: JSON.encode({
               'community': app.community.alias,
@@ -328,21 +366,28 @@ class ChatViewModel extends BaseViewModel with Observable {
             }));
 
         var response = Response.fromJson(JSON.decode(request.responseText));
-        if (response.success) message.message = 'I have sent an invitation to $email on your behalf.';
-        if (!response.success) message.message = 'Sorry. I was not able to send an invitation to $email.';
+        if (response.success) message.message =
+            'I have sent an invitation to $email on your behalf.';
+        if (!response.success) message.message =
+            'Sorry. I was not able to send an invitation to $email.';
         process(message);
         break;
       case '/print isMobile':
-        message.message = app.isMobile.toString() + ' ' + window.screen.width.toString();
+        message.message =
+            app.isMobile.toString() + ' ' + window.screen.width.toString();
         process(message);
         break;
       case '/notify':
         // JS interop version of web notifications until Dart fixes land.
-        String dummyMessage = 'Lorem ipsum dolor sit amet conseceteur adipiscing\n elit and some other random text and gibberish to prove a point';
+        String dummyMessage =
+            'Lorem ipsum dolor sit amet conseceteur adipiscing\n elit and some other random text and gibberish to prove a point';
 
         if (!Notification.supported) return;
         await Notification.requestPermission();
-        Notification notification = new Notification("Hello world", body: InputFormatter.createTeaser(dummyMessage.replaceAll('\n', ' '), 75), icon: '/static/images/woven_button_trans_margin_more.png');
+        Notification notification = new Notification("Hello world",
+            body: InputFormatter.createTeaser(
+                dummyMessage.replaceAll('\n', ' '), 75),
+            icon: '/static/images/woven_button_trans_margin_more.png');
         new Timer(new Duration(seconds: 8), () {
           notification.close();
         });
@@ -358,12 +403,14 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   preProcess(Message item) async {
-  // TODO: Look into not waiting for this lookup; show UI sooner w/ x-username element doing the lookup.
+    // TODO: Look into not waiting for this lookup; show UI sooner w/ x-username element doing the lookup.
 //    item.usernameForDisplay = await UserModel.usernameForDisplay(item.user.toLowerCase(), f, app.cache);
     item.usernameForDisplay = item.user;
 
     // If the message references an item, let's get it so we can show it inline.
-    if (item.data != null && item.data['event'] == 'added' && item.data['id'] != null) {
+    if (item.data != null &&
+        item.data['event'] == 'added' &&
+        item.data['id'] != null) {
       var itemId = item.data['id'];
 
       // Let's handle older 'notification' messages which reference an item.
@@ -404,7 +451,9 @@ class ChatViewModel extends BaseViewModel with Observable {
 //    }
 
     // Retrieve the group that this item belongs to, if any.
-    var group = groups.firstWhere((group) => group.isDateWithin(item.createdDate), orElse: () => null);
+    var group = groups.firstWhere(
+        (group) => group.isDateWithin(item.createdDate),
+        orElse: () => null);
 
     if (group != null) {
       TargetGroup target = group.determineTargetGroup(item);
@@ -417,7 +466,8 @@ class ChatViewModel extends BaseViewModel with Observable {
         var topHalf = group.items.sublist(0, intersection);
         var bottomHalf = group.items.sublist(intersection);
 
-        groups.remove(group); // Get rid of the old group, we need to split this thing!
+        groups.remove(
+            group); // Get rid of the old group, we need to split this thing!
 
         if (target == TargetGroup.New) {
           groups.insert(groupIndex, new ItemGroup.fromItems(bottomHalf));
@@ -442,14 +492,19 @@ class ChatViewModel extends BaseViewModel with Observable {
       // 2) The item needs its own new group.
 
       // Fetch the first groups that are after/before this item. i.e. surrounding the item.
-      var groupBefore = groups.reversed.firstWhere((group) => item.createdDate.isAfter(group.getLatestDate()), orElse: () => null);
-      var groupAfter = groups.firstWhere((group) => item.createdDate.isBefore(group.getOldestDate()), orElse: () => null);
+      var groupBefore = groups.reversed.firstWhere(
+          (group) => item.createdDate.isAfter(group.getLatestDate()),
+          orElse: () => null);
+      var groupAfter = groups.firstWhere(
+          (group) => item.createdDate.isBefore(group.getOldestDate()),
+          orElse: () => null);
 
       if (groupBefore == null && groupAfter == null) {
         // No groups at all!
         groups.add(new ItemGroup(item));
       } else if (groupBefore != null && groupAfter != null) {
-        if (groupBefore.determineTargetGroup(item) == TargetGroup.New && groupAfter.determineTargetGroup(item) == TargetGroup.New) {
+        if (groupBefore.determineTargetGroup(item) == TargetGroup.New &&
+            groupAfter.determineTargetGroup(item) == TargetGroup.New) {
           // The item does not belong in either groups,
           // so it has to go in between them in its own group.
           var index = groups.indexOf(groupAfter);

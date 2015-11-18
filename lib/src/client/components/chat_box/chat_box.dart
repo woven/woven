@@ -24,9 +24,15 @@ class ChatBox extends PolymerElement {
 
   db.Firebase get f => app.f;
 
-  TextAreaElement get textarea => this.shadowRoot.querySelector('#comment-textarea');
+  TextAreaElement get textarea =>
+      this.shadowRoot.querySelector('#comment-textarea');
 
-  ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
+  ChatView get chatView => document
+      .querySelector('woven-app')
+      .shadowRoot
+      .querySelector('x-main')
+      .shadowRoot
+      .querySelector('chat-view');
 
   /**
    * Handle focus of the comment input.
@@ -42,7 +48,8 @@ class ChatBox extends PolymerElement {
   }
 
   resetCommentInput() {
-    PaperAutogrowTextarea commentInput = this.shadowRoot.querySelector('#comment');
+    PaperAutogrowTextarea commentInput =
+        this.shadowRoot.querySelector('#comment');
     textarea.value = "";
     textarea.focus();
     commentInput.update();
@@ -54,7 +61,8 @@ class ChatBox extends PolymerElement {
   addComment(Event e, var detail, Element target) {
     e.preventDefault();
 
-    TextAreaElement textarea = this.shadowRoot.querySelector('#comment-textarea');
+    TextAreaElement textarea =
+        this.shadowRoot.querySelector('#comment-textarea');
     String messageText = textarea.value;
     var communityId = app.community.alias;
 
@@ -84,12 +92,12 @@ class ChatBox extends PolymerElement {
     Timer.run(() => chatView.scrollToBottom());
 
     // Save the message to Firebase server-side.
-    HttpRequest.request(
-        app.serverPath +
-        Routes.addMessage.toString(),
-        method: 'POST',
-        sendData: JSON.encode({'model': message, 'authToken': app.authToken}))
-    .then((HttpRequest res) {
+    HttpRequest
+        .request(app.serverPath + Routes.addMessage.toString(),
+            method: 'POST',
+            sendData:
+                JSON.encode({'model': message, 'authToken': app.authToken}))
+        .then((HttpRequest res) {
       // Set up the response as an object.
       var response = Response.fromJson(JSON.decode(res.responseText));
       // TODO: Handle response.success true/false later.
@@ -111,7 +119,8 @@ class ChatBox extends PolymerElement {
   }
 
   focusMessageInput() {
-    PaperAutogrowTextarea commentInput = this.shadowRoot.querySelector('#comment');
+    PaperAutogrowTextarea commentInput =
+        this.shadowRoot.querySelector('#comment');
     textarea.focus();
     commentInput.update();
   }
