@@ -16,6 +16,10 @@ core-item core-icon {
   margin-right: 4px;
 }
 
+#icon-delete {
+  padding-right: 0;
+}
+
 #icon-fav svg {
   height: 24px !important;
   width: 22px !important;
@@ -212,7 +216,10 @@ core-tooltip[show]::shadow .core-tooltip {
   color: #000;
 }
 
-.theme-dark .item-subject, .theme-dark .item-body {
+.theme-dark .item-subject,
+.theme-dark .item-body,
+.theme-dark .item-subject a,
+.theme-dark .item-subject a:hover {
   color: white;
 }
 
@@ -221,10 +228,6 @@ core-tooltip[show]::shadow .core-tooltip {
   font-size: 14px;
   white-space: normal;
   line-height: 1.4em;
-}
-
-.theme-dark .item-body {
-  color: white;
 }
 
 .item.compact .item-body {
