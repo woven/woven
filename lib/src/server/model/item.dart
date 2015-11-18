@@ -64,14 +64,17 @@ class Item extends shared.Item {
 
   /**
    * Add an item with a given [value] to the given [community].
+   *
+   * TODO: Support adding item to multiple communities?
    */
   static Future<String> add(
       String community, Map value, String authToken) async {
-    try {
-      value['communities'] = {community: true};
-      var type = value['type'];
-      var priority = value['priority'];
 
+      var type = value['type'];
+      value['communities'] = {community: true};
+      value['.priority'] = value['priority'];
+
+      try {
       var id = await Firebase.post('/items.json', value, auth: authToken);
 
       Firebase.put('/items_by_community/$community/$id.json', value,
