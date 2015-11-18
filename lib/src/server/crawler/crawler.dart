@@ -8,15 +8,23 @@ import 'dart:mirrors';
 import 'dart:collection';
 import 'dart:async';
 
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' show parse;
+import 'package:html/dom.dart';
+
 //import 'package:html5lib/parser.dart' as htmlParser;
 //import 'package:html5lib/dom.dart';
 //import 'package:html5lib/parser_console.dart';
-import 'package:http/http.dart' as http;
 //import 'package:path/path.dart' as path;
 //import 'package:query_string/query_string.dart';
+
+
 //import '../config/config.dart';
 import '../util.dart' as util;
 import 'package:woven/src/shared/util.dart' as sharedUtil;
+import 'package:woven/src/shared/model/uri_preview.dart';
+import 'package:woven/src/shared/response.dart';
+
 //import 'readability.dart';
 //import 'open_graph/open_graph.dart';
 //import 'model/server/models.dart' as model;
@@ -31,6 +39,42 @@ class Crawler {
 
   Crawler(this.url, {this.app}) {
     url = sharedUtil.prefixHttp(url);
+  }
+
+  Future<Response> getPreview() async {
+    Response response = new Response();
+    Uri uri = Uri.parse(this.url);
+
+    try {
+      String contents = await http.read(uri);
+
+      UriPreview preview = new UriPreview(uri: uri);
+      var document = parse(contents);
+      List<Element> metaTags = document.querySelectorAll('meta');
+
+      metaTags.forEach((Element metaTag) {
+        var property = metaTag.attributes['property'];
+        if (property == 'og:title') preview.title =
+        metaTag.attributes['content'];
+        if (property == 'og:description') preview.teaser =
+        metaTag.attributes['content'];
+        if (property == 'og:image') preview.imageOriginalUrl =
+        metaTag.attributes['content'];
+
+        if (metaTag.attributes['name'] == 'description' &&
+            preview.teaser == null) preview.teaser =
+        metaTag.attributes['content'];
+      });
+
+      if (preview.title == null &&
+          document.querySelector('title') != null) preview.title =
+          document.querySelector('title').innerHtml;
+
+      response.data = preview.toJson();
+      return response;
+    } catch (error) {
+      return Response.fromError(error);
+    }
   }
 
   static String findGoogleCalendarUrlFromPage(String contents) {
@@ -300,7 +344,6 @@ class Crawler {
                   foundUrl = Uri.parse(url).resolve(foundUrl).toString();
                 }
               } catch (e) {
-                //platform.logger.severe(e);
                 print(e);
               }
 
@@ -463,54 +506,54 @@ class Crawler {
   /**
    * Finds the best image related to the content.
    */
-//  static String findImagesAssociatedWithContent(String contents, {WovenPlatform platform}) {
-//    if (contents == null) return [];
-//
-//    var images = [];
-//    var parentsWithMostParagraphs = {};
-//
-//    Document dom;
-//    try {
-//      dom = htmlParser.parse(contents);
-//    } catch (e) {
+  static List findImagesAssociatedWithContent(String contents) {
+    if (contents == null) return [];
+
+    var images = [];
+    var parentsWithMostParagraphs = {};
+
+    Document dom;
+    try {
+      dom = parse(contents);
+    } catch (e) {
 //      platform.logger.severe(e);
-//      return images;
-//    }
-//
-//    // Find all <p> tags, and count which of their parents have most <p>'s.
-//    dom.queryAll('p').forEach((p) {
-//      if (parentsWithMostParagraphs.containsKey(p.parent) == false) {
-//        parentsWithMostParagraphs[p.parent] = 1;
-//      } else {
-//        parentsWithMostParagraphs[p.parent]++;
-//      }
-//    });
-//
-//    // Choose parent with most <p>'s.
-//    var highest = 0;
-//    Element bestParentMatch;
-//    parentsWithMostParagraphs.forEach((parent, count) {
-//      if (count > highest) {
-//        highest = count;
-//        bestParentMatch = parent;
-//      }
-//    });
-//
-//    if (bestParentMatch != null) {
-//      bestParentMatch.queryAll('img').forEach((img) {
+      return images;
+    }
+
+    // Find all <p> tags, and count which of their parents have most <p>'s.
+    dom.querySelectorAll('p').forEach((p) {
+      if (parentsWithMostParagraphs.containsKey(p.parent) == false) {
+        parentsWithMostParagraphs[p.parent] = 1;
+      } else {
+        parentsWithMostParagraphs[p.parent]++;
+      }
+    });
+
+    // Choose parent with most <p>'s.
+    var highest = 0;
+    Element bestParentMatch;
+    parentsWithMostParagraphs.forEach((parent, count) {
+      if (count > highest) {
+        highest = count;
+        bestParentMatch = parent;
+      }
+    });
+
+    if (bestParentMatch != null) {
+      bestParentMatch.querySelectorAll('img').forEach((img) {
 //        if (platform.adDetector.doesUrlPointToAd(img.attributes['src']) == false) {
-//          var href = img.parent.attributes['href'];
-//          if (href != null) {
-//            images.add(href);
-//          }
-//
-//          images.add(img.attributes['src']);
+          var href = img.parent.attributes['href'];
+          if (href != null) {
+            images.add(href);
+          }
+
+          images.add(img.attributes['src']);
 //        }
-//      });
-//    }
-//
-//    return images;
-//  }
+      });
+    }
+
+    return images;
+  }
 
   /**
    * Given a list of URLs, returns the first one that is actually an image.
