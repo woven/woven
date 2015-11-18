@@ -193,6 +193,8 @@ class App extends Observable {
     CoreHeaderPanel el = document
         .querySelector("woven-app")
         .shadowRoot
+        .querySelector("x-main")
+        .shadowRoot
         .querySelector("#main-panel");
     HtmlElement scroller = el.scroller;
     return scroller;

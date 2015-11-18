@@ -249,30 +249,30 @@ class InboxList extends PolymerElement with Observable {
     });
   }
 
-  scriptUpdateCommentCounts() {
-    var itemsRef = f.child('/items');
-
-    itemsRef.onChildAdded.listen((e) {
-      var countRef = f.child('/items/' + e.snapshot.key + '/activities/comments');
-      var count = 0;
-      var item = e.snapshot.val();
-      countRef.once('value').then((snapshot) {
-        print(snapshot.val());
-        print(snapshot.numChildren);
-        itemsRef.child(e.snapshot.key + '/comment_count').set(snapshot.numChildren); // TODO: In Progress.
-
-        itemsRef.child(e.snapshot.key + '/communities').onValue.listen((e2) {
-          Map communitiesRef = e2.snapshot.val();
-          if (communitiesRef != null) {
-            communitiesRef.keys.forEach((community) {
-              f.child('/items_by_community/' + community + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
-              f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
-            });
-          }
-        });
-      });
-    });
-  }
+//  scriptUpdateCommentCounts() {
+//    var itemsRef = f.child('/items');
+//
+//    itemsRef.onChildAdded.listen((e) {
+//      var countRef = f.child('/items/' + e.snapshot.key + '/activities/comments');
+//      var count = 0;
+//      var item = e.snapshot.val();
+//      countRef.once('value').then((snapshot) {
+//        print(snapshot.val());
+//        print(snapshot.numChildren);
+//        itemsRef.child(e.snapshot.key + '/comment_count').set(snapshot.numChildren); // TODO: In Progress.
+//
+//        itemsRef.child(e.snapshot.key + '/communities').onValue.listen((e2) {
+//          Map communitiesRef = e2.snapshot.val();
+//          if (communitiesRef != null) {
+//            communitiesRef.keys.forEach((community) {
+//              f.child('/items_by_community/' + community + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
+//              f.child('/items_by_community_by_type/' + community + '/' + item['type'] + '/' + e.snapshot.key + '/comment_count').set(snapshot.numChildren);
+//            });
+//          }
+//        });
+//      });
+//    });
+//  }
 
   /**
    * Initializes the infinite scrolling ability.
@@ -283,69 +283,47 @@ class InboxList extends PolymerElement with Observable {
     var scroll = new InfiniteScroll(pageSize: 20, element: element, scroller: scroller, threshold: 0);
 
     subscriptions.add(scroll.onScroll.listen((_) {
+//      print('scrolled2 for ' + app.router.selectedPage);
+//      print('DEBUG: typeFilter: ${viewModel.typeFilter} // selectedPage: ${app.router.selectedPage}');
+      if (viewModel.typeFilter != app.router.selectedPage) return;
 //      print("DEBUG: ${viewModel.reloadingContent} // ${viewModel.reachedEnd}");
+
       if (!viewModel.reloadingContent && !viewModel.reachedEnd) viewModel.paginate();
     }));
   }
 
   handlePageChange() {
-    if (app.router.selectedPage == 'news') {
-      initializeInfiniteScrolling();
+    initializeInfiniteScrolling();
 
-      // Once the view is loaded, handle scroll position.
-      viewModel.onLoad.then((_) {
-        // Wait one event loop, so the view is truly loaded, then jump to last known position.
-        Timer.run(() {
-          app.scroller.scrollTop = viewModel.lastScrollPos;
-        });
-
-        // On scroll, record new scroll position.
-        subscriptions.add(app.scroller.onScroll.listen((e) {
-          viewModel.lastScrollPos = app.scroller.scrollTop;
-        }));
+    // Once the view is loaded, handle scroll position.
+    viewModel.onLoad.then((_) {
+      // Wait one event loop, so the view is truly loaded, then jump to last known position.
+      Timer.run(() {
+        app.scroller.scrollTop = viewModel.lastScrollPos;
       });
-    } else {
-      subscriptions.forEach((subscription) => subscription.cancel());
-    }
+
+      // On scroll, record new scroll position.
+      subscriptions.add(app.scroller.onScroll.listen((e) {
+//        print('scrolled for ' + app.router.selectedPage);
+        if (viewModel.typeFilter != app.router.selectedPage) return;
+        viewModel.lastScrollPos = app.scroller.scrollTop;
+      }));
+    });
   }
 
   attached() {
     if (app.debugMode) print('+InboxList');
-//    handlePageChange();
+    handlePageChange();
 
     app.router.onDispatch.listen((e) {
-      print('wow');
+//      print('DEBUG: inbox-list onDispatch listener called');
 //      handlePageChange();
     });
-
-
-
-    // TODO move to own app-wide stream.
-//    switch (app.router.selectedPage) {
-//      case 'events':
-//        app.pageTitle = 'Events';
-//        break;
-//      case 'news':
-//        app.pageTitle = 'News';
-//        break;
-//      case 'announcements':
-//        app.pageTitle = 'Announcements';
-//        break;
-//      default:
-//        app.pageTitle = 'Feed';
-//        break;
-//    }
   }
 
   detached() {
     if (app.debugMode) print('-InboxList');
 //    viewModel.lastScrollPos = app.scroller.scrollTop;
-
-    // TODO: If we cancel, how to resume? pause/resume instead?
-//    viewModel.childAddedSubscriber.cancel();
-//    viewModel.childChangedSubscriber.cancel();
-//    viewModel.childMovedSubscriber.cancel();
-//    viewModel.childRemovedSubscriber.cancel();
 
     subscriptions.forEach((subscription) => subscription.cancel());
   }

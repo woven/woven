@@ -20,7 +20,7 @@ class ChatList extends PolymerElement {
 
   String formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
 
-  ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('chat-view');
+  ChatView get chatView => document.querySelector('woven-app').shadowRoot.querySelector('x-main').shadowRoot.querySelector('chat-view');
   Element get chatList => chatView.shadowRoot.querySelector('chat-list');
 
   /**

@@ -9,9 +9,4 @@ class WovenApp extends PolymerElement with Observable {
   @observable App app = new App();
 
   WovenApp.created() : super.created();
-
-  attached() {
-    print('+woven-app');
-    print(app.cache);
-  }
 }
