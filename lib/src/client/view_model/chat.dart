@@ -30,7 +30,7 @@ class ChatViewModel extends BaseViewModel with Observable {
 
   // TODO: Use this later for date separators between messages.
 
-  int pageSize = 50;
+  int pageSize = 20;
   @observable bool reloadingContent = false;
   @observable bool reachedEnd = false;
   @observable bool isScrollPosAtBottom = false;
