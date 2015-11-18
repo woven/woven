@@ -200,7 +200,7 @@ class AddStuff extends PolymerElement {
       (item as FeedModel)..url = urlInput.value;
     }
 
-    var encodedItem = item.encode();
+    var encodedItem = item.toJson();
 
     // Save the item, and we'll have a reference to it.
     var itemRef = f.child('/items').push();

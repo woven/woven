@@ -14,7 +14,7 @@ class NewsModel implements Item {
   String url;
   String uriPreviewId;
 
-  Map encode() {
+  Map toJson() {
     return {
       "user": user,
       "subject": subject,
@@ -27,7 +27,7 @@ class NewsModel implements Item {
     };
   }
 
-  static NewsModel decode(Map data) {
+  static NewsModel fromJson(Map data) {
     return new NewsModel()
       ..user = data['user']
       ..type = data['type']

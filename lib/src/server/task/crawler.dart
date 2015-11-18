@@ -48,7 +48,7 @@ class CrawlerTask extends Task {
       if (feedsToCrawl == null) return;
 
       Future.forEach(feedsToCrawl.values, (feedData) async {
-        var feed = FeedModel.decode(feedData);
+        var feed = FeedModel.fromJson(feedData);
 
         var url = feed.url;
         var crawler = new Crawler(url);
@@ -99,7 +99,7 @@ class CrawlerTask extends Task {
               ..type = 'news';
 
             // TODO: Use firebase_io lib in ItemModel?
-            Item.add(community, newsItem.encode(), config['datastore']['firebaseSecret']).then((id) {
+            Item.add(community, newsItem.toJson(), config['datastore']['firebaseSecret']).then((id) {
               count++;
             });
           }

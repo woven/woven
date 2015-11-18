@@ -16,7 +16,7 @@ class EventModel implements Item {
   DateTime startDateTime;
   int startDateTimePriority;
 
-  Map encode() {
+  Map toJson() {
     return {
       "user": user,
       "subject": subject,
@@ -31,7 +31,7 @@ class EventModel implements Item {
     };
   }
 
-  static EventModel decode(Map data) {
+  static EventModel fromJson(Map data) {
     return new EventModel()
       ..user = data['user']
       ..subject = data['subject']
