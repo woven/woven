@@ -317,7 +317,6 @@ class FeedViewModel extends BaseViewModel with Observable {
             item['usernameForDisplay'] = usernameForDisplay);
 
     // If no updated date, use the created date.
-    // TODO: We assume createdDate is never null!
     if (item['updatedDate'] == null) {
       item['updatedDate'] = item['createdDate'];
     }
@@ -325,6 +324,13 @@ class FeedViewModel extends BaseViewModel with Observable {
     // The live-date-time element needs parsed dates.
     item['updatedDate'] = DateTime.parse(item['updatedDate']);
     item['createdDate'] = DateTime.parse(item['createdDate']);
+
+    // We don't want items created/updated in the future.
+    DateTime now = new DateTime.now().toUtc();
+    if ((item['createdDate'] as DateTime).compareTo(now) == 1) item[
+        'createdDate'] = now;
+    if ((item['updatedDate'] as DateTime).compareTo(now) == 1) item[
+        'updatedDate'] = now;
 
     switch (item['type']) {
       case 'event':
@@ -372,7 +378,8 @@ class FeedViewModel extends BaseViewModel with Observable {
     item['formattedBody'] = InputFormatter.createTeaser(item['body'], 75);
 
     var createdDate = item['createdDate'];
-    item['formattedCreatedDate'] = InputFormatter.formatDate(createdDate.toLocal(), direction: 'past');
+    item['formattedCreatedDate'] =
+        InputFormatter.formatDate(createdDate.toLocal(), direction: 'past');
 
     // Prepare the domain name.
     if (item['url'] != null && isValidUrl(item['url'])) {
@@ -406,12 +413,11 @@ class FeedViewModel extends BaseViewModel with Observable {
       item['like_count'] = (e.snapshot.val() != null) ? e.snapshot.val() : 0;
     });
 
-
     listenForLikedState() {
       var likedItemsRef = f.child('/liked_by_user/' +
-      app.user.username.toLowerCase() +
-      '/items/' +
-      item['id']);
+          app.user.username.toLowerCase() +
+          '/items/' +
+          item['id']);
 
       userSubscriptions.add(likedItemsRef.onValue.listen((e) {
         item['liked'] = e.snapshot.val() != null;
@@ -559,10 +565,12 @@ class FeedViewModel extends BaseViewModel with Observable {
   }
 
   deleteItem(String id) async {
-    await HttpRequest.request(app.serverPath + Routes.deleteItem.reverse([]), method: 'POST',
-    sendData: JSON.encode({'id': id, 'authToken': app.authToken}));
+    await HttpRequest.request(app.serverPath + Routes.deleteItem.reverse([]),
+        method: 'POST',
+        sendData: JSON.encode({'id': id, 'authToken': app.authToken}));
 
-    groupedItems.values.forEach((List i) => i.removeWhere((i) => i['id'] == id));
+    groupedItems.values
+        .forEach((List i) => i.removeWhere((i) => i['id'] == id));
   }
 
 //  void loadUserStarredItemInformation() {
