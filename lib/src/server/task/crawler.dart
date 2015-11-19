@@ -64,7 +64,7 @@ class CrawlerTask extends Task {
         }
 
         var feedReader = new FeedReader(url: feedUrl);
-        var feedItems = await feedReader.load(limit: 2);
+        var feedItems = await feedReader.load();
 
         if (feedItems.length == 0) {
           logger.warning('Empty or misunderstood feed found at $feedUrl');
@@ -84,7 +84,7 @@ class CrawlerTask extends Task {
           if (checkIfUrlExists == null) {
 
             var now = new DateTime.now().toUtc();
-            var priority = now.millisecondsSinceEpoch;
+            var priority = -now.millisecondsSinceEpoch;
 
             firebase.put(
                 Uri.parse(
@@ -98,6 +98,7 @@ class CrawlerTask extends Task {
               ..subject = feedItem.title
               ..body = feedItem.description
               ..createdDate = feedItem.publicationDate
+              ..updatedDate = feedItem.publicationDate
               ..user = 'dave'
               ..type = 'news'
               ..priority = priority;
