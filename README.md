@@ -1,11 +1,11 @@
 Woven
 ==========
 
-This is the code for the Woven application that lives at http://woven.co. It demonstrates a fairly fleshed out client and server Dart application.
+This is the code for the Woven application that lives at http://woven.co.
 
 Woven lets you talk and share across various channels.
 
-I'm currently developing out in the open. I hope this helps you as you navigate the world of Dart and Polymer, and I hope your input helps me improve.
+It is a fairly fleshed out client and server Dart application. I'm currently developing out in the open. I hope this helps you as you navigate the world of Dart and Polymer, and I hope your input helps me improve.
 
 ### Components
 
