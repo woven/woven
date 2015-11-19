@@ -96,10 +96,11 @@ class RssReader {
             item.link = additionalInfoUrl;
           }
 
+          var pubDate = element.findElements('pubDate').first.text;
+
           // Parse the date.
-          futures.add(util
-              .parseDate(element.findElements('pubDate').first.text)
-              .then((result) {
+          futures.add(util.parseDate(pubDate).then((result) {
+
             if (result is DateTime) {
               item.publicationDate = result;
             } else {
@@ -110,12 +111,14 @@ class RssReader {
             }
 
             // We don't want published dates to be in the future.
-            if (item.publicationDate.compareTo(new DateTime.now()) ==
-                1) item.publicationDate = new DateTime.now();
+            DateTime now = new DateTime.now().toUtc();
+            if (item.publicationDate.compareTo(now) == 1) item.publicationDate =
+                now;
           }).catchError((error, stack) {
             logger.warning('Error parsing date for RSS item', error, stack);
             return;
-          }));;
+          }));
+          ;
 
           if (item.title != null && item.title != '') rssItems.add(item);
         });

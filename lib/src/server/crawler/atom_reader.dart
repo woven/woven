@@ -46,28 +46,17 @@ class AtomReader {
         XmlDocument xml = parse(contents);
 
         xml.findAllElements('entry').toList().forEach((XmlElement element) {
-          var content = element
-              .findElements('content')
-              .single
-              .text;
+          var content = element.findElements('content').single.text;
           if (content == null) content =
-              element
-                  .findElements('summary')
-                  .single
-                  .text;
+              element.findElements('summary').single.text;
 
           // Try to find images.
-          var logo = (element
-              .findElements('logo')
-              .length > 0)
-              ? element
-              .findElements('logo')
-              .single
-              .text
+          var logo = (element.findElements('logo').length > 0)
+              ? element.findElements('logo').single.text
               : null;
           if (logo == null) {
             var imageMatcher =
-            new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false);
+                new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false);
             var matches = imageMatcher.allMatches(content).toList();
             if (matches.length > 0) {
               content = content.replaceAll(imageMatcher, '');
@@ -77,48 +66,24 @@ class AtomReader {
 
           // We are inside one <item></item>.
           var item = new AtomItem()
-            ..title = (element
-                .findElements('title')
-                .length > 0)
-                ? element
-                .findElements('title')
-                .single
-                .text
+            ..title = (element.findElements('title').length > 0)
+                ? element.findElements('title').single.text
                 : null
-            ..language = (element
-                .findElements('language')
-                .length > 0)
-                ? element
-                .findElements('language')
-                .single
-                .text
+            ..language = (element.findElements('language').length > 0)
+                ? element.findElements('language').single.text
                 : null
             ..content = content
-            ..link = element
-                .findElements('link')
-                .first
-                .getAttribute('href')
+            ..link = element.findElements('link').first.getAttribute('href')
             ..logo = logo
-            ..rights = (element
-                .findElements('rights')
-                .length > 0)
-                ? element
-                .findElements('rights')
-                .single
-                .text
+            ..rights = (element.findElements('rights').length > 0)
+                ? element.findElements('rights').single.text
                 : null;
 
           if (item.title == null || item.title == '') return;
 
           // Parse the date.
-          var date = element
-              .findElements('published')
-              ?.single
-              .text;
-          if (date == null) date = element
-              .findElements('updated')
-              ?.single
-              .text;
+          var date = element.findElements('published')?.single.text;
+          if (date == null) date = element.findElements('updated')?.single.text;
 
           if (date != null) {
             futures.add(util.parseDate(date).then((result) {
@@ -126,8 +91,8 @@ class AtomReader {
                 item.published = result;
 
                 // We don't want published dates to be in the future.
-                if (item.published.compareTo(new DateTime.now()) ==
-                    1) item.published = new DateTime.now();
+                DateTime now = new DateTime.now().toUtc();
+                if (item.published.compareTo(now) == 1) item.published = now;
 
                 if (item.title != null && item.title != '') atomItems.add(item);
               }
