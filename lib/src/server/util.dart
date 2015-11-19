@@ -46,6 +46,8 @@ shelf.Response respond(content, {statusCode: 200}) {
 
 /**
  * Parses a date into a DateTime object.
+ *
+ * Returns date in UTC.
  */
 Future<DateTime> parseDate(String dateString) {
   return new Future(() {
@@ -57,7 +59,8 @@ Future<DateTime> parseDate(String dateString) {
     }
 
     var formats = [
-      new DateFormat('EEE, d MMM yyyy HH:mm:ss Z'), // "Tue, 12 Feb 2013 16:27:30 EST"
+      new DateFormat(
+          'EEE, d MMM yyyy HH:mm:ss Z'), // "Tue, 12 Feb 2013 16:27:30 EST"
       new DateFormat('d MMM yyyy HH:mm:ss Z'), // "08 Feb 2013 15:15:03 +0200"
       new DateFormat('yyyy-MM-ddTHH:mm:ssZ')
     ];
@@ -68,20 +71,27 @@ Future<DateTime> parseDate(String dateString) {
 
         var m = new RegExp('(\\+|-)([0-9]){4}\$').firstMatch(dateString);
         if (m != null) {
-          date = date.add(new Duration(minutes: timeZoneOffsetToMinutes(m.group(0))));
+          date = date
+              .add(new Duration(minutes: timeZoneOffsetToMinutes(m.group(0))));
         } else {
           date = date.add(date.timeZoneOffset);
         }
 
-        return date;
+        // We've adjusted date to UTC, now let's return it as such.
+        // TODO: Is this totally whack?
+        var dateAsUtc = new DateTime.utc(date.year, date.month, date.day,
+            date.hour, date.minute, date.second, date.millisecond);
+
+        return dateAsUtc;
       } catch (error) {
         // Try generic.
         try {
           var date = DateTime.parse(dateString);
 
-          date = date.add(date.timeZoneOffset);
+          // TODO: toUtc() handles this for us, I believe.
+//          date = date.add(date.timeZoneOffset);
 
-          return date;
+          return date.toUtc();
         } catch (e) {
           throw 'Exception parsing date';
         }
@@ -97,7 +107,8 @@ var timeZoneOffsets = {};
 
 DateTime parseUtc(String date, {int minutes: 0}) {
   var r = DateTime.parse(date);
-  return new DateTime.utc(r.year, r.month, r.day, r.hour, r.minute + minutes, r.second);
+  return new DateTime.utc(
+      r.year, r.month, r.day, r.hour, r.minute + minutes, r.second);
 }
 
 int timeZoneOffsetToMinutes(String offset) {
@@ -136,11 +147,13 @@ Future<String> readHttp(String url, {bool requestAsChrome: false}) {
 
   // Masquerades as a browser so we can crawl... blame on Facebook.
   if (requestAsChrome || url.contains('facebook.com')) {
-    headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36';
+    headers['User-Agent'] =
+        'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36';
   }
 
   var timer = new Timer(new Duration(seconds: 8), () {
-    if (completer.isCompleted == false) completer.completeError('Timed out reading URL $url');
+    if (completer.isCompleted == false) completer
+        .completeError('Timed out reading URL $url');
   });
 
   if (url == null) {
@@ -150,19 +163,23 @@ Future<String> readHttp(String url, {bool requestAsChrome: false}) {
   headers['host'] = Uri.parse(url).host;
 
   // Handle letter cases. Lower-casify the hostname, but not anything else.
-  url = url.replaceFirst(Uri.parse(url).host, Uri.parse(url).host.toLowerCase());
+  url =
+      url.replaceFirst(Uri.parse(url).host, Uri.parse(url).host.toLowerCase());
 
   http.get(url, headers: headers).then((response) {
     if (completer.isCompleted == false) {
       timer.cancel();
 
-      if ((response.statusCode < 200 || response.statusCode >= 300) && response.statusCode != 304) {
-        completer.completeError('Website returned status code ${response.statusCode}');
+      if ((response.statusCode < 200 || response.statusCode >= 300) &&
+          response.statusCode != 304) {
+        completer.completeError(
+            'Website returned status code ${response.statusCode}');
         return;
       }
 
       var contentType = response.headers[HttpHeaders.CONTENT_TYPE];
-      if (contentType == null) contentType = response.headers[HttpHeaders.CONTENT_TYPE.toLowerCase()];
+      if (contentType == null) contentType =
+          response.headers[HttpHeaders.CONTENT_TYPE.toLowerCase()];
 
       var charset;
       if (contentType != null) {
@@ -196,4 +213,3 @@ Future<String> readHttp(String url, {bool requestAsChrome: false}) {
 
   return completer.future;
 }
-
