@@ -1,6 +1,7 @@
 library shared.model.news;
 
 import 'item.dart';
+import '../util.dart';
 
 class NewsModel implements Item {
   String id;
@@ -22,8 +23,8 @@ class NewsModel implements Item {
       "type": type,
       "priority": priority,
       "body": body,
-      "createdDate": createdDate.toString(),
-      "updatedDate": updatedDate.toString(),
+      "createdDate": encode(createdDate),
+      "updatedDate": encode(updatedDate),
       "url": url,
       "uriPreviewId": uriPreviewId
     };
