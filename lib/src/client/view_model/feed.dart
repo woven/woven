@@ -73,19 +73,11 @@ class FeedViewModel extends BaseViewModel with Observable {
       dataLocation = '/items_by_community/' + app.community.alias;
     }
 
-    fb.Query itemsRef;
-    if (typeFilter == 'event') {
-      itemsRef = f
-          .child(dataLocation)
-          .orderByChild('priority')
-          .startAt(value: lastPriority)
-          .limitToFirst(pageSize + 1);
-    } else {
-      itemsRef = f
-          .child(dataLocation)
-          .startAt(value: lastPriority)
-          .limitToFirst(pageSize + 1);
-    }
+    fb.Query itemsRef = f
+        .child(dataLocation)
+        .orderByChild('priority')
+        .startAt(value: lastPriority)
+        .limitToFirst(pageSize + 1);
 
     if (items.length == 0) onLoadCompleter.complete(true);
 
@@ -180,9 +172,7 @@ class FeedViewModel extends BaseViewModel with Observable {
     }
 
     // If this is the first item loaded, start listening for new items.
-    fb.Firebase itemsRef;
-
-    itemsRef = f
+    fb.Firebase itemsRef = f
         .child(dataLocation)
         .orderByChild('priority')
         .startAt(value: startAt)
