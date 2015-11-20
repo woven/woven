@@ -17,6 +17,21 @@ bool isSuccessStatusCode(int statusCode) =>
     statusCode >= 200 && statusCode < 300 || statusCode == 304;
 
 /**
+ * Return a file extension for a given HTTP content-type.
+ *
+ * Only supports a few common images.
+ */
+getImageExtensionFromContentType(String contentType) {
+  if (contentType.contains('jpeg')) return 'jpg';
+  if (contentType.contains('png')) return 'png';
+  if (contentType.contains('gif')) return 'gif';
+  if (contentType.contains('tiff')) return 'tiff';
+  if (contentType.contains('webp')) return 'webp';
+  if (contentType.contains('svg')) return 'svg';
+  return null; // Unknown by this function.
+}
+
+/**
  * In some cases we need to convert a space to %20 to make things work.
  */
 String correctUrl(String url) {
