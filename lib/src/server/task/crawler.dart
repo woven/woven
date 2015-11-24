@@ -32,8 +32,8 @@ import 'package:woven/src/server/crawler/image_info.dart';
 class CrawlerTask extends Task {
   Daemon app;
 
-  bool runImmediately = true;
-//  Duration interval = const Duration(seconds: 120);
+//  bool runImmediately = true;
+  Duration interval = const Duration(seconds: 120);
 
   final Logger logger = new Logger('CrawlerTask');
 
