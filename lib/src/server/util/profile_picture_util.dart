@@ -12,7 +12,7 @@ import 'package:woven/src/shared/response.dart';
 import '../app.dart';
 
 class ProfilePictureUtil {
-  dynamic app;
+  App app;
 
   ProfilePictureUtil(app);
 

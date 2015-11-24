@@ -23,6 +23,7 @@ class FeedReader {
 
   // TODO: Not respecting limit?
   Future<List<FeedItem>> load({int limit: 10}) {
+//    if (!url.contains('techcrunch.com/feed')) return new Future.value([]); // TODO: Kill me.
     return new Future(() async {
       var contents;
 //      try {
@@ -43,6 +44,7 @@ class FeedReader {
           .contains('feed')) {
         var reader = new AtomReader(contents: contents, url: url);
         var results = await reader.getItems();
+        logger.fine('${results.length} results for ${url}');
         if (results == null) return new Future.value([]);
         return results.fold(
             [],
@@ -61,6 +63,7 @@ class FeedReader {
                 previous..add(new FeedItem.fromRssItem(current)));
       }
     }).catchError((e) {
+      print('$e');
       return new Future.value([]);
     });
   }

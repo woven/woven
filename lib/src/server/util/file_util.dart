@@ -33,12 +33,12 @@ Future<File> downloadFileTo(String url, File file) {
   });
 }
 
-Future<File> createTemporaryFile({String prefix: 'woven-'}) {
+Future<File> createTemporaryFile({String prefix: 'woven-', String suffix: ''}) {
   return new Future(() {
     var name;
 
     Future retry() {
-      name = '$prefix${new Random().nextInt(10000000)}';
+      name = '$prefix${new Random().nextInt(10000000)}$suffix';
 
       var file = new File(path.join(Directory.systemTemp.path, name));
       return file.exists().then((exists) {

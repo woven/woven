@@ -11,6 +11,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
+import 'package:logging/logging.dart';
 
 //import 'package:html5lib/parser.dart' as htmlParser;
 //import 'package:html5lib/dom.dart';
@@ -21,9 +22,12 @@ import 'package:html/dom.dart';
 
 //import '../config/config.dart';
 import '../util.dart' as util;
+
 import 'package:woven/src/shared/util.dart' as sharedUtil;
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/shared/response.dart';
+import 'package:woven/src/server/crawler/open_graph.dart';
+import 'package:woven/src/server/crawler/image_info.dart';
 
 //import 'readability.dart';
 //import 'open_graph/open_graph.dart';
@@ -37,8 +41,35 @@ class Crawler {
 
   static const int MINIMUM_IMAGE_SIZE = 2000;
 
+  final Logger logger = new Logger('Crawler');
+
   Crawler(this.url, {this.app}) {
     url = sharedUtil.prefixHttp(url);
+  }
+
+  Future<ImageInfo> getBestImageFromHtml(String content) async {
+    logger.fine('Getting best image...');
+    List images = [];
+
+    images = Crawler.findImagesAssociatedWithContent(content);
+    images = await Crawler.removeSmallImages(images);
+
+    Map<int, ImageInfo> goodImages = {};
+    await Future.forEach(images, (imageUrl) async {
+      ImageInfo imageInfo = await ImageInfo.parse(imageUrl);
+      if (imageInfo.tooSmall) return;
+      goodImages[imageInfo.size] = imageInfo;
+    });
+
+    if (goodImages.isEmpty) {
+      OpenGraph openGraph = OpenGraph.parse(content);
+      ImageInfo imageInfo = await ImageInfo.parse(openGraph.imageUrl);
+      return imageInfo;
+    }
+
+    ImageInfo bestImage = goodImages[goodImages.keys.reduce(max)];
+
+    return bestImage;
   }
 
   Future<Response> getPreview() async {
@@ -234,20 +265,32 @@ class Crawler {
   /**
    * Returns the image size if it's big enough, otherwise false.
    */
-  static Future<int> isImageBigEnough(String url) {
-    return new Future(() {
+  static Future<Map> getImageInfo (String url) async {
+    Map imageInfo = {};
+
+    return new Future(() async {
       // Check cache.
       if (imageSizes.containsKey(url)) {
         var size = imageSizes[url];
         if (size > Crawler.MINIMUM_IMAGE_SIZE) return size;
 
         return false;
-      }
+      } else {
+        var size;
+        var head = await http.head(url);
+        if (head.headers['content-length'] == null) {
+          var get = await http.get(url);
+          if (get.headers['content-length'] == null) {
+            size = get.body.length;
+          } else {
+            size = get.headers['content-length'];
+          }
+        } else {
+          size = head.headers['content-length'];
+        }
 
-      return http.head(url).then((response) {
-        if (response.headers['content-length'] == null) return false;
+        size = int.parse(size, onError: (_) => 0);
 
-        var size = int.parse(response.headers['content-length'], onError: (_) => 0);
 
         if (size > Crawler.MINIMUM_IMAGE_SIZE) {
           imageSizes[url] = size;
@@ -255,7 +298,7 @@ class Crawler {
         } else {
           return false;
         }
-      });
+      }
     });
   }
 

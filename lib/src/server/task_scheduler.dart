@@ -9,9 +9,12 @@ import 'task/task.dart';
  * A very simple task scheduler.
  */
 class TaskScheduler {
-  List<Task> tasks = [new DailyDigestTask(), new CrawlerTask()];
+  dynamic app;
+  List<Task> tasks;
 
-  TaskScheduler();
+  TaskScheduler(app) {
+    tasks = [new DailyDigestTask(), new CrawlerTask(app)];
+  }
 
   run() {
     tasks.forEach((task) {

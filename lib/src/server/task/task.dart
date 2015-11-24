@@ -1,11 +1,8 @@
 library task;
 
 import 'dart:async';
-import '../app.dart';
 
 abstract class Task {
-  App app;
-
   bool runImmediately = false;
   bool isRunning = false;
 

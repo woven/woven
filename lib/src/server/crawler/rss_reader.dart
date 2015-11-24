@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 
 import '../util.dart' as util;
 import 'crawler.dart';
+import 'image_info.dart';
 
 class RssReader {
   var contents;
@@ -23,7 +24,8 @@ class RssReader {
    * Loads the RSS feed.
    */
   Future<List<RssItem>> getItems() {
-    return new Future(() {
+    logger.fine('Getting items from $url');
+    return new Future(() async {
       if (contents == null) return [];
 
       // First we have to get rid of some data, because of the lack of support in the XML package.
@@ -48,7 +50,7 @@ class RssReader {
       try {
         xml = parse(contents);
 
-        var items = xml.findAllElements('item').forEach((XmlElement element) {
+        await Future.forEach(xml.findAllElements('item'), (XmlElement element) async {
           var image;
           var description = element.findElements('description').single.text;
           if (description == null) {
@@ -79,10 +81,15 @@ class RssReader {
                 ? element.findElements('copyright').single.text
                 : null;
 
-          if (item.image is String) {
-            futures.add(Crawler.isImageBigEnough(item.image).then((size) {
-              if (size == false) item.image = null;
-            }));
+          try {
+            if (item.image is String) {
+              ImageInfo imageInfo = await ImageInfo.parse(image);
+              if (imageInfo.tooSmall) {
+                item.image = null;
+              }
+            }
+          } catch(error) {
+            logger.severe(error);
           }
 
           // Build a list of categories (List<String>) based on the XML tree.
@@ -96,11 +103,10 @@ class RssReader {
             item.link = additionalInfoUrl;
           }
 
-          var pubDate = element.findElements('pubDate').first.text;
+          var pubDate = (element.findElements('pubDate').length > 0) ? element.findElements('pubDate').first.text : null;
 
           // Parse the date.
           futures.add(util.parseDate(pubDate).then((result) {
-
             if (result is DateTime) {
               item.publicationDate = result;
             } else {
@@ -118,16 +124,19 @@ class RssReader {
             logger.warning('Error parsing date for RSS item', error, stack);
             return;
           }));
-          ;
 
           if (item.title != null && item.title != '') rssItems.add(item);
         });
+
+        return Future.wait(futures).then((values) {
+          logger.fine('RSS reader returned ${rssItems.length} items for $url');
+          return rssItems;
+        });
+
       } catch (error, stack) {
-        throw 'Exception during parsing of RSS feed: $error\n\n$stack';
+//        throw 'Exception during parsing of RSS feed: $error\n\n$stack';
         logger.severe('Exception during parsing of RSS feed', error, stack);
       }
-
-      return Future.wait(futures).then((values) => rssItems);
     });
   }
 }
