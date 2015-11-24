@@ -8,12 +8,12 @@
 }
 
 #content-container {
-  max-width: 540px;
+  max-width: 640px;
   margin: auto;
 }
 
 #content-container.compact {
-  max-width: 540px;
+  max-width: 640px;
 }
 
 .date-group-header {
@@ -63,7 +63,7 @@ x-item::shadow .item-wrapper {
   margin-bottom: 20px;
 }
 
-@media all and (max-width: 900px)  {
+@media all and (max-width: 640px)  {
   .date-group-header {
     margin-top: 0;
     border-radius: 0;

@@ -389,7 +389,7 @@ paper-toast.important {
   transform: translateZ(0);
 }
 
-@media all and (max-width: 800px)  {
+@media all and (max-width: 640px)  {
   .page-wrapper {
     width: 100%;
     margin: 0;

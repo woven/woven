@@ -17,7 +17,7 @@ import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 @CustomTag('x-main')
 class Main extends PolymerElement with Observable {
   @published App app;
-  @observable var responsiveWidth = "600px";
+  @observable var responsiveWidth = "900px";
   @observable var show = false;
 
   List<StreamSubscription> subscriptions = [];

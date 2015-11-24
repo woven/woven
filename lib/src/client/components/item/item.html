@@ -4,12 +4,15 @@
     <div class="item-wrapper {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" data-id="{{item['id']}}">
         <div class="item-container" vertical layout>
-          <div layout horizontal>
+          <div class="content-container" layout horizontal>
             <div class="item-photo-area">
               <div class="item-photo-wrapper">
                 <template if="{{item['uriPreview']['imageSmallLocation'] != null}}">
-                  <core-image class="item-photo" sizing="cover" preload
-                              src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
+                  <a _href="{{item['url']}}" target="_blank" title="Go to {{item['url']}}"
+                     on-tap="{{stopProp}}">
+                    <core-image class="item-photo" sizing="cover" preload
+                                src="{{item['uriPreview']['imageSmallLocation']}}"></core-image>
+                  </a>
                 </template>
                 <template
                     if="{{item['uriPreviewTried'] == true && (item['uriPreview'] == null || item['uriPreview']['imageSmallLocation'] == null)}}">
@@ -31,7 +34,7 @@
                   </core-tooltip>
                 </div>
               </template>
-              <div class="item-body">
+              <div class="item-body" hidden>
                 <template if="{{item['type'] != null && item['type'] == 'event'}}">
                   <div class="event-date">
                     <live-date-time value="{{item['startDateTime']}}" formatter="{{formatEventDate}}"></live-date-time>

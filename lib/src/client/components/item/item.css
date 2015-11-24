@@ -105,7 +105,6 @@ core-tooltip[show]::shadow .core-tooltip {
 
 .item.compact {
   background-color: white;
-  /*padding-top: 15px;*/
 }
 
 .theme-dark .item.compact {
@@ -145,13 +144,13 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-photo-area {
-  padding: 7px 10px 7px 7px;
+  margin-right: 10px;
 }
 
 .item-photo-area .item-photo-wrapper {
   border: solid 1px #eee;
-  width:225px;
-  height:125px;
+  width:245px;
+  height:120px;
   text-align: center;
   background: #eee;
   fill: white;
@@ -180,8 +179,8 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-photo-area .item-photo {
-  width:225px;
-  height:125px;
+  width:245px;
+  height:120px;
   background: #fff;
 }
 
@@ -200,10 +199,12 @@ core-tooltip[show]::shadow .core-tooltip {
   white-space: normal;
   margin-right: 5px;
   color: #212121;
-  font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   padding: 0;
   margin-bottom: 10px;
+  font-weight: 500;
+  text-rendering: optimizeLegibility;
+  line-height: 16pt;
 }
 
 .item-subject a {
@@ -354,12 +355,12 @@ core-tooltip[show]::shadow .core-tooltip {
   padding: 10px 0 5px 0;
 }
 
-.content-main {
-  padding: 0 0 0 0;
+.content-container {
+  margin: 10px;
 }
 
-.item.compact .content-main {
-  padding: 7px 5px 0 0;
+.content-main {
+  padding: 0 0 0 0;
 }
 
 .content-footer {
@@ -451,7 +452,7 @@ core-tooltip[show]::shadow .core-tooltip {
   background-color: transparent;
 }
 
-@media all and (max-width: 900px)  {
+@media all and (max-width: 640px)  {
   .item-wrapper {
     margin: 8px 0;
   }
@@ -460,20 +461,12 @@ core-tooltip[show]::shadow .core-tooltip {
     padding: 8px;
   }
 
-  .item-photo-area .item-photo-wrapper {
-    width: 80px;
-    height: 80px;
-    overflow: hidden;
-  }
 
-  .item-photo-area .item-photo {
-    width: 80px;
-    height: 80px;
-  }
 
-  .item-photo-area .item-photo-icon-none {
-    width: 60px;
-    margin-top: 0 !important;
+  .item.compact {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
   }
 
   .item.compact .item-body {
@@ -490,8 +483,26 @@ core-tooltip[show]::shadow .core-tooltip {
   }
 
   .item.compact .content-main {
-    padding: 4px 0 4px 0;
+    /*padding: 4px 0 4px 0;*/
     overflow: hidden;
     margin-right: 5px;
+  }
+}
+
+@media all and (max-width: 540px)  {
+  .item-photo-area .item-photo-wrapper {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+  }
+
+  .item-photo-area .item-photo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .item-photo-area .item-photo-icon-none {
+    width: 60px;
+    margin-top: 0 !important;
   }
 }
