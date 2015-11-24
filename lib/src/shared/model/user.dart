@@ -25,7 +25,7 @@ class UserModel {
 
   // Return the path to the small picture if we have it, otherwise the original picture.
   String get fullPathToPicture => picture != null
-      ? "${config['google']['cloudStoragePath']}/${pictureSmall != null ? pictureSmall : picture}"
+      ? "${config['google']['cloudStorage']['path']}/${pictureSmall != null ? pictureSmall : picture}"
       : null;
 
   Map toJson() {

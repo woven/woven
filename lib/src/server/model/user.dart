@@ -24,6 +24,6 @@ class UserModel extends shared.UserModel {
     user = user.toLowerCase();
     var picture = await Firebase.get('/users/$user/pictureSmall.json');
 
-    return picture != null ? "${config['google']['cloudStoragePath']}/$picture" : null;
+    return picture != null ? "${config['google']['cloudStorage']['path']}/$picture" : null;
   }
 }

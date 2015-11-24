@@ -42,6 +42,7 @@ class App extends Observable {
   String sessionId;
   Firebase f;
   String cloudStoragePath;
+  String cloudStorageBucket;
   AudioContext audioContext = new AudioContext();
 
   Stream onUserChanged;
@@ -52,7 +53,8 @@ class App extends Observable {
 
   App() {
     f = new Firebase(config['datastore']['firebaseLocation']);
-    cloudStoragePath = config['google']['cloudStoragePath'];
+    cloudStoragePath = config['google']['cloudStorage']['path'];
+    cloudStorageBucket = config['google']['cloudStorage']['bucket'];
 
     mainViewModel = new MainViewModel(this);
     cache = new Cache();

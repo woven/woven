@@ -27,20 +27,27 @@ var config = {
       'password': 'xxx', // Get your own.
       'localEmail': 'dave@woven.co'
     },
-     'mailgun': {
-         'user': 'api',
-         'key': 'xxx', // Get your own.
-         'localEmail': 'support@woven.co',
-         'path': 'https://api:xxx@api.mailgun.net/v2/mydomain.com' // Adapt.
+    'mailgun': {
+       'user': 'api',
+       'key': 'xxx', // Get your own.
+       'localEmail': 'support@woven.co',
+       'path': 'https://api:xxx@api.mailgun.net/v2/mydomain.com' // Adapt.
     },
-         'google': {
-           'serviceAccountCredentials': {
-               "private_key_id": "xxx",
-               "private_key": "xxx",
-               "client_email": "xxx",
-               "client_id": "xxx",
-               "type": "service_account"
-           },
-           'cloudStoragePath': 'http://storage.googleapis.com/yourbucket'
-         }
+    'google': {
+       'serviceAccountCredentials': {
+           "private_key_id": "xxx",
+           "private_key": "xxx",
+           "client_email": "xxx",
+           "client_id": "xxx",
+           "type": "service_account"
+       },
+       'cloudStorage': {
+         'path:': 'http://storage.googleapis.com/yourproject',
+         'bucket': 'yourbucket'
+       }
+     },
+     'appSettings': {
+       'validShareToOptions': ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode', 'ideagarden', 'fiu', 'breakshop', 'littlehaiti']
+     },
+     'debug_mode': true
 };

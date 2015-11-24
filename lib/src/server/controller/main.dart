@@ -250,7 +250,7 @@ class MainController {
       var extension =
           path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
       var filename = 'preview_small$extension';
-      var gsBucket = 'woven';
+      var gsBucket = config['google']['cloudStorage']['bucket'];
       var gsPath = 'public/images/preview/$uriPreviewId/$filename';
 
       // Then upload the image to our filesystem.

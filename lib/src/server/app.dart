@@ -31,6 +31,8 @@ class App {
   SessionManager sessionManager;
 
   final String serverPath = config['server']['path'];
+  final String cloudStoragePath = config['google']['cloudStorage']['path'];
+  final String cloudStorageBucket = config['google']['cloudStorage']['bucket'];
 
   // Obtain the service account credentials from the Google Developers Console by
   // creating new OAuth credentials of application type "Service account".

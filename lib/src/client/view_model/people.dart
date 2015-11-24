@@ -136,7 +136,7 @@ class PeopleViewModel extends BaseViewModel with Observable {
 
     // Assemble the full path of the user's profile picture.
     // TODO: Simplify choosing of original or small.
-    if (item['picture'] != null) item['picture'] = "${config['google']['cloudStoragePath']}/${(item['pictureSmall'] != null) ? item['pictureSmall'] : item['picture']}";
+    if (item['picture'] != null) item['picture'] = "${app.cloudStoragePath}/${(item['pictureSmall'] != null) ? item['pictureSmall'] : item['picture']}";
 
     return item;
   }

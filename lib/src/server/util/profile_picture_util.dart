@@ -38,7 +38,7 @@ class ProfilePictureUtil {
         if (data['data']['is_silhouette'] == true) return null;
 
         var extension = path.extension(data['data']['url']).split("?")[0];
-        var gsBucket = 'woven';
+        var gsBucket = app.cloudStorageBucket;
         var gsPath = 'public/images/user/$user/profile-picture';
 
         // Set up a temporary file to write to.

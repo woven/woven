@@ -242,7 +242,7 @@ class FeedViewModel extends BaseViewModel with Observable {
             newData['uriPreview']['imageSmallLocation'] = (newData['uriPreview']
                         ['imageSmallLocation'] !=
                     null)
-                ? '${ config['google']['cloudStoragePath']}/${newData['uriPreview']['imageSmallLocation']}'
+                ? '${app.cloudStoragePath}/${newData['uriPreview']['imageSmallLocation']}'
                 : null;
             newData['uriPreviewTried'] = true;
 
