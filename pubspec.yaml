@@ -31,6 +31,8 @@ dependencies:
   image: "^1.1.25"
 dependency_overrides:
   web_components: "^0.12.0+3"
+  firebase:
+    git: https://github.com/davenotik/firebase-dart.git
 transformers:
 - polymer:
     entry_points:
