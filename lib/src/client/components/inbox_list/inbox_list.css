@@ -8,6 +8,7 @@
 }
 
 #content-container {
+  -webkit-overflow-scrolling: touch;
   max-width: 640px;
   margin: auto;
 }
