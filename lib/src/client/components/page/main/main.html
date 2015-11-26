@@ -68,7 +68,7 @@
       </div>
 
       <core-scroll-header-panel id="main-panel" main fixed>
-        <core-toolbar id="toolbar-main">
+        <div id="toolbar-main">
           <template if="{{app.router.selectedPage != 'item' || (app.router.previousPage != 'feed' && app.router.previousPage != 'events' && app.router.previousPage != 'lobby')}}">
             <core-icon-button class="btn flashing-fix" id="menu-button" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
           </template>
@@ -79,7 +79,7 @@
           <core-tooltip label="Add stuff" position="left">
             <core-icon-button class="btn primary flashing-fix" id="add-button" icon="add-circle" on-tap="{{toggleAddStuff}}"></core-icon-button>
           </core-tooltip>
-        </core-toolbar>
+        </div>
 
         <div class="content" layout vertical>
           <core-animated-pages id="pages" selected="{{app.router.selectedPage}}" valueattr="data-page" fit>
