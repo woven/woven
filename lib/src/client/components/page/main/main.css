@@ -79,6 +79,10 @@
   width: 125px;
 }
 
+core-drawer-panel {
+  position: fixed !important;
+}
+
 /* drawer is always visible on a wide screen
    so menu button isn't required */
 core-drawer-panel:not([narrow]) #menu-button {
