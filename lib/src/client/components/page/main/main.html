@@ -5,7 +5,7 @@
 
       <div vertical layout drawer>
         <core-header-panel id="side-panel" navigation flex mode="seamed">
-          <core-toolbar id="toolbar-drawer" class="toolbar {{app.community == null ? 'has-logo' : ''}}">
+          <div id="toolbar-drawer" class="toolbar {{app.community == null ? 'has-logo' : ''}}">
                   <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
                         data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
                     <template if="{{app.community == null}}">
@@ -15,7 +15,7 @@
                       {{app.community.name}}
                     </template>
                   </span>
-          </core-toolbar>
+          </div>
 
           <core-menu valueattr="data-page" selected="{{app.router.selectedPage}}" class="menu">
             <template if="{{app.community != null}}">
