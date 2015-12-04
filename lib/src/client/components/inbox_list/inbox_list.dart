@@ -88,6 +88,8 @@ class InboxList extends PolymerElement with Observable {
   attached() {
     if (app.debugMode) print('+InboxList');
 
+    print('DEBUG: ${app.scroller}');
+
     initializeInfiniteScrolling();
 
     // Once the view is loaded, handle scroll position.
@@ -99,6 +101,7 @@ class InboxList extends PolymerElement with Observable {
 
       // On scroll, record new scroll position.
       subscriptions.add(app.scroller.onScroll.listen((e) {
+        print(app.scroller.scrollTop);
         viewModel.lastScrollPos = app.scroller.scrollTop;
       }));
     });

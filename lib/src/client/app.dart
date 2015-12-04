@@ -192,13 +192,12 @@ class App extends Observable {
    */
   HtmlElement get scroller {
     //TODO: Get this working for chat view, which has its own scroller.
-    CoreHeaderPanel el = document
+    DivElement scroller = document
         .querySelector("woven-app")
         .shadowRoot
         .querySelector("x-main")
         .shadowRoot
-        .querySelector("#main-panel");
-    HtmlElement scroller = el.scroller;
+        .querySelector(".main");
     return scroller;
   }
 

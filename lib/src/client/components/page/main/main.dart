@@ -57,8 +57,8 @@ class Main extends PolymerElement with Observable {
 
   // Toggle the drawer panel.
   togglePanel() {
-    CoreDrawerPanel panel = this.shadowRoot.querySelector('core-drawer-panel');
-    panel.togglePanel();
+    DivElement panel = this.shadowRoot.querySelector('.side-panel');
+    panel.classes.add('hide');
   }
 
   // Toggle the Add Stuff dialog.
@@ -98,27 +98,27 @@ class Main extends PolymerElement with Observable {
 
   attached() async {
     print('MAIN ELEMENT IS: #$mainElement');
-    print('''
-    ${mainElement.shadowRoot.querySelector('.side-panel .close')}
-    ''');
+//    print('''
+//    ${mainElement.shadowRoot.querySelector('.side-panel .close')}
+//    ''');
 
 
     //querySelector('.main').text = 'Your Dart app is running.';
-    final Element header = mainElement.shadowRoot.querySelector('.header');
+    final Element toolbar = mainElement.shadowRoot.querySelector('.toolbar');
     final Element sidePanel = mainElement.shadowRoot.querySelector('.side-panel');
-    final Element closeSidePanel = mainElement.shadowRoot.querySelector('.side-panel .close');
-    final Element toggle = mainElement.shadowRoot.querySelector('.header .toggle');
+    final Element closeButton = mainElement.shadowRoot.querySelector('.side-panel #close-button');
+    final Element menuButton = mainElement.shadowRoot.querySelector('.toolbar #menu-button');
     final Element scrim = mainElement.shadowRoot.querySelector('.scrim');
     final Element mainDiv = mainElement.shadowRoot.querySelector('.main');
 
     hide() {
       if (sidePanel.classes.contains('hide')) {
-        header.classes.add('hide');
+        toolbar.classes.add('hide');
       }
     }
 
     show() {
-      header.classes.remove('hide');
+      toolbar.classes.remove('hide');
     }
 
     var oldY = 0;
@@ -136,16 +136,16 @@ class Main extends PolymerElement with Observable {
     });
 
     // TODO: Is adding class on every listen slow? Maybe hold a local var?
-    closeSidePanel.onClick.listen((e) {
+    closeButton.onClick.listen((e) {
       sidePanel.classes.add('hide');
-      scrim.classes.removeAll(['show']);
-      mainDiv.classes.remove('noscroll');
+//      scrim.classes.removeAll(['show']);
+//      mainDiv.classes.remove('noscroll');
     });
 
-    toggle.onClick.listen((e) {
+    menuButton.onClick.listen((e) {
       sidePanel.classes.remove('hide');
 //    scrim.classes.addAll(['show']);
-      mainDiv.classes.add('noscroll');
+//      mainDiv.classes.add('noscroll');
     });
 
 
