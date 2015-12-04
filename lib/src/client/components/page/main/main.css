@@ -4,7 +4,7 @@
   top: 0;
   display: block;
   height: 50px;
-  background-color: #00A114;
+  background-color: rgba(47, 163, 0, .9);
   width: 100%;
 
   -webkit-transition: -webkit-transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
