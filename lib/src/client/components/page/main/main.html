@@ -3,21 +3,29 @@
     <link rel="stylesheet" href="main.css">
     <div class="toolbar" layout horizontal>
       <template if="{{app.router.selectedPage != 'item' || (app.router.previousPage != 'feed' && app.router.previousPage != 'events' && app.router.previousPage != 'lobby')}}">
-        <core-icon  id="menu-button" icon="menu"></core-icon>
+        <core-icon class="icon menu" icon="menu"></core-icon>
       </template>
       <template if="{{app.router.selectedPage == 'item' && (app.router.previousPage == 'feed' || app.router.previousPage == 'events' || app.router.previousPage == 'lobby')}}">
-        <core-icon class="btn flashing-fix" id="back-button" icon="arrow-back" on-tap="{{goBack}}" center-center></core-icon>
+        <core-icon class="icon back" id="back-button" icon="arrow-back" on-tap="{{goBack}}" center-center></core-icon>
       </template>
       <span id="page-title" flex on-tap="{{scrollToTop}}"></span>
-      <div>
-        <core-tooltip label="Add stuff" position="left">
-          <core-icon  id="add-button" icon="add-circle" on-tap="{{toggleAddStuff}}"></core-icon>
-        </core-tooltip>
-      </div>
+      <!--<div>-->
+        <!--<core-tooltip label="Add stuff" position="left">-->
+          <core-icon class="icon add" icon="add-circle" on-tap="{{toggleAddStuff}}"></core-icon>
+        <!--</core-tooltip>-->
+      <!--</div>-->
     </div>
-    <div layout horizontal>
+    <div layout horizontal class="theme-dark">
       <div class="side-panel hide">
-        <br/><br/>
+        <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
+              data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
+          <template if="{{app.community == null}}">
+            <img id="woven-logo" _src="{{app.cloudStoragePath}}/public/images/app/woven-logo-small.png">
+          </template>
+          <template if="{{app.community != null}}">
+            {{app.community.name}}
+          </template>
+        </span>
         <p id="close-button">Close</p>
         <div class="content">
           <core-menu valueattr="data-page" selected="{{app.router.selectedPage}}" class="menu">

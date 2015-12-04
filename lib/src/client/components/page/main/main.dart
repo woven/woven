@@ -107,7 +107,7 @@ class Main extends PolymerElement with Observable {
     final Element toolbar = mainElement.shadowRoot.querySelector('.toolbar');
     final Element sidePanel = mainElement.shadowRoot.querySelector('.side-panel');
     final Element closeButton = mainElement.shadowRoot.querySelector('.side-panel #close-button');
-    final Element menuButton = mainElement.shadowRoot.querySelector('.toolbar #menu-button');
+    final Element menuButton = mainElement.shadowRoot.querySelector('.toolbar .icon.menu');
     final Element scrim = mainElement.shadowRoot.querySelector('.scrim');
     final Element mainDiv = mainElement.shadowRoot.querySelector('.main');
 
@@ -142,7 +142,12 @@ class Main extends PolymerElement with Observable {
 //      mainDiv.classes.remove('noscroll');
     });
 
+    document.body.onClick.listen((e) {
+      sidePanel.classes.add('hide');
+    });
+
     menuButton.onClick.listen((e) {
+      e.stopPropagation();
       sidePanel.classes.remove('hide');
 //    scrim.classes.addAll(['show']);
 //      mainDiv.classes.add('noscroll');
