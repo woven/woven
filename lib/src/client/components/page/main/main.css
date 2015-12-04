@@ -67,15 +67,22 @@
 
 .toolbar .icon {
   cursor: pointer;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  margin-left: 10px;
+}
+
+.toolbar .icon.first {
+  margin-left: 12px;
+}
+
+.toolbar .icon.last {
+  margin-right: 12px;
 }
 
 .toolbar .icon:hover {
   color: #ddd;
   transition: color .2s;
-}
-
-.toolbar .icon {
-  margin: 12px;
 }
 
 .side-panel {
