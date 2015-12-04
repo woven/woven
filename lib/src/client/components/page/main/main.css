@@ -1,17 +1,17 @@
-.header {
-  z-index: 23;
-  position: fixed;
-  top: 0;
-  display: block;
-  height: 50px;
-  background-color: rgba(47, 163, 0, .9);
-  width: 100%;
+/*.header {*/
+  /*z-index: 23;*/
+  /*position: fixed;*/
+  /*top: 0;*/
+  /*display: block;*/
+  /*height: 50px;*/
+  /*background-color: rgba(47, 163, 0, .9);*/
+  /*width: 100%;*/
 
-  -webkit-transition: -webkit-transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
-  transition: transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
-  -webkit-transform: translate3d(0,0,0);
-  transform: translate3d(0,0,0);
-}
+  /*-webkit-transition: -webkit-transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);*/
+  /*transition: transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);*/
+  /*-webkit-transform: translate3d(0,0,0);*/
+  /*transform: translate3d(0,0,0);*/
+/*}*/
 
 .toolbar.hide {
   -webkit-transform: translate3d(0,-131px,0);
@@ -109,7 +109,7 @@
 }
 
 .toolbar {
-  background-color: #2FA300;
+  background-color: rgba(47, 163, 0, 0.9);
   padding: 0 0 0 8px;
   /*background-image: url(/static/images/patt_1.png);*/
   background-repeat: repeat;

@@ -8,6 +8,7 @@
   transition: background-color 2s;
   font-size: 15px;
   color: #2d2d2d;
+  overflow: hidden;
 }
 
 .theme-dark .activity-card {
