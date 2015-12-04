@@ -18,11 +18,13 @@ import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 class Main extends PolymerElement with Observable {
   @published App app;
   @observable var responsiveWidth = "900px";
-  @observable var show = false;
 
   List<StreamSubscription> subscriptions = [];
 
-  Main.created() : super.created();
+  static Element get mainElement => document.querySelector('woven-app').shadowRoot.querySelector('x-main');
+
+  Main.created() : super.created() {
+  }
 
   void switchPage(Event e, var detail, Element target) {
     app.router.switchPage(target.dataset['url']);
@@ -95,6 +97,58 @@ class Main extends PolymerElement with Observable {
   }
 
   attached() async {
+    print('MAIN ELEMENT IS: #$mainElement');
+    print('''
+    ${mainElement.shadowRoot.querySelector('.side-panel .close')}
+    ''');
+
+
+    //querySelector('.main').text = 'Your Dart app is running.';
+    final Element header = mainElement.shadowRoot.querySelector('.header');
+    final Element sidePanel = mainElement.shadowRoot.querySelector('.side-panel');
+    final Element closeSidePanel = mainElement.shadowRoot.querySelector('.side-panel .close');
+    final Element toggle = mainElement.shadowRoot.querySelector('.header .toggle');
+    final Element scrim = mainElement.shadowRoot.querySelector('.scrim');
+    final Element mainDiv = mainElement.shadowRoot.querySelector('.main');
+
+    hide() {
+      if (sidePanel.classes.contains('hide')) {
+        header.classes.add('hide');
+      }
+    }
+
+    show() {
+      header.classes.remove('hide');
+    }
+
+    var oldY = 0;
+
+    document.onScroll.listen((_) {
+      var newY = document.body.scrollTop;
+      if ((oldY - newY).abs() > 30) {
+        if (oldY < newY) {
+          hide();
+        } else {
+          show();
+        }
+      }
+      oldY = newY;
+    });
+
+    // TODO: Is adding class on every listen slow? Maybe hold a local var?
+    closeSidePanel.onClick.listen((e) {
+      sidePanel.classes.add('hide');
+      scrim.classes.removeAll(['show']);
+      mainDiv.classes.remove('noscroll');
+    });
+
+    toggle.onClick.listen((e) {
+      sidePanel.classes.remove('hide');
+//    scrim.classes.addAll(['show']);
+      mainDiv.classes.add('noscroll');
+    });
+
+
     changeTitle();
 
     app.router.onDispatch.listen((page) {
@@ -102,4 +156,7 @@ class Main extends PolymerElement with Observable {
       changeTitle();
     });
   }
+
+
+
 }

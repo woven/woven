@@ -1,3 +1,94 @@
+.header {
+  z-index: 23;
+  position: fixed;
+  top: 0;
+  display: block;
+  height: 50px;
+  background-color: #00A114;
+  width: 100%;
+  text-align: center;
+
+  -webkit-transition: -webkit-transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
+  transition: transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.header.hide {
+  -webkit-transform: translate3d(0,-131px,0);
+  transform: translate3d(0,-131px,0);
+}
+
+.header .toggle {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+}
+
+.side-panel {
+  z-index: 26;
+  position: fixed;
+  top: 0px;
+  display: block;
+  width: 250px;
+  background-color: rgba(65, 65, 68, 0.7);
+  height: 100%;
+  transition: transform 0.1s cubic-bezier(0.47, 0, 0.75, 0.72),opacity .1s ease-out;
+}
+
+.side-panel .content {
+  height: 5000px;
+  overflow: scroll;
+  background:yellow;
+}
+
+.side-panel.hide {
+  -webkit-transform: translate3d(-250px,0,0);
+  transform: translate3d(-250px,0,0);
+}
+
+.chat-box {
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.main {
+  display: block;
+  position: relative;
+  height: 2000px;
+  margin-top: 75px;
+  margin-bottom: 75px;
+  text-align: center;
+}
+
+.noscroll {
+  overflow: hidden;
+  position: fixed;
+}
+
+.scrim.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.scrim {
+  visibility: hidden;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: opacity ease-in-out 0.38s, visibility ease-in-out 0.38s;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/*--------------------*/
+
+
 #core_header_panel {
   width: 300px;
   height: 400px;
