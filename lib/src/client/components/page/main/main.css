@@ -1,3 +1,32 @@
+body {
+  font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+  font-size: 14px;
+  margin: 0;
+  padding: 24px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+}
+/*section {*/
+  /*padding: 20px 0;*/
+/*}*/
+/*section > div {*/
+  /*padding: 14px;*/
+  /*font-size: 16px;*/
+/*}*/
+html /deep/ core-dropdown {
+  background-color: #eee;
+  color: #000;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 8px;
+}
+.with-margin {
+  margin: 12px;
+}
+.in-toolbar {
+  top: 50px;
+}
+
 .toolbar {
   background-color: rgba(47, 163, 0, 0.9);
   /*background-image: url(/static/images/patt_1.png);*/
@@ -83,6 +112,11 @@
 .toolbar .icon:hover {
   color: #ddd;
   transition: color .2s;
+}
+
+.toolbar .user-picture {
+  margin-top: 10px;
+  margin-right: 12px;
 }
 
 .side-panel {

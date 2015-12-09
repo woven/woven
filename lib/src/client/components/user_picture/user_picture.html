@@ -3,9 +3,9 @@
 <polymer-element name="user-picture">
   <template>
     <link rel="stylesheet" href="user_picture.css">
-    <div class="user-photo {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
+    <div style="width:{{size}}px;height:{{size}}px" class="user-photo {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <template if="{{user.fullPathToPicture != null}}">
-        <core-image sizing="cover" preload src="{{user.fullPathToPicture}}"></core-image>
+        <core-image style="width:{{size}}px;height:{{size}}px" sizing="cover" preload src="{{user.fullPathToPicture}}"></core-image>
       </template>
     </div>
   </template>

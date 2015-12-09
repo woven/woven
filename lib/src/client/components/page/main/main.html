@@ -9,7 +9,8 @@
       </template>
 
       <core-tooltip label="Browse channels" position="right">
-        <core-icon class="icon communities" icon="custom-icons:communities"></core-icon>
+        <core-icon class="icon communities" icon="custom-icons:communities"
+                   on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>
       </core-tooltip>
 
       <template if="{{app.router.selectedPage == 'item' && (app.router.previousPage == 'feed' || app.router.previousPage == 'events' || app.router.previousPage == 'lobby')}}">
@@ -21,6 +22,23 @@
       <core-tooltip label="Add stuff" position="left">
         <core-icon class="icon add last" icon="add-circle" on-tap="{{toggleAddStuff}}"></core-icon>
       </core-tooltip>
+
+
+      <user-picture relative on-tap="{{toggleMenu}}" id="user-picture" class="user-picture" app="{{app}}" size="30" username="{{app.user.username.toLowerCase()}}">
+      </user-picture>
+
+      <!--<core-collapse id="collapse">-->
+
+        <!--<core-icon-button relative on-tap="{{toggleMenu}}" icon="search">-->
+          <!--<core-dropdown valign="bottom" class="in-toolbar">-->
+            <!--halign = left-->
+            <!--<br>-->
+            <!--valign = top-->
+          <!--</core-dropdown>-->
+        <!--</core-icon-button>-->
+
+      <!--</core-collapse>-->
+
     </div>
     <div layout horizontal class="theme-dark">
       <div class="side-panel hide">

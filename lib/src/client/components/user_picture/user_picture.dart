@@ -10,6 +10,7 @@ class UserPicture extends PolymerElement {
   @published App app;
   @published String username;
   @observable UserModel user;
+  @published int size = 40;
 
   UserPicture.created() : super.created();
 

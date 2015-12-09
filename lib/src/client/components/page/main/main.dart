@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_drawer_panel.dart';
 import 'package:core_elements/core_tooltip.dart';
+import 'package:core_elements/core_image.dart';
+import 'package:core_elements/core_dropdown.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/routing/routes.dart';
@@ -54,6 +56,12 @@ class Main extends PolymerElement with Observable {
   signInWithFacebook() => app.signInWithFacebook();
 
   signOut() => app.signOut();
+
+  toggleMenu(Event e) {
+    var dropdown = (e.target as HtmlElement)
+        .querySelector('core-dropdown') as CoreDropdown;
+    if (dropdown != null) dropdown.toggle();
+  }
 
   // Toggle the drawer panel.
   togglePanel() {
@@ -123,17 +131,19 @@ class Main extends PolymerElement with Observable {
 
     var oldY = 0;
 
-    document.onScroll.listen((_) {
-      var newY = document.body.scrollTop;
-      if ((oldY - newY).abs() > 30) {
-        if (oldY < newY) {
-          hide();
-        } else {
-          show();
+    if (app.isMobile) {
+      document.onScroll.listen((_) {
+        var newY = document.body.scrollTop;
+        if ((oldY - newY).abs() > 30) {
+          if (oldY < newY) {
+            hide();
+          } else {
+            show();
+          }
         }
-      }
-      oldY = newY;
-    });
+        oldY = newY;
+      });
+    }
 
     // TODO: Is adding class on every listen slow? Maybe hold a local var?
     closeButton.onClick.listen((e) {
