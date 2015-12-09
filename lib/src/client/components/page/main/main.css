@@ -67,7 +67,6 @@ body {
   transition: .2s opacity;
   font-size: 20px;
   letter-spacing: .2pt;
-  text-align: center;
   margin: 12px;
   color: white;
 }
@@ -138,12 +137,6 @@ body {
   user-select: none;
 }
 
-.side-panel .content {
-  /*height: 5000px;*/
-  /*overflow: scroll;*/
-  /*background:yellow;*/
-}
-
 .side-panel.hide {
   -webkit-transform: translate3d(-250px,0,0);
   transform: translate3d(-250px,0,0);
@@ -179,10 +172,6 @@ body {
 }
 
 .main {
-  /*display: block;*/
-  /*position: relative;*/
-  /*margin-top: 50px;*/
-  /*margin-bottom: 75px;*/
   overflow:auto;
   height: 100%;
 }
@@ -192,10 +181,24 @@ body {
 }
 
 .left {
-  background: rgb(224, 224, 224);
-  margin-top: 50px;
+  /*background: #E8E8E8;*/
+  margin-top: 75px;
   width: 250px;
-  border-right: solid 1px #C4C4C4;
+  /*border-right: solid 1px #DEDEDE;*/
+}
+
+.left .content {
+  text-align: center;
+}
+
+.info-area {
+  background: white;
+  width: 225px;
+  height: 175px;
+  border: solid 1px #E2E2E2;
+  border-radius: 3px;
+  margin: auto;
+  margin-bottom: 20px;
 }
 
 .noscroll {
@@ -353,7 +356,7 @@ core-tooltip[show]::shadow .core-tooltip {
 
 core-item {
   padding: 6px 13px 6px 13px;
-  border-bottom: 1px solid #E7E7E7;
+  border-bottom: 1px solid #DBDBDB;
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;

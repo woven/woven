@@ -31,8 +31,13 @@
 
     <div class="main-area" layout horizontal>
       <div class="left">
-        <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
-              data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
+        <!--<p id="close-button">Close</p>-->
+        <div class="content">
+          <div class="info-area">
+
+          </div>
+          <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
+                data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
           <template if="{{app.community == null}}">
             <img id="woven-logo" _src="{{app.cloudStoragePath}}/public/images/app/woven-logo-small.png">
           </template>
@@ -40,8 +45,6 @@
             {{app.community.name}}
           </template>
         </span>
-        <p id="close-button">Close</p>
-        <div class="content">
           <core-menu valueattr="data-page" selected="{{app.router.selectedPage}}" class="menu">
             <template if="{{app.community != null}}">
               <core-item label="Lobby" icon="communication:forum" horizontal center layout class="item"
