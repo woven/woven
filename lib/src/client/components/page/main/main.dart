@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
-import 'package:core_elements/core_drawer_panel.dart';
+//import 'package:core_elements/core_drawer_panel.dart';
 import 'package:core_elements/core_tooltip.dart';
 import 'package:core_elements/core_image.dart';
 import 'package:core_elements/core_dropdown.dart';
