@@ -13,13 +13,7 @@ body {
   /*padding: 14px;*/
   /*font-size: 16px;*/
 /*}*/
-html /deep/ core-dropdown {
-  background-color: #eee;
-  color: #000;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 8px;
-}
+
 .with-margin {
   margin: 12px;
 }
@@ -180,11 +174,27 @@ html /deep/ core-dropdown {
   background-color: black;
 }
 
+.main-area {
+  height: 100%;
+}
+
 .main {
-  display: block;
-  position: relative;
+  /*display: block;*/
+  /*position: relative;*/
+  /*margin-top: 50px;*/
+  /*margin-bottom: 75px;*/
+  overflow:auto;
+  height: 100%;
+}
+
+.main-content {
+  margin-top:50px;
+}
+
+.left {
+  background: yellow;
   margin-top: 50px;
-  margin-bottom: 75px;
+  width: 250px;
 }
 
 .noscroll {
@@ -220,13 +230,9 @@ html /deep/ core-dropdown {
   position: absolute;
 }
 
-.content {
-  height: 100%;
-}
-
-.main {
-  /*overflow: auto;*/
-}
+/*.content {*/
+  /*height: 100%;*/
+/*}*/
 
 .fixed-area {
   background-color: #1A9AF5;

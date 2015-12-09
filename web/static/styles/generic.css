@@ -1,5 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
+html {
+  height: 100%;
+}
+
 body {
   font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
   background: #F2F2F2;
@@ -16,6 +20,8 @@ body {
   /* Disable iOS highlighting the element on tap. */
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
+
+  height: 100%;
 }
 
 body.colored-bg {
