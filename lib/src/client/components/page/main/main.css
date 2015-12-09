@@ -181,22 +181,23 @@ body {
 }
 
 .left {
-  /*background: #E8E8E8;*/
-  margin-top: 75px;
+  background: #F5F5F5;
+  margin-top: 50px;
   width: 250px;
   /*border-right: solid 1px #DEDEDE;*/
 }
 
 .left .content {
+  margin-top: 10px;
   text-align: center;
 }
 
 .info-area {
-  background: white;
+  background: url(http://media-cdn.tripadvisor.com/media/photo-s/09/b3/a4/13/wynwood.jpg);
+  background-size: cover;
   width: 225px;
   height: 175px;
-  border: solid 1px #E2E2E2;
-  border-radius: 3px;
+  border-radius: 0px;
   margin: auto;
   margin-bottom: 20px;
 }
