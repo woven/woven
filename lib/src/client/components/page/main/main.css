@@ -192,9 +192,10 @@ body {
 }
 
 .left {
-  background: yellow;
+  background: rgb(224, 224, 224);
   margin-top: 50px;
   width: 250px;
+  border-right: solid 1px #C4C4C4;
 }
 
 .noscroll {
