@@ -365,9 +365,8 @@ core-tooltip[show]::shadow .core-tooltip {
 
 .content-footer {
   min-height: 35px;
-  padding: 4px 5px 4px 4px;
-  /*border-top: solid 1px #eee;*/
-  border-top: 1px solid #e5e5e5;
+  padding: 2px 2px 2px 1px;
+  border-top: 1px solid #EAEAEA;
   background-color: #F5F5F5;
 
   /* Disable iOS highlighting the element on tap. */
