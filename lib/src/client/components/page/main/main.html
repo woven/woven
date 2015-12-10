@@ -98,43 +98,45 @@
       </div>
       <div class="main" flex>
         <div class="main-content">
-          <core-pages id="pages" selected="{{app.router.selectedPage}}" valueattr="data-page">
-            <section data-page="lobby">
-              <template if="{{app.community != null && app.router.selectedPage == 'lobby'}}">
-                <chat-view app="{{app}}" viewModel="{{app.mainViewModel.chatViewModel}}"></chat-view>
-              </template>
-            </section>
-            <section data-page="channels" layout vertical>
-              <template if="{{app.community == null && app.router.selectedPage == 'channels'}}">
-                <div>
-                  <community-list id="community-list" app="{{app}}" viewModel="{{app.mainViewModel}}"></community-list>
-                </div>
-              </template>
-            </section>
-            <section data-page="item" layout vertical>
-              <template if="{{app.router.selectedPage == 'item'}}">
-                <div class="page-wrapper">
-                  <item-view id="item-view" app="{{app}}" viewModel="{{app.mainViewModel.itemViewModel}}"></item-view>
-                  <item-activities app="{{app}}"></item-activities>
-                </div>
-              </template>
-            </section>
-            <section data-page="people" layout vertical>
-              <template if="{{app.router.selectedPage == 'people'}}">
-                <people-list app="{{app}}" viewModel="{{app.mainViewModel.peopleViewModel}}"></people-list>
-              </template>
-            </section>
-            <section data-page="events">
-              <template if="{{app.community != null && app.router.selectedPage == 'events'}}">
-                <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></inbox-list>
-              </template>
-            </section>
-            <section data-page="news">
-              <template if="{{app.community != null && app.router.selectedPage == 'news'}}">
-                <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.newsViewModel}}"></inbox-list>
-              </template>
-            </section>
-          </core-pages>
+          <div style="height:100%">
+            <core-pages id="pages" selected="{{app.router.selectedPage}}" valueattr="data-page">
+              <section data-page="lobby">
+                <template if="{{app.community != null && app.router.selectedPage == 'lobby'}}">
+                  <chat-view app="{{app}}" viewModel="{{app.mainViewModel.chatViewModel}}"></chat-view>
+                </template>
+              </section>
+              <section data-page="channels" layout vertical>
+                <template if="{{app.community == null && app.router.selectedPage == 'channels'}}">
+                  <div>
+                    <community-list id="community-list" app="{{app}}" viewModel="{{app.mainViewModel}}"></community-list>
+                  </div>
+                </template>
+              </section>
+              <section data-page="item" layout vertical>
+                <template if="{{app.router.selectedPage == 'item'}}">
+                  <div class="page-wrapper">
+                    <item-view id="item-view" app="{{app}}" viewModel="{{app.mainViewModel.itemViewModel}}"></item-view>
+                    <item-activities app="{{app}}"></item-activities>
+                  </div>
+                </template>
+              </section>
+              <section data-page="people" layout vertical>
+                <template if="{{app.router.selectedPage == 'people'}}">
+                  <people-list app="{{app}}" viewModel="{{app.mainViewModel.peopleViewModel}}"></people-list>
+                </template>
+              </section>
+              <section data-page="events">
+                <template if="{{app.community != null && app.router.selectedPage == 'events'}}">
+                  <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.eventViewModel}}"></inbox-list>
+                </template>
+              </section>
+              <section data-page="news">
+                <template if="{{app.community != null && app.router.selectedPage == 'news'}}">
+                  <inbox-list id="inbox-list" app="{{app}}" viewModel="{{app.mainViewModel.newsViewModel}}"></inbox-list>
+                </template>
+              </section>
+            </core-pages>
+          </div>
         </div>
       </div>
     </div>

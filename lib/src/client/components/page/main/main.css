@@ -177,7 +177,12 @@ body {
 }
 
 .main-content {
-  margin-top:50px;
+  /*margin-top:50px;*/
+  height: 100%
+}
+
+core-pages {
+  height: 100%;
 }
 
 .left {
