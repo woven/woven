@@ -88,7 +88,7 @@ class InboxList extends PolymerElement with Observable {
   attached() {
     if (app.debugMode) print('+InboxList');
 
-    print('DEBUG: ${app.scroller}');
+    if (app.debugMode) print('DEBUG: ${app.scroller}');
 
     initializeInfiniteScrolling();
 
