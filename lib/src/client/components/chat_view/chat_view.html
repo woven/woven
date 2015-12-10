@@ -5,14 +5,29 @@
 <polymer-element name="chat-view">
   <template>
     <link rel="stylesheet" href="chat_view.css">
-    <div layout vertical>
-      <div class="main-area" id="scroller">
+    <div style="height: 100%;
+position: fixed;
+width: 100%;">
+    <div style="display: flex; flex-direction: column; height: 100%;">
+      <div style="flex: 1; background: green; overflow: auto;">
         <chat-list app="{{app}}" viewModel="{{viewModel}}"></chat-list>
+        <!--im first main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im main<br />im last main-->
       </div>
-      <div class="footer-area">
+      <div style="height: 100px; background: blue;">
         <chat-box app="{{app}}" viewModel="{{viewModel}}"></chat-box>
       </div>
     </div>
+    </div>
+    <!--<div style="position: fixed;height:100%;">-->
+      <!--<div layout vertical stretch>-->
+        <!--<div class="main-area" id="scroller" flex>-->
+          <!--<chat-list app="{{app}}" viewModel="{{viewModel}}"></chat-list>-->
+        <!--</div>-->
+        <!--<div class="footer-area">-->
+          <!--<chat-box app="{{app}}" viewModel="{{viewModel}}"></chat-box>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </template>
   <script type="application/dart" src="chat_view.dart"></script>
 </polymer-element>

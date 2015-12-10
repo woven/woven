@@ -213,7 +213,6 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-subject a:hover {
-  text-decoration: underline;
   color: #000;
 }
 
