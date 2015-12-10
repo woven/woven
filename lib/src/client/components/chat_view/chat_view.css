@@ -2,3 +2,9 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+.footer-area {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
