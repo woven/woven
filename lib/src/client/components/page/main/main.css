@@ -171,7 +171,8 @@ body {
 }
 
 .main {
-  overflow: scroll;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   height: 100%;
 }
 
