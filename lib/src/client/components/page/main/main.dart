@@ -106,6 +106,9 @@ class Main extends PolymerElement with Observable {
   }
 
   attached() async {
+
+    window.scroll(0, 1);
+
     print('MAIN ELEMENT IS: #$mainElement');
 //    print('''
 //    ${mainElement.shadowRoot.querySelector('.side-panel .close')}
