@@ -107,9 +107,11 @@ class Main extends PolymerElement with Observable {
 
   attached() async {
 
-    window.scrollTo(0, 1);
-
-    print('DEBUG SCROLL POS: ${window.scrollY}');
+    new Timer(new Duration(seconds: 1), () {
+      window.scrollTo(0, 1);
+      print('DEBUG SCROLL POS: ${window.scrollY}');
+    });
+    
 
     print('MAIN ELEMENT IS: #$mainElement');
 //    print('''
