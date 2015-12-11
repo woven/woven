@@ -94,6 +94,10 @@ body {
   margin-left: 10px;
 }
 
+.toolbar .icon.menu {
+  display: none;
+}
+
 .toolbar .icon.first {
   margin-left: 12px;
 }
@@ -135,11 +139,6 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.side-panel.hide {
-  -webkit-transform: translate3d(-250px,0,0);
-  transform: translate3d(-250px,0,0);
 }
 
 .side-panel .menu {
@@ -560,6 +559,23 @@ paper-toast.important {
 
 @media all and (max-width: 1024px) {
   .left {
-    display: none;
+    -webkit-transform: translate3d(-250px,0,0);
+    transform: translate3d(-250px,0,0);
+    margin-top: 0;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    left: -250px;
+    -webkit-transition: -webkit-transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
+    transition: transform .2s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
+  }
+
+  .left.show {
+    -webkit-transform: translate3d(250px,0,0);
+    transform: translate3d(250px,0,0);
+  }
+
+  .toolbar .icon.menu {
+    display: block;
   }
 }

@@ -65,8 +65,9 @@ class Main extends PolymerElement with Observable {
 
   // Toggle the drawer panel.
   togglePanel() {
-    DivElement panel = this.shadowRoot.querySelector('.side-panel');
-    panel.classes.add('hide');
+
+//    DivElement panel = this.shadowRoot.querySelector('.left');
+//    panel.classes.add('hide');
   }
 
   // Toggle the Add Stuff dialog.
@@ -149,19 +150,20 @@ class Main extends PolymerElement with Observable {
     }
 
     // TODO: Is adding class on every listen slow? Maybe hold a local var?
-    closeButton.onClick.listen((e) {
-      sidePanel.classes.add('hide');
-//      scrim.classes.removeAll(['show']);
-//      mainDiv.classes.remove('noscroll');
-    });
+//    closeButton.onClick.listen((e) {
+//      sidePanel.classes.add('hide');
+////      scrim.classes.removeAll(['show']);
+////      mainDiv.classes.remove('noscroll');
+//    });
 
     document.body.onClick.listen((e) {
-      sidePanel.classes.add('hide');
+      sidePanel.classes.remove('show');
     });
 
     menuButton.onClick.listen((e) {
+      print('hello');
       e.stopPropagation();
-      sidePanel.classes.remove('hide');
+      sidePanel.classes.add('show');
 //    scrim.classes.addAll(['show']);
 //      mainDiv.classes.add('noscroll');
     });
