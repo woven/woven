@@ -267,8 +267,8 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-url {
-  margin-top: 15px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  /*margin-bottom: 10px;*/
   font-size: 12px;
   text-transform: uppercase;
 }
@@ -474,10 +474,6 @@ core-tooltip[show]::shadow .core-tooltip {
   .item.compact .event-date {
     display: block;
     margin-bottom: 5px;
-  }
-
-  .item.compact .item-subject {
-    margin-bottom: 0;
   }
 
   .item.compact .content-main {
