@@ -29,7 +29,7 @@
 
     </div>
 
-    <div class="main-area" layout horizontal>
+    <!--<div class="main-area" layout horizontal>-->
       <div class="left">
         <!--<p id="close-button">Close</p>-->
         <div class="content">
@@ -96,7 +96,7 @@
         <!--</div>-->
 
       </div>
-      <div class="main" flex>
+      <div class="main">
         <div class="main-content">
           <div style="height:100%">
             <core-pages id="pages" selected="{{app.router.selectedPage}}" valueattr="data-page">
@@ -139,7 +139,7 @@
           </div>
         </div>
       </div>
-    </div>
+    <!--</div>-->
 
     <template if="{{app.user != null}}"><add-stuff app="{{app}}"></add-stuff></template>
     <template if="{{app.hasTriedLoadingUser && app.user == null}}"><sign-in-dialog app="{{app}}"></sign-in-dialog></template>
