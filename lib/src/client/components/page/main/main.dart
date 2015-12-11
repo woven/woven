@@ -113,16 +113,16 @@ class Main extends PolymerElement with Observable {
 
     //querySelector('.main').text = 'Your Dart app is running.';
     final Element toolbar = mainElement.shadowRoot.querySelector('.toolbar');
-    final Element sidePanel = mainElement.shadowRoot.querySelector('.side-panel');
-    final Element closeButton = mainElement.shadowRoot.querySelector('.side-panel #close-button');
+    final Element sidePanel = mainElement.shadowRoot.querySelector('.left');
+    final Element closeButton = mainElement.shadowRoot.querySelector('.left #close-button');
     final Element menuButton = mainElement.shadowRoot.querySelector('.toolbar .icon.menu');
     final Element scrim = mainElement.shadowRoot.querySelector('.scrim');
     final Element mainDiv = mainElement.shadowRoot.querySelector('.main');
 
     hide() {
-      if (sidePanel.classes.contains('hide')) {
+//      if (sidePanel.classes.contains('hide')) {
         toolbar.classes.add('hide');
-      }
+//      }
     }
 
     show() {
@@ -131,8 +131,11 @@ class Main extends PolymerElement with Observable {
 
     var oldY = 0;
 
+    print('debug UA: ${app.isMobile}');
+
     if (app.isMobile) {
       document.onScroll.listen((_) {
+        print('debug: scrolled');
         var newY = document.body.scrollTop;
         if ((oldY - newY).abs() > 30) {
           if (oldY < newY) {

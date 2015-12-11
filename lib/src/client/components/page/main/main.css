@@ -553,3 +553,9 @@ paper-toast.important {
     padding: 0;
   }
 }
+
+@media all and (max-width: 1024px) {
+  .left {
+    display: none;
+  }
+}
