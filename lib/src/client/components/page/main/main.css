@@ -92,7 +92,7 @@ body {
   cursor: pointer;
   margin-top: 12px;
   margin-bottom: 12px;
-  margin-left: 10px;
+  margin-left: 8px;
 }
 
 .toolbar .icon.menu {
@@ -142,20 +142,21 @@ body {
   user-select: none;
 }
 
-.side-panel .menu {
+.left .menu {
   color: #444;
   font-size: 18px;
+  margin: 15px;
 }
 
-.side-panel .menu-section {
+.left .menu-section {
   margin-top: 15px;
 }
 
-.side-panel .menu-section .item {
+.left .menu-section .item {
   border: none;
 }
 
-.theme-dark .side-panel {
+.theme-dark .left {
   background-color: rgba(14, 14, 14, 0.9);
 }
 
@@ -191,12 +192,10 @@ core-pages section {
 }
 
 .left {
-  background: #F5F5F5;
+  background: #F0F0F0;
   margin-top: 50px;
   width: 250px;
-  -webkit-box-shadow: 3px 0px 5px -2px rgba(198, 198, 198, 0.75);
-  -moz-box-shadow: 3px 0px 5px -2px rgba(198, 198, 198, 0.75);
-  box-shadow: 3px 0px 5px -2px rgba(198, 198, 198, 0.75);
+  border-right: solid 1px #DEDEDE;
   z-index: 25;
 }
 
@@ -209,10 +208,10 @@ core-pages section {
   background: url(http://media-cdn.tripadvisor.com/media/photo-s/09/b3/a4/13/wynwood.jpg);
   background-size: cover;
   width: 225px;
-  height: 150px;
+  height: 125px;
   border-radius: 0px;
   margin: auto;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .noscroll {
@@ -273,6 +272,8 @@ core-pages section {
 
 #woven-logo {
   width: 125px;
+  margin-top: 9px;
+  margin-left: 5px;
 }
 
 /* drawer is always visible on a wide screen
