@@ -1,6 +1,7 @@
 .main-area {
   overflow-x: hidden;
   overflow-y: auto;
+  padding-top: 50px;
 }
 
 .footer-area {
