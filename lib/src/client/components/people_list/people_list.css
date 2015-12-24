@@ -7,6 +7,10 @@
   height: 100%;
 }
 
+#content-container {
+  padding-top: 50px;
+}
+
 core-item core-icon {
   margin: 0 !important;
 }
