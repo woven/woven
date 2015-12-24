@@ -7,6 +7,10 @@
   height: 100%;
 }
 
+.content-wrapper {
+  padding-top: 50px;
+}
+
 /*core-item core-icon-button {*/
   /*margin: 0 !important;*/
 /*}*/

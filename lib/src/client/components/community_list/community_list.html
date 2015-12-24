@@ -7,30 +7,32 @@
 <polymer-element name="community-list">
   <template>
     <link rel="stylesheet" href="community_list.css">
-    <template repeat="{{community in viewModel.communities}}">
-      <core-item class="item {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}" on-click="{{selectCommunity}}" data-id="{{community['id']}}">
-        <div class="item-container" horizontal layout>
-          <!--<div class="item-col1" vertical layout>-->
+    <div class="content-wrapper">
+      <template repeat="{{community in viewModel.communities}}">
+        <core-item class="item {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}" on-click="{{selectCommunity}}" data-id="{{community['id']}}">
+          <div class="item-container" horizontal layout>
+            <!--<div class="item-col1" vertical layout>-->
 
-          <!--</div>-->
-          <div class="item-col2" flex>
-            <div class="community-alias">{{community['alias']}}</div>
-            <div class="item-body" flex>{{community['name']}}</div>
-            <core-icon-button icon="{{app.user != null && community['starred'] == true ? 'star' : 'star-outline'}}"
-                              on-click="{{toggleStar}}"
-                              class="join-button {{app.user != null && community['starred'] == true ? 'selected' : ''}}"
-                              data-id="{{ community['id'] }}"><span>{{app.user != null && community['starred'] == true ? 'Joined' : 'Join'}}</span></core-icon-button><span class="item-count"><strong>{{community['star_count']}}</strong> participants</span>
-          </div>
-          <div class="item-col3">
-            <div class="item-updated">
-              Active
-              <live-date-time value="{{community['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+            <!--</div>-->
+            <div class="item-col2" flex>
+              <div class="community-alias">{{community['alias']}}</div>
+              <div class="item-body" flex>{{community['name']}}</div>
+              <core-icon-button icon="{{app.user != null && community['starred'] == true ? 'star' : 'star-outline'}}"
+                                on-click="{{toggleStar}}"
+                                class="join-button {{app.user != null && community['starred'] == true ? 'selected' : ''}}"
+                                data-id="{{ community['id'] }}"><span>{{app.user != null && community['starred'] == true ? 'Joined' : 'Join'}}</span></core-icon-button><span class="item-count"><strong>{{community['star_count']}}</strong> participants</span>
+            </div>
+            <div class="item-col3">
+              <div class="item-updated">
+                Active
+                <live-date-time value="{{community['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+              </div>
             </div>
           </div>
-        </div>
-      </core-item>
-    </template>
-    <!--<cta-learn-more app="{{app}}"></cta-learn-more>-->
+        </core-item>
+      </template>
+    </div>
+    <cta-learn-more app="{{app}}"></cta-learn-more>
   </template>
   <script type="application/dart" src="community_list.dart"></script>
 </polymer-element>
