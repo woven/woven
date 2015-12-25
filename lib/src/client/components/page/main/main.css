@@ -196,18 +196,39 @@ core-pages {
 }
 
 .left .content {
-  margin-top: 10px;
   text-align: center;
 }
 
 .info-area {
+  height: 205px;
+  border-bottom: solid 1px rgb(227, 227, 227);
+  width: 250px;
+  margin: auto;
+  background: floralwhite;
+}
+
+.info-area span {
+  color: gray;
+  margin-right: 5px;
+}
+
+.info-area span:hover {
+  cursor: pointer;
+  color: dimgray;
+}
+
+.channel-image {
   background: url(http://media-cdn.tripadvisor.com/media/photo-s/09/b3/a4/13/wynwood.jpg);
   background-size: cover;
-  width: 225px;
   height: 125px;
-  border-radius: 0px;
+  border-radius: 0;
   margin: auto;
   margin-bottom: 10px;
+}
+
+.left .description {
+  font-size: 14px;
+  margin: 12px;
 }
 
 .noscroll {
@@ -258,8 +279,11 @@ core-pages {
 #sidebar-title {
   opacity: 1;
   transition: .2s opacity;
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: .2pt;
+  font-weight: 400;
+  color: #2d2d2d;
+  text-rendering: optimizeLegibility;
 }
 
 #sidebar-title.has-logo {

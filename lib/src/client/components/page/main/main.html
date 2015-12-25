@@ -20,7 +20,7 @@
 
       <span flex></span>
 
-      <core-icon class="icon add last" icon="add-circle" on-tap="{{toggleAddStuff}}"></core-icon>
+      <core-icon class="icon add last" icon="add-circle" on-tap="{{toggleAddStuff}}" size=""></core-icon>
 
       <user-picture relative on-tap="{{toggleMenu}}" id="user-picture"
                     class="user-picture" app="{{app}}" size="30" username="{{app.user.username.toLowerCase()}}">
@@ -32,12 +32,22 @@
         <div class="content">
           <template if="{{app.community != null}}">
             <div class="info-area">
+              <div class="channel-image">
 
+              </div>
+              <div id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
+                   data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
+                {{app.community.name}}
+              </div>
+              <div class="description">
+                <span>About this channel</span>
+                <!--<span class="item-count"><strong>201</strong> participants</span>-->
+                <!--<core-icon class="icon" icon="info-outline"-->
+                           <!--on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>-->
+                <!--<core-icon class="icon" icon="info-outline"-->
+                           <!--on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>-->
+              </div>
             </div>
-            <span id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix"
-                  data-page="lobby" data-url="/{{app.community.alias}}" on-tap="{{switchPage}}">
-            {{app.community.name}}
-            </span>
           </template>
 
           <core-menu valueattr="data-page" selected="{{app.router.selectedPage}}" class="menu">
