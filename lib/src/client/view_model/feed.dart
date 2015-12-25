@@ -332,7 +332,7 @@ class FeedViewModel extends BaseViewModel with Observable {
         item['defaultImage'] = 'announcement';
         break;
       case 'news':
-        item['defaultImage'] = 'custom-icons:news';
+        item['defaultImage'] = 'custom-icons-fix:news';
         break;
       case 'message':
       case 'other':
