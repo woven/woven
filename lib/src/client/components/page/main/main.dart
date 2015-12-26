@@ -15,6 +15,7 @@ import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
+import 'package:woven/src/client/components/channel_info/channel_info.dart';
 
 @CustomTag('x-main')
 class Main extends PolymerElement with Observable {
@@ -83,12 +84,20 @@ class Main extends PolymerElement with Observable {
     }
 
     AddStuff addStuff = this.shadowRoot.querySelector('add-stuff');
+    print(addStuff.runtimeType);
     addStuff.toggleOverlay();
   }
 
-// Toggle the sign in dialog.
+  // Toggle the sign in dialog.
   toggleSignIn() {
     app.toggleSignIn();
+  }
+
+  toggleChannelInfo() {
+    ChannelInfo channelInfo = this.shadowRoot.querySelector('channel-info');
+    print(channelInfo.runtimeType);
+    print(channelInfo.parentNode);
+    channelInfo.toggleOverlay();
   }
 
   changeTitle() {
@@ -101,19 +110,16 @@ class Main extends PolymerElement with Observable {
         el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
       });
     } else {
-      if (app.debugMode )print('DEBUG: pageTitle is NULL!');
+      if (app.debugMode ) print('DEBUG: pageTitle is NULL!');
     }
   }
 
   attached() async {
 
-    new Timer(new Duration(seconds: 1), () {
-      window.scrollTo(0, 1);
-      print('DEBUG SCROLL POS: ${window.scrollY}');
-    });
-    
+//    new Timer(new Duration(seconds: 1), () {
+//      window.scrollTo(0, 1);
+//    });
 
-    print('MAIN ELEMENT IS: #$mainElement');
 //    print('''
 //    ${mainElement.shadowRoot.querySelector('.side-panel .close')}
 //    ''');
@@ -138,8 +144,6 @@ class Main extends PolymerElement with Observable {
     }
 
     var oldY = 0;
-
-    print('debug UA: ${app.isMobile}');
 
     if (app.isMobile) {
       document.onScroll.listen((_) {
@@ -170,7 +174,12 @@ class Main extends PolymerElement with Observable {
     menuButton.onClick.listen((e) {
       print('hello');
       e.stopPropagation();
-      sidePanel.classes.add('show');
+      if (sidePanel.classes.contains('show')) {
+        sidePanel.classes.remove('show');
+      } else {
+        sidePanel.classes.add('show');
+      }
+
 //    scrim.classes.addAll(['show']);
 //      mainDiv.classes.add('noscroll');
     });

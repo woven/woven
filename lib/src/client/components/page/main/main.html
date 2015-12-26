@@ -40,7 +40,7 @@
                 {{app.community.name}}
               </div>
               <div class="description">
-                <span>About this channel</span>
+                <span on-tap="{{toggleChannelInfo}}">About this channel</span>
                 <!--<span class="item-count"><strong>201</strong> participants</span>-->
                 <!--<core-icon class="icon" icon="info-outline"-->
                            <!--on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>-->
@@ -117,6 +117,9 @@
       </div>
     </div>
 
+    <template if="{{app.community != null}}">
+      <channel-info app="{{app}}"></channel-info>
+    </template>
     <template if="{{app.user != null}}"><add-stuff app="{{app}}"></add-stuff></template>
     <template if="{{app.hasTriedLoadingUser && app.user == null}}"><sign-in-dialog app="{{app}}"></sign-in-dialog></template>
 
