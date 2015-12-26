@@ -34,6 +34,20 @@ core-overlay {
   }
 }
 
+.toolbar {
+  background-color: rgb(39, 39, 39);
+  color: white;
+  text-align: center;
+  align-content: center;
+  width: 100%;
+  z-index: 23;
+  top: 0;
+  display: block;
+  height: 50px;
+  font-size: 18px;
+  align-items: center;
+}
+
 core-toolbar {
   background: #333;
   color: #fff;
@@ -43,11 +57,11 @@ core-toolbar {
 }
 
 core-icon-button.action {
-  background-color: rgb(64, 136, 214);
+  background-color: transparent;
 }
 
-core-icon-button.action:hover {
-  background-color: rgb(45, 104, 214);
+core-icon-button:hover {
+  color: #ccc;
 }
 
 .field-wrapper core-icon {

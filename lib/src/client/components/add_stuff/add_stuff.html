@@ -3,7 +3,6 @@
 <link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_selector.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_toolbar.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_input.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_overlay.html">
 <link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
@@ -16,13 +15,11 @@
     <core-overlay id="overlay" class="dialog" opened="{{opened}}" transition="core-transition-bottom"
                   autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}"
                   on-core-overlay-open-completed="{{handleOpen}}">
-      <core-toolbar center-justified>
+      <div class="toolbar" layout horizontal>
         <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
-        <div flex horizontal center-justified layout>
-          <div>Add Stuff</div>
-        </div>
+        <div flex>Add Stuff</div>
         <core-icon-button icon="send" on-tap="{{addItem}}" class="action"></core-icon-button>
-      </core-toolbar>
+      </div>
       <div id="container">
         <div id="post-container">
           <div>
