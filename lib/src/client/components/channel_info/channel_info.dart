@@ -1,6 +1,5 @@
+@HtmlImport('channel_info.html')
 library components.channel_info;
-
-import 'dart:html';
 
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
@@ -15,19 +14,23 @@ class ChannelInfo extends PolymerElement {
   @published App app;
   @published bool opened = false;
 
-  db.Firebase get f => app.f;
-
+//  db.Firebase get f => app.f;
+//
   CoreOverlay get overlay => $['overlay'];
 
-  Element get elRoot => document
-      .querySelector('woven-app')
-      .shadowRoot
-      .querySelector('x-main')
-      .shadowRoot
-      .querySelector('add-stuff');
+//  Element get elRoot => document
+//      .querySelector('woven-app')
+//      .shadowRoot
+//      .querySelector('x-main')
+//      .shadowRoot
+//      .querySelector('add-stuff');
 
   // Toggle the overlay.
   toggleOverlay() {
     overlay.toggle();
+  }
+
+  attached() {
+    if (app.debugMode) print('+ChannelInfo');
   }
 }

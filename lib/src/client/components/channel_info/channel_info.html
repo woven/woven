@@ -1,29 +1,21 @@
-<link rel="import" href="../../../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_selector.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_input.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_overlay.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_tooltip.html">
-<link rel="import" href="../../../../../../packages/paper_elements/paper_autogrow_textarea.html">
-<link rel="import" href="../widgets/dialog/dialog.html">
-
 <polymer-element name="channel-info">
   <template>
     <link rel="stylesheet" href="channel_info.css">
     <core-overlay id="overlay" class="dialog" opened="{{opened}}" transition="core-transition-bottom"
-                  autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}"
-                  on-core-overlay-open-completed="{{handleOpen}}">
-      <div class="toolbar" layout horizontal>
-        <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
-        <div flex>Add Stuff</div>
-        <core-icon-button icon="send" on-tap="{{addItem}}" class="action"></core-icon-button>
+                  autoclosedisabled="false" autofocusdisabled="{{(app.isMobile) ? true : false}}"
+                  backdrop>
+      <div class="toolbar">
+        <div class="content" layout horizontal center>
+          <div flex>About {{app.community.name}}</div>
+          <core-icon class="close action" icon="close" on-tap="{{toggleOverlay}}"></core-icon>
+        </div>
       </div>
-      <div class="content">
-        Hello world.
-      </div>
+      <div id="container">
+        <div id="content-container">
+          <p>Hello world!</p>
+          <p>{{app.community.alias}}</p>
+          <p>{{app.community.name}}</p>
+        </div>
     </core-overlay>
   </template>
-  <script type="application/dart" src="channel_info.dart"></script>
 </polymer-element>
