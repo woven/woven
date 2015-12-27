@@ -32,7 +32,7 @@ body {
   text-align: center;
   align-content: center;
   width: 100%;
-  z-index: 23;
+  z-index: 2;
   position: fixed;
   top: 0;
   display: block;
@@ -192,7 +192,7 @@ core-pages {
   margin-top: 50px;
   width: 250px;
   border-right: solid 1px #DEDEDE;
-  z-index: 25;
+  z-index: 3;
 }
 
 .left .content {
