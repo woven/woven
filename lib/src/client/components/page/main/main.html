@@ -120,10 +120,11 @@
     <template if="{{app.community != null}}">
       <channel-info app="{{app}}"></channel-info>
     </template>
-    <template if="{{app.user != null}}"><add-stuff app="{{app}}"></add-stuff></template>
+    <template if="{{app.user != null}}">
+      <add-stuff app="{{app}}"></add-stuff>
+    </template>
     <template if="{{app.hasTriedLoadingUser && app.user == null}}"><sign-in-dialog app="{{app}}"></sign-in-dialog></template>
 
     <paper-toast id="toast-message" duration="4000"></paper-toast>
   </template>
-  <script type="application/dart" src="main.dart"></script>
 </polymer-element>

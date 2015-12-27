@@ -1,21 +1,15 @@
+@HtmlImport('main.html')
 library client.components.page.app;
 
 import 'dart:html';
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
-//import 'package:core_elements/core_drawer_panel.dart';
-//import 'package:core_elements/core_tooltip.dart';
-import 'package:core_elements/core_image.dart';
-//import 'package:core_elements/core_dropdown.dart';
 
 import 'package:woven/src/client/app.dart';
-import 'package:woven/src/shared/routing/routes.dart';
-import 'package:woven/src/shared/response.dart';
-import 'package:woven/src/shared/model/user.dart';
-import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 import 'package:woven/src/client/components/channel_info/channel_info.dart';
+import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
+
 
 @CustomTag('x-main')
 class Main extends PolymerElement with Observable {
@@ -96,7 +90,7 @@ class Main extends PolymerElement with Observable {
   toggleChannelInfo() {
     ChannelInfo channelInfo = this.shadowRoot.querySelector('channel-info');
     print(channelInfo.runtimeType);
-    print(channelInfo.parentNode);
+    channelInfo.style.backgroundColor = 'red';
     channelInfo.toggleOverlay();
   }
 
@@ -192,7 +186,4 @@ class Main extends PolymerElement with Observable {
       changeTitle();
     });
   }
-
-
-
 }
