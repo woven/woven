@@ -20,12 +20,11 @@ core-overlay #container {
   margin: 15px;
 }
 
-.toolbar {
+.dialog .toolbar {
   background-color: rgb(230, 230, 230);
   color: rgb(70, 70, 70);
   align-content: center;
   width: 100%;
-  z-index: 23;
   top: 0;
   display: block;
   height: 50px;
@@ -33,13 +32,13 @@ core-overlay #container {
   font-weight: 500;
 }
 
-.toolbar .content {
+.dialog .toolbar .content {
   margin-left: 15px;
   margin-right: 10px;
   height: 100%;
 }
 
-.toolbar core-icon {
+.dialog .toolbar core-icon {
   width: 20px;
 }
 

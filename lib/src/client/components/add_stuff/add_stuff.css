@@ -34,7 +34,7 @@ core-overlay {
   }
 }
 
-.toolbar {
+.dialog .toolbar {
   background-color: rgb(39, 39, 39);
   color: white;
   text-align: center;
@@ -46,14 +46,6 @@ core-overlay {
   height: 50px;
   font-size: 18px;
   align-items: center;
-}
-
-core-toolbar {
-  background: #333;
-  color: #fff;
-  fill: #fff;
-  letter-spacing: .2pt;
-  font-size: 1.4em;
 }
 
 core-icon-button.action {
