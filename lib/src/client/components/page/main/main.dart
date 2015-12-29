@@ -139,20 +139,20 @@ class Main extends PolymerElement with Observable {
 
     var oldY = 0;
 
-    if (app.isMobile) {
-      document.onScroll.listen((_) {
-        print('debug: scrolled');
-        var newY = document.body.scrollTop;
-        if ((oldY - newY).abs() > 30) {
-          if (oldY < newY) {
-            hide();
-          } else {
-            show();
-          }
-        }
-        oldY = newY;
-      });
-    }
+//    if (app.isMobile) {
+//      document.onScroll.listen((_) {
+//        print('debug: scrolled');
+//        var newY = document.body.scrollTop;
+//        if ((oldY - newY).abs() > 30) {
+//          if (oldY < newY) {
+//            hide();
+//          } else {
+//            show();
+//          }
+//        }
+//        oldY = newY;
+//      });
+//    }
 
     // TODO: Is adding class on every listen slow? Maybe hold a local var?
 //    closeButton.onClick.listen((e) {
@@ -166,7 +166,6 @@ class Main extends PolymerElement with Observable {
     });
 
     menuButton.onClick.listen((e) {
-      print('hello');
       e.stopPropagation();
       if (sidePanel.classes.contains('show')) {
         sidePanel.classes.remove('show');
@@ -181,9 +180,8 @@ class Main extends PolymerElement with Observable {
 
     changeTitle();
 
-    app.router.onDispatch.listen((page) {
-      print('DEBUG: Got onDispatch event');
-      changeTitle();
-    });
+//    app.router.onDispatch.listen((page) {
+//      changeTitle();
+//    });
   }
 }

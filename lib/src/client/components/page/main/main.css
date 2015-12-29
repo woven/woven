@@ -22,7 +22,7 @@ body {
   top: 50px;
 }
 
-.toolbar {
+.header .toolbar {
   background-color: rgba(47, 163, 0, 0.9);
   /*background-image: url(/static/images/patt_1.png);*/
   background-repeat: repeat;
@@ -45,18 +45,18 @@ body {
   /*transition: background-color .8s;*/
 }
 
-.theme-dark .toolbar {
+.theme-dark .header .toolbar {
   background-color: #0B0B0B;
   transition: background-color .2s;
   border-bottom: none;
   color: white;
 }
 
-.toolbar span {
+.header .toolbar span {
   cursor: pointer;
 }
 
-.toolbar.has-logo {
+.header .toolbar.has-logo {
   background-color: #000;
   /*transition: background-color .8s;*/
 }
@@ -77,42 +77,42 @@ body {
   transition: color .2s;
 }
 
-.toolbar.hide {
+.header .toolbar.hide {
   -webkit-transform: translate3d(0,-131px,0);
   transform: translate3d(0,-131px,0);
 }
 
-.toolbar .toggle {
+.header .toolbar .toggle {
   position: fixed;
   left: 10px;
   top: 10px;
 }
 
-.toolbar .icon {
+.header .toolbar .icon {
   cursor: pointer;
   margin-top: 12px;
   margin-bottom: 12px;
   margin-left: 8px;
 }
 
-.toolbar .icon.menu {
+.header .toolbar .icon.menu {
   display: none;
 }
 
-.toolbar .icon.first {
+.header .toolbar .icon.first {
   margin-left: 12px;
 }
 
-.toolbar .icon.last {
+.header .toolbar .icon.last {
   margin-right: 12px;
 }
 
-.toolbar .icon:hover {
+.header .toolbar .icon:hover {
   color: #ddd;
   transition: color .2s;
 }
 
-.toolbar .user-picture {
+.header .toolbar .user-picture {
   margin-top: 10px;
   margin-right: 12px;
 }
@@ -598,7 +598,7 @@ paper-toast.important {
     transform: translate3d(250px,0,0);
   }
 
-  .toolbar .icon.menu {
+  .header .toolbar .icon.menu {
     display: block;
   }
 }

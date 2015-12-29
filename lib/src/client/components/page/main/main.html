@@ -2,29 +2,31 @@
   <template>
     <link rel="stylesheet" href="main.css">
 
-    <div class="toolbar" layout horizontal>
-      <core-icon class="icon menu first" icon="menu"></core-icon>
+    <div class="header">
+      <div class="toolbar" layout horizontal>
+        <core-icon class="icon menu first" icon="menu"></core-icon>
 
-      <span>
-        <img id="woven-logo" _src="{{app.cloudStoragePath}}/public/images/app/woven-logo-white.png"
-             on-tap="{{switchPage}}" data-page="channels" data-url="/" />
-      </span>
+        <span>
+          <img id="woven-logo" _src="{{app.cloudStoragePath}}/public/images/app/woven-logo-white.png"
+               on-tap="{{switchPage}}" data-page="channels" data-url="/" />
+        </span>
 
-      <core-icon class="icon communities" icon="custom-icons:communities"
-                 on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>
+        <core-icon class="icon communities" icon="custom-icons:communities"
+                   on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>
 
-      <template if="{{app.router.selectedPage == 'item' && (app.router.previousPage == 'feed' || app.router.previousPage == 'events' || app.router.previousPage == 'lobby')}}">
-        <core-icon class="icon back first" id="back-button"
-                   icon="arrow-back" on-tap="{{goBack}}" center-center></core-icon>
-      </template>
+        <template if="{{app.router.selectedPage == 'item' && (app.router.previousPage == 'feed' || app.router.previousPage == 'events' || app.router.previousPage == 'lobby')}}">
+          <core-icon class="icon back first" id="back-button"
+                     icon="arrow-back" on-tap="{{goBack}}" center-center></core-icon>
+        </template>
 
-      <span flex></span>
+        <span flex></span>
 
-      <core-icon class="icon add last" icon="add-circle" on-tap="{{toggleAddStuff}}" size=""></core-icon>
+        <core-icon class="icon add last" icon="add-circle" on-tap="{{toggleAddStuff}}" size=""></core-icon>
 
-      <user-picture relative on-tap="{{toggleMenu}}" id="user-picture"
-                    class="user-picture" app="{{app}}" size="30" username="{{app.user.username.toLowerCase()}}">
-      </user-picture>
+        <user-picture relative on-tap="{{toggleMenu}}" id="user-picture"
+                      class="user-picture" app="{{app}}" size="30" username="{{app.user.username.toLowerCase()}}">
+        </user-picture>
+      </div>
     </div>
 
     <div class="main-area" layout horizontal>
