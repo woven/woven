@@ -107,10 +107,10 @@ body {
   margin-right: 12px;
 }
 
-.header .toolbar .icon:hover {
-  color: #ddd;
-  transition: color .2s;
-}
+/*.header .toolbar .icon:hover {*/
+  /*color: #ddd;*/
+  /*transition: color .2s;*/
+/*}*/
 
 .header .toolbar .user-picture {
   margin-top: 10px;
@@ -187,9 +187,9 @@ core-pages {
   margin-right: 5px;
 }
 
-.info-area span:hover {
+.info-area span {
   cursor: pointer;
-  color: dimgray;
+  /*color: dimgray;*/
 }
 
 .channel-image {
@@ -288,7 +288,7 @@ core-drawer-panel:not([narrow]) #menu-button {
   box-shadow: none;
 }
 
-.btn.primary:hover {
+.btn.primary {
   fill: #bbb !important;
   color: #bbb;
 }
@@ -399,9 +399,9 @@ core-item::shadow #icon {
   color:#455a64;
 }
 
-core-menu core-item:hover {
+core-menu core-item {
   cursor: pointer !important;
-  color: black;
+  /*color: black;*/
 }
 
 #main-panel {
