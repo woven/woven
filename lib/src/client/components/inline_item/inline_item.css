@@ -81,7 +81,7 @@ core-tooltip[show]::shadow .core-tooltip {
   margin: 0;
   padding: 0;
   background-color: #FAFAFA;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #d9d9d9;
   /*background-color: white;*/
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
@@ -105,7 +105,6 @@ core-tooltip[show]::shadow .core-tooltip {
 
 .item.compact {
   background-color: white;
-  /*padding-top: 15px;*/
 }
 
 .theme-dark .item.compact {
@@ -145,13 +144,13 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-photo-area {
-  padding: 7px 10px 7px 7px;
+  margin-right: 10px;
 }
 
 .item-photo-area .item-photo-wrapper {
   border: solid 1px #eee;
-  width:225px;
-  height:125px;
+  width:245px;
+  height:120px;
   text-align: center;
   background: #eee;
   fill: white;
@@ -180,8 +179,8 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-photo-area .item-photo {
-  width:225px;
-  height:125px;
+  width:245px;
+  height:120px;
   background: #fff;
 }
 
@@ -200,10 +199,12 @@ core-tooltip[show]::shadow .core-tooltip {
   white-space: normal;
   margin-right: 5px;
   color: #212121;
-  font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   padding: 0;
-  margin-bottom: 10px;
+  margin-bottom: 7px;
+  font-weight: 500;
+  text-rendering: optimizeLegibility;
+  line-height: 18pt;
 }
 
 .item-subject a {
@@ -212,7 +213,6 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-subject a:hover {
-  text-decoration: underline;
   color: #000;
 }
 
@@ -267,8 +267,8 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-url {
-  margin-top: 15px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  /*margin-bottom: 10px;*/
   font-size: 12px;
   text-transform: uppercase;
 }
@@ -334,6 +334,7 @@ core-tooltip[show]::shadow .core-tooltip {
 
 .item-wrapper {
   margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .event-date {
@@ -344,6 +345,7 @@ core-tooltip[show]::shadow .core-tooltip {
 .item-date {
   margin-bottom: 10px;
   font-size: 14px;
+  color: #5B5B5B;
 }
 
 .content-header {
@@ -354,19 +356,18 @@ core-tooltip[show]::shadow .core-tooltip {
   padding: 10px 0 5px 0;
 }
 
+.content-container {
+  margin: 10px;
+}
+
 .content-main {
   padding: 0 0 0 0;
 }
 
-.item.compact .content-main {
-  padding: 7px 5px 0 0;
-}
-
 .content-footer {
   min-height: 35px;
-  padding: 4px 5px 4px 4px;
-  /*border-top: solid 1px #eee;*/
-  border-top: 1px solid #e5e5e5;
+  padding: 2px 2px 2px 1px;
+  border-top: 1px solid #EAEAEA;
   background-color: #F5F5F5;
 
   /* Disable iOS highlighting the element on tap. */
@@ -451,7 +452,7 @@ core-tooltip[show]::shadow .core-tooltip {
   background-color: transparent;
 }
 
-@media all and (max-width: 900px)  {
+@media all and (max-width: 640px)  {
   .item-wrapper {
     margin: 8px 0;
   }
@@ -460,6 +461,38 @@ core-tooltip[show]::shadow .core-tooltip {
     padding: 8px;
   }
 
+  .item-subject {
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+
+  .item-date {
+    margin-bottom: 6px;
+  }
+
+  .item.compact {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  .item.compact .item-body {
+    white-space: nowrap;
+  }
+
+  .item.compact .event-date {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .item.compact .content-main {
+    /*padding: 4px 0 4px 0;*/
+    overflow: hidden;
+    margin-right: 5px;
+  }
+}
+
+@media all and (max-width: 540px)  {
   .item-photo-area .item-photo-wrapper {
     width: 80px;
     height: 80px;
@@ -474,24 +507,5 @@ core-tooltip[show]::shadow .core-tooltip {
   .item-photo-area .item-photo-icon-none {
     width: 60px;
     margin-top: 0 !important;
-  }
-
-  .item.compact .item-body {
-    white-space: nowrap;
-  }
-
-  .item.compact .event-date {
-    display: block;
-    margin-bottom: 5px;
-  }
-
-  .item.compact .item-subject {
-    margin-bottom: 0;
-  }
-
-  .item.compact .content-main {
-    padding: 4px 0 4px 0;
-    overflow: hidden;
-    margin-right: 5px;
   }
 }

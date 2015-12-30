@@ -333,7 +333,7 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-wrapper {
-  /*margin-top: 10px;*/
+  margin-top: 10px;
   margin-bottom: 15px;
 }
 
@@ -462,7 +462,6 @@ core-tooltip[show]::shadow .core-tooltip {
   }
 
   .item-subject {
-    line-height: 17px;
     font-size: 17px;
     margin-bottom: 10px;
   }

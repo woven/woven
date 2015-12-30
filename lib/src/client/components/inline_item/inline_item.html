@@ -10,7 +10,7 @@
       <div class="item-wrapper {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
         <core-item class="item compact">
           <div class="item-container" vertical layout>
-            <div layout horizontal>
+            <div class="content-container" layout horizontal>
               <div class="item-photo-area">
                 <div class="item-photo-wrapper">
                 </div>
@@ -38,7 +38,7 @@
       <div class="item-wrapper {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
         <core-item class="item {{(item['type'] != null) ? item['type'] : 'other'}} compact" data-id="{{item['id']}}">
           <div class="item-container" vertical layout>
-            <div layout horizontal>
+            <div class="content-container" layout horizontal>
               <div class="item-photo-area">
                 <div class="item-photo-wrapper">
                   <template if="{{item['uriPreview']['imageSmallLocation'] != null}}">
