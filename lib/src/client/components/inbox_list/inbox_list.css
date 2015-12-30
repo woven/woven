@@ -69,6 +69,7 @@
 @media all and (max-width: 640px)  {
   .date-group-header {
     margin-top: 0;
+    margin-bottom: 5px;
     border-radius: 0;
   }
 }
