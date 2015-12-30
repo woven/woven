@@ -1,6 +1,6 @@
 :host {
   box-sizing: border-box;
-  /*position: relative;*/
+  position: relative;
   /*top: 0px;*/
   /*left: 0px;*/
   width: 100%;
@@ -8,7 +8,9 @@
 }
 
 #content-container {
-  /*-webkit-overflow-scrolling: touch;*/
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translate3d(0,0,0);
   max-width: 640px;
   margin: auto;
   padding-top: 50px;
