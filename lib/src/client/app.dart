@@ -427,10 +427,7 @@ class App extends Observable {
     return _isMobile;
   }
 
-  @observable bool get isNotMobile {
-    if (isMobile) return false;
-    return true;
-  }
+  @observable bool get isNotMobile => !isMobile;
 
   logError(String error, [StackTrace stack]) =>
       window.console.error("$error\n\n${stack != null ? stack : ''}");
