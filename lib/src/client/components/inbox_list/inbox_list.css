@@ -23,8 +23,8 @@
   color: #FFF;
   font-size: 16px;
   letter-spacing: .2pt;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   background: #1A9AF5;
   border-radius: 3px;
 }
@@ -33,9 +33,9 @@
   background-color: #003A62;
 }
 
-x-item::shadow .item-wrapper {
-  margin-bottom: 20px;
-}
+/*x-item::shadow .item-wrapper {*/
+  /*margin-bottom: 20px;*/
+/*}*/
 
 .cta {
   background: #333;

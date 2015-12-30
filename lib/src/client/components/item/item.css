@@ -81,7 +81,7 @@ core-tooltip[show]::shadow .core-tooltip {
   margin: 0;
   padding: 0;
   background-color: #FAFAFA;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #d9d9d9;
   /*background-color: white;*/
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
@@ -201,7 +201,7 @@ core-tooltip[show]::shadow .core-tooltip {
   color: #212121;
   font-size: 18px;
   padding: 0;
-  margin-bottom: 10px;
+  margin-bottom: 7px;
   font-weight: 500;
   text-rendering: optimizeLegibility;
   line-height: 18pt;
@@ -333,7 +333,8 @@ core-tooltip[show]::shadow .core-tooltip {
 }
 
 .item-wrapper {
-  margin-top: 10px;
+  /*margin-top: 10px;*/
+  margin-bottom: 15px;
 }
 
 .event-date {
@@ -344,6 +345,7 @@ core-tooltip[show]::shadow .core-tooltip {
 .item-date {
   margin-bottom: 10px;
   font-size: 14px;
+  color: #5B5B5B;
 }
 
 .content-header {
@@ -459,7 +461,15 @@ core-tooltip[show]::shadow .core-tooltip {
     padding: 8px;
   }
 
+  .item-subject {
+    line-height: 17px;
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
 
+  .item-date {
+    margin-bottom: 6px;
+  }
 
   .item.compact {
     border-left: 0;
