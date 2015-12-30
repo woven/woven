@@ -470,11 +470,11 @@ core-tooltip[show]::shadow .core-tooltip {
     margin-bottom: 6px;
   }
 
-  .item.compact {
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-  }
+  /*.item.compact {*/
+    /*border-left: 0;*/
+    /*border-right: 0;*/
+    /*border-radius: 0;*/
+  /*}*/
 
   .item.compact .item-body {
     white-space: nowrap;
