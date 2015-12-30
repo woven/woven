@@ -101,7 +101,6 @@ class InboxList extends PolymerElement with Observable {
 
       // On scroll, record new scroll position.
       subscriptions.add(app.scroller.onScroll.listen((e) {
-        print(app.scroller.scrollTop);
         viewModel.lastScrollPos = app.scroller.scrollTop;
       }));
     });
