@@ -61,6 +61,10 @@ body {
   /*transition: background-color .8s;*/
 }
 
+#button-sign-in:hover {
+  background-color: #269BCF;
+}
+
 #page-title {
   width: 100%;
   cursor: pointer;
@@ -95,6 +99,11 @@ body {
   margin-left: 8px;
 }
 
+.header .toolbar .icon.hover:hover {
+  color: #ddd;
+  transition: color .2s;
+}
+
 .header .toolbar .icon.menu {
   display: none;
 }
@@ -107,10 +116,7 @@ body {
   margin-right: 12px;
 }
 
-/*.header .toolbar .icon:hover {*/
-  /*color: #ddd;*/
-  /*transition: color .2s;*/
-/*}*/
+
 
 .header .toolbar .user-picture {
   margin-top: 10px;
@@ -183,13 +189,14 @@ core-pages {
 }
 
 .info-area span {
+  cursor: pointer;
   color: gray;
   margin-right: 5px;
 }
 
-.info-area span {
+.info-area span.hover:hover {
   cursor: pointer;
-  /*color: dimgray;*/
+  color: dimgray;
 }
 
 .channel-image {
@@ -288,9 +295,9 @@ core-drawer-panel:not([narrow]) #menu-button {
   box-shadow: none;
 }
 
-.btn.primary {
+.btn.primary.hover:hover {
   fill: #bbb !important;
-  color: #bbb;
+  color: #bbb !important;
 }
 
 .btn.primary:active {
@@ -401,7 +408,10 @@ core-item::shadow #icon {
 
 core-menu core-item {
   cursor: pointer !important;
-  /*color: black;*/
+}
+
+core-menu core-item.hover:hover {
+  color: black;
 }
 
 #main-panel {
@@ -500,9 +510,6 @@ core-menu core-item {
   background-color: #247BA1;
 }
 
-#button-sign-in:hover {
-  background-color: #269BCF;
-}
 
 paper-toast {
   right: 10px;
@@ -577,3 +584,4 @@ paper-toast.important {
     display: block;
   }
 }
+

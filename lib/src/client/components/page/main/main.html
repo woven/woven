@@ -4,14 +4,14 @@
 
     <div class="header">
       <div class="toolbar" layout horizontal>
-        <core-icon class="icon menu first" icon="menu"></core-icon>
+        <core-icon class="icon menu first {{app.isNotMobile ? 'hover' : ''}}" icon="menu"></core-icon>
 
         <span>
           <img id="woven-logo" _src="{{app.cloudStoragePath}}/public/images/app/woven-logo-white.png"
                on-tap="{{switchPage}}" data-page="channels" data-url="/" />
         </span>
 
-        <core-icon class="icon communities" icon="custom-icons:communities"
+        <core-icon class="icon communities {{app.isNotMobile ? 'hover' : ''}}" icon="custom-icons:communities"
                    on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>
 
         <template if="{{app.router.selectedPage == 'item' && (app.router.previousPage == 'feed' || app.router.previousPage == 'events' || app.router.previousPage == 'lobby')}}">
@@ -21,7 +21,7 @@
 
         <span flex></span>
 
-        <core-icon class="icon add last" icon="add-circle" on-tap="{{toggleAddStuff}}" size=""></core-icon>
+        <core-icon class="icon add last {{app.isNotMobile ? 'hover' : ''}}" icon="add-circle" on-tap="{{toggleAddStuff}}" size=""></core-icon>
 
         <user-picture relative on-tap="{{toggleMenu}}" id="user-picture"
                       class="user-picture" app="{{app}}" size="30" username="{{app.user.username.toLowerCase()}}">
@@ -41,7 +41,7 @@
                 {{app.community.name}}
               </div>
               <div class="description">
-                <span on-tap="{{toggleChannelInfo}}">About this channel</span>
+                <span class="{{app.isNotMobile ? 'hover' : ''}}" on-tap="{{toggleChannelInfo}}">About this channel</span>
                 <!--<span class="item-count"><strong>201</strong> participants</span>-->
                 <!--<core-icon class="icon" icon="info-outline"-->
                            <!--on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>-->
@@ -53,21 +53,26 @@
 
           <core-menu valueattr="data-page" selected="{{app.router.selectedPage}}" class="menu">
             <template if="{{app.community != null}}">
-              <core-item label="Lobby" icon="communication:forum" horizontal center layout class="item"
+              <core-item label="Lobby" icon="communication:forum" horizontal center layout
+                         class="item {{app.isNotMobile ? 'hover' : ''}}"
                          on-tap="{{switchPage}}" data-page="lobby" data-url="/{{app.community.alias}}"></core-item>
-              <core-item hidden label="Feed" icon="view-stream" horizontal center layout class="item"
+              <core-item hidden label="Feed" icon="view-stream" horizontal center layout
+                         class="item {{app.isNotMobile ? 'hover' : ''}}"
                          on-tap="{{switchPage}}" data-page="feed" data-url="/{{app.community.alias}}/feed"></core-item>
-              <core-item label="News" icon="custom-icons-fix:news" horizontal center layout class="item"
+              <core-item label="News" icon="custom-icons-fix:news" horizontal center layout
+                         class="item {{app.isNotMobile ? 'hover' : ''}}"
                          on-tap="{{switchPage}}" data-page="news" data-url="/{{app.community.alias}}/news"></core-item>
-              <core-item label="Events" icon="event" horizontal center layout class="item last"
+              <core-item label="Events" icon="event" horizontal center layout
+                         class="item last {{app.isNotMobile ? 'hover' : ''}}"
                          on-tap="{{switchPage}}" data-page="events" data-url="/{{app.community.alias}}/events"></core-item>
 
             </template>
             <template if="{{app.community == null}}">
-              <core-item label="Channels" icon="custom-icons:communities" horizontal center layout class="item" active
+              <core-item label="Channels" icon="custom-icons:communities" horizontal center layout
+                         class="item {{app.isNotMobile ? 'hover' : ''}}" active
                          on-tap="{{switchPage}}" data-page="channels" data-url="/" ></core-item>
               <core-item label="People" icon="account-circle" horizontal center layout class="item last"
-                         on-tap="{{switchPage}}" data-page="people" data-url="/people"></core-item>
+                         on-tap="{{switchPage}} {{app.isNotMobile ? 'hover' : ''}}" data-page="people" data-url="/people"></core-item>
             </template>
           </core-menu>
         </div>
