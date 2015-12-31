@@ -19,15 +19,18 @@ import 'package:logging/logging.dart';
 //import 'package:path/path.dart' as path;
 //import 'package:query_string/query_string.dart';
 
-
-//import '../config/config.dart';
 import '../util.dart' as util;
 
+import 'package:woven/config/config.dart';
+import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/server/util/image_util.dart';
+import 'package:woven/src/server/util/file_util.dart';
 import 'package:woven/src/shared/util.dart' as sharedUtil;
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/server/crawler/open_graph.dart';
 import 'package:woven/src/server/crawler/image_info.dart';
+import 'package:woven/src/server/crawler/crawl_info.dart';
 
 //import 'readability.dart';
 //import 'open_graph/open_graph.dart';
@@ -72,51 +75,159 @@ class Crawler {
     return bestImage;
   }
 
-  Future<Response> getPreview() async {
-    Response response = new Response();
+  Future<CrawlInfo> crawl() async {
     Uri uri = Uri.parse(this.url);
 
     try {
       String contents = await http.read(uri);
 
-      UriPreview preview = new UriPreview(uri: uri);
+      CrawlInfo crawlInfo = new CrawlInfo(uri: uri);
+
       var document = parse(contents);
       List<Element> metaTags = document.querySelectorAll('meta');
 
       metaTags.forEach((Element metaTag) {
         var property = metaTag.attributes['property'];
-        if (property == 'og:title') preview.title =
-        metaTag.attributes['content'];
-        if (property == 'og:description') preview.teaser =
-        metaTag.attributes['content'];
-        if (property == 'og:image') preview.imageOriginalUrl =
-        metaTag.attributes['content'];
+
+        if (property == 'og:title') crawlInfo.title =
+            metaTag.attributes['content'];
+
+        if (property == 'og:description') crawlInfo.teaser =
+            metaTag.attributes['content'];
 
         if (metaTag.attributes['name'] == 'description' &&
-            preview.teaser == null) preview.teaser =
-        metaTag.attributes['content'];
+            crawlInfo.teaser == null) crawlInfo.teaser =
+            metaTag.attributes['content'];
       });
 
-      if (preview.title == null &&
-          document.querySelector('title') != null) preview.title =
+      if (crawlInfo.title == null &&
+          document.querySelector('title') != null) crawlInfo.title =
           document.querySelector('title').innerHtml;
 
-      response.data = preview.toJson();
-      return response;
+      // Let's get the best image ourselves, not from OG tags.
+      crawlInfo.bestImage = await getBestImageFromHtml(contents);
+
+      return crawlInfo;
     } catch (error) {
-      return Response.fromError(error);
+      // TODO: throw here!
+      print('Exception in crawl():\n$error');
     }
   }
+
+//  Future<Response> getPreview() async {
+//    Response response = new Response();
+//    Uri uri = Uri.parse(this.url);
+//
+//    try {
+//      String contents = await http.read(uri);
+//
+//      UriPreview preview = new UriPreview(uri: uri);
+//      var document = parse(contents);
+//      List<Element> metaTags = document.querySelectorAll('meta');
+//
+//      metaTags.forEach((Element metaTag) {
+//        var property = metaTag.attributes['property'];
+//        if (property == 'og:title') preview.title =
+//            metaTag.attributes['content'];
+//        if (property == 'og:description') preview.teaser =
+//            metaTag.attributes['content'];
+//        if (property == 'og:image') preview.imageOriginalUrl =
+//            metaTag.attributes['content'];
+//
+//        if (metaTag.attributes['name'] == 'description' &&
+//            preview.teaser == null) preview.teaser =
+//            metaTag.attributes['content'];
+//      });
+//
+//      if (preview.title == null &&
+//          document.querySelector('title') != null) preview.title =
+//          document.querySelector('title').innerHtml;
+//
+//      response.data = preview.toJson();
+//      return response;
+//    } catch (error) {
+//      return Response.fromError(error);
+//    }
+//  }
+//
+//  Future<Response> getPreviewOld() async {
+//    Response response = new Response();
+//    Uri uri = Uri.parse(this.url);
+//
+//    try {
+//      // Visit the URL of this item and get the best image from its page.
+//      var content = await http.get(this.url);
+//      ImageInfo imageInfo = await getBestImageFromHtml(content.body);
+//
+//      // Download the image locally to our temporary file.
+//      File imageFile = await downloadFileTo(imageInfo.url,
+//          await createTemporaryFile(suffix: '.' + imageInfo.extension));
+//
+//      var imageUtil = new ImageUtil();
+//      File croppedFile =
+//          await imageUtil.resize(imageFile, width: 245, height: 120);
+//
+//      var extension = imageInfo.extension;
+//      var gsBucket = config['google']['cloudStorage']['bucket'];
+//      var gsPath = 'public/images/item/$itemId';
+//
+//      var filename = 'main-photo.$extension';
+//      var cloudStorageResponse = await app.cloudStorageUtil.uploadFile(
+//          croppedFile.path, gsBucket, '$gsPath/$filename',
+//          public: true);
+//
+//      String contents = await http.read(uri);
+//
+//      UriPreview preview = new UriPreview(uri: uri);
+//
+//      // Get some basic info from the OG tags.
+//      // TODO: Decouple to getOgInfo(String content)?
+//      var document = parse(contents);
+//      List<Element> metaTags = document.querySelectorAll('meta');
+//
+//      metaTags.forEach((Element metaTag) {
+//        var property = metaTag.attributes['property'];
+//
+//        if (property == 'og:title') preview.title =
+//            metaTag.attributes['content'];
+//
+//        if (property == 'og:description') preview.teaser =
+//            metaTag.attributes['content'];
+//
+//        if (metaTag.attributes['name'] == 'description' &&
+//            preview.teaser == null) preview.teaser =
+//            metaTag.attributes['content'];
+//      });
+//
+//      // Let's use the best image we found, not from the OG tags.
+//      preview.imageOriginalUrl = imageInfo.url;
+//
+//      preview.imageSmallLocation = (cloudStorageResponse.name != null)
+//          ? cloudStorageResponse.name
+//          : null;
+//
+//      if (preview.title == null &&
+//          document.querySelector('title') != null) preview.title =
+//          document.querySelector('title').innerHtml;
+//
+//      response.data = preview.toJson();
+//      return response;
+//    } catch (error) {
+//      return Response.fromError(error);
+//    }
+//  }
 
   static String findGoogleCalendarUrlFromPage(String contents) {
     if (contents == null || contents == '') return null;
 
-    var match = new RegExp('src="((.*?)google.com/calendar/embed(.*?))"').firstMatch(contents);
+    var match = new RegExp('src="((.*?)google.com/calendar/embed(.*?))"')
+        .firstMatch(contents);
     if (match == null) return null;
 
     var uri = Uri.parse(match.group(1));
     var src = uri.queryParameters['src'];
-    var iCalUrl = 'https://www.google.com/calendar/ical/${Uri.encodeComponent(src)}/public/basic.ics';
+    var iCalUrl =
+        'https://www.google.com/calendar/ical/${Uri.encodeComponent(src)}/public/basic.ics';
 
     return iCalUrl;
   }
@@ -209,8 +320,10 @@ class Crawler {
       if (contents.startsWith('BEGIN:VCALENDAR')) return url;
 
       // Try to look for RSS tag.
-      var matchRss = new RegExp("<rss(.|[\n\r])*?version=\".*?\"", caseSensitive: false).firstMatch(contents);
-      var matchAtom = new RegExp("<feed xmlns=[^]+?/Atom.", caseSensitive: false).firstMatch(contents);
+      var matchRss = new RegExp("<rss(.|[\n\r])*?version=\".*?\"",
+          caseSensitive: false).firstMatch(contents);
+      var matchAtom = new RegExp("<feed xmlns=[^]+?/Atom.",
+          caseSensitive: false).firstMatch(contents);
 
       // The URL was a direct hit, return the url.
       if (matchRss != null || matchAtom != null) return url;
@@ -231,7 +344,8 @@ class Crawler {
       var foundUrl;
 
       var matched = regExp.allMatches(contents).any((Match match) {
-        if (match != null && match.group(0).contains('application/rss') || match.group(0).contains('application/atom')) {
+        if (match != null && match.group(0).contains('application/rss') ||
+            match.group(0).contains('application/atom')) {
           var regExp = new RegExp('href=["\'](.*?)["\']', caseSensitive: false);
 
           var match2 = regExp.firstMatch(match.group(0));
@@ -243,7 +357,8 @@ class Crawler {
 
             if (realFeedUrl.startsWith('http') == false) {
               var extraSlash = '';
-              if (url.endsWith('/') == false && realFeedUrl.startsWith('/') == false) extraSlash = '/';
+              if (url.endsWith('/') == false &&
+                  realFeedUrl.startsWith('/') == false) extraSlash = '/';
 
               realFeedUrl = Uri.parse(url).resolve(realFeedUrl).toString();
             }
@@ -265,7 +380,7 @@ class Crawler {
   /**
    * Returns the image size if it's big enough, otherwise false.
    */
-  static Future<Map> getImageInfo (String url) async {
+  static Future<Map> getImageInfo(String url) async {
     Map imageInfo = {};
 
     return new Future(() async {
@@ -291,7 +406,6 @@ class Crawler {
 
         size = int.parse(size, onError: (_) => 0);
 
-
         if (size > Crawler.MINIMUM_IMAGE_SIZE) {
           imageSizes[url] = size;
           return size;
@@ -308,7 +422,11 @@ class Crawler {
    * This method looks for <img> tags, does a HEAD request to find the content length of the images.
    * The URL of the image with largest content size is returned.
    */
-  static Future<String> getLargestImage({String contents, String url, bool logoWanted: false, String skipContents}) {
+  static Future<String> getLargestImage(
+      {String contents,
+      String url,
+      bool logoWanted: false,
+      String skipContents}) {
     return new Future(() {
       if (contents == null && url == null) return null;
 
@@ -326,7 +444,8 @@ class Crawler {
           var urls = [], logoUrls = [];
 
           // Look for content="http:*"
-          var matches = new RegExp('content="(http://.*?)"').allMatches(contents);
+          var matches =
+              new RegExp('content="(http://.*?)"').allMatches(contents);
           matches.forEach((Match match) {
             var url = match.group(1);
             if (url.contains('logo')) {
@@ -383,7 +502,9 @@ class Crawler {
 
               try {
                 // Make sure the URL is absolute.
-                if (url != null && foundUrl != null && Uri.parse(foundUrl).isAbsolute == false) {
+                if (url != null &&
+                    foundUrl != null &&
+                    Uri.parse(foundUrl).isAbsolute == false) {
                   foundUrl = Uri.parse(url).resolve(foundUrl).toString();
                 }
               } catch (e) {
@@ -394,12 +515,16 @@ class Crawler {
               if (imageSizes.containsKey(foundUrl)) {
                 var size = imageSizes[foundUrl];
 
-                if (largest < size && size >= Crawler.MINIMUM_IMAGE_SIZE && foundPreferred == false) {
+                if (largest < size &&
+                    size >= Crawler.MINIMUM_IMAGE_SIZE &&
+                    foundPreferred == false) {
                   largest = size;
                   lastMatch = foundUrl;
                 }
 
-                if (size >= Crawler.MINIMUM_IMAGE_SIZE && foundPreferred == false && logoWanted == foundUrl.contains('logo')) {
+                if (size >= Crawler.MINIMUM_IMAGE_SIZE &&
+                    foundPreferred == false &&
+                    logoWanted == foundUrl.contains('logo')) {
                   foundPreferred = true;
                   largest = size;
                   lastMatch = foundUrl;
@@ -408,11 +533,10 @@ class Crawler {
                 return null;
               }
 
-              var f = http.head(foundUrl)
-
-                  .then((response) {
+              var f = http.head(foundUrl).then((response) {
                 // Skip 404, etc.
-                if (util.isSuccessStatusCode(response.statusCode) == false) return null;
+                if (util.isSuccessStatusCode(response.statusCode) ==
+                    false) return null;
 
                 if (response.headers['content-type'] == 'text/html') {
                   htmlUrls.add(foundUrl);
@@ -421,20 +545,22 @@ class Crawler {
 
                   imageSizes[foundUrl] = size;
 
-                  if (largest < size && foundPreferred == false && size >= Crawler.MINIMUM_IMAGE_SIZE) {
+                  if (largest < size &&
+                      foundPreferred == false &&
+                      size >= Crawler.MINIMUM_IMAGE_SIZE) {
                     largest = size;
                     lastMatch = foundUrl;
                   }
 
-                  if (size >= Crawler.MINIMUM_IMAGE_SIZE && foundPreferred == false && logoWanted == foundUrl.contains('logo')) {
+                  if (size >= Crawler.MINIMUM_IMAGE_SIZE &&
+                      foundPreferred == false &&
+                      logoWanted == foundUrl.contains('logo')) {
                     foundPreferred = true;
                     largest = size;
                     lastMatch = foundUrl;
                   }
                 }
-              })
-
-                  .catchError((error) {
+              }).catchError((error) {
                 print(error);
               });
 
@@ -444,7 +570,12 @@ class Crawler {
             return Future.wait(futures).then((values) {
               if (lastMatch != null || htmlUrls.length == 0) return lastMatch;
 
-              return getLargestImage(url: htmlUrls.first, skipContents: contents, logoWanted: logoWanted).then((imageUrl) => imageUrl).catchError((e) => null);
+              return getLargestImage(
+                      url: htmlUrls.first,
+                      skipContents: contents,
+                      logoWanted: logoWanted)
+                  .then((imageUrl) => imageUrl)
+                  .catchError((e) => null);
             });
           });
         });
@@ -585,13 +716,13 @@ class Crawler {
     if (bestParentMatch != null) {
       bestParentMatch.querySelectorAll('img').forEach((img) {
 //        if (platform.adDetector.doesUrlPointToAd(img.attributes['src']) == false) {
-          var href = img.parent.attributes['href'];
-          if (href != null) {
-            images.add(href);
-          }
+        var href = img.parent.attributes['href'];
+        if (href != null) {
+          if (isValidUrl(href)) images.add(href);
+        }
 
-          images.add(img.attributes['src']);
-//        }
+        if (isValidUrl(img.attributes['src'])) images
+            .add(img.attributes['src']);
       });
     }
 
