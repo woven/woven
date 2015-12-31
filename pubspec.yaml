@@ -23,7 +23,7 @@ dependencies:
   jwt: ">=0.1.4 <0.2.0"
   notification: ">=0.0.1 <0.1.0"
   emoji: ">=1.0.3 <2.0.0"
-  shelf: "^0.6.3+1"
+  shelf: "^0.6.4+3"
   shelf_cors: "^0.2.1"
   shelf_static: "^0.2.3+1"
   html: "^0.12.2"
@@ -31,8 +31,8 @@ dependencies:
   image: "^1.1.25"
 dependency_overrides:
   web_components: "^0.12.0+3"
-  firebase:
-    git: https://github.com/davenotik/firebase-dart.git
+#  firebase:
+#    git: https://github.com/davenotik/firebase-dart.git
 transformers:
 - polymer:
     entry_points:
