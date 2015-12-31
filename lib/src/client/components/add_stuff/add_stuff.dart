@@ -281,6 +281,7 @@ class AddStuff extends PolymerElement {
     if (item is EventModel || item is NewsModel) {
       var dataJson = {'itemId': itemId, 'authToken': app.authToken};
       // Start a crawl for a URI preview. The return is handled in onChildChanged.
+      // TODO: Just trigger the new Crawler.crawl() for now, move all to server later.
       HttpRequest.request(app.serverPath + Routes.getUriPreview.toString(),
           method: 'POST', sendData: JSON.encode(dataJson));
     }

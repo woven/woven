@@ -9,9 +9,6 @@ class Response {
 
   Response([this.success = true]);
 
-  /**
-   * Dart calls this method when encoding this object with JSON.encode.
-   */
   Map toJson() {
     return {
         'success': success,
