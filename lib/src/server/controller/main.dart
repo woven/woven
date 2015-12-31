@@ -14,7 +14,9 @@ import '../util/image_util.dart';
 
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/response.dart';
-import 'package:woven/src/server/util/crawler_util.dart';
+import 'package:woven/src/server/crawler/crawler.dart';
+import 'package:woven/src/server/crawler/crawl_info.dart';
+import 'package:woven/src/server/crawler/image_info.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/server/model/item.dart';
 import 'package:woven/src/server/util.dart';
@@ -188,84 +190,90 @@ class MainController {
     String itemId = data['itemId'];
     String authToken = data['authToken'];
 
-    var crawler = new CrawlerUtil();
-
     Map itemMap = await Firebase.get('/items/$itemId.json');
 
     String uri = itemMap['url'];
 
+    var crawler = new Crawler(uri);
+
     // Crawl for some data.
-    Response getPreview = await crawler.getPreview(Uri.parse(uri));
-    if (getPreview.success == false) return respond(
-        Response.fromError('Could not fetch from that URL.'),
-        statusCode: 404);
+    CrawlInfo crawlInfo = await crawler.crawl();
 
-    UriPreview preview = UriPreview.fromJson(getPreview.data);
-    var response = new Response();
+//    if (getPreview.success == false) return respond(
+//        Response.fromError('Could not fetch from that URL.'),
+//        statusCode: 404);
 
-    if (preview.imageOriginalUrl == null || preview.imageOriginalUrl.isEmpty) {
+    ImageInfo bestImage = crawlInfo.bestImage;
+
+    Response response = new Response();
+    response.success = true;
+
+    // Build a preview.
+    UriPreview uriPreview = new UriPreview(uri: Uri.parse(uri));
+    uriPreview
+      ..title = crawlInfo.title
+      ..teaser = crawlInfo.teaser;
+
+    if (bestImage.url == null) {
       // Save the preview.
       String uriPreviewId = await Firebase
-          .post('/uri_previews.json', preview.toJson(), auth: authToken);
+          .post('/uri_previews.json', uriPreview.toJson(), auth: authToken);
       Map updates = {};
       updates['uriPreviewId'] = uriPreviewId;
 
       // If no subject/body, use preview's title/teaser.
-      if (itemMap['subject'] == null) updates['subject'] = preview.title;
-      if (itemMap['body'] == null) updates['body'] = preview.teaser;
+      if (itemMap['subject'] == null) updates['subject'] = uriPreview.title;
+      if (itemMap['body'] == null) updates['body'] = uriPreview.teaser;
 
       // Update the item with a reference to the preview.
       Item.update(itemId, updates, authToken);
 
       // Return the preview information.
-      response.data = preview;
+      response.data = uriPreview.toJson();
       return respond(response);
     } else {
-      // Resize and save a small preview image.
-      ImageUtil imageUtil = new ImageUtil();
-
-      // Set up a temporary file to write to.
-      File file = await createTemporaryFile();
-
       // Download the image locally to our temporary file.
-      await downloadFileTo(preview.imageOriginalUrl, file);
+      ImageInfo image = crawlInfo.bestImage;
+      File imageFile = await downloadFileTo(
+          image.url, await createTemporaryFile(suffix: '.' + image.extension));
 
-      // Resize the image.
-      File convertedFile =
-          await imageUtil.resize(file, width: 225, height: 125);
+      var imageUtil = new ImageUtil();
+      File croppedFile =
+          await imageUtil.resize(imageFile, width: 245, height: 120);
 
       // Save the preview.
       String uriPreviewId = await Firebase
-          .post('/uri_previews.json', preview.toJson(), auth: authToken);
+          .post('/uri_previews.json', uriPreview.toJson(), auth: authToken);
       Map updates = {};
       updates['uriPreviewId'] = uriPreviewId;
 
-      if (itemMap['subject'] == null) updates['subject'] = preview.title;
-      if (itemMap['body'] == null) updates['body'] = preview.teaser;
+      // If no subject/body, use preview's title/teaser.
+      if (itemMap['subject'] == null) updates['subject'] = uriPreview.title;
+      if (itemMap['body'] == null) updates['body'] = uriPreview.teaser;
 
       // Update the item with a reference to the preview.
       Item.update(itemId, updates, authToken);
 
-      // Convert and save the image.
-      var extension =
-          path.extension(preview.imageOriginalUrl.toString()).split("?")[0];
-      var filename = 'preview_small$extension';
+      var extension = image.extension;
       var gsBucket = config['google']['cloudStorage']['bucket'];
-      var gsPath = 'public/images/preview/$uriPreviewId/$filename';
+      var gsPath = 'public/images/item/$itemId';
 
-      // Then upload the image to our filesystem.
-      await app.cloudStorageUtil
-          .uploadFile(convertedFile.path, gsBucket, gsPath, public: true);
-      await file.delete();
+      var filename = 'main-photo.$extension';
+      var cloudStorageResponse = await app.cloudStorageUtil.uploadFile(
+          croppedFile.path, gsBucket, '$gsPath/$filename',
+          public: true);
 
       // Update the preview with a reference to the cloud file.
-      preview.imageSmallLocation = gsPath;
+      uriPreview.imageSmallLocation = cloudStorageResponse.name;
       Firebase.patch(
-          '/uri_previews/$uriPreviewId.json', JSON.encode(preview.toJson()),
+          '/uri_previews/$uriPreviewId.json', JSON.encode(uriPreview.toJson()),
           auth: authToken);
 
+      imageFile.delete();
+      croppedFile.delete();
+
       // Return the preview information.
-      response.data = preview;
+      response.data = uriPreview.toJson();
       return respond(response);
     }
   }
