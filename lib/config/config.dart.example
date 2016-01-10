@@ -3,45 +3,36 @@ library config;
 var config = {
   'server': {
     'address': '0.0.0.0',
-    'port': 8181,
+    'port': 80,
 
-    'displayDomain': 'woven.app',
-    'domain': 'woven.app:8181',
-    'path': 'http://woven.app:8181',
+    'displayDomain': 'yourdomain.com',
+    'domain': 'yourdomain.com',
+    'path': 'http://yourdomain.com',
     'directory': 'web' // Toggle me.
 
     // For building Cordova app. Also comment out the base href in index.html!
-//    'displayDomain': 'woven.app',
-//    'domain': 'woven.co:8080',
-//    'path': 'http://woven.co:8080',
+//    'displayDomain': 'yourdomain.com',
+//    'domain': 'yourdomain.com',
+//    'path': 'http://yourdomain.com',
 //    'directory': 'build/web'
   },
   'authentication': {
     'facebook': {
-      'appId': '820721287940975',
-      'appSecret': 'e09435e26e2fc560bd7b1754d9baf334',
+      'appId': 'get-your-own',
+      'appSecret': 'get-your-own',
       'url': 'http://woven.app/signin/facebook'
     }
   },
   'datastore': {
-    'firebaseSecret': 'i7dfNHOVFPZ1vxNe6LpWku5E0QjlHacVuz1kjPIq', //dev
-    'firebaseLocation': 'https://luminous-fire-4671.firebaseio.com'
-//    'firebaseSecret': 'uY8p08LpEK6eF8JnB1ijFPdLQOoNpeJEgQEFJ3cI', //prod
-//    'firebaseLocation': 'https://wovenco.firebaseio.com'
-  },
-  'email': {
-    'hostName': 'smtp.mailgun.org',
-    'port': 465,
-    'requiresAuthentication': true,
-    'secured': true,
-    'username': 'postmaster@woven.org',
-    'password': '36rz36tcm5k2',
-    'localEmail': 'dave@woven.co'
+    'firebaseSecret': 'get-your-own', //dev
+    'firebaseLocation': 'get-your-own'
+//    'firebaseSecret': 'get-your-own', //prod
+//    'firebaseLocation': 'https://get-your-own.firebaseio.com'
   },
   'mailgun': {
     'user': 'api',
     'key': 'get-your-own',
-    'localEmail': 'hello@woven.co',
+    'localEmail': 'you@yours.com',
     'path': 'https://api.mailgun.net/v2/get-your-own'
   },
   'google': {
@@ -58,7 +49,7 @@ var config = {
     }
   },
   'appSettings': {
-    'validShareToOptions': ['miamitech', 'wynwood', 'woven', 'thelab', 'wyncode', 'ideagarden', 'fiu', 'breakshop', 'littlehaiti']
+    'validShareToOptions': ['channel1', 'channel2']
   },
   'debug_mode': true
 };
