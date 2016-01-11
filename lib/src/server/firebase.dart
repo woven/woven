@@ -44,7 +44,7 @@ class Firebase {
         '${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}',
         body: data);
     if (response.statusCode !=
-        200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
+        200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}\nBody:${response.body}';
   }
 
   /**
