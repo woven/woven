@@ -33,7 +33,8 @@ class Home extends PolymerElement with Observable {
   CoreInput get firstname => this.shadowRoot.querySelector('#firstname');
   CoreInput get lastname => this.shadowRoot.querySelector('#lastname');
   CoreInput get email => this.shadowRoot.querySelector('#email');
-  CoreInput get invitationCode => this.shadowRoot.querySelector('#invitation-code');
+  CoreInput get invitationCode =>
+      this.shadowRoot.querySelector('#invitation-code');
   Element get submitButton => this.shadowRoot.querySelector('#submit');
 
   Home.created() : super.created();
@@ -66,7 +67,8 @@ class Home extends PolymerElement with Observable {
     } else {
       Uri currentPath = Uri.parse(window.location.toString());
 
-      if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
+      if (currentPath.pathSegments.contains('confirm') &&
+          currentPath.pathSegments[1] != null) {
         var confirmId = currentPath.pathSegments[1].toString();
         handleConfirm(confirmId);
         app.router.dispatch(url: '/');
@@ -80,7 +82,8 @@ class Home extends PolymerElement with Observable {
    * Handle the case where user is coming by way of an email confirmation/invite link.
    */
   handleConfirm(String confirmId) async {
-    firebase.DataSnapshot snapshot = await f.child('/email_confirmation_index/$confirmId').once('value');
+    firebase.DataSnapshot snapshot =
+        await f.child('/email_confirmation_index/$confirmId').once('value');
 
     if (snapshot.val() == null) {
       app.homePageCta = 'sign-up';
@@ -121,13 +124,11 @@ class Home extends PolymerElement with Observable {
     app.signOut();
 
     // Check credentials and sign the user in server side.
-    HttpRequest request = await HttpRequest.request(
-        app.serverPath +
-        Routes.sendConfirmEmail.toString(),
-        method: 'POST',
-        sendData: JSON.encode({
-          'email': email.value.trim()
-        })).catchError((e) => print(e));
+    HttpRequest request = await HttpRequest
+        .request(app.serverPath + Routes.sendConfirmEmail.toString(),
+            method: 'POST',
+            sendData: JSON.encode({'email': email.value.trim()}))
+        .catchError((e) => print(e));
 
     // Set up the response as an object.
     Response response = Response.fromJson(JSON.decode(request.responseText));
@@ -159,7 +160,8 @@ class Home extends PolymerElement with Observable {
 
     //TODO: Regex this for all disallowed cases.
     if (!new RegExp(RegexHelper.username).hasMatch(username.value.trim())) {
-      window.alert("Your username may only contain letters and numbers, and must have at least one letter.");
+      window.alert(
+          "Your username may only contain letters and numbers, and must have at least one letter.");
       return false;
     }
 
@@ -172,21 +174,23 @@ class Home extends PolymerElement with Observable {
 
     // Check credentials and sign the user in server side.
     HttpRequest request = await HttpRequest.request(
-      app.serverPath +
-      Routes.createNewUser.toString(),
-      method: 'POST',
-      sendData: JSON.encode({
-        'username': username.value.trim(),
-        'password': password.value,
-        'firstName': firstname.value.trim(),
-        'lastName': lastname.value.trim(),
-        'email': email.value.trim(),
-        'onboardingState': app.user.onboardingState,
-        'invitation': app.user.invitation,
-        'facebookId': (app.user.facebookId != null) ? app.user.facebookId : null,
-        'invitationCode': (invitationCode != null && invitationCode.value.isNotEmpty) ? invitationCode.value.toLowerCase().trim() : null
-      })
-    );
+        app.serverPath + Routes.createNewUser.toString(),
+        method: 'POST',
+        sendData: JSON.encode({
+          'username': username.value.trim(),
+          'password': password.value,
+          'firstName': firstname.value.trim(),
+          'lastName': lastname.value.trim(),
+          'email': email.value.trim(),
+          'onboardingState': app.user.onboardingState,
+          'invitation': app.user.invitation,
+          'facebookId':
+              (app.user.facebookId != null) ? app.user.facebookId : null,
+          'invitationCode':
+              (invitationCode != null && invitationCode.value.isNotEmpty)
+                  ? invitationCode.value.toLowerCase().trim()
+                  : null
+        }));
 
     // Set up the response as an object.
     Response response = Response.fromJson(JSON.decode(request.responseText));
@@ -201,14 +205,15 @@ class Home extends PolymerElement with Observable {
         app.user = null; // Kill the disabled user.
         showSignUpNote();
       } else {
-        f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+        f
+            .authWithCustomToken(app.authToken)
+            .catchError((error) => print(error));
 
         // Set up the user object.
         app.user = UserModel.fromJson(response.data);
         app.user.isNew = true;
         app.signIn();
       }
-
     } else {
       toggleProcessingIndicator();
       window.alert(response.message);
@@ -263,7 +268,8 @@ class Home extends PolymerElement with Observable {
 
     document.body.classes.add('no-transition');
     app.user.settings = toObservable(app.user.settings);
-    new Timer(new Duration(seconds: 1), () => document.body.classes.remove('no-transition'));
+    new Timer(new Duration(seconds: 1),
+        () => document.body.classes.remove('no-transition'));
 
     app.cache.users[app.user.username.toLowerCase()] = app.user;
 
@@ -273,7 +279,8 @@ class Home extends PolymerElement with Observable {
     app.showHomePage = false;
     app.skippedHomePage = true;
 
-    Timer.run(() => app.showMessage('Thanks for doing that, ${app.user.firstName}.'));
+    Timer.run(
+        () => app.showMessage('Thanks for doing that, ${app.user.firstName}.'));
   }
 
   /**
@@ -292,7 +299,10 @@ class Home extends PolymerElement with Observable {
     var request = await HttpRequest.request(
         app.serverPath + Routes.signIn.toString(),
         method: 'POST',
-        sendData: JSON.encode({'username': username.value.toLowerCase(), 'password': password.value}));
+        sendData: JSON.encode({
+          'username': username.value.toLowerCase(),
+          'password': password.value
+        }));
 
     // Set up the response as an object.
     Response response = Response.fromJson(JSON.decode(request.responseText));
@@ -301,7 +311,9 @@ class Home extends PolymerElement with Observable {
       app.authToken = response.data['authToken'];
       // TODO: This should totally just be part of the UserModel.
       response.data.remove('authToken');
-      app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+      app.f
+          .authWithCustomToken(app.authToken)
+          .catchError((error) => print(error));
 
       // Set up the user object.
       app.user = UserModel.fromJson(response.data);
@@ -323,15 +335,9 @@ class Home extends PolymerElement with Observable {
       processingAnimation.iterations = 'Infinity';
       processingAnimation.easing = 'ease-in';
       processingAnimation.keyframes = [
-          {
-              'background-color': 'rgb(64, 136, 214)'
-          },
-          {
-              'background-color': 'rgb(73, 168, 255)'
-          },
-          {
-              'background-color': 'rgb(64, 136, 214)'
-          }
+        {'background-color': 'rgb(64, 136, 214)'},
+        {'background-color': 'rgb(73, 168, 255)'},
+        {'background-color': 'rgb(64, 136, 214)'}
       ];
       processingAnimation.target = submitButton;
       processingAnimation.play();
