@@ -279,7 +279,7 @@ class Home extends PolymerElement with Observable {
   /**
    * Handle sign in.
    */
-  signIn() {
+  signIn() async {
     if (username.value.trim().isEmpty || password.value.trim().isEmpty) {
       window.alert("Your username and password, please.");
       return false;
@@ -289,28 +289,27 @@ class Home extends PolymerElement with Observable {
     toggleProcessingIndicator();
 
     // Check credentials and sign the user in server side.
-    HttpRequest.request(
+    var request = await HttpRequest.request(
         app.serverPath + Routes.signIn.toString(),
         method: 'POST',
-        sendData: JSON.encode({'username': username.value.toLowerCase(), 'password': password.value}))
-    .then((HttpRequest request) {
-      // Set up the response as an object.
-      Response response = Response.fromJson(JSON.decode(request.responseText));
-      if (response.success) {
-        // Set the auth token and remove it from the map.
-        app.authToken = response.data['authToken'];
-        // TODO: This should totally just be part of the UserModel.
-        response.data.remove('authToken');
-        app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+        sendData: JSON.encode({'username': username.value.toLowerCase(), 'password': password.value}));
 
-        // Set up the user object.
-        app.user = UserModel.fromJson(response.data);
-        app.signIn();
-      } else {
-        toggleProcessingIndicator();
-        window.alert(response.message);
-      }
-    });
+    // Set up the response as an object.
+    Response response = Response.fromJson(JSON.decode(request.responseText));
+    if (response.success) {
+      // Set the auth token and remove it from the map.
+      app.authToken = response.data['authToken'];
+      // TODO: This should totally just be part of the UserModel.
+      response.data.remove('authToken');
+      app.f.authWithCustomToken(app.authToken).catchError((error) => print(error));
+
+      // Set up the user object.
+      app.user = UserModel.fromJson(response.data);
+      app.signIn();
+    } else {
+      toggleProcessingIndicator();
+      window.alert(response.message);
+    }
   }
 
   toggleProcessingIndicator() {
