@@ -1,6 +1,5 @@
 import 'dart:html';
 import 'dart:async';
-import 'dart:math';
 import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
@@ -22,24 +21,12 @@ class Home extends PolymerElement with Observable {
   @observable String randomWord = '';
   @observable Map formData = toObservable({});
 
-  var overlayAnimation = new CoreAnimation();
-  var logoAnimation = new CoreAnimation();
-  var menuAnimation = new CoreAnimation();
-  var mainAnimation = new CoreAnimation();
-  var ctaAnimation = new CoreAnimation();
-
   var processing = false;
   var processingAnimation = new CoreAnimation();
 
   firebase.Firebase get f => app.f;
 
   DateTime get now => new DateTime.now().toUtc();
-
-  Element get overlay => this.shadowRoot.querySelector('div.overlay');
-  Element get logo => this.shadowRoot.querySelector((app.isMobile ? 'div.logo-solo' : 'div.logo'));
-  Element get menu => this.shadowRoot.querySelector('ul.menu');
-  Element get cover => this.shadowRoot.querySelector('div.cover');
-  Element get cta => this.shadowRoot.querySelector('div.cta');
 
   CoreInput get username => this.shadowRoot.querySelector('#username');
   CoreInput get password => this.shadowRoot.querySelector('#password');
@@ -51,38 +38,11 @@ class Home extends PolymerElement with Observable {
 
   Home.created() : super.created();
 
-  toggleOverlay() {
-    overlayAnimation.target = overlay;
-    overlayAnimation.duration = 200;
-    overlayAnimation.iterations = 'auto';
-    overlayAnimation.easing = 'ease-out';
-    overlayAnimation.composite = 'add';
-    overlayAnimation.fill = 'both';
-    overlayAnimation.keyframes = [
-        {'height': '70px'},
-        {'height': '100%'}
-    ];
-    overlayAnimation.play();
-    toggleLogo();
-    toggleMenu();
-
-    if (overlayAnimation.direction == 'reverse') {
-      overlayAnimation.direction = 'forward';
-    } else {
-      overlayAnimation.direction = 'reverse';
-    }
-  }
-
-  changeCta(String page) {
-    toggleCta();
-    new Timer(new Duration(milliseconds: 100), () {
-      app.homePageCta = page;
-      toggleCta();
-    });
-  }
+  changeCta(String page) => app.homePageCta = page;
 
   showSignIn() {
     changeCta('sign-in');
+
     Timer.run(() {
       InputElement username = querySelector('#username');
       if (!app.isMobile) username.autofocus = true;
@@ -95,68 +55,25 @@ class Home extends PolymerElement with Observable {
 
   showGetStartedNote() => changeCta('get-started-note');
 
-  toggleCta() {
-    mainAnimation.target = cta;
-    mainAnimation.duration = 400;
-    mainAnimation.iterations = 'auto';
-    mainAnimation.easing = 'ease-out';
-    mainAnimation.composite = 'add';
-    mainAnimation.fill = 'both';
-    mainAnimation.keyframes = [
-        {'opacity': '1', 'top': (app.isMobile ? '0px' : '60px')},
-        {'opacity': '0', 'top': '300px'}
-    ];
-    mainAnimation.play();
-
-    if (mainAnimation.direction == 'reverse') {
-      mainAnimation.direction = 'forward';
-    } else {
-      mainAnimation.direction = 'reverse';
-    }
-  }
-
-  toggleCover() {
-    mainAnimation.target = cover;
-    mainAnimation.duration = 300;
-    mainAnimation.iterations = 'auto';
-    mainAnimation.easing = 'ease-out';
-    mainAnimation.composite = 'add';
-    mainAnimation.fill = 'both';
-    mainAnimation.keyframes = [
-        {'opacity': '0'},
-        {'opacity': '1'}
-    ];
-    mainAnimation.play();
-
-    if (mainAnimation.direction == 'reverse') {
-      mainAnimation.direction = 'forward';
-    } else {
-      mainAnimation.direction = 'reverse';
-    }
-  }
-
   toggleMain() {
-    new Timer(new Duration(milliseconds: 600), () async {
-      if (app.user != null) {
-        if (app.user.disabled && app.user.onboardingState == 'signUpComplete') {
-          app.homePageCta = 'sign-up-note';
-        }
-        if (app.user.onboardingState == 'temporaryUser') {
-          app.homePageCta = 'complete-sign-up';
-        }
-      } else {
-        Uri currentPath = Uri.parse(window.location.toString());
-
-        if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
-          var confirmId = currentPath.pathSegments[1].toString();
-          handleConfirm(confirmId);
-          app.router.dispatch(url: '/');
-        } else {
-          app.homePageCta = 'sign-up';
-        }
+    if (app.user != null) {
+      if (app.user.disabled && app.user.onboardingState == 'signUpComplete') {
+        app.homePageCta = 'sign-up-note';
       }
-      toggleCta();
-    });
+      if (app.user.onboardingState == 'temporaryUser') {
+        app.homePageCta = 'complete-sign-up';
+      }
+    } else {
+      Uri currentPath = Uri.parse(window.location.toString());
+
+      if (currentPath.pathSegments.contains('confirm') && currentPath.pathSegments[1] != null) {
+        var confirmId = currentPath.pathSegments[1].toString();
+        handleConfirm(confirmId);
+        app.router.dispatch(url: '/');
+      } else {
+        app.homePageCta = 'sign-up';
+      }
+    }
   }
 
   /**
@@ -164,6 +81,7 @@ class Home extends PolymerElement with Observable {
    */
   handleConfirm(String confirmId) async {
     firebase.DataSnapshot snapshot = await f.child('/email_confirmation_index/$confirmId').once('value');
+
     if (snapshot.val() == null) {
       app.homePageCta = 'sign-up';
     } else {
@@ -182,68 +100,8 @@ class Home extends PolymerElement with Observable {
     }
   }
 
-  toggleLogo() {
-    logoAnimation.target = logo;
-    logoAnimation.duration = 600;
-    logoAnimation.iterations = 'auto';
-    logoAnimation.easing = 'ease-out';
-    logoAnimation.composite = 'add';
-    logoAnimation.fill = 'both';
-    logoAnimation.keyframes = [
-        {'opacity': '0'},
-        {'opacity': '1'}
-    ];
-
-    logoAnimation.play();
-
-    if (logoAnimation.direction == 'reverse') {
-      logoAnimation.direction = 'forward';
-    } else {
-      logoAnimation.direction = 'reverse';
-    }
-  }
-
-  toggleMenu() {
-    menuAnimation.target = menu;
-    menuAnimation.duration = 300;
-    menuAnimation.iterations = 'auto';
-    menuAnimation.easing = 'ease-out';
-    menuAnimation.composite = 'add';
-    menuAnimation.fill = 'both';
-    menuAnimation.keyframes = [
-        {'font-size': '24px', 'margin-left': '0px'},
-        {'font-size': '32px', 'margin-left': '80px'}
-    ];
-
-    menuAnimation.play();
-
-    if (menuAnimation.direction == 'reverse') {
-      menuAnimation.direction = 'forward';
-    } else {
-      menuAnimation.direction = 'reverse';
-    }
-  }
-
   signInWithFacebook() {
     app.signInWithFacebook();
-  }
-
-  close() {
-    toggleCta();
-    new Timer(new Duration(milliseconds: 400), () {
-      toggleLogo();
-      new Timer(new Duration(milliseconds: 400), () {
-        toggleCover();
-        new Timer(new Duration(milliseconds: 400), () {
-          if (app.user != null && app.user.disabled == true) {
-            app.user = null; // Kill the disabled user before entering app.
-          }
-
-          app.showHomePage = false;
-          app.skippedHomePage = true;
-        });
-      });
-    });
   }
 
   /**
@@ -485,13 +343,8 @@ class Home extends PolymerElement with Observable {
   attached() {
     if (app.debugMode) print('+Home');
 
-//    ImageElement coverImage = new ImageElement(src: 'https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg');
     document.body.classes.add('colored-bg');
-    Timer.run(() => toggleCover());
     toggleMain();
-//    coverImage.onLoad.listen((e) {
-//      document.body.style.backgroundImage = 'url(https://storage.googleapis.com/woven/public/images/bg/space_galaxy.jpg)';
-//    });
 
     if (app.user != null && app.user.onboardingState == 'signUpIncomplete') {
       username.disabled = true;
