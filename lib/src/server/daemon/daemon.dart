@@ -6,7 +6,6 @@ import 'package:woven/config/config.dart';
 
 import '../task_scheduler.dart';
 import '../util/cloud_storage_util.dart';
-import '../util/image_util.dart';
 import 'package:googleapis/storage/v1.dart' as storage;
 import 'package:googleapis_auth/auth_io.dart' as auth;
 
@@ -23,6 +22,7 @@ class Daemon {
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((LogRecord rec) {
       print('${rec.level.name}: ${rec.time}: ${rec.message}');
+      if (rec.stackTrace != null) print(rec.stackTrace);
     });
 
     initializeGoogleApiClient().then((googleApiClient) {
