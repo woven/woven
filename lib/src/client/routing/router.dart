@@ -37,18 +37,14 @@ class Router extends Observable {
   }
 
   resolve() async {
-    print('debug2: resolve');
     var matchingPattern = routes.keys.firstWhere(
         (UrlPattern pattern) => pattern.matches(currentPath),
         orElse: () => null);
     if (matchingPattern == null) {
-      print('debug3: no matching pattern');
       bool foundAlias = await aliasHandler(currentPath);
       if (foundAlias) {
-        print('debug: foundAlias');
         _onDispatchController.add(currentPath);
       } else {
-        print('debug: did not foundAlias');
         _onNotFoundController.add(currentPath);
       }
       return;
@@ -56,7 +52,6 @@ class Router extends Observable {
 
     route = matchingPattern;
 
-    print('debug4: dispatched');
     _onDispatchController.add(currentPath);
 
     var action = routes[matchingPattern];
@@ -68,11 +63,9 @@ class Router extends Observable {
       String title,
       bool flash: false,
       bool alwaysDispatch: false}) {
-    print('debug0');
     // Determine if we should just reload instead.
     if (Uri.parse(url).host != window.location.hostname &&
         Uri.parse(url).host != '') {
-      print('debug1');
       window.location.href = url;
       return;
     }
