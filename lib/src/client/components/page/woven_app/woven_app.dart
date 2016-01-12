@@ -8,7 +8,11 @@ import 'package:woven/src/client/components/page/main/main.dart';
 
 @CustomTag('woven-app')
 class WovenApp extends PolymerElement with Observable {
-  @observable App app = new App();
+  @observable App app;
 
-  WovenApp.created() : super.created();
+  WovenApp.created() : super.created() {
+    App.create().then((app) {
+      this.app = app;
+    });
+  }
 }

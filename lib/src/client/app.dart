@@ -31,18 +31,19 @@ class App extends Observable {
   @observable bool skippedHomePage = false;
   DateTime timeOfLastFocus = new DateTime.now().toUtc();
   bool isFocused = true;
-  bool debugMode;
+  bool debugMode =
+      (config['debug_mode'] != null ? config['debug_mode'] : false);
   List reservedPaths = ['people', 'events', 'item', 'confirm'];
   final String serverPath = config['server']['path'];
 
   Router router;
   MainViewModel mainViewModel;
-  Cache cache;
+  Cache cache = new Cache();
   String authToken;
-  String sessionId;
-  Firebase f;
-  String cloudStoragePath;
-  String cloudStorageBucket;
+//  String sessionId;
+  Firebase f = new Firebase(config['datastore']['firebaseLocation']);
+  String cloudStoragePath = config['google']['cloudStorage']['path'];
+  String cloudStorageBucket = config['google']['cloudStorage']['bucket'];
   AudioContext audioContext = new AudioContext();
 
   Stream onUserChanged;
@@ -52,14 +53,8 @@ class App extends Observable {
   StreamController _controllerTitleChanged;
 
   App() {
-    f = new Firebase(config['datastore']['firebaseLocation']);
-    cloudStoragePath = config['google']['cloudStorage']['path'];
-    cloudStorageBucket = config['google']['cloudStorage']['bucket'];
-
     mainViewModel = new MainViewModel(this);
-    cache = new Cache();
-    sessionId = readCookie('session');
-    debugMode = (config['debug_mode'] != null ? config['debug_mode'] : false);
+//    sessionId = readCookie('session');
 
     // Track when app gets focus.
     window.onFocus.listen((_) {
@@ -72,6 +67,31 @@ class App extends Observable {
       this.timeOfLastFocus = new DateTime.now().toUtc();
     });
 
+    _controllerUserChanged = new StreamController();
+    onUserChanged = _controllerUserChanged.stream.asBroadcastStream();
+  }
+
+  static Future<App> create() async {
+    App app = new App();
+
+    await app.loadUserForSession();
+
+    Uri currentPath = Uri.parse(window.location.toString());
+
+    if (currentPath.pathSegments.contains('confirm') &&
+        currentPath.pathSegments[1] != null) {
+      app.homePageCta = 'complete-sign-up';
+      app.hasTriedLoadingUser = true;
+    } else {
+      app.hasTriedLoadingUser = true;
+    }
+
+    await app.startRouter();
+
+    return app;
+  }
+
+  Future startRouter() async {
     // Set up the router.
     router = new Router()
       // Every route has to be registered... but if we don't need a handler, pass null.
@@ -87,21 +107,15 @@ class App extends Observable {
     if (Uri.parse(path).pathSegments.length > 0 &&
         !reservedPaths.contains(Uri.parse(path).pathSegments[0])) {
       String alias = Uri.parse(path).pathSegments[0];
-      f.child('/communities/$alias').once('value').then((res) {
-        if (res == null) return;
-        // If so, create a community object and add it to our cache.
-        community = CommunityModel.fromJson(res.val());
-        cache.communities[alias] = community;
-      });
+      var checkAlias = await f.child('/communities/$alias').once('value');
+      if (checkAlias == null) return;
+      // If so, create a community object and add it to our cache.
+      community = CommunityModel.fromJson(checkAlias.val());
+      cache.communities[alias] = community;
     }
 
 //    router.onNotFound.listen(notFound);
     router.onDispatch.listen(handleAliasPage);
-
-    _controllerUserChanged = new StreamController();
-    onUserChanged = _controllerUserChanged.stream.asBroadcastStream();
-
-    loadUserForSession();
   }
 
   void home(String path) {
@@ -109,6 +123,8 @@ class App extends Observable {
     // Home goes to the community list for now.
     router.selectedPage = 'channels';
     changeCommunity(null);
+
+    // Show the homepage if a signed out user had skipped it.
     if (hasTriedLoadingUser && user == null && !skippedHomePage) showHomePage =
         true;
   }
@@ -325,9 +341,7 @@ class App extends Observable {
   loadUserForSession() async {
     var currentUser = await HttpRequest
         .getString(serverPath + Routes.currentUser.reverse([]))
-        .catchError((e) {
-      hasTriedLoadingUser = true;
-    });
+        .catchError(print);
 
     if (currentUser == null) return;
 
@@ -340,8 +354,6 @@ class App extends Observable {
       user = UserModel.fromJson(response.data);
 
       signIn();
-    } else {
-      hasTriedLoadingUser = true;
     }
   }
 
