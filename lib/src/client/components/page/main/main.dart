@@ -10,7 +10,6 @@ import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/components/channel_info/channel_info.dart';
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 
-
 @CustomTag('x-main')
 class Main extends PolymerElement with Observable {
   @published App app;
@@ -18,10 +17,10 @@ class Main extends PolymerElement with Observable {
 
   List<StreamSubscription> subscriptions = [];
 
-  static Element get mainElement => document.querySelector('woven-app').shadowRoot.querySelector('x-main');
+  static Element get mainElement =>
+      document.querySelector('woven-app').shadowRoot.querySelector('x-main');
 
-  Main.created() : super.created() {
-  }
+  Main.created() : super.created() {}
 
   void switchPage(Event e, var detail, Element target) {
     app.router.switchPage(target.dataset['url']);
@@ -38,7 +37,7 @@ class Main extends PolymerElement with Observable {
         url: (app.community != null ? '/${app.community.alias}' : '/'));
     if (app.router.previousPage == 'feed') app.router.dispatch(
         url:
-        (app.community != null ? '/${app.community.alias}/feed' : '/feed'));
+            (app.community != null ? '/${app.community.alias}/feed' : '/feed'));
     if (app.router.previousPage == 'events') app.router.dispatch(
         url: (app.community != null
             ? '/${app.community.alias}/events'
@@ -53,14 +52,13 @@ class Main extends PolymerElement with Observable {
   signOut() => app.signOut();
 
   toggleMenu(Event e) {
-    var dropdown = (e.target as HtmlElement)
-        .querySelector('core-dropdown') as CoreDropdown;
+    var dropdown = (e.target as HtmlElement).querySelector('core-dropdown')
+        as CoreDropdown;
     if (dropdown != null) dropdown.toggle();
   }
 
   // Toggle the drawer panel.
   togglePanel() {
-
 //    DivElement panel = this.shadowRoot.querySelector('.left');
 //    panel.classes.add('hide');
   }
@@ -102,12 +100,11 @@ class Main extends PolymerElement with Observable {
         el.text = (app.pageTitle != null) ? '${app.pageTitle}' : '';
       });
     } else {
-      if (app.debugMode ) print('DEBUG: pageTitle is NULL!');
+      if (app.debugMode) print('DEBUG: pageTitle is NULL!');
     }
   }
 
   attached() async {
-
 //    new Timer(new Duration(seconds: 1), () {
 //      window.scrollTo(0, 1);
 //    });
@@ -116,18 +113,19 @@ class Main extends PolymerElement with Observable {
 //    ${mainElement.shadowRoot.querySelector('.side-panel .close')}
 //    ''');
 
-
     //querySelector('.main').text = 'Your Dart app is running.';
     final Element toolbar = mainElement.shadowRoot.querySelector('.toolbar');
     final Element sidePanel = mainElement.shadowRoot.querySelector('.left');
-    final Element closeButton = mainElement.shadowRoot.querySelector('.left #close-button');
-    final Element menuButton = mainElement.shadowRoot.querySelector('.toolbar .icon.menu');
+    final Element closeButton =
+        mainElement.shadowRoot.querySelector('.left #close-button');
+    final Element menuButton =
+        mainElement.shadowRoot.querySelector('.toolbar .icon.menu');
     final Element scrim = mainElement.shadowRoot.querySelector('.scrim');
     final Element mainDiv = mainElement.shadowRoot.querySelector('.main');
 
     hide() {
 //      if (sidePanel.classes.contains('hide')) {
-        toolbar.classes.add('hide');
+      toolbar.classes.add('hide');
 //      }
     }
 
@@ -174,7 +172,6 @@ class Main extends PolymerElement with Observable {
 //    scrim.classes.addAll(['show']);
 //      mainDiv.classes.add('noscroll');
     });
-
 
     changeTitle();
 
