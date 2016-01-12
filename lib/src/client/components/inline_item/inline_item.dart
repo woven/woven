@@ -41,7 +41,8 @@ class InlineItem extends PolymerElement with Observable {
   void selectItem(Event e, var detail, Element target) {
     // Look in the items list for the item that matches the
     // id passed in the data-id attribute on the element.
-    var item = viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
+    var item =
+        viewModel.items.firstWhere((i) => i['id'] == target.dataset['id']);
 
     app.router.previousPage = app.router.selectedPage;
     app.router.selectedItem = item;
@@ -79,14 +80,13 @@ class InlineItem extends PolymerElement with Observable {
       }
 
       // The live-date-time element needs parsed dates.
-      print(e.snapshot.key);
-      print(queuedItem['createdDate']);
       queuedItem['createdDate'] = DateTime.parse(queuedItem['createdDate']);
       queuedItem['updatedDate'] = DateTime.parse(queuedItem['updatedDate']);
 
       switch (queuedItem['type']) {
         case 'event':
-          if (queuedItem['startDateTime'] != null) queuedItem['startDateTime'] = DateTime.parse(queuedItem['startDateTime']);
+          if (queuedItem['startDateTime'] != null) queuedItem['startDateTime'] =
+              DateTime.parse(queuedItem['startDateTime']);
           queuedItem['defaultImage'] = 'event';
           break;
         case 'announcement':
@@ -97,9 +97,12 @@ class InlineItem extends PolymerElement with Observable {
           break;
         case 'message':
           queuedItem['defaultImage'] = 'communication:message';
-          if (queuedItem['subject'] == null) queuedItem['subject'] = InputFormatter.createTeaser(queuedItem['message'], 75);
-          if (queuedItem['body'] == null) queuedItem['body'] = queuedItem['message'];
-//          queuedItem['subject'] ??= queuedItem['message']; // TODO Why don't null-aware operators work?
+          if (queuedItem['subject'] == null) queuedItem['subject'] =
+              InputFormatter.createTeaser(queuedItem['message'], 75);
+          if (queuedItem['body'] == null) queuedItem['body'] =
+              queuedItem['message'];
+          // TODO Why don't null-aware operators work?
+//          queuedItem['subject'] ??= queuedItem['message'];
           break;
         case 'other':
           break;
@@ -109,17 +112,27 @@ class InlineItem extends PolymerElement with Observable {
 
       // Handle any URI previews the item may have.
       if (queuedItem['uriPreviewId'] != null) {
-        var onValue = f.child('/uri_previews/${queuedItem['uriPreviewId']}').onValue.listen((e) {
+        var onValue = f
+            .child('/uri_previews/${queuedItem['uriPreviewId']}')
+            .onValue
+            .listen((e) {
           var previewData = e.snapshot.val();
           if (previewData == null) return;
           UriPreview preview = UriPreview.fromJson(previewData);
           queuedItem['uriPreview'] = preview.toJson();
-          queuedItem['uriPreview']['imageSmallLocation'] = (queuedItem['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${queuedItem['uriPreview']['imageSmallLocation']}' : null;
+          queuedItem['uriPreview']['imageSmallLocation'] = (queuedItem[
+                      'uriPreview']['imageSmallLocation'] !=
+                  null)
+              ? '${app.cloudStoragePath}/${queuedItem['uriPreview']['imageSmallLocation']}'
+              : null;
           queuedItem['uriPreviewTried'] = true;
 
           // If subject and body are empty, use title and teaser from URI preview instead.
-          if (queuedItem['subject'] == null) queuedItem['subject'] = toObservable(preview.title);
-          if (queuedItem['body'] == null) queuedItem['body'] = toObservable(preview.teaser);;
+          if (queuedItem['subject'] == null) queuedItem['subject'] =
+              toObservable(preview.title);
+          if (queuedItem['body'] == null) queuedItem['body'] =
+              toObservable(preview.teaser);
+          ;
         });
         subscriptions.add(onValue);
       } else {
@@ -130,7 +143,10 @@ class InlineItem extends PolymerElement with Observable {
       if (queuedItem['url'] != null) {
         String uriHost = Uri.parse(queuedItem['url']).host;
         if (uriHost.isEmpty) return;
-        String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
+        String uriHostShortened = uriHost.substring(uriHost
+                .toString()
+                .lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) +
+            1);
         queuedItem['uriHost'] = uriHostShortened;
       }
 
@@ -138,23 +154,27 @@ class InlineItem extends PolymerElement with Observable {
       // So we'll add that to our local item.
       queuedItem['id'] = e.snapshot.key;
 
-      queuedItem['formattedBody'] = InputFormatter.createTeaser(queuedItem['body'], 75);
+      queuedItem['formattedBody'] =
+          InputFormatter.createTeaser(queuedItem['body'], 75);
 
       var createdDate = queuedItem['createdDate'];
-      queuedItem['formattedCreatedDate'] = InputFormatter.formatDate(createdDate.toLocal(), direction: 'past');
+      queuedItem['formattedCreatedDate'] =
+          InputFormatter.formatDate(createdDate.toLocal(), direction: 'past');
 
-      queuedItem['comment_count'] = (queuedItem['comment_count'] != null) ? queuedItem['comment_count'] : 0;
+      queuedItem['comment_count'] = (queuedItem['comment_count'] != null)
+          ? queuedItem['comment_count']
+          : 0;
 
-      queuedItem['like_count'] = (queuedItem['like_count'] != null) ? queuedItem['like_count'] : 0;
+      queuedItem['like_count'] =
+          (queuedItem['like_count'] != null) ? queuedItem['like_count'] : 0;
 
       queuedItem['liked'] = false;
 
-
       listenForLikedState() {
         var likedItemsRef = f.child('/liked_by_user/' +
-        app.user.username.toLowerCase() +
-        '/items/' +
-        queuedItem['id']);
+            app.user.username.toLowerCase() +
+            '/items/' +
+            queuedItem['id']);
 
         var likeStream = likedItemsRef.onValue.listen((e) {
           queuedItem['liked'] = e.snapshot.val() != null;
@@ -178,9 +198,9 @@ class InlineItem extends PolymerElement with Observable {
           item['liked'] = false;
         } else {
           var likedItemsRef = f.child('/liked_by_user/' +
-          app.user.username.toLowerCase() +
-          '/items/' +
-          item['id']);
+              app.user.username.toLowerCase() +
+              '/items/' +
+              item['id']);
 
           userSubscriptions.add(likedItemsRef.onValue.listen((e) {
             item['liked'] = e.snapshot.val() != null;
@@ -194,9 +214,13 @@ class InlineItem extends PolymerElement with Observable {
 
   // Unused. No stars at the moment.
   void toggleStar() {
-    if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
+    if (app.user == null) return app.showMessage(
+        "Kindly sign in first.", "important");
 
-    var starredItemRef = f.child('/starred_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
+    var starredItemRef = f.child('/starred_by_user/' +
+        app.user.username.toLowerCase() +
+        '/items/' +
+        item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['starred']) {
@@ -216,7 +240,12 @@ class InlineItem extends PolymerElement with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
+      f
+          .child('/users_who_starred/item/' +
+              item['id'] +
+              '/' +
+              app.user.username.toLowerCase())
+          .remove();
     } else {
       // If it's not starred, time to star it.
       item['starred'] = true;
@@ -234,14 +263,23 @@ class InlineItem extends PolymerElement with Observable {
       });
 
       // Update the list of users who starred.
-      f.child('/users_who_starred/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
+      f
+          .child('/users_who_starred/item/' +
+              item['id'] +
+              '/' +
+              app.user.username.toLowerCase())
+          .set(true);
     }
   }
 
   void toggleLike() {
-    if (app.user == null) return app.showMessage("Kindly sign in first.", "important");
+    if (app.user == null) return app.showMessage(
+        "Kindly sign in first.", "important");
 
-    var likedItemRef = f.child('/liked_by_user/' + app.user.username.toLowerCase() + '/items/' + item['id']);
+    var likedItemRef = f.child('/liked_by_user/' +
+        app.user.username.toLowerCase() +
+        '/items/' +
+        item['id']);
     var itemRef = f.child('/items/' + item['id']);
 
     if (item['liked']) {
@@ -261,7 +299,12 @@ class InlineItem extends PolymerElement with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).remove();
+      f
+          .child('/users_who_liked/item/' +
+              item['id'] +
+              '/' +
+              app.user.username.toLowerCase())
+          .remove();
     } else {
       // If it's not liked, time to like it.
       item['liked'] = true;
@@ -280,19 +323,28 @@ class InlineItem extends PolymerElement with Observable {
       });
 
       // Update the list of users who liked.
-      f.child('/users_who_liked/item/' + item['id'] + '/' + app.user.username.toLowerCase()).set(true);
+      f
+          .child('/users_who_liked/item/' +
+              item['id'] +
+              '/' +
+              app.user.username.toLowerCase())
+          .set(true);
     }
   }
 
   /**
    * Format the given string with "a" or "an" or none.
    */
-  formatWordArticle(String content) => InputFormatter.formatWordArticle(content);
+  formatWordArticle(String content) =>
+      InputFormatter.formatWordArticle(content);
 
-  formatItemDate(DateTime value) => InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
+  formatItemDate(DateTime value) =>
+      InputFormatter.formatMomentDate(value, short: true, momentsAgo: true);
 
   // TODO: Bring back endDate, currently null.
-  formatEventDate(DateTime startDate) => InputFormatter.formatDate(startDate.toLocal(), showHappenedPrefix: true, trimPast: true);
+  formatEventDate(DateTime startDate) =>
+      InputFormatter.formatDate(startDate.toLocal(),
+          showHappenedPrefix: true, trimPast: true);
 
   stopProp(Event e) => e.stopPropagation();
 
