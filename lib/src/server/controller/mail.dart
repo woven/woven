@@ -359,7 +359,7 @@ http://woven.co
     var checkForExistingEmail = await Firebase
         .get('/email_index/${encodeFirebaseKey(data['email'])}.json');
     if (checkForExistingEmail != null) return respond(Response.fromError(
-        'There\'s already an account associated with that email address. Perhaps you sign in with Facebook?'));
+        'There\'s already an account associated with that email address.'));
 
     // Kill any existing session if the user signs up again.
 //    app.sessionManager.deleteCookie(request);
