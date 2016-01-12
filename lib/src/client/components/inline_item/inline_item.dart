@@ -111,6 +111,7 @@ class InlineItem extends PolymerElement with Observable {
       if (queuedItem['uriPreviewId'] != null) {
         var onValue = f.child('/uri_previews/${queuedItem['uriPreviewId']}').onValue.listen((e) {
           var previewData = e.snapshot.val();
+          if (previewData == null) return;
           UriPreview preview = UriPreview.fromJson(previewData);
           queuedItem['uriPreview'] = preview.toJson();
           queuedItem['uriPreview']['imageSmallLocation'] = (queuedItem['uriPreview']['imageSmallLocation'] != null) ? '${app.cloudStoragePath}/${queuedItem['uriPreview']['imageSmallLocation']}' : null;
@@ -128,6 +129,7 @@ class InlineItem extends PolymerElement with Observable {
       // Format the URL for display.
       if (queuedItem['url'] != null) {
         String uriHost = Uri.parse(queuedItem['url']).host;
+        if (uriHost.isEmpty) return;
         String uriHostShortened = uriHost.substring(uriHost.toString().lastIndexOf(".", uriHost.toString().lastIndexOf(".") - 1) + 1);
         queuedItem['uriHost'] = uriHostShortened;
       }
