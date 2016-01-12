@@ -88,6 +88,17 @@ class App extends Observable {
 
     await app.startRouter();
 
+
+    print('''
+
+8b      db      d8  ,adPPYba,  8b       d8  ,adPPYba,  8b,dPPYba,
+`8b    d88b    d8' a8"     "8a `8b     d8' a8P_____88  88P'   `"8a
+ `8b  d8'`8b  d8'  8b       d8  `8b   d8'  8PP"""""""  88       88
+  `8bd8'  `8bd8'   "8a,   ,a8"   `8b,d8'   "8b,        88       88
+    YP      YP      `"YbbdP"'      "8"      `"Ybbd88"  88       88
+
+    ''');
+
     return app;
   }
 
