@@ -191,12 +191,12 @@
             <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
                    value="{{(app.user != null) ? app.user.lastName : ''}}">
           </div>
-          <template if="{{app.user.invitation == null}}">
-            <div class="field-wrapper last">
-              <input is="core-input" id="invitation-code" placeholder="Invitation code? (optional)" autocomplete="off"
-                     value="{{(app.user != null) ? app.user.lastName : ''}}">
-            </div>
-          </template>
+          <!--<template if="{{app.user.invitation == null}}">-->
+            <!--<div class="field-wrapper last">-->
+              <!--<input is="core-input" id="invitation-code" placeholder="Invitation code? (optional)" autocomplete="off"-->
+                     <!--value="{{(app.user != null) ? app.user.lastName : ''}}">-->
+            <!--</div>-->
+          <!--</template>-->
           <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
             <div id="submit" class="button" on-tap="{{signUp}}">Sign up</div>
             <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
