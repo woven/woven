@@ -78,7 +78,6 @@ class Main extends PolymerElement with Observable {
     }
 
     AddStuff addStuff = this.shadowRoot.querySelector('add-stuff');
-    print(addStuff.runtimeType);
     addStuff.toggleOverlay();
   }
 
