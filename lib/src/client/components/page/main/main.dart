@@ -88,7 +88,6 @@ class Main extends PolymerElement with Observable {
 
   toggleChannelInfo() {
     ChannelInfo channelInfo = this.shadowRoot.querySelector('channel-info');
-    print(channelInfo.runtimeType);
     channelInfo.style.backgroundColor = 'red';
     channelInfo.toggleOverlay();
   }
