@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 import '../util.dart';
+import 'package:woven/src/shared/util.dart';
 
 class ImageInfo {
   String url;
@@ -14,18 +16,27 @@ class ImageInfo {
 
   static const MINIMUM_IMAGE_SIZE = 2000;
 
+  static final Logger logger = new Logger('AtomReader');
+
 //  Map imageSizes = {};
 
   static Future<ImageInfo> parse(String url) async {
+    if (!isValidUrl(url)) return null;
+
     var imageInfo = new ImageInfo();
     var size;
 
-    var head = await http.head(url);
-    if (head.headers['content-length'] == null) {
+    var head = await http.head(url).catchError((error, stack) {
+      logger.severe('Error parsing image at URL', error, stack);
+    });
+
+    if (head == null || head.headers['content-length'] == null) {
       // See if we get content-length with a GET.
-      var get = await http.get(url);
+      var get = await http.get(url).catchError((error, stack) {
+        logger.severe('Error parsing image via get at URL', error, stack);
+      });
       if (get.headers['content-length'] == null) {
-        size = get.body.length;
+        size = get.body.length.toString();
       } else {
         size = get.headers['content-length'];
       }

@@ -45,26 +45,37 @@ class RssReader {
 
       // Parse the RSS message.
       var rssItems = [];
-      var futures = [];
+//      var futures = [];
 
       try {
         xml = parse(contents);
 
-        await Future.forEach(xml.findAllElements('item'), (XmlElement element) async {
+        await Future.forEach(xml.findAllElements('item'),
+            (XmlElement element) async {
           var image;
-          var description = element.findElements('description').single.text;
+          var description;
+
+          description = (element.findElements('description').isNotEmpty)
+              ? element.findElements('description').single.text
+              : null;
+
           if (description == null) {
-            description = element.findElements('content').single.text;
+            description = (element.findElements('content').isNotEmpty)
+                ? element.findElements('content').single.text
+                : null;
           }
+
 //          description = sharedUtil.htmlDecode(description);
 
           // Try to find images.
-          var imageMatcher =
-              new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false);
-          var matches = imageMatcher.allMatches(description).toList();
-          if (matches.length > 0) {
-            description = description.replaceAll(imageMatcher, '');
-            image = matches[0].group(1);
+          if (description != null) {
+            var imageMatcher =
+                new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false);
+            var matches = imageMatcher.allMatches(description).toList();
+            if (matches.length > 0) {
+              description = description.replaceAll(imageMatcher, '');
+              image = matches[0].group(1);
+            }
           }
 
           // We are inside one <item></item>.
@@ -72,12 +83,14 @@ class RssReader {
             ..title = element.findElements('title').single.text
             ..link = element.findElements('link').single.text
             // TODO: Bad state, handle better?
-            ..language = (element.findElements('language').length > 0)
+            ..language = (element.findElements('language') != null &&
+                    element.findElements('language').length > 0)
                 ? element.findElements('language').single.text
                 : null
             ..description = description
             ..image = image
-            ..copyright = (element.findElements('copyright').length > 0)
+            ..copyright = (element.findElements('copyright') != null &&
+                    element.findElements('copyright').length > 0)
                 ? element.findElements('copyright').single.text
                 : null;
 
@@ -88,8 +101,8 @@ class RssReader {
                 item.image = null;
               }
             }
-          } catch(error) {
-            logger.severe(error);
+          } catch (error, stack) {
+            logger.severe('Error parsing image info', error, stack);
           }
 
           // Build a list of categories (List<String>) based on the XML tree.
@@ -103,39 +116,38 @@ class RssReader {
             item.link = additionalInfoUrl;
           }
 
-          var pubDate = (element.findElements('pubDate').length > 0) ? element.findElements('pubDate').first.text : null;
+          var pubDate = (element.findElements('pubDate') != null &&
+                  element.findElements('pubDate').length > 0)
+              ? element.findElements('pubDate').first.text
+              : null;
 
           // Parse the date.
-          futures.add(util.parseDate(pubDate).then((result) {
-            if (result is DateTime) {
-              item.publicationDate = result;
-            } else {
-              // No publication date, so let's just skip this item.
-              logger.warning("No publication date for item: ${item.link}");
-              return;
-//              item.publicationDate = new DateTime.now();
-            }
-
-            // We don't want published dates to be in the future.
-            DateTime now = new DateTime.now().toUtc();
-            if (item.publicationDate.compareTo(now) == 1) item.publicationDate =
-                now;
-          }).catchError((error, stack) {
-            logger.warning('Error parsing date for RSS item', error, stack);
+          var result = await util.parseDate(pubDate);
+          if (result is DateTime) {
+            item.publicationDate = result;
+          } else {
+            // No publication date, so let's just skip this item.
+            logger.warning("No publication date for item: ${item.link}");
             return;
-          }));
+//              item.publicationDate = new DateTime.now();
+          }
 
-          if (item.title != null && item.title != '') rssItems.add(item);
+          // We don't want published dates to be in the future.
+          DateTime now = new DateTime.now().toUtc();
+          if (item.publicationDate.compareTo(now) == 1) item.publicationDate =
+              now;
+
+          if (item.title != null &&
+              item.title != '' &&
+              item.publicationDate != null) rssItems.add(item);
         });
 
-        return Future.wait(futures).then((values) {
-          logger.fine('RSS reader returned ${rssItems.length} items for $url');
-          return rssItems;
-        });
-
+        logger.fine('RSS reader returned ${rssItems.length} items for $url');
+        return rssItems;
       } catch (error, stack) {
 //        throw 'Exception during parsing of RSS feed: $error\n\n$stack';
         logger.severe('Exception during parsing of RSS feed', error, stack);
+        return new Future.value([]);
       }
     });
   }

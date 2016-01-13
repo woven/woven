@@ -44,14 +44,14 @@ class Crawler {
 
   static const int MINIMUM_IMAGE_SIZE = 2000;
 
-  final Logger logger = new Logger('Crawler');
+  static final Logger logger = new Logger('Crawler');
 
   Crawler(this.url, {this.app}) {
     url = sharedUtil.prefixHttp(url);
   }
 
   Future<ImageInfo> getBestImageFromHtml(String content) async {
-    logger.fine('Getting best image...');
+    logger.fine('Getting best image');
     List images = [];
 
     images = Crawler.findImagesAssociatedWithContent(content);
@@ -79,7 +79,8 @@ class Crawler {
     Uri uri = Uri.parse(this.url);
 
     try {
-      String contents = await http.read(uri);
+      String contents = await http.read(uri).catchError(
+          (error, stack) => logger.severe('Error crawling URL', error, stack));
 
       CrawlInfo crawlInfo = new CrawlInfo(uri: uri);
 
@@ -108,9 +109,8 @@ class Crawler {
       crawlInfo.bestImage = await getBestImageFromHtml(contents);
 
       return crawlInfo;
-    } catch (error) {
-      // TODO: throw here!
-      print('Exception in crawl():\n$error');
+    } catch (error, stack) {
+      logger.severe('Exception in crawl()', error, stack);
     }
   }
 
@@ -372,7 +372,8 @@ class Crawler {
       if (matched == false) return null;
 
       return foundUrl;
-    });
+    }).catchError(
+        (error, stack) => logger.severe("Error in findFeedUrl", error, stack));
   }
 
   static Map imageSizes = {};
@@ -507,8 +508,9 @@ class Crawler {
                     Uri.parse(foundUrl).isAbsolute == false) {
                   foundUrl = Uri.parse(url).resolve(foundUrl).toString();
                 }
-              } catch (e) {
-                print(e);
+              } catch (error, stack) {
+                logger.severe(
+                    "Could not parse URL in getLargestImage", error, stack);
               }
 
               // Check cache.
@@ -560,9 +562,8 @@ class Crawler {
                     lastMatch = foundUrl;
                   }
                 }
-              }).catchError((error) {
-                print(error);
-              });
+              }).catchError((error, stack) =>
+                  logger.severe('Error crawling URL', error, stack));
 
               futures.add(f);
             });
@@ -689,8 +690,11 @@ class Crawler {
     Document dom;
     try {
       dom = parse(contents);
-    } catch (e) {
-//      platform.logger.severe(e);
+    } catch (error, stack) {
+      logger.severe(
+          'Could not parse contents in findImagesAssociatedWithContent...',
+          error,
+          stack);
       return images;
     }
 

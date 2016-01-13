@@ -85,11 +85,12 @@ class CrawlerTask extends Task {
         }
 
         var count = 0;
-        await Future.forEach(feedItems, (FeedItem feedItem)  async {
+        await Future.forEach(feedItems, (FeedItem feedItem) async {
           var encodedKey = util.encodeFirebaseKey(feedItem.link);
           // TODO: Tell kevmoo his encodeKey() not encoding properly.
 //          print('$firebaseUrl/url_index/$encodedKey.json');
 //          print('$firebaseUrl/url_index/${encodeKey(feedItem.link)}.json');
+
           try {
             var checkIfUrlExists = await firebase
                 .get(Uri.parse('$firebaseUrl/url_index/$encodedKey.json'));
@@ -121,53 +122,70 @@ class CrawlerTask extends Task {
 
               newsItem.id = itemId;
 
-              // Visit the URL of this item and get the best image from its page.
-              var content = await http.get(feedItem.link);
-              ImageInfo imageInfo =
-                  await crawler.getBestImageFromHtml(content.body);
-
-              // Download the image locally to our temporary file.
-              File imageFile = await downloadFileTo(
-                  imageInfo.url, await createTemporaryFile(suffix: '.' + imageInfo.extension));
-
-              var imageUtil = new ImageUtil();
-              File croppedFile =
-                  await imageUtil.resize(imageFile, width: 245, height: 120);
-
-              var extension = imageInfo.extension;
-              var gsBucket = config['google']['cloudStorage']['bucket'];
-              var gsPath = 'public/images/item/$itemId';
-
-              var filename = 'main-photo.$extension';
-              var cloudStorageResponse = await app.cloudStorageUtil.uploadFile(
-                  croppedFile.path, gsBucket, '$gsPath/$filename',
-                  public: true);
-
               UriPreview uriPreview =
                   new UriPreview(uri: Uri.parse(newsItem.url));
+
               uriPreview
-                ..imageOriginalUrl = imageInfo.url
-                ..imageSmallLocation = (cloudStorageResponse.name != null)
-                    ? cloudStorageResponse.name
-                    : null
                 ..uri = Uri.parse(newsItem.url)
                 ..title = newsItem.subject
                 ..teaser =
                     InputFormatter.createIntelligentTeaser(newsItem.body);
 
-              Map uriPreviewResponse = await firebase.post(
-                  Uri.parse('$firebaseUrl/uri_previews.json'),
-                  uriPreview.toJson());
-              var uriPreviewId = uriPreviewResponse['name'];
+              // Visit the URL of this item and get the best image from its page.
+              var content = await http.get(feedItem.link);
+              ImageInfo imageInfo =
+                  await crawler.getBestImageFromHtml(content.body);
+
+              if (imageInfo != null) {
+                // Download the image locally to our temporary file.
+                File imageFile = await downloadFileTo(
+                    imageInfo.url,
+                    await createTemporaryFile(
+                        suffix: '.' + imageInfo.extension));
+
+                var imageUtil = new ImageUtil();
+                File croppedFile =
+                    await imageUtil.resize(imageFile, width: 245, height: 120);
+
+                var extension = imageInfo.extension;
+                var gsBucket = config['google']['cloudStorage']['bucket'];
+                var gsPath = 'public/images/item/$itemId';
+
+                var filename = 'main-photo.$extension';
+                var cloudStorageResponse = await app.cloudStorageUtil
+                    .uploadFile(croppedFile.path, gsBucket, '$gsPath/$filename',
+                        public: true);
+
+                uriPreview
+                  ..imageOriginalUrl = imageInfo.url
+                  ..imageSmallLocation = (cloudStorageResponse.name != null)
+                      ? cloudStorageResponse.name
+                      : null;
+
+                imageFile.delete();
+                croppedFile.delete();
+              }
+
+              Map uriPreviewResponse;
+
+              try {
+                uriPreviewResponse = await firebase.post(
+                    Uri.parse('$firebaseUrl/uri_previews.json'),
+                    uriPreview.toJson());
+              } catch (error, stack) {
+                logger.severe('Error posting preview to db', error, stack);
+              }
+
+              var uriPreviewId = uriPreviewResponse != null
+                  ? uriPreviewResponse['name']
+                  : null;
 
               Item.update(newsItem.id, {'uriPreviewId': uriPreviewId},
                   config['datastore']['firebaseSecret']);
-
-              imageFile.delete();
-              croppedFile.delete();
             }
-          } catch (e, s) {
-            print('$e\n\n$s');
+          } catch (error, stack) {
+            logger.severe(
+                'Error while processing feed item in run()', error, stack);
           }
         }).then((_) {
           if (count > 0) logger

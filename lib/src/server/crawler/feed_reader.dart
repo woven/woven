@@ -23,14 +23,10 @@ class FeedReader {
 
   // TODO: Not respecting limit?
   Future<List<FeedItem>> load({int limit: 10}) {
-//    if (!url.contains('techcrunch.com/feed')) return new Future.value([]); // TODO: Kill me.
+//    if (!url.contains('knightfoundation')) return new Future.value([]); // TODO: Kill me.
     return new Future(() async {
       var contents;
-//      try {
       contents = await util.readHttp(url);
-//      } catch(error, stack) {
-//        print('$error\n\n$stack');
-//      }
 
       if (contents == null) {
         logger.warning('Loading $url was empty');
@@ -56,14 +52,18 @@ class FeedReader {
       else {
         var reader = new RssReader(contents: contents, url: url);
         var results = await reader.getItems();
+
+        for (var result in results) {
+          var a = new FeedItem.fromRssItem(result);
+        }
         if (results == null) return new Future.value([]);
         return results.fold(
             [],
             (previous, current) =>
                 previous..add(new FeedItem.fromRssItem(current)));
       }
-    }).catchError((e) {
-      print('$e');
+    }).catchError((error, stack) {
+      logger.severe("Error loading feed items", error, stack);
       return new Future.value([]);
     });
   }
