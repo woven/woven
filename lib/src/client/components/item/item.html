@@ -29,7 +29,7 @@
               </div>
               <template if="{{item['type'] != null && item['type'] != 'event'}}">
                 <div class="item-date">
-                  <core-tooltip label="{{item['formattedCreatedDate']}}">
+                  <core-tooltip label="{{item['formattedCreatedDate']}}" disabled="{{app.isMobile ? 'true' : 'false'}}">
                     <live-date-time value="{{item['createdDate']}}" formatter="{{formatItemDate}}"></live-date-time>
                   </core-tooltip>
                 </div>
