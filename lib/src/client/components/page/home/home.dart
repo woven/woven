@@ -318,6 +318,7 @@ class Home extends PolymerElement with Observable {
     } else {
       toggleProcessingIndicator();
       window.alert(response.message);
+      password.value = '';
     }
   }
 
