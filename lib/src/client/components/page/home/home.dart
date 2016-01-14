@@ -44,10 +44,7 @@ class Home extends PolymerElement with Observable {
   showSignIn() {
     changeCta('sign-in');
 
-    Timer.run(() {
-      InputElement username = querySelector('#username');
-      if (!app.isMobile) username.autofocus = true;
-    });
+//    if (!app.isMobile) username.autofocus = true;
   }
 
   showSignUp() => changeCta('sign-up');
