@@ -195,8 +195,7 @@ class UserController {
     var password = data['password'];
 
     if (!(await isValidLogin(username, password))) return respond(
-        Response.fromError('We don\'t recognize you. Try again.'),
-        statusCode: 403);
+        Response.fromError('We don\'t recognize you. Try again.'));
 
 //    if (!(await isDisabledUser(username))) return respond(Response.fromError('You don\'t have access yet.\n\nWant to talk about it? hello@woven.co'), statusCode: 403);
 
