@@ -47,7 +47,7 @@ core-icon.action {
   cursor: pointer;
 }
 
-core-icon:hover {
+core-icon.hover:hover {
   color: #ccc;
 }
 

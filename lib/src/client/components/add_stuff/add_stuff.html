@@ -5,9 +5,9 @@
                   autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}"
                   on-core-overlay-open-completed="{{handleOpen}}">
       <div class="toolbar" layout horizontal>
-        <core-icon-button icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
+        <core-icon-button class="{{(app.isNotMobile) ? 'hover' : ''}}" icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
         <div flex>Add Stuff</div>
-        <core-icon-button icon="send" on-tap="{{addItem}}" class="action"></core-icon-button>
+        <core-icon-button class="{{(app.isNotMobile) ? 'hover' : ''}}" icon="send" on-tap="{{addItem}}" class="action"></core-icon-button>
       </div>
       <div id="container">
         <div id="post-container">

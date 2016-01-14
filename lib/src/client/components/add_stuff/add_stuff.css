@@ -52,7 +52,7 @@ core-icon-button.action {
   background-color: transparent;
 }
 
-core-icon-button:hover {
+core-icon-button.hover:hover {
   color: #ccc;
 }
 
@@ -166,7 +166,7 @@ button.primary:hover {
   cursor: pointer;
 }
 
-button:hover {
+button.hover:hover {
   background-color: #f8f8f2;
   cursor: pointer;
 }
