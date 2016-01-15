@@ -118,7 +118,7 @@
     </template>
 
     <template if="{{app.homePageCta == 'sign-in'}}">
-      <!--<div class="simple-content" layout vertical center>-->
+      <div class="simple-content">
         <h2>Please sign in.</h2>
         <div class="form" self-center>
           <div class="field-wrapper first">
@@ -129,32 +129,10 @@
             <input id="password" is="core-input" type="password" placeholder="Password"
                    autocomplete="off" autocorrect="off" autocapitalize="off">
           </div>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
-          <p>wffwfwf</p>
           <div id="submit" class="button" on-tap="{{signIn}}">Sign in</div>
           <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signIn}}"></core-a11y-keys>
         </div>
-      <!--</div>-->
+      </div>
     </template>
 
     <template if="{{app.homePageCta == 'get-started-note'}}">
