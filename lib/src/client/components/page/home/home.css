@@ -273,8 +273,9 @@ footer a:hover {
   height: 40px;
   padding: 0;
   border-radius: 3px;
+  margin-right: 5px;
   background: white;
-  margin: 10px auto;
+  margin-bottom: 10px;
 }
 
 .form input[is="core-input"] {
@@ -296,7 +297,6 @@ footer a:hover {
   cursor: pointer;
   font-weight: 600;
   background: #00a104;
-  margin: auto;
   /*transition: background-color .1s, color .1s;*/
 }
 
@@ -308,7 +308,7 @@ footer a:hover {
 
 .form p {
   font-size: 18px;
-  margin: 10px auto;
+  margin: 10px;
   text-align: center;
 }
 
@@ -375,9 +375,6 @@ footer a:hover {
 
   .simple-content h2 {
     font-size: 30px;
+    max-width: 250px;
   }
-
-  /*.simple-content h2 {*/
-    /*max-width: 250px;*/
-  /*}*/
 }
