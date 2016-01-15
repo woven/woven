@@ -346,7 +346,9 @@ class Home extends PolymerElement with Observable {
   attached() {
     if (app.debugMode) print('+Home');
 
-    if (app.isMobile) document.body.style.minHeight = '100vh';
+    if (app.isMobile) {
+      this.querySelector('.page-wrapper').style.minHeight = '100vh';
+    }
 
     document.body.classes.add('colored-bg');
     toggleMain();
