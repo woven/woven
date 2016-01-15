@@ -274,7 +274,6 @@ footer a:hover {
   padding: 0;
   border-radius: 3px;
   background: white;
-  margin: auto;
   /*margin: 10px auto;*/
 }
 
@@ -283,6 +282,7 @@ footer a:hover {
   background: transparent;
   font-size: 18px;
   margin-left: 10px;
+  width: 100%;
 }
 
 .form .field-wrapper, .get-started input[is="core-input"] {
