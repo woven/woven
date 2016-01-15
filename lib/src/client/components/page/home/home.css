@@ -297,6 +297,7 @@ footer a:hover {
   cursor: pointer;
   font-weight: 600;
   background: #00a104;
+  margin: auto;
   /*transition: background-color .1s, color .1s;*/
 }
 
