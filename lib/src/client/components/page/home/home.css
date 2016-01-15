@@ -1,7 +1,7 @@
 .simple-content h2 {
   font-size: 25px;
   font-weight: normal;
-  margin: 40px 0 0 0;
+  margin: 40px auto;
   text-align: center;
 }
 
@@ -375,6 +375,7 @@ footer a:hover {
 
   .simple-content h2 {
     font-size: 30px;
+    max-width: 250px;
   }
 
   /*.simple-content h2 {*/
