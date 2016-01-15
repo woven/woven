@@ -1,256 +1,254 @@
 <polymer-element name="x-home">
   <template>
     <link rel="stylesheet" href="home.css">
-    <div class="page-wrapper">
-      <header class="header">
-        <div horizontal layout>
-          <div>
-            <a on-tap="{{showSignUp}}">
-              <img src="/static/images/woven_logo_solo_35.png" class="logo" alt="Woven" />
-            </a>
-          </div>
-          <div flex>
-
-          </div>
-          <div>
-            <!--<template if="{{app.homePageCta == 'sign-up'}}">-->
-              <div class="button" on-tap="{{showSignIn}}">
-                Sign in
-              </div>
-            <!--</template>-->
-          </div>
+    <header class="header">
+      <div horizontal layout>
+        <div>
+          <a on-tap="{{showSignUp}}">
+            <img src="/static/images/woven_logo_solo_35.png" class="logo" alt="Woven" />
+          </a>
         </div>
-      </header>
+        <div flex>
 
-      <template if="{{app.homePageCta == 'sign-up'}}">
-
-        <div class="heading">
-          <h1>Channels for your passions</h1>
-          <h2>Tap into what matters with others who care.</h2>
         </div>
-
-        <div class="get-started">
-          <div horizontal layout center-center>
-            <div class="field-wrapper">
-              <input id="email" is="core-input" placeholder="Your email"
-                       autocomplete="off" autocorrect="off" autocapitalize="off">
+        <div>
+          <template if="{{app.homePageCta == 'sign-up'}}">
+            <div class="button" on-tap="{{showSignIn}}">
+              Sign in
             </div>
-            <div id="submit" class="button" on-tap="{{getStarted}}">Join now</div>
-            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{getStarted}}"></core-a11y-keys>
-          </div>
-          <p>Woven is free to use – forever, and with no limits.</p>
+          </template>
         </div>
+      </div>
+    </header>
 
-        <section class="feature-area">
-          <div class="feature-row first" layout horizontal>
-            <div class="feature first">
-              <h3>Discuss what's hot.</h3>
-              <p>Every channel has a Lobby, the place to connect with others about what's happening right now.</p>
-            </div>
-            <div class="feature">
-              <h3>Discover what matters.</h3>
-              <p>Anyone can share,
-                but everyone decides what matters
-                most, so you can cut through the noise.</p>
-            </div>
-          </div>
-          <div class="feature-row" layout horizontal>
-            <div class="feature first">
-              <h3>Subscribe for the best.</h3>
-              <p>Get an email digest of the top
-                activity in your favorite channels,
-                exactly when you want it.</p>
-            </div>
-            <div class="feature">
-              <h3>Join, don't follow.</h3>
-              <p>There's no need to figure out who to follow on Woven. Join channels to instantly tap into communities.</p>
-            </div>
-          </div>
-        </section>
+    <template if="{{app.homePageCta == 'sign-up'}}">
 
-        <section class="channels" hidden>
-          <!--<h2>Featured Channels</h2>-->
-          <div horizontal layout center-center wrap>
-            <div class="channel" vertical layout>
-              <div class="picture"></div>
-              <div class="content">
-                <h3>Wynwood</h3>
-                <p>Talk and share as a community.</p>
-              </div>
-            </div>
-            <div class="channel" vertical layout>
-              <div class="picture"></div>
-              <div class="content">
-                <h3>Wynwood</h3>
-                <p>Talk and share as a community.</p>
-              </div>
-            </div>
-            <div class="channel" vertical layout>
-              <div class="picture"></div>
-              <div class="content">
-                <h3>Wynwood</h3>
-                <p>Talk and share as a community.</p>
-              </div>
-            </div>
-            <div class="channel" vertical layout>
-              <div class="picture"></div>
-              <div class="content">
-                <h3>Wynwood</h3>
-                <p>Talk and share as a community.</p>
-              </div>
-            </div>
-            <div class="channel" vertical layout>
-              <div class="picture"></div>
-              <div class="content">
-                <h3>Wynwood</h3>
-                <p>Talk and share as a community.</p>
-              </div>
-            </div>
-            <div class="channel" vertical layout>
-              <div class="picture"></div>
-              <div class="content">
-                <h3>Wynwood</h3>
-                <p>Talk and share as a community.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+      <div class="heading">
+        <h1>Channels for your passions</h1>
+        <h2>Tap into what matters with others who care.</h2>
+      </div>
 
-      </template>
-
-      <template if="{{app.homePageCta == 'sign-in'}}">
-        <div class="simple-content" layout vertical center>
-          <h2>Please sign in.</h2>
-          <div class="form" self-center>
-            <div class="field-wrapper first">
-              <input id="username" is="core-input" placeholder="Username"
+      <div class="get-started">
+        <div horizontal layout center-center>
+          <div class="field-wrapper">
+            <input id="email" is="core-input" placeholder="Your email"
                      autocomplete="off" autocorrect="off" autocapitalize="off">
-            </div>
-            <div class="field-wrapper">
-              <input id="password" is="core-input" type="password" placeholder="Password"
-                     autocomplete="off" autocorrect="off" autocapitalize="off">
-            </div>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <p>wffwfwf</p>
-            <div id="submit" class="button" on-tap="{{signIn}}">Sign in</div>
-            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signIn}}"></core-a11y-keys>
+          </div>
+          <div id="submit" class="button" on-tap="{{getStarted}}">Join now</div>
+          <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{getStarted}}"></core-a11y-keys>
+        </div>
+        <p>Woven is free to use – forever, and with no limits.</p>
+      </div>
+
+      <section class="feature-area">
+        <div class="feature-row first" layout horizontal>
+          <div class="feature first">
+            <h3>Discuss what's hot.</h3>
+            <p>Every channel has a Lobby, the place to connect with others about what's happening right now.</p>
+          </div>
+          <div class="feature">
+            <h3>Discover what matters.</h3>
+            <p>Anyone can share,
+              but everyone decides what matters
+              most, so you can cut through the noise.</p>
           </div>
         </div>
-      </template>
-
-      <template if="{{app.homePageCta == 'get-started-note'}}">
-        <div class="simple-content" layout vertical center-center>
-          <h2 class="first">Check your email...</h2>
-          <p>Please follow the link we just sent you.</p>
+        <div class="feature-row" layout horizontal>
+          <div class="feature first">
+            <h3>Subscribe for the best.</h3>
+            <p>Get an email digest of the top
+              activity in your favorite channels,
+              exactly when you want it.</p>
+          </div>
+          <div class="feature">
+            <h3>Join, don't follow.</h3>
+            <p>There's no need to figure out who to follow on Woven. Join channels to instantly tap into communities.</p>
+          </div>
         </div>
-      </template>
+      </section>
 
-      <template if="{{app.homePageCta == 'sign-up-note'}}">
-        <div class="simple-content" layout vertical center-center>
-          <h2>Look out for an invitation...</h2>
-          <p>
-            You've signed up and reserved your username. Your account is disabled for the moment.
-          </p>
+      <section class="channels" hidden>
+        <!--<h2>Featured Channels</h2>-->
+        <div horizontal layout center-center wrap>
+          <div class="channel" vertical layout>
+            <div class="picture"></div>
+            <div class="content">
+              <h3>Wynwood</h3>
+              <p>Talk and share as a community.</p>
+            </div>
+          </div>
+          <div class="channel" vertical layout>
+            <div class="picture"></div>
+            <div class="content">
+              <h3>Wynwood</h3>
+              <p>Talk and share as a community.</p>
+            </div>
+          </div>
+          <div class="channel" vertical layout>
+            <div class="picture"></div>
+            <div class="content">
+              <h3>Wynwood</h3>
+              <p>Talk and share as a community.</p>
+            </div>
+          </div>
+          <div class="channel" vertical layout>
+            <div class="picture"></div>
+            <div class="content">
+              <h3>Wynwood</h3>
+              <p>Talk and share as a community.</p>
+            </div>
+          </div>
+          <div class="channel" vertical layout>
+            <div class="picture"></div>
+            <div class="content">
+              <h3>Wynwood</h3>
+              <p>Talk and share as a community.</p>
+            </div>
+          </div>
+          <div class="channel" vertical layout>
+            <div class="picture"></div>
+            <div class="content">
+              <h3>Wynwood</h3>
+              <p>Talk and share as a community.</p>
+            </div>
+          </div>
         </div>
-      </template>
+      </section>
 
-      <template if="{{app.homePageCta == 'complete-sign-up'}}">
-        <div class="simple-content" layout vertical center-center>
+    </template>
+
+    <template if="{{app.homePageCta == 'sign-in'}}">
+      <!--<div class="simple-content" layout vertical center>-->
+        <!--<h2>Please sign in.</h2>-->
+        <!--<div class="form" self-center>-->
+          <!--<div class="field-wrapper first">-->
+            <!--<input id="username" is="core-input" placeholder="Username"-->
+                   <!--autocomplete="off" autocorrect="off" autocapitalize="off">-->
+          <!--</div>-->
+          <!--<div class="field-wrapper">-->
+            <!--<input id="password" is="core-input" type="password" placeholder="Password"-->
+                   <!--autocomplete="off" autocorrect="off" autocapitalize="off">-->
+          <!--</div>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<p>wffwfwf</p>-->
+          <!--<div id="submit" class="button" on-tap="{{signIn}}">Sign in</div>-->
+          <!--<core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signIn}}"></core-a11y-keys>-->
+        <!--</div>-->
+      <!--</div>-->
+    </template>
+
+    <template if="{{app.homePageCta == 'get-started-note'}}">
+      <div class="simple-content" layout vertical center-center>
+        <h2 class="first">Check your email...</h2>
+        <p>Please follow the link we just sent you.</p>
+      </div>
+    </template>
+
+    <template if="{{app.homePageCta == 'sign-up-note'}}">
+      <div class="simple-content" layout vertical center-center>
+        <h2>Look out for an invitation...</h2>
+        <p>
+          You've signed up and reserved your username. Your account is disabled for the moment.
+        </p>
+      </div>
+    </template>
+
+    <template if="{{app.homePageCta == 'complete-sign-up'}}">
+      <div class="simple-content" layout vertical center-center>
+        <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+          <h2>Please complete your sign up.</h2>
+        </template>
+        <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
+          <h2>Please update your account.</h2>
+          <p>We're missing some pertinent details.</p>
+        </template>
+
+        <div class="form" self-center>
+          <div class="field-wrapper first">
+            <template if="{{app.user != null && app.user.email != null}}">
+              <input is="core-input" id="email" placeholder="Your email"
+                     autocomplete="off" autocorrect="off" autocapitalize="off"
+                     value="{{(app.user != null) ? app.user.email : ''}}" disabled>
+            </template>
+            <template if="{{app.user == null || (app.user != null && app.user.email == null)}}">
+              <input is="core-input" id="email" placeholder="Your email"
+                     autocomplete="off" autocorrect="off" autocapitalize="off"
+                     value="{{(app.user != null) ? app.user.email : ''}}">
+            </template>
+          </div>
+          <div class="field-wrapper">
+            <input is="core-input" id="username" placeholder="Choose a username"
+                   autocomplete="off" autocorrect="off" autocapitalize="off"
+                   value="{{(app.user != null && !app.user.disabled) ? app.user.username.toLowerCase() : ''}}">
+          </div>
+          <div class="field-wrapper">
+            <input is="core-input" id="password" placeholder="Choose a password"
+                   autocomplete="off" autocorrect="off" autocapitalize="off" type="password">
+          </div>
+          <div class="field-wrapper">
+            <input is="core-input" id="firstname" placeholder="Your first name" autocomplete="off"
+                   value="{{(app.user != null) ? app.user.firstName : ''}}">
+          </div>
+          <div class="field-wrapper {{app.user.invitation != null ? 'last' : ''}}">
+            <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
+                   value="{{(app.user != null) ? app.user.lastName : ''}}">
+          </div>
+          <!--<template if="{{app.user.invitation == null}}">-->
+            <!--<div class="field-wrapper last">-->
+              <!--<input is="core-input" id="invitation-code" placeholder="Invitation code? (optional)" autocomplete="off"-->
+                     <!--value="{{(app.user != null) ? app.user.lastName : ''}}">-->
+            <!--</div>-->
+          <!--</template>-->
           <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-            <h2>Please complete your sign up.</h2>
+            <div id="submit" class="button" on-tap="{{signUp}}">Sign up</div>
+            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
           </template>
           <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-            <h2>Please update your account.</h2>
-            <p>We're missing some pertinent details.</p>
+            <div id="submit" class="button" on-tap="{{updateExistingUser}}">Continue &#8594;</div>
+            <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
           </template>
+        </div>
+      </div>
+    </template>
 
-          <div class="form" self-center>
-            <div class="field-wrapper first">
-              <template if="{{app.user != null && app.user.email != null}}">
-                <input is="core-input" id="email" placeholder="Your email"
-                       autocomplete="off" autocorrect="off" autocapitalize="off"
-                       value="{{(app.user != null) ? app.user.email : ''}}" disabled>
-              </template>
-              <template if="{{app.user == null || (app.user != null && app.user.email == null)}}">
-                <input is="core-input" id="email" placeholder="Your email"
-                       autocomplete="off" autocorrect="off" autocapitalize="off"
-                       value="{{(app.user != null) ? app.user.email : ''}}">
-              </template>
-            </div>
-            <div class="field-wrapper">
-              <input is="core-input" id="username" placeholder="Choose a username"
-                     autocomplete="off" autocorrect="off" autocapitalize="off"
-                     value="{{(app.user != null && !app.user.disabled) ? app.user.username.toLowerCase() : ''}}">
-            </div>
-            <div class="field-wrapper">
-              <input is="core-input" id="password" placeholder="Choose a password"
-                     autocomplete="off" autocorrect="off" autocapitalize="off" type="password">
-            </div>
-            <div class="field-wrapper">
-              <input is="core-input" id="firstname" placeholder="Your first name" autocomplete="off"
-                     value="{{(app.user != null) ? app.user.firstName : ''}}">
-            </div>
-            <div class="field-wrapper {{app.user.invitation != null ? 'last' : ''}}">
-              <input is="core-input" id="lastname" placeholder="Your last name" autocomplete="off"
-                     value="{{(app.user != null) ? app.user.lastName : ''}}">
-            </div>
-            <!--<template if="{{app.user.invitation == null}}">-->
-              <!--<div class="field-wrapper last">-->
-                <!--<input is="core-input" id="invitation-code" placeholder="Invitation code? (optional)" autocomplete="off"-->
-                       <!--value="{{(app.user != null) ? app.user.lastName : ''}}">-->
-              <!--</div>-->
-            <!--</template>-->
-            <template if="{{!(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-              <div id="submit" class="button" on-tap="{{signUp}}">Sign up</div>
-              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{signUp}}"></core-a11y-keys>
-            </template>
-            <template if="{{(app.user != null && app.user.onboardingState == 'signUpIncomplete')}}">
-              <div id="submit" class="button" on-tap="{{updateExistingUser}}">Continue &#8594;</div>
-              <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{updateExistingUser}}"></core-a11y-keys>
-            </template>
+
+    <template if="{{app.homePageCta == 'sign-up'}}">
+      <footer>
+        <div layout horizontal>
+          <div class="column first">
+            <ul>
+              <li>hello@woven.co</li>
+              <li><a href="http://twitter.com/wovenco" target="_blank">@WovenCo</a></li>
+            </ul>
+          </div>
+          <div class="column last">
+            <ul>
+              <li><a href="http://github.com/woven/tracker" target="_blank">Issues &amp; Roadmap</a></li>
+            </ul>
           </div>
         </div>
-      </template>
-
-
-      <template if="{{app.homePageCta == 'sign-up'}}">
-        <footer>
-          <div layout horizontal>
-            <div class="column first">
-              <ul>
-                <li>hello@woven.co</li>
-                <li><a href="http://twitter.com/wovenco" target="_blank">@WovenCo</a></li>
-              </ul>
-            </div>
-            <div class="column last">
-              <ul>
-                <li><a href="http://github.com/woven/tracker" target="_blank">Issues &amp; Roadmap</a></li>
-              </ul>
-            </div>
-          </div>
-        </footer>
-      </template>
-    </div>
+      </footer>
+    </template>
 
   </template>
   <script type="application/dart" src="home.dart"></script>
