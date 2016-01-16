@@ -23,9 +23,29 @@
 
         <core-icon class="icon add last {{(app.isNotMobile) ? 'hover' : ''}}" icon="add-circle-outline" on-tap="{{toggleAddStuff}}" size=""></core-icon>
 
-        <user-picture relative on-tap="{{signOut}}" id="user-picture"
+        <user-picture relative on-tap="{{toggleUserMenu}}" id="user-picture"
                       class="user-picture" app="{{app}}" size="30" username="{{app.user.username.toLowerCase()}}">
         </user-picture>
+        <x-dropdown class="user-menu">
+          <div class="menu">
+            <!--<div class="menu-item">-->
+            <!--<core-icon class="icon" icon="settings"></core-icon>-->
+            <!--Settings-->
+            <!--</div>-->
+            <template if="{{app.user == null}}">
+              <div class="menu-item" on-tap="{{toggleSignIn}}">
+                <!--<core-icon class="icon" icon="none"></core-icon>-->
+                Sign in
+              </div>
+            </template>
+            <template if="{{app.user != null}}">
+              <div class="menu-item" on-tap="{{signOut}}">
+                <!--<core-icon class="icon" icon="none"></core-icon>-->
+                Sign out
+              </div>
+            </template>
+          </div>
+        </x-dropdown>
       </div>
     </div>
 

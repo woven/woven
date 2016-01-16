@@ -1,0 +1,11 @@
+:host {
+  position: absolute;
+  display: none;
+  top: 50px;
+  right: 12px;
+  width: 100px;
+  background: white;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+

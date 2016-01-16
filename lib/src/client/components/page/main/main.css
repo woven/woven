@@ -116,11 +116,10 @@ body {
   margin-right: 12px;
 }
 
-
-
 .header .toolbar .user-picture {
   margin-top: 10px;
   margin-right: 12px;
+  cursor: pointer;
 }
 
 .left .menu {
@@ -139,6 +138,26 @@ body {
 
 .theme-dark .left {
   background-color: rgba(14, 14, 14, 0.9);
+}
+
+.user-menu .menu-item .icon {
+  height: 18px;
+  top: -1px;
+  color: lightslategray;
+}
+
+.user-menu .menu-item {
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+  font-weight: 400;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.user-menu .menu-item:hover {
+  background: rgb(240, 240, 240);
+  color: #000;
 }
 
 .chat-box {

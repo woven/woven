@@ -1,4 +1,5 @@
 @HtmlImport('main.html')
+
 library client.components.page.app;
 
 import 'dart:html';
@@ -9,6 +10,7 @@ import 'package:polymer/polymer.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/components/channel_info/channel_info.dart';
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
+import 'package:woven/src/client/components/widgets/dropdown/dropdown.dart';
 
 @CustomTag('x-main')
 class Main extends PolymerElement with Observable {
@@ -19,6 +21,9 @@ class Main extends PolymerElement with Observable {
 
   static Element get mainElement =>
       document.querySelector('woven-app').shadowRoot.querySelector('x-main');
+
+  static XDropdown get userMenu =>
+      mainElement.shadowRoot.querySelector('.user-menu');
 
   Main.created() : super.created() {}
 
@@ -51,12 +56,6 @@ class Main extends PolymerElement with Observable {
 
   signOut() => app.signOut();
 
-  toggleMenu(Event e) {
-    var dropdown = (e.target as HtmlElement).querySelector('core-dropdown')
-        as CoreDropdown;
-    if (dropdown != null) dropdown.toggle();
-  }
-
   // Toggle the drawer panel.
   togglePanel() {
 //    DivElement panel = this.shadowRoot.querySelector('.left');
@@ -82,6 +81,13 @@ class Main extends PolymerElement with Observable {
   // Toggle the sign in dialog.
   toggleSignIn() {
     app.toggleSignIn();
+  }
+
+  toggleUserMenu(Event e) {
+    print('toggleUserMenu: ${e.target}');
+    e.preventDefault();
+    e.stopPropagation();
+    userMenu.open();
   }
 
   toggleChannelInfo() {
