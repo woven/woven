@@ -52,6 +52,7 @@ core-dropdown {
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
   /*transition: background-color .8s;*/
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .theme-dark.header .toolbar {
@@ -202,6 +203,7 @@ core-pages {
   width: 250px;
   border-right: solid 1px #DEDEDE;
   z-index: 3;
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .theme-dark .left {
