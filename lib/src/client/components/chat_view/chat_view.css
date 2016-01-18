@@ -4,6 +4,10 @@
   padding-top: 50px;
 }
 
+.theme-dark .main-area {
+  background-color: rgba(34, 34, 34, 0.9);
+}
+
 .footer-area {
   /*position: fixed;*/
   /*width: 100%;*/

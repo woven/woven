@@ -2,7 +2,7 @@
   <template>
     <link rel="stylesheet" href="main.css">
 
-    <div class="header">
+    <div class="header {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}">
       <div class="toolbar" layout horizontal>
         <core-icon class="icon menu first {{(app.isNotMobile) ? 'hover' : ''}}" icon="menu"></core-icon>
 
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div class="main-area" layout horizontal>
+    <div class="main-area {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}" layout horizontal>
       <div class="left">
         <div class="content">
           <template if="{{app.community != null}}">
