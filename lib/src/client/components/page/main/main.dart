@@ -6,6 +6,7 @@ import 'dart:html';
 import 'dart:async';
 
 import 'package:polymer/polymer.dart';
+import 'package:core_elements/core_dropdown.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/components/channel_info/channel_info.dart';
@@ -24,6 +25,14 @@ class Main extends PolymerElement with Observable {
 
   static XDropdown get userMenu =>
       mainElement.shadowRoot.querySelector('.user-menu');
+
+  toggle(Event e) {
+    print(e.target);
+    var dropdown = (e.target as HtmlElement)
+        .querySelector('core-dropdown') as CoreDropdown;
+    print(dropdown);
+    if (dropdown != null) dropdown.toggle();
+  }
 
   Main.created() : super.created() {}
 

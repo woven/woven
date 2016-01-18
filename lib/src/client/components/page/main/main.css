@@ -15,11 +15,20 @@ body {
   /*font-size: 16px;*/
 /*}*/
 
+
+core-dropdown {
+  background-color: #eee;
+  color: #000;
+  border-radius: 0;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
 .with-margin {
   margin: 12px;
 }
+
 .in-toolbar {
-  top: 50px;
+  top: 40px;
 }
 
 .header .toolbar {
@@ -156,8 +165,8 @@ body {
 }
 
 .user-menu .menu-item:hover {
-  background: rgb(240, 240, 240);
-  color: #000;
+  background: rgb(49, 111, 188);
+  color: #fff;
 }
 
 .chat-box {
