@@ -31,6 +31,8 @@ dependencies:
   image: "^1.1.25"
 dependency_overrides:
   web_components: "^0.12.0+3"
+  core_elements:
+    git: https://github.com/woven/core-elements
 #  firebase:
 #    git: https://github.com/davenotik/firebase-dart.git
 transformers:
