@@ -7,14 +7,14 @@ core-overlay {
   -webkit-user-select: none;
   -moz-user-select: none;
   overflow: hidden;
-  background: white;
-  max-height: 1000px;
+  max-height: 1200px;
   max-width: 1000px;
   width: 400px;
   bottom: 0;
   right: 10px;
   position: absolute;
   box-shadow: 0 0 8px 0 rgba(0,0,0,.15);
+  background-color: white;
 }
 
 @media all and (max-width: 600px)  {
@@ -28,32 +28,46 @@ core-overlay {
     left: 0;
   }
   core-overlay #container {
+    background: white;
     position: relative;
     /*overflow: scroll;*/
-    background-color: white;
   }
 }
 
 .dialog .toolbar {
-  background-color: rgb(39, 39, 39);
+  background-color: rgb(47, 163, 0);
   color: white;
-  text-align: center;
   align-content: center;
   width: 100%;
-  z-index: 23;
   top: 0;
   display: block;
   height: 50px;
-  font-size: 18px;
-  align-items: center;
+  font-size: 17px;
+  font-weight: 500;
+  text-align: center;
 }
 
-core-icon-button.action {
-  background-color: transparent;
+.dialog .toolbar .content {
+  margin-left: 15px;
+  margin-right: 10px;
+  height: 100%;
 }
 
-core-icon-button.hover:hover {
-  color: #ccc;
+.dialog .toolbar core-icon {
+  width: 20px;
+}
+
+
+core-icon.action {
+  cursor: pointer;
+}
+
+core-icon.close {
+  color: #888;
+}
+
+core-icon.hover:hover {
+  color: #ddd;
 }
 
 .field-wrapper core-icon {

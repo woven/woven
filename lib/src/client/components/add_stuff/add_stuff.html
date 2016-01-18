@@ -4,10 +4,13 @@
     <core-overlay id="overlay" class="dialog" opened="{{opened}}" transition="core-transition-bottom"
                   autoclosedisabled="true" autofocusdisabled="{{(app.isMobile) ? true : false}}"
                   on-core-overlay-open-completed="{{handleOpen}}">
-      <div class="toolbar" layout horizontal>
-        <core-icon-button class="{{(app.isNotMobile) ? 'hover' : ''}}" icon="close" on-tap="{{toggleOverlay}}"></core-icon-button>
-        <div flex>Add Stuff</div>
-        <core-icon-button class="action {{(app.isNotMobile) ? 'hover' : ''}}" icon="send" on-tap="{{addItem}}"></core-icon-button>
+
+      <div class="toolbar">
+        <div class="content" layout horizontal center>
+          <core-icon class="action {{(app.isNotMobile) ? 'hover' : ''}}" icon="close" on-tap="{{toggleOverlay}}"></core-icon>
+          <div flex center-justified>Add Stuff</div>
+          <core-icon class="action {{(app.isNotMobile) ? 'hover' : ''}}" icon="send" on-tap="{{addItem}}"></core-icon>
+        </div>
       </div>
       <div id="container">
         <div id="post-container">
