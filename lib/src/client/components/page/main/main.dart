@@ -7,6 +7,8 @@ import 'dart:async';
 
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_dropdown.dart';
+import 'package:core_elements/core_menu.dart';
+import 'package:core_elements/core_item.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/components/channel_info/channel_info.dart';
@@ -23,14 +25,16 @@ class Main extends PolymerElement with Observable {
   static Element get mainElement =>
       document.querySelector('woven-app').shadowRoot.querySelector('x-main');
 
+  static List<Element> get dropdowns =>
+      mainElement.shadowRoot.querySelectorAll('core-dropdown');
+
   static XDropdown get userMenu =>
       mainElement.shadowRoot.querySelector('.user-menu');
 
   toggle(Event e) {
-    print(e.target);
-    var dropdown = (e.target as HtmlElement)
-        .querySelector('core-dropdown') as CoreDropdown;
-    print(dropdown);
+    HtmlElement target = e.target;
+    dropdowns.forEach((CoreDropdown e) => e.close());
+    var dropdown = target.querySelector('core-dropdown') as CoreDropdown;
     if (dropdown != null) dropdown.toggle();
   }
 
