@@ -179,7 +179,7 @@ core-dropdown {
 }
 
 .theme-dark.main-area {
-  background-color: rgba(3, 3, 3, 0.9);
+  background-color: rgb(30, 30, 30);
 }
 
 .main {
@@ -207,8 +207,8 @@ core-pages {
 }
 
 .theme-dark .left {
-  background-color: rgba(34, 34, 34, 0.9);
-  border-right: solid 1px #333;
+  background-color: rgba(27, 27, 27, 0.9);
+  border-right: none;
 }
 
 .left .content {
@@ -224,8 +224,8 @@ core-pages {
 }
 
 .theme-dark .info-area {
-  background: rgb(31, 31, 31);
-  border-bottom: solid 1px #333;
+  border-bottom: none;
+  background-color: rgba(41, 41, 41, 0.9);
 }
 
 .info-area span {

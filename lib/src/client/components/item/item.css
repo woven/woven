@@ -476,6 +476,10 @@ core-tooltip[show]::shadow .core-tooltip {
     border-radius: 0;
   }
 
+  .theme-dark .item.compact {
+    background-color: #222;
+  }
+
   .item.compact .item-body {
     white-space: nowrap;
   }
