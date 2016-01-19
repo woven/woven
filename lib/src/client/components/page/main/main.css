@@ -1,20 +1,4 @@
-body {
-  font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
-  font-size: 14px;
-  margin: 0;
-  margin-bottom: 1px;
-  padding: 24px;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-touch-callout: none;
 }
-/*section {*/
-  /*padding: 20px 0;*/
-/*}*/
-/*section > div {*/
-  /*padding: 14px;*/
-  /*font-size: 16px;*/
-/*}*/
-
 
 core-dropdown {
   background-color: #eee;
