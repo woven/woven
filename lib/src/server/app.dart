@@ -58,7 +58,7 @@ class App {
     // Define what routes we have.
     router = new Router(this)
       ..routes[Routes.home] = MainController.serveApp
-      ..routes[Routes.showItem] = MainController.showItem
+      ..routes[Routes.showItem] = MainController.serveApp
 //      ..routes[Routes.signInFacebook] = UserController.facebook
       ..routes[Routes.currentUser] = UserController.getCurrentUser
       ..routes[Routes.starred] = MainController.serveApp

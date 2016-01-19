@@ -20,11 +20,77 @@ import 'package:woven/src/server/crawler/image_info.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
 import 'package:woven/src/server/model/item.dart';
 import 'package:woven/src/server/util.dart';
+import 'package:woven/src/server/util/user_util.dart';
+
 
 class MainController {
-  static serveApp(App app, shelf.Request request, [String path]) {
-    return app.staticHandler(
-        new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
+  static serveApp(App app, shelf.Request request, [String path]) async {
+    Map userData;
+
+    var sessionCookie = app.sessionManager.getSessionCookie(request);
+    if (sessionCookie ==
+        null) return respond(Response.fromError('No session cookie found.'));
+    if (sessionCookie.value == null) return respond(
+        Response.fromError('The id in the session cookie was null.'),
+        statusCode: 401);
+
+    var sessionId = sessionCookie.value;
+
+    // Check the session index for the user associated with this session id.
+    Map sessionData = await findSession(sessionId);
+    if (sessionData == null) {
+      // The user may have an old cookie, with Facebook ID, so let's check that index.
+      String username = await findUsernameFromFacebookIndex(sessionId);
+      if (username == null) {
+        sessionId = app.sessionManager.createSessionId();
+        userData = null;
+      } else {
+        // Update the old cookie to use a newer session ID, and add it to our session index.
+        sessionId = app.sessionManager.createSessionId();
+        sessionData = await app.sessionManager
+            .addSessionToIndex(sessionId, username.toLowerCase());
+      }
+    } else {
+      String authToken = sessionData['authToken'];
+      String username = (sessionData['username'] as String).toLowerCase();
+
+      // If the session has no auth token, just generate a new session.
+      if (sessionData['authToken'] == null) {
+        sessionId = app.sessionManager.createSessionId();
+        sessionData =
+        await app.sessionManager.addSessionToIndex(sessionId, username);
+        authToken = sessionData['authToken'];
+      }
+
+      // Return the user data.
+      userData = await findUser(username);
+
+//      if (userData == null) return respond(
+//          Response.fromError('That user was not found.'),
+//          statusCode: 401);
+
+      if (userData['password'] == null) userData['needsPassword'] = true;
+      userData.remove('password');
+
+      if (authToken == null) {
+        sessionId = app.sessionManager.createSessionId();
+        sessionData =
+        await app.sessionManager.addSessionToIndex(sessionId, username);
+        userData['auth_token'] = sessionData['authToken'];
+      } else {
+        userData['auth_token'] = authToken;
+      }
+    }
+
+    var file = new File(config['server']['directory'] + '/index.html');
+    var index = await file.readAsString();
+
+    index = index.replaceAll('insert_user_here', JSON.encode(userData));
+
+    return new shelf.Response.ok(index, headers: {'content-type': 'text/html'});
+
+//    return app.staticHandler(
+//        new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
   }
 
   static confirmEmail(App app, shelf.Request request, String confirmId) {
@@ -32,11 +98,11 @@ class MainController {
         new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
   }
 
-  static showItem(App app, shelf.Request request, String item) {
-    // Serve the app as usual, and client router will handle showing the item.
-    return app.staticHandler(
-        new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
-  }
+//  static showItem(App app, shelf.Request request, String item) {
+//    // Serve the app as usual, and client router will handle showing the item.
+//    return app.staticHandler(
+//        new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
+//  }
 
   /**
    * Add an item.

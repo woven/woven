@@ -13,6 +13,7 @@ import '../util.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/server/util/user_util.dart';
 
 class UserController {
   static createNewUser(App app, shelf.Request request) async {
@@ -212,43 +213,4 @@ class UserController {
     return new shelf.Response.ok(JSON.encode(response),
         headers: app.sessionManager.getSessionHeaders(sessionId));
   }
-
-  static Future<bool> isValidLogin(String username, String password) async {
-    String hashedPassword = hash(password);
-    var response = await Firebase.get('/users/$username/password.json');
-    if (response == null) return false;
-    return response == hashedPassword; // True if they match.
-  }
-
-  static Future<bool> isDisabledUser(String username) async {
-    var response = await Firebase.get('/users/$username/disabled.json');
-    if (response == null) return false;
-    return response;
-  }
-
-  static Future findUserInfo(String username) =>
-      Firebase.get('/users/$username.json');
-
-  static Future<bool> userExists(String user) {
-    return Firebase.get('/users/$user.json').then((res) {
-      return (res == null ? false : true);
-    });
-  }
-
-  static Future findFacebookIndex(String id) {
-    return Firebase.get('/facebook_index/$id.json').then((res) {
-      return res;
-    });
-  }
-
-  static Future findInvitationCode(String code) =>
-      Firebase.get('/invitation_code_index/$code.json');
-  static Future findUser(String username) =>
-      Firebase.get('/users/$username.json');
-  static Future findSession(String sessionId) =>
-      Firebase.get('/session_index/$sessionId.json');
-  static Future findUsernameFromSession(String sessionId) =>
-      Firebase.get('/session_index/$sessionId/username.json');
-  static Future findUsernameFromFacebookIndex(String facebookId) =>
-      Firebase.get('/facebook_index/$facebookId/username.json');
 }

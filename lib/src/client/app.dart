@@ -74,7 +74,11 @@ class App extends Observable {
   static Future<App> create() async {
     App app = new App();
 
-    await app.loadUserForSession();
+    var t = new Stopwatch();
+    t.start();
+    await app.loadUserForSession2();
+    t.stop();
+    print(t.elapsedMilliseconds);
 
     Uri currentPath = Uri.parse(window.location.toString());
 
@@ -366,6 +370,15 @@ class App extends Observable {
 
       signIn();
     }
+  }
+
+  loadUserForSession2() {
+    var userData = JSON.decode(document.querySelector('#user-data').text);
+
+    // Set up the user object.
+    user = UserModel.fromJson(userData);
+
+    signIn();
   }
 
   signIn() async {
