@@ -185,7 +185,6 @@ core-pages {
   background: #F0F0F0;
   margin-top: 50px;
   width: 250px;
-  border-right: solid 1px #DEDEDE;
   z-index: 3;
   -webkit-backdrop-filter: blur(10px);
 }

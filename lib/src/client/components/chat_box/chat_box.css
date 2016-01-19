@@ -98,7 +98,7 @@ core-tooltip::shadow .core-tooltip {
 }
 
 #post-container {
-  background: #F0F0F0;
+  background: #ddd;
   /* box-shadow: rgba(0, 0, 0, 0.098) 0 2px 4px, rgba(0, 0, 0, 0.098) 0 0 3px; */
   padding: 8px;
   /*height: 40px;*/
