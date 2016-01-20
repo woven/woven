@@ -7,11 +7,14 @@
       <div class="toolbar">
         <div class="content" layout horizontal center>
           <div flex>About {{app.community.name}}</div>
-          <core-icon class="close action" icon="close" on-tap="{{toggleOverlay}}"></core-icon>
+          <core-icon class="close action {{(app.isNotMobile) ? 'hover' : ''}}" icon="close" on-tap="{{toggleOverlay}}"></core-icon>
         </div>
       </div>
       <div id="container">
         <div id="content-container">
+          <div class="channel-image">
+
+          </div>
           <p>Hello world!</p>
           <p>{{app.community.alias}}</p>
           <p>{{app.community.name}}</p>

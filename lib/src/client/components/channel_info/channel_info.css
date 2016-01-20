@@ -47,8 +47,21 @@ core-icon.action {
   cursor: pointer;
 }
 
+core-icon.close {
+  color: #888;
+}
+
 core-icon.hover:hover {
-  color: #ccc;
+  color: #333;
+}
+
+.channel-image {
+  background: url(http://media-cdn.tripadvisor.com/media/photo-s/09/b3/a4/13/wynwood.jpg);
+  background-size: cover;
+  height: 125px;
+  border-radius: 0;
+  margin: auto;
+  margin-bottom: 10px;
 }
 
 @media all and (max-width: 600px)  {
