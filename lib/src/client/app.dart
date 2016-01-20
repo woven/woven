@@ -76,7 +76,7 @@ class App extends Observable {
 
     var t = new Stopwatch();
     t.start();
-    await app.loadUserForSession2();
+    await app.loadUserForSession();
     t.stop();
     print(t.elapsedMilliseconds);
 
@@ -353,26 +353,7 @@ class App extends Observable {
         () => document.body.classes.remove('no-transition'));
   }
 
-  loadUserForSession() async {
-    var currentUser = await HttpRequest
-        .getString(serverPath + Routes.currentUser.reverse([]))
-        .catchError(print);
-
-    if (currentUser == null) return;
-
-    var response = Response.fromJson(JSON.decode(currentUser));
-    if (response.success && response.data != null) {
-      authToken = response.data['auth_token'];
-      f.authWithCustomToken(authToken).catchError(print);
-
-      // Set up the user object.
-      user = UserModel.fromJson(response.data);
-
-      signIn();
-    }
-  }
-
-  loadUserForSession2() {
+  loadUserForSession() {
     var userData = JSON.decode(document.querySelector('#user-data').text);
 
     if (userData != null) {
