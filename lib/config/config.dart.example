@@ -49,7 +49,6 @@ var config = {
     }
   },
   'appSettings': {
-    'validShareToOptions': ['channel1', 'channel2']
   },
   'debug_mode': true
 };
