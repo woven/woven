@@ -74,11 +74,7 @@ class App extends Observable {
   static Future<App> create() async {
     App app = new App();
 
-    var t = new Stopwatch();
-    t.start();
     await app.loadUserForSession();
-    t.stop();
-    print(t.elapsedMilliseconds);
 
     Uri currentPath = Uri.parse(window.location.toString());
 
