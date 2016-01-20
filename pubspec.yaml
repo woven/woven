@@ -5,8 +5,8 @@ environment:
 dependencies:
   browser: any
   polymer: ">=0.16.0 <0.17.0"
-  core_elements: "^0.7.1+4"
-  paper_elements: "^0.7.1+1"
+  core_elements: "^0.7.1+5"
+  paper_elements: "^0.7.1+2"
   firebase: ">=0.6.3 <0.7.0"
   meta: ">=0.8.8 <0.9.0"
   http: any
@@ -30,7 +30,6 @@ dependencies:
   xml: "^2.4.0"
   image: "^1.1.25"
 dependency_overrides:
-  web_components: "^0.12.0+3"
   core_elements:
     git: https://github.com/woven/core-elements
 #  firebase:
