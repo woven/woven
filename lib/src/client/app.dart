@@ -375,10 +375,11 @@ class App extends Observable {
   loadUserForSession2() {
     var userData = JSON.decode(document.querySelector('#user-data').text);
 
-    // Set up the user object.
-    user = UserModel.fromJson(userData);
-
-    signIn();
+    if (userData != null) {
+      // Set up the user object.
+      user = UserModel.fromJson(userData);
+      signIn();
+    }
   }
 
   signIn() async {
