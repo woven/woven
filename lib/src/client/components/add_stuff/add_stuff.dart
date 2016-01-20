@@ -100,7 +100,8 @@ class AddStuff extends PolymerElement {
     for (var community in shareTos) {
       community = community.trim();
 
-      db.DataSnapshot checkCommunity = await f.child('/communities/$community').once('value');
+      db.DataSnapshot checkCommunity =
+          await f.child('/communities/$community').once('value');
       var communityData = checkCommunity.val();
 
       if (communityData == null || communityData['disabled'] == true) {
