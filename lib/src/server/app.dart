@@ -11,7 +11,6 @@ import 'package:shelf_static/shelf_static.dart' as shelf_static;
 
 import 'package:woven/config/config.dart';
 import 'package:woven/src/server/mailer/mailer.dart';
-import 'package:woven/src/server/session_manager.dart';
 import 'package:woven/src/server/util/cloud_storage_util.dart';
 import 'package:woven/src/server/util/profile_picture_util.dart';
 
@@ -28,7 +27,6 @@ class App {
   Mailgun mailer;
   ProfilePictureUtil profilePictureUtil;
   CloudStorageUtil cloudStorageUtil;
-  SessionManager sessionManager;
 
   final String serverPath = config['server']['path'];
   final String cloudStoragePath = config['google']['cloudStorage']['path'];
@@ -109,7 +107,6 @@ class App {
 
     // Set up some objects.
     profilePictureUtil = new ProfilePictureUtil(this);
-    sessionManager = new SessionManager();
 
     // Instantiate Google APIs is what follows.
     // Taken from example at: http://goo.gl/38YoIm

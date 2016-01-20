@@ -14,6 +14,7 @@ import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/util.dart';
 import 'package:woven/src/server/util/user_util.dart';
+import 'package:woven/src/server/session_manager.dart' as sessionManager;
 
 class UserController {
   static createNewUser(App app, shelf.Request request) async {
@@ -45,7 +46,7 @@ class UserController {
     }
 
     // If the user isn't disabled (i.e. they  have an invitation) send down a session to sign them in.
-    String sessionId = app.sessionManager.createSessionId();
+    String sessionId = sessionManager.createSessionId();
 
     // Prepare the data for save and response.
     DateTime now = new DateTime.now().toUtc();
@@ -71,11 +72,10 @@ class UserController {
     } else {
       // TODO: Consider simplifying auth so just checks user == user, so we don't have to wait for session index.
       Map newSession =
-          await app.sessionManager.addSessionToIndex(sessionId, username);
+          await sessionManager.addSessionToIndex(sessionId, username);
       data['authToken'] = newSession['authToken'];
-      headers = (data['disabled']
-          ? {}
-          : app.sessionManager.getSessionHeaders(sessionId));
+      headers =
+          (data['disabled'] ? {} : sessionManager.getSessionHeaders(sessionId));
     }
 
     // Update the onboarding state now that we created the user.
@@ -109,7 +109,7 @@ class UserController {
 
   static Future<shelf.Response> getCurrentUser(
       App app, shelf.Request request) async {
-    var sessionCookie = app.sessionManager.getSessionCookie(request);
+    var sessionCookie = sessionManager.getSessionCookie(request);
     if (sessionCookie ==
         null) return respond(Response.fromError('No session cookie found.'));
     if (sessionCookie.value == null) return respond(
@@ -124,15 +124,15 @@ class UserController {
       // The user may have an old cookie, with Facebook ID, so let's check that index.
       String username = await findUsernameFromFacebookIndex(sessionId);
       if (username == null) {
-        sessionId = app.sessionManager.createSessionId();
+        sessionId = sessionManager.createSessionId();
         return respond(
             Response.fromError('A session with that id was not found.'),
             statusCode: 401);
       } else {
         // Update the old cookie to use a newer session ID, and add it to our session index.
-        sessionId = app.sessionManager.createSessionId();
-        sessionData = await app.sessionManager
-            .addSessionToIndex(sessionId, username.toLowerCase());
+        sessionId = sessionManager.createSessionId();
+        sessionData = await sessionManager.addSessionToIndex(
+            sessionId, username.toLowerCase());
       }
     }
 
@@ -144,9 +144,9 @@ class UserController {
 
       // If the session has no auth token, just generate a new session.
       if (sessionData['authToken'] == null) {
-        sessionId = app.sessionManager.createSessionId();
+        sessionId = sessionManager.createSessionId();
         sessionData =
-            await app.sessionManager.addSessionToIndex(sessionId, username);
+            await sessionManager.addSessionToIndex(sessionId, username);
         authToken = sessionData['authToken'];
       }
 
@@ -161,9 +161,9 @@ class UserController {
       userData.remove('password');
 
       if (authToken == null) {
-        sessionId = app.sessionManager.createSessionId();
+        sessionId = sessionManager.createSessionId();
         sessionData =
-            await app.sessionManager.addSessionToIndex(sessionId, username);
+            await sessionManager.addSessionToIndex(sessionId, username);
         userData['auth_token'] = sessionData['authToken'];
         response.data = userData;
       } else {
@@ -175,20 +175,19 @@ class UserController {
     //    if (userData['disabled'] == true) return Response.fromError('That user is not active.');
 
     return new shelf.Response.ok(JSON.encode(response),
-        headers: app.sessionManager.getSessionHeaders(sessionId));
+        headers: sessionManager.getSessionHeaders(sessionId));
   }
 
   static signOut(App app, shelf.Request request) {
-    return new shelf.Response.ok('',
-        headers: app.sessionManager.deleteCookie());
+    return new shelf.Response.ok('', headers: sessionManager.deleteCookie());
   }
 
   static signIn(App app, shelf.Request request) async {
     // Check for a session cookie in the request.
-    var sessionCookie = app.sessionManager.getSessionCookie(request);
+    var sessionCookie = sessionManager.getSessionCookie(request);
     // If there's an existing session cookie, use it. Else, create a new session id.
     var sessionId = (sessionCookie == null || sessionCookie.value == null)
-        ? app.sessionManager.createSessionId()
+        ? sessionManager.createSessionId()
         : sessionCookie.value;
 
     Map<String, String> data = JSON.decode(await request.readAsString());
@@ -201,7 +200,7 @@ class UserController {
 //    if (!(await isDisabledUser(username))) return respond(Response.fromError('You don\'t have access yet.\n\nWant to talk about it? hello@woven.co'), statusCode: 403);
 
     var sessionData =
-        await app.sessionManager.addSessionToIndex(sessionId, username);
+        await sessionManager.addSessionToIndex(sessionId, username);
     Map userData = await findUserInfo(username);
 
     var response = new Response();
@@ -211,6 +210,6 @@ class UserController {
     response.success = true;
 
     return new shelf.Response.ok(JSON.encode(response),
-        headers: app.sessionManager.getSessionHeaders(sessionId));
+        headers: sessionManager.getSessionHeaders(sessionId));
   }
 }
