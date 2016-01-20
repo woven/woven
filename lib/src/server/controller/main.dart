@@ -30,13 +30,11 @@ class MainController {
 
     var sessionCookie = sessionManager.getSessionCookie(request);
     if (sessionCookie != null && sessionCookie.value != null) {
-      print('debug1');
       sessionId = sessionCookie.value;
 
       // Check the session index for the user associated with this session id.
       Map sessionData = await findSession(sessionId);
       if (sessionData == null) {
-        print('debug2');
         // The user may have an old cookie, with Facebook ID, so let's check that index.
         String username = await findUsernameFromFacebookIndex(sessionId);
         if (username == null) {
@@ -49,7 +47,6 @@ class MainController {
               sessionId, username.toLowerCase());
         }
       } else {
-        print('debug3');
         String authToken = sessionData['authToken'];
         String username = (sessionData['username'] as String).toLowerCase();
 
@@ -88,14 +85,11 @@ class MainController {
     index = index.replaceAll('insert_user_here', JSON.encode(userData));
 
     Map headers = {};
-    print('debug4 $sessionId');
+
     if (sessionId != null) headers = sessionManager.getSessionHeaders(sessionId);
     headers['content-type'] = 'text/html';
 
     return new shelf.Response.ok(index, headers: headers);
-
-//    return app.staticHandler(
-//        new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
   }
 
   static confirmEmail(App app, shelf.Request request, String confirmId) {
