@@ -5,7 +5,7 @@ environment:
 dependencies:
   browser: any
   polymer: ">=0.16.0 <0.17.0"
-  core_elements: "^0.7.1+5"
+  core_elements: "^0.7.1+6"
   paper_elements: "^0.7.1+2"
   firebase: ">=0.6.3 <0.7.0"
   meta: ">=0.8.8 <0.9.0"
@@ -30,8 +30,6 @@ dependencies:
   xml: "^2.4.0"
   image: "^1.1.25"
 dependency_overrides:
-  core_elements:
-    git: https://github.com/woven/core-elements
 #  firebase:
 #    git: https://github.com/davenotik/firebase-dart.git
 transformers:
