@@ -30,8 +30,6 @@ class AddStuff extends PolymerElement {
   @published bool opened = false;
   @observable var selectedType = 'news';
   @observable Map formData = toObservable({});
-  List validShareToOptions = config['appSettings']
-      ['validShareToOptions']; // TODO: Fixed for now, change later.
 
   db.Firebase get f => app.f;
 
@@ -87,7 +85,7 @@ class AddStuff extends PolymerElement {
   /**
    * Add an item.
    */
-  addItem(Event e) {
+  addItem(Event e) async {
     e.preventDefault();
 
     // Validate share tos.
@@ -99,12 +97,16 @@ class AddStuff extends PolymerElement {
     var shareTos = shareToInput.value.trim().split(',');
     List invalidShareTos = [];
 
-    shareTos.forEach((e) {
-      var community = e.trim();
-      if (!validShareToOptions.contains(community)) {
+    for (var community in shareTos) {
+      community = community.trim();
+
+      db.DataSnapshot checkCommunity = await f.child('/communities/$community').once('value');
+      var communityData = checkCommunity.val();
+
+      if (communityData == null || communityData['disabled'] == true) {
         invalidShareTos.add(community);
       }
-    });
+    }
 
     if (invalidShareTos.length > 0) {
       window.alert(
@@ -155,9 +157,6 @@ class AddStuff extends PolymerElement {
         }
       }
     }
-
-    // Handle the share to field.
-    if (shareToInput.value == null) {}
 
     var now = new DateTime.now().toUtc();
     var priority = now.millisecondsSinceEpoch;
