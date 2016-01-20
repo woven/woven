@@ -139,8 +139,8 @@ class App {
       var alias = Uri.parse(request.url.path).pathSegments[0];
 
       if (await aliasExists(alias)) {
-        var response = staticHandler(
-            new shelf.Request('GET', Uri.parse(serverPath + '/')));
+        shelf.Response response = await MainController.serveApp(
+            null, request);
         response = response.change(headers: {'Transfer-Encoding': 'chunked'});
         return response;
       }
