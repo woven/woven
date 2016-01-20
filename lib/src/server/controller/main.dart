@@ -54,7 +54,7 @@ class MainController {
         if (sessionData['authToken'] == null) {
           sessionId = sessionManager.createSessionId();
           sessionData =
-          await sessionManager.addSessionToIndex(sessionId, username);
+              await sessionManager.addSessionToIndex(sessionId, username);
           authToken = sessionData['authToken'];
         }
 
@@ -71,7 +71,7 @@ class MainController {
         if (authToken == null) {
           sessionId = sessionManager.createSessionId();
           sessionData =
-          await sessionManager.addSessionToIndex(sessionId, username);
+              await sessionManager.addSessionToIndex(sessionId, username);
           userData['auth_token'] = sessionData['authToken'];
         } else {
           userData['auth_token'] = authToken;
@@ -86,7 +86,8 @@ class MainController {
 
     Map headers = {};
 
-    if (sessionId != null) headers = sessionManager.getSessionHeaders(sessionId);
+    if (sessionId != null) headers =
+        sessionManager.getSessionHeaders(sessionId);
     headers['content-type'] = 'text/html';
 
     return new shelf.Response.ok(index, headers: headers);
