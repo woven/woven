@@ -120,6 +120,12 @@ class AddStuff extends PolymerElement {
       return false;
     }
 
+    if ((selectedType == 'news' || selectedType == 'feed') &&
+        urlInput.value.trim().isEmpty) {
+      window.alert("Please provide a URL.");
+      return false;
+    }
+
     if (urlInput != null) {
       urlInput.value = prefixHttp(urlInput.value);
     }
