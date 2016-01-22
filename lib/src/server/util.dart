@@ -66,6 +66,7 @@ shelf.Response respond(content, {statusCode: 200}) {
  */
 Future<DateTime> parseDate(String dateString) {
   return new Future(() {
+    DateTime date;
     if (dateString == null) return null;
 
     if (int.parse(dateString, onError: (s) => null) != null) {
@@ -77,13 +78,16 @@ Future<DateTime> parseDate(String dateString) {
       new DateFormat(
           'EEE, d MMM yyyy HH:mm:ss Z'), // "Tue, 12 Feb 2013 16:27:30 EST"
       new DateFormat('d MMM yyyy HH:mm:ss Z'), // "08 Feb 2013 15:15:03 +0200"
-      new DateFormat('yyyy-MM-ddTHH:mm:ssZ')
+      new DateFormat('yyyy-MM-ddTHH:mm:ssZ'),
+      new DateFormat('dd MMM yyyy HH:mm:ss Z') // "21 Jan 2016 18:43:38 +0200"
     ];
 
     for (var i = 0, length = formats.length; i < length; i++) {
       try {
-        DateTime date = formats[i].parse(dateString);
+        date = formats[i].parse(dateString);
+      } catch (e) {}
 
+      if (date != null) {
         var m = new RegExp('(\\+|-)([0-9]){4}\$').firstMatch(dateString);
         if (m != null) {
           date = date
@@ -94,22 +98,30 @@ Future<DateTime> parseDate(String dateString) {
 
         // We've adjusted date to UTC, now let's return it as such.
         // TODO: Is this totally whack?
-        var dateAsUtc = new DateTime.utc(date.year, date.month, date.day,
-            date.hour, date.minute, date.second, date.millisecond);
+        var dateAsUtc = new DateTime.utc(
+            date.year,
+            date.month,
+            date.day,
+            date.hour,
+            date.minute,
+            date.second,
+            date.millisecond);
 
         return dateAsUtc;
-      } catch (error) {
-        // Try generic.
-        try {
-          var date = DateTime.parse(dateString);
+      }
+    }
 
-          // TODO: toUtc() handles this for us, I believe.
+    if (date == null) {
+      // Try generic.
+      try {
+        var date = DateTime.parse(dateString);
+
+        // TODO: toUtc() handles this for us, I believe.
 //          date = date.add(date.timeZoneOffset);
 
-          return date.toUtc();
-        } catch (e) {
-          throw 'Exception parsing date';
-        }
+        return date.toUtc();
+      } catch (e) {
+        throw 'Exception parsing date';
       }
     }
 
