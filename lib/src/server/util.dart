@@ -98,14 +98,8 @@ Future<DateTime> parseDate(String dateString) {
 
         // We've adjusted date to UTC, now let's return it as such.
         // TODO: Is this totally whack?
-        var dateAsUtc = new DateTime.utc(
-            date.year,
-            date.month,
-            date.day,
-            date.hour,
-            date.minute,
-            date.second,
-            date.millisecond);
+        var dateAsUtc = new DateTime.utc(date.year, date.month, date.day,
+            date.hour, date.minute, date.second, date.millisecond);
 
         return dateAsUtc;
       }
