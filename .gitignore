@@ -5,5 +5,6 @@ packages
 web/packages
 web/static/images/user
 build
+deploy
 /lib/config/config.dart
 /.pub
