@@ -280,7 +280,7 @@ class MainController {
       ..title = crawlInfo.title
       ..teaser = crawlInfo.teaser;
 
-    if (bestImage.url == null) {
+    if (bestImage == null || bestImage.url == null) {
       // Save the preview.
       String uriPreviewId = await Firebase
           .post('/uri_previews.json', uriPreview.toJson(), auth: authToken);
