@@ -26,7 +26,7 @@ class Firebase {
     Map message = JSON.decode(response.body);
 
     if (response.statusCode !=
-        200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
+        200) throw 'Firebase returned an error in post().\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
 
     if (message['name'] != null) return message['name'];
   }
@@ -44,7 +44,7 @@ class Firebase {
         '${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}',
         body: data);
     if (response.statusCode !=
-        200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}\nBody:${response.body}';
+        200) throw 'Firebase returned an error in put().\nPath: $path\nData: $data\nStatus code: ${response.statusCode}\nBody:${response.body}';
   }
 
   /**
@@ -68,12 +68,11 @@ class Firebase {
       HttpClientResponse response = await request.done;
 
       if (response.statusCode !=
-          200) throw 'Firebase returned an error.\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
+          200) throw 'Firebase returned an error in patch().\nPath: $path\nData: $data\nStatus code: ${response.statusCode}';
 
-      response.transform(UTF8.decoder).listen((contents) {
-        return contents;
-      });
-//          return response.statusCode; // TODO: I want more here.
+      response.drain();
+
+      // TODO: Return more info?
 
     } catch (error, stack) {
       print("Error: $error\n\n$stack");
@@ -92,7 +91,7 @@ class Firebase {
           await http.get('${config['datastore']['firebaseLocation']}$path');
 
       if (res.statusCode !=
-          200) throw 'Firebase returned an error.\nPath: $path\nStatus code: ${res.statusCode}';
+          200) throw 'Firebase returned an error in get().\nPath: $path\nStatus code: ${res.statusCode}\nBody:${res.body}';
 
       if (res.body != 'null') {
         var response = JSON.decode(res.body);
@@ -117,7 +116,7 @@ class Firebase {
           '${config['datastore']['firebaseLocation']}$path${(auth != null) ? '?auth=$auth' : ''}');
 
       if (res.statusCode !=
-          200) throw 'Firebase returned an error.\nPath: $path\nStatus code: ${res.statusCode}';
+          200) throw 'Firebase returned an error in delete().\nPath: $path\nStatus code: ${res.statusCode}\nBody:${res.body}';
 
       if (res.body != 'null') {
         var response = JSON.decode(res.body);
