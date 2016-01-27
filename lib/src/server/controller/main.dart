@@ -93,11 +93,6 @@ class MainController {
     return new shelf.Response.ok(index, headers: headers);
   }
 
-  static confirmEmail(App app, shelf.Request request, String confirmId) {
-    return app.staticHandler(
-        new shelf.Request('GET', Uri.parse(app.serverPath + '/')));
-  }
-
 //  static showItem(App app, shelf.Request request, String item) {
 //    // Serve the app as usual, and client router will handle showing the item.
 //    return app.staticHandler(

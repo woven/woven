@@ -74,7 +74,7 @@ class App {
       ..routes[Routes.signIn] = UserController.signIn
       ..routes[Routes.signOut] = UserController.signOut
       ..routes[Routes.createNewUser] = UserController.createNewUser
-      ..routes[Routes.confirmEmail] = MainController.confirmEmail
+      ..routes[Routes.confirmEmail] = MainController.serveApp
       ..routes[Routes.sendConfirmEmail] = MailController.sendConfirmEmail
       ..routes[Routes.inviteUserToChannel] = MailController.inviteUserToChannel;
 
