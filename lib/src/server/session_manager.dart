@@ -53,7 +53,6 @@ Map<String, String> deleteCookie() {
 }
 
 Cookie getSessionCookie(shelf.Request request) {
-  print(request.headers);
   Map<String, Cookie> cookies = _parseCookies(request.headers);
   return cookies['session'];
 }
