@@ -240,6 +240,10 @@ class AddStuff extends PolymerElement {
         f.child('/items_by_community/' + community + '/' + itemId)
           ..setWithPriority(encodedItem, -priority);
 
+        // Add to items_by_type.
+        f.child('/items_by_type/' + selectedType + '/' + itemId)
+          ..setWithPriority(encodedItem, -priority);
+
         // Only in the main /items location, store a simple list of its parent communities.
         f.child('/items/' + itemId + '/communities/' + community)..set(true);
 

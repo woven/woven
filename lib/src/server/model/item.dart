@@ -24,6 +24,8 @@ class Item extends shared.Item {
       communities.forEach((community) {
         Firebase.patch('/items_by_community/$community/$id.json', value,
             auth: authToken);
+        Firebase.patch('/items_by_type/$type/$id.json', value,
+            auth: authToken);
         Firebase.patch(
             '/items_by_community_by_type/$community/$type/$id.json', value,
             auth: authToken);
@@ -54,6 +56,8 @@ class Item extends shared.Item {
       communities.forEach((community) {
         Firebase.delete('/items_by_community/$community/$id.json',
             auth: authToken);
+        Firebase.delete('/items_by_type/$type/$id.json',
+            auth: authToken);
         Firebase.delete('/items_by_community_by_type/$community/$type/$id.json',
             auth: authToken);
       });
@@ -78,6 +82,8 @@ class Item extends shared.Item {
       var id = await Firebase.post('/items.json', value, auth: authToken);
 
       Firebase.put('/items_by_community/$community/$id.json', value,
+          auth: authToken);
+      Firebase.put('/items_by_type/$type/$id.json', value,
           auth: authToken);
       Firebase.put(
           '/items_by_community_by_type/$community/$type/$id.json', value,
