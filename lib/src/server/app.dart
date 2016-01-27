@@ -141,7 +141,9 @@ class App {
       if (await aliasExists(alias)) {
         shelf.Response response = await MainController.serveApp(
             null, request);
-        response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+        if (request.protocolVersion == '1.1') {
+          response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+        }
         return response;
       }
     }
@@ -150,7 +152,9 @@ class App {
 
   Future<shelf.Response> _handleFile(shelf.Request request) async {
     shelf.Response response = await this.staticHandler(request);
-    response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+    if (request.protocolVersion == '1.1') {
+      response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+    }
     return response;
   }
 
@@ -169,7 +173,9 @@ class App {
 
     try {
       shelf.Response response = await router.dispatch(request);
-      response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+      if (request.protocolVersion == '1.1') {
+        response = response.change(headers: {'Transfer-Encoding': 'chunked'});
+      }
       return response;
 //      print('dispatch returned: ' + response.readAsString());
     } catch (error, trace) {
