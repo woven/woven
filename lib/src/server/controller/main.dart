@@ -48,10 +48,16 @@ class MainController {
         }
       } else {
         String authToken = sessionData['authToken'];
+        DateTime updatedDate = DateTime.parse(sessionData['updatedDate']);
+
+        // This is the Firebase session length specified in Firebase settings.
+        Duration daysTokenIsValid = new Duration(days: 7);
+        Duration elapsedTimeForToken = updatedDate.difference(new DateTime.now().toUtc());
+
         String username = (sessionData['username'] as String).toLowerCase();
 
         // If the session has no auth token, just generate a new session.
-        if (sessionData['authToken'] == null) {
+        if (sessionData['authToken'] == null || elapsedTimeForToken >= daysTokenIsValid) {
           sessionId = sessionManager.createSessionId();
           sessionData =
               await sessionManager.addSessionToIndex(sessionId, username);
