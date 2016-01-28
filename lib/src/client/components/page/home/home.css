@@ -331,6 +331,10 @@ footer a:hover {
     width: 220px;
   }
 
+  .feature-area {
+    border-bottom: none;
+  }
+
   .feature h3 {
     font-size: 23px;
     margin: 15px 10px 10px 15px;
@@ -340,6 +344,22 @@ footer a:hover {
     margin-left: 15px;
   }
 
+  .feature.last {
+    border-bottom: none;
+  }
+
+  footer {
+    margin-top: 0;
+  }
+
+  footer .column {
+    margin: 0;
+    padding: 0;
+  }
+
+  footer .column-container {
+    flex-direction: column !important;
+  }
 }
 
 @media (max-width: 650px) {
@@ -366,6 +386,10 @@ footer a:hover {
     line-height: 50px;
   }
 
+  .get-started .field-wrapper, .get-started input[is="core-input"] {
+    width: 205px;
+  }
+
   .feature h3 {
     margin: 20px 10px 10px 20px;
   }
@@ -377,5 +401,33 @@ footer a:hover {
   .simple-content h2 {
     font-size: 30px;
     max-width: 250px;
+  }
+}
+
+@media (max-width: 350px) {
+  .heading h1 {
+    margin-top: 30px;
+    font-size: 45px;
+    line-height: 40px;
+  }
+
+  .heading h2 {
+    font-size: 25px;
+    margin: 15px 15px 0 15px
+  }
+
+  .get-started .field-wrapper, .get-started input[is="core-input"] {
+    width: 185px;
+  }
+
+  .get-started .button {
+    width: 85px;
+  }
+  .get-started p {
+    margin: 10px 50px 0 50px;
+  }
+
+  .feature-area {
+    margin: 35px auto 40px auto;
   }
 }
