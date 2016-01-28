@@ -231,6 +231,8 @@ class ChatViewModel extends BaseViewModel with Observable {
   }
 
   doNotifications(Message item) {
+    if (app.user == null) return;
+    
     var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
 
     List mentions = [];
