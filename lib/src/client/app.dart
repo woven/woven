@@ -355,6 +355,7 @@ class App extends Observable {
     if (userData != null) {
       // Set up the user object.
       user = UserModel.fromJson(userData);
+      authToken = userData['auth_token'];
       signIn();
     }
   }
