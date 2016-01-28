@@ -150,9 +150,6 @@ user-picture {
 }
 
 @media all and (min-width: 600px)  {
-  .button-sign-in {
-    display: none;
-  }
   #post-container {
     /*height: 40px;*/
   }
