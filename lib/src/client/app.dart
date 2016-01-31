@@ -9,6 +9,7 @@ import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'package:firebase/firebase.dart';
 import 'package:core_elements/core_header_panel.dart';
+import 'package:usage/usage_html.dart';
 
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
@@ -20,6 +21,7 @@ import 'package:woven/src/client/view_model/main.dart';
 import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
 import 'cache.dart';
 import 'util.dart';
+import 'analytics.dart' as analytics;
 
 class App extends Observable {
   @observable String pageTitle = "";
@@ -88,7 +90,6 @@ class App extends Observable {
 
     await app.startRouter();
 
-
     print('''
 
 8b      db      d8  ,adPPYba,  8b       d8  ,adPPYba,  8b,dPPYba,
@@ -126,7 +127,10 @@ class App extends Observable {
     }
 
 //    router.onNotFound.listen(notFound);
-    router.onDispatch.listen(handleAliasPage);
+    router.onDispatch.listen((path) {
+      handleAliasPage(path);
+      analytics.changePage(analytics.getAnalytics());
+    });
   }
 
   void home(String path) {
@@ -202,6 +206,7 @@ class App extends Observable {
     router.selectedPage = 'item';
   }
 
+  // TODO: I don't think this is used/called anymore.
   void globalHandler(String path) {
     if (router.selectedPage != 'channels') showHomePage = false;
 
