@@ -6,28 +6,20 @@ import 'package:usage/usage_html.dart';
 
 import 'package:woven/config/config.dart';
 
-
-
-Analytics _analytics;
 final String _ua = config['google']['analytics']['tracking_id'];
 
+class Analytics {
+  AnalyticsHtml _analytics = new AnalyticsHtml(_ua, 'Woven', '1.0');
 
-Analytics getAnalytics() {
-  _analytics = new AnalyticsHtml(_ua, 'Woven', '1.0');
-  _analytics.optIn = true;
-  _analytics.sendScreenView(window.location.pathname);
+  Analytics() {
+    _analytics.optIn = true;
+  }
 
-  return _analytics;
+  void changePage() {
+    _analytics.sendScreenView(window.location.pathname);
+  }
+
+  void sendEvent(String category, String action, {String label, int value}) {
+    _analytics.sendEvent(category, action, label: label, value: value);
+  }
 }
-
-void changePage(Analytics analytics) {
-  analytics.sendScreenView(window.location.pathname);
-}
-
-//void _handleFoo(Analytics analytics) {
-//  analytics.sendEvent('main', 'foo');
-//}
-//
-//void _handleBar(Analytics analytics) {
-//  analytics.sendEvent('main', 'bar');
-//}

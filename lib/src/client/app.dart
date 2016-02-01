@@ -9,7 +9,6 @@ import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'package:firebase/firebase.dart';
 import 'package:core_elements/core_header_panel.dart';
-import 'package:usage/usage_html.dart';
 
 import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/model/community.dart';
@@ -21,7 +20,7 @@ import 'package:woven/src/client/view_model/main.dart';
 import 'package:woven/src/client/components/dialog/sign_in/sign_in.dart';
 import 'cache.dart';
 import 'util.dart';
-import 'analytics.dart' as analytics;
+import 'analytics.dart';
 
 class App extends Observable {
   @observable String pageTitle = "";
@@ -41,6 +40,7 @@ class App extends Observable {
   Router router;
   MainViewModel mainViewModel;
   Cache cache = new Cache();
+  Analytics analytics = new Analytics();
   String authToken;
 //  String sessionId;
   Firebase f = new Firebase(config['datastore']['firebaseLocation']);
@@ -129,7 +129,7 @@ class App extends Observable {
 //    router.onNotFound.listen(notFound);
     router.onDispatch.listen((path) {
       handleAliasPage(path);
-      analytics.changePage(analytics.getAnalytics());
+      analytics.changePage();
     });
   }
 
