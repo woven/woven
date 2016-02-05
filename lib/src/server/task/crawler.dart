@@ -51,149 +51,149 @@ class CrawlerTask extends Task {
   Future run() async {
     logger.info("Running the crawler task");
 
-    Map communities =
-        await firebase.get(Uri.parse('$firebaseUrl/communities.json'));
+    Map feeds =
+      await firebase.get(Uri.parse('$firebaseUrl/feeds.json'));
 
-    communities.keys.forEach((community) async {
-      Map feedsToCrawl = await firebase.get(Uri.parse(
-          '$firebaseUrl/items_by_community_by_type/$community/feed.json'));
+    List feedsAsList = [];
 
-      if (feedsToCrawl == null) return;
+    feeds.forEach((k, v) {
+      Map feed = v;
+      feed['id'] = k;
+      feedsAsList.add(FeedModel.fromJson(feed));
+    });
 
-      await Future.forEach(feedsToCrawl.values, (feedData) async {
-        var feed = FeedModel.fromJson(feedData);
+    Future.forEach(feedsAsList, (FeedModel feed) async {
+      var crawler = new Crawler(feed.url);
 
-        var url = feed.url;
-        var crawler = new Crawler(url);
+      // Turns it into an actual feed URL, if it isn't already.
+      // TODO: Store the feed URL or the user-entered URL or both in db?
 
-        // Turns it into an actual feed URL, if it isn't already.
-        // TODO: Store the feed URL or the user-entered URL or both in db?
+      var feedUrl = await crawler.findFeedUrl();
 
-        var feedUrl = await crawler.findFeedUrl();
+      if (feedUrl == null) {
+        logger.warning('No feed found for ${feed.url}');
+        return;
+      }
 
-        if (feedUrl == null) {
-          logger.warning('No feed found for $url');
-          return;
-        }
+      var feedReader = new FeedReader(url: feedUrl);
+      var feedItems = await feedReader.load();
 
-        var feedReader = new FeedReader(url: feedUrl);
-        var feedItems = await feedReader.load();
+      if (feedItems.length == 0) {
+        logger.warning('Empty or misunderstood feed found at $feedUrl');
+        return;
+      }
 
-        if (feedItems.length == 0) {
-          logger.warning('Empty or misunderstood feed found at $feedUrl');
-          return;
-        }
+      var count = 0;
 
-        var count = 0;
-        await Future.forEach(feedItems, (FeedItem feedItem) async {
-          var encodedKey = util.encodeFirebaseKey(feedItem.link);
-          // TODO: Tell kevmoo his encodeKey() not encoding properly.
+      // TODO: This the right async approach?
+      for (FeedItem feedItem in feedItems) {
+        var encodedKey = util.encodeFirebaseKey(feedItem.link);
+        // TODO: Tell kevmoo his encodeKey() not encoding properly.
 //          print('$firebaseUrl/url_index/$encodedKey.json');
 //          print('$firebaseUrl/url_index/${encodeKey(feedItem.link)}.json');
 
-          try {
-            var checkIfUrlExists = await firebase
-                .get(Uri.parse('$firebaseUrl/url_index/$encodedKey.json'));
+        try {
+          var checkIfUrlExists = await firebase
+              .get(Uri.parse('$firebaseUrl/url_index/$encodedKey.json'));
 
-            if (checkIfUrlExists == null) {
-              count++;
-              logger.fine('Adding new item for ${feedItem.link}');
+          if (checkIfUrlExists == null) {
+            count++;
+            logger.fine('Adding new item for ${feedItem.link}');
 
-              var priority = -feedItem.publicationDate.millisecondsSinceEpoch;
+            var priority = -feedItem.publicationDate.millisecondsSinceEpoch;
 
-              firebase.put(Uri.parse('$firebaseUrl/url_index/$encodedKey.json'),
-                  {'lastCrawledDate': new DateTime.now().toUtc().toString()});
+            firebase.put(Uri.parse('$firebaseUrl/url_index/$encodedKey.json'),
+                {'lastCrawledDate': new DateTime.now().toUtc().toString()});
 
-              // TODO: Crawl the feed item's URL, generate a uriPreview, etc.
-              NewsModel newsItem = new NewsModel();
-              newsItem
-                ..url = feedItem.link
-                ..subject = feedItem.title
-                ..body = feedItem.description
-                ..createdDate = feedItem.publicationDate
-                ..updatedDate = feedItem.publicationDate
-                ..user = 'dave'
-                ..type = 'news'
-                ..priority = priority;
+            // TODO: Crawl the feed item's URL, generate a uriPreview, etc.
+            NewsModel newsItem = new NewsModel();
+            newsItem
+              ..url = feedItem.link
+              ..subject = feedItem.title
+              ..body = feedItem.description
+              ..createdDate = feedItem.publicationDate
+              ..updatedDate = feedItem.publicationDate
+              ..user = 'dave'
+              ..type = 'news'
+              ..priority = priority;
 
-              // TODO: Use firebase_io lib in ItemModel?
-              var itemId = await Item.add(community, newsItem.toJson(),
-                  config['datastore']['firebaseSecret']);
+            // TODO: Use firebase_io lib in ItemModel?
+            var itemId = await Item.add(feed.communities.keys, newsItem.toJson(),
+                config['datastore']['firebaseSecret']);
 
-              newsItem.id = itemId;
+            newsItem.id = itemId;
 
-              UriPreview uriPreview =
-                  new UriPreview(uri: Uri.parse(newsItem.url));
+            UriPreview uriPreview =
+            new UriPreview(uri: Uri.parse(newsItem.url));
+
+            uriPreview
+              ..uri = Uri.parse(newsItem.url)
+              ..title = newsItem.subject
+              ..teaser =
+              InputFormatter.createIntelligentTeaser(newsItem.body);
+
+            // Visit the URL of this item and get the best image from its page.
+            var content = await http.get(feedItem.link);
+            ImageInfo imageInfo =
+            await crawler.getBestImageFromHtml(content.body);
+
+            if (imageInfo != null) {
+              // Download the image locally to our temporary file.
+              File imageFile = await downloadFileTo(
+                  imageInfo.url,
+                  await createTemporaryFile(
+                      suffix: '.' + imageInfo.extension));
+
+              var imageUtil = new ImageUtil();
+              File croppedFile =
+              await imageUtil.resize(imageFile, width: 245, height: 120);
+
+              var extension = imageInfo.extension;
+              var gsBucket = config['google']['cloudStorage']['bucket'];
+              var gsPath = 'public/images/item/$itemId';
+
+              var filename = 'main-photo.$extension';
+              var cloudStorageResponse = await app.cloudStorageUtil
+                  .uploadFile(croppedFile.path, gsBucket, '$gsPath/$filename',
+                  public: true);
 
               uriPreview
-                ..uri = Uri.parse(newsItem.url)
-                ..title = newsItem.subject
-                ..teaser =
-                    InputFormatter.createIntelligentTeaser(newsItem.body);
+                ..imageOriginalUrl = imageInfo.url
+                ..imageSmallLocation = (cloudStorageResponse.name != null)
+                    ? cloudStorageResponse.name
+                    : null;
 
-              // Visit the URL of this item and get the best image from its page.
-              var content = await http.get(feedItem.link);
-              ImageInfo imageInfo =
-                  await crawler.getBestImageFromHtml(content.body);
-
-              if (imageInfo != null) {
-                // Download the image locally to our temporary file.
-                File imageFile = await downloadFileTo(
-                    imageInfo.url,
-                    await createTemporaryFile(
-                        suffix: '.' + imageInfo.extension));
-
-                var imageUtil = new ImageUtil();
-                File croppedFile =
-                    await imageUtil.resize(imageFile, width: 245, height: 120);
-
-                var extension = imageInfo.extension;
-                var gsBucket = config['google']['cloudStorage']['bucket'];
-                var gsPath = 'public/images/item/$itemId';
-
-                var filename = 'main-photo.$extension';
-                var cloudStorageResponse = await app.cloudStorageUtil
-                    .uploadFile(croppedFile.path, gsBucket, '$gsPath/$filename',
-                        public: true);
-
-                uriPreview
-                  ..imageOriginalUrl = imageInfo.url
-                  ..imageSmallLocation = (cloudStorageResponse.name != null)
-                      ? cloudStorageResponse.name
-                      : null;
-
-                imageFile.delete();
-                croppedFile.delete();
-              }
-
-              Map uriPreviewResponse;
-
-              try {
-                uriPreviewResponse = await firebase.post(
-                    Uri.parse('$firebaseUrl/uri_previews.json'),
-                    uriPreview.toJson());
-              } catch (error, stack) {
-                logger.severe('Error posting preview to db', error, stack);
-              }
-
-              var uriPreviewId = uriPreviewResponse != null
-                  ? uriPreviewResponse['name']
-                  : null;
-
-              Item.update(newsItem.id, {'uriPreviewId': uriPreviewId},
-                  config['datastore']['firebaseSecret']);
+              imageFile.delete();
+              croppedFile.delete();
             }
-          } catch (error, stack) {
-            logger.severe(
-                'Error while processing feed item in run()', error, stack);
+
+            Map uriPreviewResponse;
+
+            try {
+              uriPreviewResponse = await firebase.post(
+                  Uri.parse('$firebaseUrl/uri_previews.json'),
+                  uriPreview.toJson());
+            } catch (error, stack) {
+              logger.severe('Error posting preview to db', error, stack);
+            }
+
+            var uriPreviewId = uriPreviewResponse != null
+                ? uriPreviewResponse['name']
+                : null;
+
+            Item.update(newsItem.id, {'uriPreviewId': uriPreviewId},
+                config['datastore']['firebaseSecret']);
           }
-        }).then((_) {
-          if (count > 0) logger
-              .info('Retrieved $count new items from $feedUrl');
-        });
-      }).catchError((error, stack) {
-        logger.severe('Unhandled exception crawling feeds', error, stack);
-      });
+        } catch (error, stack) {
+          logger.severe(
+              'Error while processing feed item in run()', error, stack);
+        }
+      };
+
+      if (count > 0) logger
+          .info('Retrieved $count new items from $feedUrl');
+    }).catchError((error, stack) {
+      logger.severe('Unhandled exception crawling feeds', error, stack);
     });
   }
 
