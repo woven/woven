@@ -14,9 +14,11 @@ class FeedModel implements Item {
   String url;
   String siteUrl; // The user's message.
   DateTime lastCrawledDate; // The attached content's subject.
+  Map communities; // Communities this feed is a part of.
 
   Map toJson() {
     return {
+      "id": id,
       "user": user,
       "type": type,
       "priority": priority,
@@ -25,12 +27,14 @@ class FeedModel implements Item {
       "url": url,
       "siteUrl": siteUrl,
       // TODO: https://goo.gl/NpR6Xe
-      "lastCrawledDate": util.encode(lastCrawledDate)
+      "lastCrawledDate": util.encode(lastCrawledDate),
+      "communities": communities
     };
   }
 
   static FeedModel fromJson(Map data) {
     return new FeedModel()
+      ..id = data['id']
       ..user = data['user']
       ..type = data['type']
       ..priority = data['priority']
@@ -38,6 +42,7 @@ class FeedModel implements Item {
       ..updatedDate = data['updatedDate']
       ..url = data['url']
       ..siteUrl = data['siteUrl']
-      ..lastCrawledDate = data['lastCrawledDate'];
+      ..lastCrawledDate = data['lastCrawledDate']
+      ..communities = data['communities'];
   }
 }
