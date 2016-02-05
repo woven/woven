@@ -68,32 +68,37 @@ class Item extends shared.Item {
 
   /**
    * Add an item with a given [value] to the given [community].
-   *
-   * TODO: Support adding item to multiple communities?
    */
   static Future<String> add(
-      String community, Map value, String authToken) async {
+      List communities, Map value, String authToken) async {
+
+      Map communitiesMap = {};
+
+      for (var community in communities) communitiesMap[community] = true;
 
       var type = value['type'];
-      value['communities'] = {community: true};
+      value['communities'] = communitiesMap;
       value['.priority'] = value['priority'];
 
       try {
       var id = await Firebase.post('/items.json', value, auth: authToken);
 
-      Firebase.put('/items_by_community/$community/$id.json', value,
-          auth: authToken);
-      Firebase.put('/items_by_type/$type/$id.json', value,
-          auth: authToken);
-      Firebase.put(
-          '/items_by_community_by_type/$community/$type/$id.json', value,
-          auth: authToken);
+      for (var community in communities) {
+        Firebase.put('/items_by_community/$community/$id.json', value,
+            auth: authToken);
+        Firebase.put('/items_by_type/$type/$id.json', value,
+            auth: authToken);
+        Firebase.put(
+            '/items_by_community_by_type/$community/$type/$id.json', value,
+            auth: authToken);
 
-      var now = new DateTime.now().toUtc();
+        var now = new DateTime.now().toUtc();
 
-      Firebase.patch(
-          '/communities/$community.json', {'updatedDate': now.toString()},
-          auth: authToken);
+        Firebase.patch(
+            '/communities/$community.json', {'updatedDate': now.toString()},
+            auth: authToken);
+
+      }
 
       return id;
     } catch (error, stack) {
