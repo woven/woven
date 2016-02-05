@@ -68,6 +68,8 @@ class Item extends shared.Item {
 
   /**
    * Add an item with a given [value] to the given [community].
+   *
+   * TODO: Consider moving communities into the Map itself.
    */
   static Future<String> add(
       List communities, Map value, String authToken) async {
