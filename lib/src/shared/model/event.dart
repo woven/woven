@@ -15,6 +15,7 @@ class EventModel implements Item {
   String url;
   String uriPreviewId;
   DateTime startDateTime;
+  String feedId;
 
   Map toJson() {
     return {

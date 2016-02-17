@@ -15,6 +15,7 @@ class NewsModel implements Item {
   String body;
   String url;
   String uriPreviewId;
+  String feedId;
 
   Map toJson() {
     return {
@@ -26,7 +27,8 @@ class NewsModel implements Item {
       "createdDate": encode(createdDate),
       "updatedDate": encode(updatedDate),
       "url": url,
-      "uriPreviewId": uriPreviewId
+      "uriPreviewId": uriPreviewId,
+      "feedId": feedId
     };
   }
 
@@ -40,6 +42,7 @@ class NewsModel implements Item {
       ..createdDate = data['createdDate']
       ..updatedDate = data['updatedDate']
       ..url = data['url']
-      ..uriPreviewId = data['uriPreviewId'];
+      ..uriPreviewId = data['uriPreviewId']
+      ..feedId = data['feedId'];
   }
 }

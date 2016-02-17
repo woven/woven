@@ -113,6 +113,7 @@ class CrawlerTask extends Task {
               ..updatedDate = feedItem.publicationDate
               ..user = 'dave'
               ..type = 'news'
+              ..feedId = feed.id
               ..priority = priority;
 
             // TODO: Use firebase_io lib in ItemModel?

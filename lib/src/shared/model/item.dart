@@ -8,4 +8,5 @@ class Item {
   String usernameForDisplay;
   DateTime createdDate = new DateTime.now().toUtc();
   DateTime updatedDate = new DateTime.now().toUtc();
+  String feedId;
 }

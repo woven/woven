@@ -15,6 +15,7 @@ class Post implements Item {
   String message; // The user's message.
   String subject; // The attached content's subject.
   String body;
+  String feedId;
 
   Map encode() {
     return {
