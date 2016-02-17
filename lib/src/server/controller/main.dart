@@ -29,7 +29,7 @@ class MainController {
     var sessionId;
 
     var sessionCookie = sessionManager.getSessionCookie(request);
-    if (sessionCookie != null && sessionCookie.value != null) {
+    if (sessionCookie != null && sessionCookie.value != null && sessionCookie.value.isNotEmpty) {
       sessionId = sessionCookie.value;
 
       // Check the session index for the user associated with this session id.

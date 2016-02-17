@@ -186,7 +186,7 @@ class UserController {
     // Check for a session cookie in the request.
     var sessionCookie = sessionManager.getSessionCookie(request);
     // If there's an existing session cookie, use it. Else, create a new session id.
-    var sessionId = (sessionCookie == null || sessionCookie.value == null)
+    var sessionId = (sessionCookie == null || sessionCookie.value == null || sessionCookie.value.isEmpty)
         ? sessionManager.createSessionId()
         : sessionCookie.value;
 
