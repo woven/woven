@@ -29,6 +29,7 @@ dependencies:
   html: "^0.12.2"
   xml: "^2.4.0"
   image: "^1.1.25"
+  usage: "^1.2.0"
 dependency_overrides:
 #  firebase:
 #    git: https://github.com/davenotik/firebase-dart.git

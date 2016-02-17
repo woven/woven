@@ -282,6 +282,8 @@ class MainViewModel extends BaseViewModel with Observable {
       community['starred'] = false;
       starredCommunityRef.remove();
 
+      app.analytics.sendEvent('Channel', 'leave', label: community['id']);
+
       // Update the star count.
       communityRef.child('/star_count').transaction((currentCount) {
         if (currentCount == null || currentCount == 0) {
@@ -304,6 +306,8 @@ class MainViewModel extends BaseViewModel with Observable {
       // If it's not starred, time to star it.
       community['starred'] = true;
       starredCommunityRef.set(true);
+
+      app.analytics.sendEvent('Channel', 'join', label: community['id']);
 
       // Update the star count.
       communityRef.child('/star_count').transaction((currentCount) {
