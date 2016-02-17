@@ -29,7 +29,9 @@ class MainController {
     var sessionId;
 
     var sessionCookie = sessionManager.getSessionCookie(request);
-    if (sessionCookie != null && sessionCookie.value != null && sessionCookie.value.isNotEmpty) {
+    if (sessionCookie != null &&
+        sessionCookie.value != null &&
+        sessionCookie.value.isNotEmpty) {
       sessionId = sessionCookie.value;
 
       // Check the session index for the user associated with this session id.
@@ -94,8 +96,8 @@ class MainController {
 
     Map headers = {};
 
-    if (sessionId != null) headers =
-        sessionManager.getSessionHeaders(sessionId);
+    if (sessionId != null)
+      headers = sessionManager.getSessionHeaders(sessionId);
     headers['content-type'] = 'text/html';
 
     return new shelf.Response.ok(index, headers: headers);

@@ -29,8 +29,9 @@ class UserController {
     Map headers;
 
     var lookForExistingUser = await findUserInfo(username);
-    if (lookForExistingUser != null) return respond(Response
-        .fromError('That username is not available.')); // User already exists.
+    if (lookForExistingUser != null)
+      return respond(Response.fromError(
+          'That username is not available.')); // User already exists.
 
     // Give user instant access in certain cases.
     if (data['invitation'] != null) {
@@ -110,11 +111,12 @@ class UserController {
   static Future<shelf.Response> getCurrentUser(
       App app, shelf.Request request) async {
     var sessionCookie = sessionManager.getSessionCookie(request);
-    if (sessionCookie ==
-        null) return respond(Response.fromError('No session cookie found.'));
-    if (sessionCookie.value == null) return respond(
-        Response.fromError('The id in the session cookie was null.'),
-        statusCode: 401);
+    if (sessionCookie == null)
+      return respond(Response.fromError('No session cookie found.'));
+    if (sessionCookie.value == null)
+      return respond(
+          Response.fromError('The id in the session cookie was null.'),
+          statusCode: 401);
 
     var sessionId = sessionCookie.value;
 
@@ -153,9 +155,9 @@ class UserController {
       // Return the user data.
       Map userData = await findUser(username);
 
-      if (userData == null) return respond(
-          Response.fromError('That user was not found.'),
-          statusCode: 401);
+      if (userData == null)
+        return respond(Response.fromError('That user was not found.'),
+            statusCode: 401);
 
       if (userData['password'] == null) userData['needsPassword'] = true;
       userData.remove('password');
@@ -186,7 +188,9 @@ class UserController {
     // Check for a session cookie in the request.
     var sessionCookie = sessionManager.getSessionCookie(request);
     // If there's an existing session cookie, use it. Else, create a new session id.
-    var sessionId = (sessionCookie == null || sessionCookie.value == null || sessionCookie.value.isEmpty)
+    var sessionId = (sessionCookie == null ||
+            sessionCookie.value == null ||
+            sessionCookie.value.isEmpty)
         ? sessionManager.createSessionId()
         : sessionCookie.value;
 
@@ -194,8 +198,8 @@ class UserController {
     var username = data['username'].toLowerCase();
     var password = data['password'];
 
-    if (!(await isValidLogin(username, password))) return respond(
-        Response.fromError('We don\'t recognize you. Try again.'));
+    if (!(await isValidLogin(username, password)))
+      return respond(Response.fromError('We don\'t recognize you. Try again.'));
 
 //    if (!(await isDisabledUser(username))) return respond(Response.fromError('You don\'t have access yet.\n\nWant to talk about it? hello@woven.co'), statusCode: 403);
 
