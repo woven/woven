@@ -9,6 +9,7 @@ import 'package:core_elements/core_tooltip.dart';
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/view_model/feed.dart';
+import 'package:woven/src/client/model/message.dart';
 
 /**
  * A list of items.
@@ -52,6 +53,31 @@ class Item extends PolymerElement with Observable {
 //    }
 
     viewModel.toggleItemLike(target.dataset['id']);
+  }
+
+  shareToChannel(Event e, var detail, Element target) {
+    e.stopPropagation();
+
+    var itemId = target.dataset['id'];
+
+    var now = new DateTime.now().toUtc();
+    var priority = now.millisecondsSinceEpoch;
+
+    // Notify lobby about new item.
+    var message = new Message()
+      ..type = 'item'
+      ..priority = priority
+      ..data = {'event': 'added', 'type': 'news', 'id': '$itemId'}
+      ..community = app.community.alias
+      ..usernameForDisplay = app.user.username
+      ..user = app.user.username.toLowerCase();
+
+    Message.add(message, app.f);
+
+    if (app.community != null) {
+      app.router.selectedPage = 'lobby';
+      app.router.dispatch(url: '/${app.community.alias}');
+    }
   }
 
   void toggleStar(Event e, var detail, Element target) {

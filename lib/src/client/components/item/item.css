@@ -34,6 +34,12 @@ core-item core-icon {
   /*opacity: 0.0;*/
 }
 
+#icon-share::shadow core-icon svg {
+  height: 26px;
+  width: 26px;
+  top: -4px;
+}
+
 @-webkit-keyframes pulsate {
   0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
   50% {opacity: 1.0;}
@@ -390,7 +396,7 @@ core-tooltip[show]::shadow .core-tooltip {
 
 .action-button span {
   position: relative;
-  top: 1px;
+  top: 2px;
 }
 
 .action-button {
@@ -399,9 +405,9 @@ core-tooltip[show]::shadow .core-tooltip {
   box-shadow: none;
   display: inline-block;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
-  padding: 5px 12px 5px 8px;
+  padding: 5px 8px 5px 8px;
   text-decoration: none;
   text-align: left;
   border-radius: 2px;
@@ -435,6 +441,16 @@ core-tooltip[show]::shadow .core-tooltip {
 
 .like-button {
   width: 60px;
+}
+
+.share-button:hover {
+  color: mediumaquamarine;
+  fill: mediumaquamarine;
+}
+
+.share-button:hover {
+  color: mediumaquamarine;
+  fill: mediumaquamarine;
 }
 
 .like-button.selected:not([disabled]) {
