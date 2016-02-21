@@ -1,14 +1,24 @@
-import 'package:polymer/polymer.dart';
+@HtmlImport('inline_item.html')
+
+library components.inline_item;
+
 import 'dart:html';
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:polymer/polymer.dart';
+import 'package:firebase/firebase.dart' as db;
+import 'package:crypto/crypto.dart';
+import 'package:core_elements/core_icon_button.dart';
+import 'package:core_elements/core_item.dart';
+
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
-import 'package:firebase/firebase.dart' as db;
 import 'package:woven/src/client/view_model/base.dart';
 import 'package:woven/src/client/model/user.dart';
 import 'package:woven/src/shared/model/uri_preview.dart';
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
+import 'package:woven/src/client/components/widgets/live_date_time/live_date_time.dart';
+
 
 /**
  * A list of items.

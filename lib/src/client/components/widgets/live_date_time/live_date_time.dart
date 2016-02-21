@@ -1,3 +1,7 @@
+@HtmlImport('live_date_time.html')
+
+library components.widgets.live_date_time;
+
 import 'dart:html';
 import 'dart:async';
 
@@ -47,5 +51,4 @@ class LiveDateTime extends PolymerElement {
   }
 
   LiveDateTime.created() : super.created();
-
 }

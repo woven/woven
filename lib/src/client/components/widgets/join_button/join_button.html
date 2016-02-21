@@ -1,0 +1,11 @@
+<polymer-element name="join-button">
+  <template>
+    <link rel="stylesheet" href="join_button.css">
+
+    <core-icon-button icon="{{app.user != null && community.starred == true ? 'star' : 'star-outline'}}"
+                      on-click="{{toggleStar}}"
+                      class="join-button {{app.user != null && community.starred == true ? 'selected' : ''}}"
+                      data-id="{{community.id}}"><span>{{community.starred}}{{app.user != null && community.starred == true ? 'Joined' : 'Join'}}</span></core-icon-button><span class="item-count"><strong>{{community.starCount}}</strong> participants</span>
+
+  </template>
+</polymer-element>

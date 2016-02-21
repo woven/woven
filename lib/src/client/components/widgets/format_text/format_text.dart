@@ -1,3 +1,5 @@
+@HtmlImport('format_text.html')
+
 library format_text;
 
 import 'dart:html';

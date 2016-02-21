@@ -1,3 +1,7 @@
+@HtmlImport('item.html')
+
+library components.item;
+
 import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
@@ -5,6 +9,11 @@ import 'dart:convert';
 import 'package:polymer/polymer.dart';
 import 'package:crypto/crypto.dart';
 import 'package:core_elements/core_tooltip.dart';
+import 'package:core_elements/core_item.dart';
+import 'package:core_elements/core_icon_button.dart';
+import 'package:core_elements/core_image.dart';
+import 'package:core_elements/core_tooltip.dart';
+
 
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';

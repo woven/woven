@@ -1,3 +1,7 @@
+@HtmlImport('chat_list.html')
+
+library components.chat_list;
+
 import 'dart:html' hide Notification;
 import 'dart:async';
 
@@ -5,6 +9,11 @@ import 'package:polymer/polymer.dart';
 import 'package:notification/notification.dart';
 
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
+import 'package:woven/src/client/components/widgets/live_date_time/live_date_time.dart';
+import 'package:woven/src/client/components/widgets/safe_html/safe_html.dart';
+import 'package:woven/src/client/components/widgets/format_text/format_text.dart';
+import 'package:woven/src/client/components/user_picture/user_picture.dart';
+import 'package:woven/src/client/components/inline_item/inline_item.dart';
 import 'package:woven/src/client/view_model/chat.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/infinite_scroll.dart';

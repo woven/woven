@@ -1,6 +1,9 @@
-library user_picture;
+@HtmlImport('user_picture.html')
+
+library components.user_picture;
 
 import 'package:polymer/polymer.dart';
+import 'package:core_elements/core_image.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/shared/model/user.dart';

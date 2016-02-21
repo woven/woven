@@ -1,9 +1,15 @@
+@HtmlImport('chat_view.html')
+
 library client.components.chat_view;
 
-import 'package:polymer/polymer.dart';
 import 'dart:html';
+
+import 'package:polymer/polymer.dart';
+
 import 'package:woven/src/client/view_model/chat.dart';
 import 'package:woven/src/client/app.dart';
+import 'package:woven/src/client/components/chat_list/chat_list.dart';
+import 'package:woven/src/client/components/chat_box/chat_box.dart';
 
 @CustomTag('chat-view')
 class ChatView extends PolymerElement {

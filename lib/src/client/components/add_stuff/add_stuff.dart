@@ -1,3 +1,5 @@
+@HtmlImport('add_stuff.html')
+
 library components.add_stuff;
 
 import 'dart:html';
@@ -10,6 +12,7 @@ import 'package:core_elements/core_overlay.dart';
 import 'package:intl/intl.dart';
 import 'package:core_elements/core_input.dart';
 import 'package:core_elements/core_selector.dart';
+import 'package:paper_elements/paper_autogrow_textarea.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';

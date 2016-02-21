@@ -1,0 +1,59 @@
+.join-button {
+  fill: #2d2d2d;
+  color: #2d2d2d;
+  background-color: #fff;
+  box-shadow: none;
+  border: 1px solid #e6e6e6;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 3px 5px;
+  text-decoration: none;
+  width: 90px;
+}
+
+.theme-dark .join-button {
+  border: none;
+  color: #e0e0e0;
+  background-color: transparent;
+}
+
+.join-button:hover {
+  box-shadow: none;
+}
+
+.join-button.selected:not([disabled]) {
+  box-shadow: none;
+  background-color: #fff;
+  fill: #f99b15;
+  color: #f99b15;
+}
+
+.theme-dark .join-button.selected:not([disabled]) {
+  background-color: transparent;
+}
+
+.join-button:active:not([disabled]), .join-button.selected:active:not([disabled]) {
+  background-color: #fff;
+}
+
+.theme-dark .join-button:active:not([disabled]), .theme-dark .join-button.selected:active:not([disabled]) {
+  background-color: transparent;
+}
+
+.join-button span {
+  position: relative;
+  top: 1px;
+}
+
+span.item-count {
+  font-size: 14px;
+  color: #444;
+  outline: none;
+  margin-left: 12px;
+}
+
+.theme-dark span.item-count {
+  color: #e0e0e0;
+}

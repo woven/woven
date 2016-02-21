@@ -1,12 +1,22 @@
-import 'package:polymer/polymer.dart';
+@HtmlImport('chat_box.html')
+
+library components.chat_box;
+
 import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
-import 'package:woven/src/client/app.dart';
+
+import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_autogrow_textarea.dart';
 import 'package:core_elements/core_a11y_keys.dart';
-import 'package:woven/config/config.dart';
 import 'package:firebase/firebase.dart' as db;
+import 'package:core_elements/core_field.dart';
+import 'package:core_elements/core_icon_button.dart';
+import 'package:core_elements/core_a11y_keys.dart';
+import 'package:paper_elements/paper_autogrow_textarea.dart';
+
+import 'package:woven/src/client/app.dart';
+import 'package:woven/config/config.dart';
 import 'package:woven/src/client/components/chat_view/chat_view.dart';
 import 'package:woven/src/client/view_model/chat.dart';
 import 'package:woven/src/client/model/message.dart';

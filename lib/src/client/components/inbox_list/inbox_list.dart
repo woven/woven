@@ -1,13 +1,26 @@
-import 'package:polymer/polymer.dart';
-import 'package:firebase/firebase.dart' as db;
+@HtmlImport('inbox_list.html')
+
+library components.inbox_list;
+
 import 'dart:html';
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:polymer/polymer.dart';
+import 'package:core_elements/core_item.dart';
+import 'package:core_elements/core_icon.dart';
+import 'package:core_elements/core_tooltip.dart';
+import 'package:firebase/firebase.dart' as db;
+import 'package:crypto/crypto.dart';
+
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/view_model/feed.dart';
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
+import 'package:woven/src/client/components/widgets/live_date_time/live_date_time.dart';
+import 'package:woven/src/client/components/item/item.dart';
+import 'package:woven/src/client/components/user_picture/user_picture.dart';
+import 'package:woven/src/client/components/widgets/uri_preview/uri_preview.dart';
 
 /**
  * A list of items.

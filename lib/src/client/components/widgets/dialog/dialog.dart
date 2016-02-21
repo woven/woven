@@ -1,5 +1,6 @@
 import 'package:polymer/polymer.dart';
-//export 'package:polymer/init.dart';
+
+import 'package:core_elements/core_overlay.dart';
 
 @CustomTag('x-dialog')
 class XDialog extends PolymerElement {

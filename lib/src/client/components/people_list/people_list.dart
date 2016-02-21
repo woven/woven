@@ -1,12 +1,23 @@
+@HtmlImport('people_list.html')
+
+library components.people_list;
+
 import 'dart:html';
 import 'dart:async';
+
 import 'package:polymer/polymer.dart';
+import 'package:core_elements/core_header_panel.dart';
+import 'package:core_elements/core_icon.dart';
+import 'package:core_elements/core_item.dart';
+
+
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/client/view_model/people.dart';
 import 'package:woven/src/client/infinite_scroll.dart';
-import 'package:core_elements/core_header_panel.dart';
+import 'package:woven/src/client/components/widgets/live_date_time/live_date_time.dart';
+
 
 /**
  * This class represents a list of users.
