@@ -9,11 +9,21 @@ import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_dropdown.dart';
 import 'package:core_elements/core_menu.dart';
 import 'package:core_elements/core_item.dart';
+import 'package:core_elements/communication_icons.dart';
+import 'package:core_elements/core_dropdown.dart';
 
 import 'package:woven/src/client/app.dart';
 import 'package:woven/src/client/components/channel_info/channel_info.dart';
+import 'package:woven/src/client/components/community_list/community_list.dart';
+import 'package:woven/src/client/components/people_list/people_list.dart';
+import 'package:woven/src/client/components/user_picture/user_picture.dart';
+import 'package:woven/src/client/components/chat_view/chat_view.dart';
+import 'package:woven/src/client/components/inbox_list/inbox_list.dart';
+import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
+import 'package:woven/src/client/components/page/home/home.dart';
 import 'package:woven/src/client/components/add_stuff/add_stuff.dart';
 import 'package:woven/src/client/components/widgets/dropdown/dropdown.dart';
+import 'package:woven/src/client/components/widgets/custom_icons/custom_icons.dart';
 
 @CustomTag('x-main')
 class Main extends PolymerElement with Observable {
