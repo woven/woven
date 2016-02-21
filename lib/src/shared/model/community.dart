@@ -30,8 +30,8 @@ class CommunityModel {
       ..alias = data['alias']
       ..name = data['name']
       ..shortDescription = data['shortDescription']
-      ..createdDate = data['createdDate']
-      ..updatedDate = data['updatedDate']
+      ..createdDate = (data['createdDate'] != null) ? DateTime.parse(data['createdDate']) : null
+      ..updatedDate = (data['updatedDate'] != null) ? DateTime.parse(data['updatedDate']) : null
       ..starCount = data['star_count']
       ..disabled = data['disabled'];
   }
