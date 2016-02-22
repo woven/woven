@@ -60,15 +60,12 @@
               <div id="sidebar-title" class="{{app.community == null ? 'has-logo' : ''}} flashing-fix">
                 {{app.community.name}}
               </div>
-              <div class="description">
-                <span class="{{(app.isNotMobile) ? 'hover' : ''}}" on-tap="{{toggleChannelInfo}}">About this channel</span>
-
-                <!--<span class="item-count"><strong>201</strong> participants</span>-->
-                <!--<core-icon class="icon" icon="info-outline"-->
-                           <!--on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>-->
-                <!--<core-icon class="icon" icon="info-outline"-->
-                           <!--on-tap="{{switchPage}}" data-page="channels" data-url="/"></core-icon>-->
-              </div>
+              <div class="description">{{app.community.shortDescription}}</div>
+              <div class="join"><join-button app="{{app}}" community="{{app.community}}"></join-button></div>
+              <div class="participants"><strong>{{app.community.starCount}}</strong> participants</div>
+              <!--<div class="link">-->
+                <!--<span class="{{(app.isNotMobile) ? 'hover' : ''}}" on-tap="{{toggleChannelInfo}}">About this channel</span>-->
+              <!--</div>-->
             </div>
           </template>
 

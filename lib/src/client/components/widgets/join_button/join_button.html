@@ -5,7 +5,6 @@
     <core-icon-button icon="{{app.user != null && community.starred == true ? 'star' : 'star-outline'}}"
                       on-click="{{toggleStar}}"
                       class="join-button {{app.user != null && community.starred == true ? 'selected' : ''}}"
-                      data-id="{{community.id}}"><span>{{app.user != null && community.starred == true ? 'Joined' : 'Join'}}</span></core-icon-button><span class="item-count"><strong>{{community.starCount}}</strong> participants</span>
-
+                      data-id="{{community.id}}"><span>{{app.user != null && community.starred == true ? 'Joined' : 'Join'}}</span></core-icon-button>
   </template>
 </polymer-element>

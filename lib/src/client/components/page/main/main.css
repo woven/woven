@@ -197,11 +197,11 @@ core-pages {
 }
 
 .info-area {
-  height: 205px;
   border-bottom: solid 1px rgb(227, 227, 227);
   width: 250px;
   margin: auto;
   background: white;
+  font-size: 14px;
 }
 
 .theme-dark .info-area {
@@ -215,6 +215,11 @@ core-pages {
   margin-right: 5px;
 }
 
+.info-area .participants {
+  color: #666;
+  margin: 8px;
+}
+
 .theme-dark .info-area span {
   color: white;
 }
@@ -222,6 +227,10 @@ core-pages {
 .info-area span.hover:hover {
   cursor: pointer;
   color: dimgray;
+}
+
+.info-area .join {
+  margin: 5px;
 }
 
 .channel-image {
@@ -233,9 +242,14 @@ core-pages {
   margin-bottom: 10px;
 }
 
-.left .description {
-  font-size: 14px;
-  margin: 12px;
+.info-area .description {
+  color: #666;
+  margin: 5px 20px;
+}
+
+.info-area .link {
+  color: #333;
+  margin: 5px;
 }
 
 .noscroll {
