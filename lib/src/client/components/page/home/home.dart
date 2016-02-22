@@ -1,3 +1,7 @@
+@HtmlImport('home.html')
+
+library components.page.home;
+
 import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
