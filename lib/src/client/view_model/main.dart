@@ -19,7 +19,7 @@ import 'base.dart';
 
 class MainViewModel extends BaseViewModel with Observable {
   final App app;
-  final List communities = toObservable([]);
+  @observable final List communities = toObservable([]);
   final List users = toObservable([]);
   final Map feedViewModels = {};
   final Map itemViewModels = {};
@@ -31,7 +31,7 @@ class MainViewModel extends BaseViewModel with Observable {
   @observable bool reachedEnd = false;
   var snapshotPriority = null;
 
-  List<StreamSubscription> userSubscriptions = [];
+  List<StreamSubscription> subscriptions = [];
 
   Firebase get f => app.f;
 
@@ -89,8 +89,8 @@ class MainViewModel extends BaseViewModel with Observable {
 
   // Get the view model for the current inbox.
   @observable FeedViewModel get feedViewModel {
-    if (app.debugMode) print(
-        'feedViewModel getter called // community: ${app.community}');
+    if (app.debugMode)
+      print('feedViewModel getter called // community: ${app.community}');
     if (app.community == null) return null;
 
     var id = app.community.alias;
@@ -123,8 +123,9 @@ class MainViewModel extends BaseViewModel with Observable {
   }
 
   FeedViewModel get eventViewModel {
-    if (app.debugMode) print(
-        'DEBUG: eventViewModel getter called // community: ${app.community}');
+    if (app.debugMode)
+      print(
+          'DEBUG: eventViewModel getter called // community: ${app.community}');
 
     if (app.community == null) return null;
     if (app.community.alias == null) return null;
@@ -195,41 +196,41 @@ class MainViewModel extends BaseViewModel with Observable {
     // Get the list of communities, and listen for new ones.
     communitiesRef.onChildAdded.listen((e) {
       // Make it observable right from the start.
-      var community = toObservable(e.snapshot.val());
+      @observable
+      CommunityModel community =
+          CommunityModel.fromJson(toObservable(e.snapshot.val()));
 
-      if (community['disabled'] == true) return;
-      if (community['alias'] == null) return;
+      community.id = e.snapshot.key;
 
-      // Use the ID from Firebase as our ID.
-      community['id'] = e.snapshot.key;
+      if (community.disabled == true) return;
+      if (community.id == null) return;
 
       // Add the community to the app cache, so we have it elsewhere.
-      app.cache.communities[community['id']] =
-          CommunityModel.fromJson(community);
+      app.cache.communities[community.id] = community;
 
       // Set some defaults.
-      if (community['updatedDate'] == null) community['updatedDate'] =
-          community['createdDate'];
-      if (community['star_count'] == null) community['star_count'] = 0;
+      if (community.updatedDate == null)
+        community.updatedDate = community.createdDate;
+      if (community.starCount == null) community.starCount = 0;
 
       // The live-date-time element needs parsed dates.
-      community['updatedDate'] = DateTime.parse(community['updatedDate']);
-      community['createdDate'] = DateTime.parse(community['createdDate']);
+      community.updatedDate = community.updatedDate;
+      community.createdDate = community.createdDate;
 
       // Insert each new community into the list.
       communities.add(community);
 
       // Sort the list by the item's updatedDate.
-      communities
-          .sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+      communities.sort((CommunityModel m1, CommunityModel m2) =>
+          m2.updatedDate.compareTo(m1.updatedDate));
 
       listenForStarredState() {
         var starredCommunitiesRef = f.child('/starred_by_user/' +
             app.user.username.toLowerCase() +
             '/communities/' +
-            community['id']);
-        userSubscriptions.add(starredCommunitiesRef.onValue.listen((e) {
-          community['starred'] = e.snapshot.val() != null;
+            community.id);
+        subscriptions.add(starredCommunitiesRef.onValue.listen((e) {
+          community.starred = e.snapshot.val() != null;
         }));
       }
 
@@ -239,9 +240,9 @@ class MainViewModel extends BaseViewModel with Observable {
 
       app.onUserChanged.listen((UserModel user) {
         if (user == null) {
-          community['starred'] = false;
-          userSubscriptions.forEach((s) => s.cancel());
-          userSubscriptions.clear();
+          community.starred = false;
+          subscriptions.forEach((s) => s.cancel());
+          subscriptions.clear();
         } else {
           listenForStarredState();
         }
@@ -250,80 +251,80 @@ class MainViewModel extends BaseViewModel with Observable {
 
     // When a community changes, let's update it.
     communitiesRef.onChildChanged.listen((e) {
-      Map currentData =
-          communities.firstWhere((i) => i['id'] == e.snapshot.key);
-      Map newData = e.snapshot.val();
+      CommunityModel community =
+          communities.firstWhere((CommunityModel i) => i.id == e.snapshot.key);
+      CommunityModel newData = CommunityModel.fromJson(e.snapshot.val());
 
-      newData.forEach((k, v) {
-        if (k == "createdDate" || k == "updatedDate") v = DateTime.parse(v);
-        if (k == "star_count") v = (v != null) ? v : 0;
+      community
+        ..alias = newData.alias
+        ..updatedDate = newData.updatedDate
+        ..name = newData.name
+        ..shortDescription = newData.shortDescription
+        ..starCount = newData.starCount;
 
-        currentData[k] = v;
-      });
-
-      communities
-          .sort((m1, m2) => m2["updatedDate"].compareTo(m1["updatedDate"]));
+      communities.sort((m1, m2) => m2.updatedDate.compareTo(m1.updatedDate));
     });
   }
 
   void toggleCommunityStar(id) {
-    if (app.user == null) return app.showMessage(
-        "Kindly sign in first.", "important");
+    if (app.user == null)
+      return app.showMessage("Kindly sign in first.", "important");
 
-    var community = communities.firstWhere((i) => i['id'] == id);
+    CommunityModel community =
+        communities.firstWhere((CommunityModel i) => i.id == id);
     var starredCommunityRef = f.child('/starred_by_user/' +
         app.user.username.toLowerCase() +
         '/communities/' +
-        community['id']);
-    var communityRef = f.child('/communities/' + community['id']);
+        community.id);
+    var communityRef = f.child('/communities/' + community.id);
 
-    if (community['starred']) {
+    if (community.starred) {
       // If it's starred, time to unstar it.
-      community['starred'] = false;
+      community.starred = false;
       starredCommunityRef.remove();
 
-      app.analytics.sendEvent('Channel', 'leave', label: community['id']);
+      app.analytics.sendEvent('Channel', 'leave', label: community.id);
 
       // Update the star count.
       communityRef.child('/star_count').transaction((currentCount) {
         if (currentCount == null || currentCount == 0) {
-          community['star_count'] = 0;
+          community.starCount = 0;
           return 0;
         } else {
-          community['star_count'] = currentCount - 1;
-          return community['star_count'];
+          community.starCount = currentCount - 1;
+          return community.starCount;
         }
       });
 
       // Update the list of users who starred.
       f
           .child('/users_who_starred/community/' +
-              community['id'] +
+              community.id +
               '/' +
               app.user.username.toLowerCase())
           .remove();
     } else {
       // If it's not starred, time to star it.
-      community['starred'] = true;
+      community.starred = true;
       starredCommunityRef.set(true);
 
-      app.analytics.sendEvent('Channel', 'join', label: community['id']);
+      app.analytics.sendEvent('Channel', 'join', label: community.alias);
 
       // Update the star count.
       communityRef.child('/star_count').transaction((currentCount) {
         if (currentCount == null || currentCount == 0) {
-          community['star_count'] = 1;
+          community.starCount = 1;
           return 1;
         } else {
-          community['star_count'] = currentCount + 1;
-          return community['star_count'];
+          community.starCount = currentCount + 1;
+          return community.starCount;
         }
       });
 
       // Update the list of users who starred.
       f
           .child('/users_who_starred/community/' +
-              community['id'] +
+              community.id +
               '/' +
               app.user.username.toLowerCase())
           .set(true);
