@@ -1,17 +1,23 @@
+@HtmlImport('community_list.html')
+
+library components.community_list;
+
+import 'dart:html';
+import 'dart:math';
+import 'dart:async' show Timer;
+import 'dart:convert';
+
 import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
-import 'dart:html';
+import 'package:crypto/crypto.dart';
+
 import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/client/app.dart';
 import 'package:core_elements/core_pages.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/model/community.dart';
 import 'package:woven/src/client/view_model/main.dart';
-import 'dart:math';
-import 'dart:async' show Timer;
-
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
+import 'package:woven/src/client/components/widgets/join_button/join_button.dart';
 
 // *
 // The InboxList class is for the list of inbox items, which is pulled from Firebase.
@@ -20,22 +26,14 @@ import 'package:crypto/crypto.dart';
 class CommunityList extends PolymerElement with Observable {
   @published App app;
   @published MainViewModel viewModel;
+//  @observable CommunityModel community;
 
   CommunityList.created() : super.created();
 
   void selectCommunity(Event e, var detail, Element target) {
     // Look in the communities list for the item that matches the
     // id passed in the data-id attribute on the element.
-    var communityMap = viewModel.communities.firstWhere((i) => i['id'] == target.dataset['id']);
-
-    // Dave: you should construct these CommunityModel's way sooner. In fact, all data should be modeled,
-    // right after the data has been loaded from the DB. Consider making some generic functions for these.
-    // Maybe `new CommunityModel.fromData(communityMap)` ?
-    var community = new CommunityModel()
-      ..alias = communityMap['alias']
-      ..name = communityMap['name']
-      ..createdDate = communityMap['createdDate']
-      ..updatedDate = communityMap['updatedDate'];
+    var community = viewModel.communities.firstWhere((i) => i.id == target.dataset['id']);
 
     app.changeCommunity(community.alias);
     app.router.selectedPage = 'lobby';

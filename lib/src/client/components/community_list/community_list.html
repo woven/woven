@@ -1,31 +1,21 @@
-<link rel="import" href="../../../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_item.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon.html">
-<link rel="import" href="../../../../../../packages/core_elements/core_icon_button.html">
-<link rel="import" href="../widgets/live_date_time/live_date_time.html">
-<link rel="import" href="../cta_learn_more/cta_learn_more.html">
 <polymer-element name="community-list">
   <template>
     <link rel="stylesheet" href="community_list.css">
     <div class="content-wrapper">
       <template repeat="{{community in viewModel.communities}}">
-        <core-item class="item {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}" on-click="{{selectCommunity}}" data-id="{{community['id']}}">
+        <core-item class="item {{(app.user.settings['theme'] == 'dark') ? 'theme-dark' : ''}}" on-click="{{selectCommunity}}" data-id="{{community.id}}">
           <div class="item-container" horizontal layout>
-            <!--<div class="item-col1" vertical layout>-->
-
-            <!--</div>-->
             <div class="item-col2" flex>
-              <div class="community-alias">{{community['alias']}}</div>
-              <div class="item-body" flex>{{community['name']}}</div>
-              <core-icon-button icon="{{app.user != null && community['starred'] == true ? 'star' : 'star-outline'}}"
-                                on-click="{{toggleStar}}"
-                                class="join-button {{app.user != null && community['starred'] == true ? 'selected' : ''}}"
-                                data-id="{{ community['id'] }}"><span>{{app.user != null && community['starred'] == true ? 'Joined' : 'Join'}}</span></core-icon-button><span class="item-count"><strong>{{community['star_count']}}</strong> participants</span>
+              <div class="community-alias">{{community.alias}}</div>
+              <div class="item-body" flex>{{community.name}}</div>
+
+              <join-button app="{{app}}" community="{{community}}"></join-button>
+
             </div>
             <div class="item-col3">
               <div class="item-updated">
                 Active
-                <live-date-time value="{{community['updatedDate']}}" formatter="{{formatItemDate}}"></live-date-time>
+                <live-date-time value="{{community.updatedDate}}" formatter="{{formatItemDate}}"></live-date-time>
               </div>
             </div>
           </div>
@@ -33,5 +23,4 @@
       </template>
     </div>
   </template>
-  <script type="application/dart" src="community_list.dart"></script>
 </polymer-element>

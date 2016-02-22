@@ -1,17 +1,18 @@
 library community_model;
 
 import '../util.dart' as util;
+import 'package:observe/observe.dart';
 
-class CommunityModel {
-  String id;
-  String alias;
-  String name;
-  String shortDescription;
-  DateTime createdDate;
-  DateTime updatedDate;
-  int starCount;
-  bool disabled;
-  bool starred = false;
+class CommunityModel extends Observable {
+  @observable String id;
+  @observable String alias;
+  @observable String name;
+  @observable String shortDescription;
+  @observable DateTime createdDate;
+  @observable DateTime updatedDate;
+  @observable int starCount = 0;
+  @observable bool disabled;
+  @observable bool starred = false;
 
   static Map toJson(CommunityModel community) {
     return {
