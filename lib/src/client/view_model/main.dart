@@ -196,7 +196,6 @@ class MainViewModel extends BaseViewModel with Observable {
     // Get the list of communities, and listen for new ones.
     communitiesRef.onChildAdded.listen((e) {
       // Make it observable right from the start.
-      @observable
       CommunityModel community =
           CommunityModel.fromJson(toObservable(e.snapshot.val()));
 
