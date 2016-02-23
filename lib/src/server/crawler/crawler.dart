@@ -780,7 +780,14 @@ class Crawler {
       var list = [];
 
       return Future.forEach(images, (image) async {
-        var response = await http.head(image);
+        var response = await http
+            .head(image)
+            .catchError((_) {
+          return;
+        });
+
+        if (response == null) return;
+
         // Skip 404, etc.
         if (util.isSuccessStatusCode(response.statusCode) == false) return;
 
