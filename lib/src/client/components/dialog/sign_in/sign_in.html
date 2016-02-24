@@ -1,12 +1,3 @@
-<link rel="import" href="../../../../../../../packages/polymer/polymer.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_item.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_icon.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_icon_button.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_toolbar.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_input.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_animation.html">
-<link rel="import" href="../../../../../../../packages/core_elements/core_a11y_keys.html">
-<link rel="import" href="../../widgets/dialog/dialog.html">
 <polymer-element name="sign-in-dialog">
   <template>
     <x-dialog id="dialog-overlay" class="dialog" opened="{{opened}}"
@@ -37,5 +28,4 @@
       <core-a11y-keys id="a11y-send" keys="enter" on-keys-pressed="{{submit}}"></core-a11y-keys>
     </x-dialog>
   </template>
-  <script type="application/dart" src="sign_in.dart"></script>
 </polymer-element>

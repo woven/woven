@@ -1,5 +1,8 @@
-import 'package:polymer/polymer.dart';
+@HtmlImport('dialog.html')
 
+library components.widgets.dialog;
+
+import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_overlay.dart';
 
 @CustomTag('x-dialog')

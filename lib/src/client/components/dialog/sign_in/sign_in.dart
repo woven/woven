@@ -1,16 +1,27 @@
-import 'package:polymer/polymer.dart';
+@HtmlImport('sign_in.html')
+
+library components.dialog.sign_in;
+
 import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:polymer/polymer.dart';
 import 'package:firebase/firebase.dart' as db;
 import 'package:core_elements/core_overlay.dart';
-import 'package:woven/src/client/app.dart';
+import 'package:core_elements/core_item.dart';
+import 'package:core_elements/core_icon.dart';
+import 'package:core_elements/core_icon_button.dart';
+import 'package:core_elements/core_toolbar.dart';
+import 'package:core_elements/core_a11y_keys.dart';
 import 'package:core_elements/core_input.dart';
-import 'package:woven/src/shared/model/user.dart';
-import '../welcome/welcome.dart';
 import 'package:core_elements/core_icon_button.dart';
 import 'package:core_elements/core_animation.dart';
 
+import '../welcome/welcome.dart';
+import 'package:woven/src/client/components/widgets/dialog/dialog.dart';
+import 'package:woven/src/client/app.dart';
+import 'package:woven/src/shared/model/user.dart';
 import 'package:woven/src/shared/routing/routes.dart';
 import 'package:woven/src/shared/response.dart';
 
