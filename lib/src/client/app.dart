@@ -122,7 +122,8 @@ class App extends Observable {
       var checkAlias = await f.child('/communities/$alias').once('value');
       if (checkAlias == null) return;
       // If so, create a community object and add it to our cache.
-      community = CommunityModel.fromJson(checkAlias.val());
+      community =
+          mainViewModel.communities.firstWhere((CommunityModel i) => i.alias == alias);
       cache.communities[alias] = community;
     }
 
