@@ -122,8 +122,8 @@ class App extends Observable {
       var checkAlias = await f.child('/communities/$alias').once('value');
       if (checkAlias == null) return;
       // If so, create a community object and add it to our cache.
-      community =
-          mainViewModel.communities.firstWhere((CommunityModel i) => i.alias == alias);
+      community = mainViewModel.communities
+          .firstWhere((CommunityModel i) => i.alias == alias);
       cache.communities[alias] = community;
     }
 
@@ -141,8 +141,8 @@ class App extends Observable {
     changeCommunity(null);
 
     // Show the homepage if a signed out user had skipped it.
-    if (hasTriedLoadingUser && user == null && !skippedHomePage) showHomePage =
-        true;
+    if (hasTriedLoadingUser && user == null && !skippedHomePage)
+      showHomePage = true;
   }
 
   void people(String path) {
@@ -259,8 +259,8 @@ class App extends Observable {
    * for certain components that need to refresh their view model.
    */
   Future<bool> changeCommunity(String alias) {
-    if (community != null &&
-        community.alias == alias) return new Future.value(true);
+    if (community != null && community.alias == alias)
+      return new Future.value(true);
 
     if (alias == null) {
       community = null;
