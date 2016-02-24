@@ -1,5 +1,4 @@
 @HtmlImport('join_button.html')
-
 library woven.client.components.join_button;
 
 import 'dart:async';
@@ -14,7 +13,7 @@ import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/model/community.dart';
 
 @CustomTag("join-button")
-class JoinButton extends PolymerElement  {
+class JoinButton extends PolymerElement {
   @published CommunityModel community;
   @published App app;
 
@@ -26,8 +25,8 @@ class JoinButton extends PolymerElement  {
     // Don't fire the core-item's on-click, just the icon's.
     e.stopPropagation();
 
-    if (app.user == null) return app.showMessage(
-        "Kindly sign in first.", "important");
+    if (app.user == null)
+      return app.showMessage("Kindly sign in first.", "important");
 
     var starredCommunityRef = f.child('/starred_by_user/' +
         app.user.username.toLowerCase() +
@@ -56,9 +55,9 @@ class JoinButton extends PolymerElement  {
       // Update the list of users who starred.
       f
           .child('/users_who_starred/community/' +
-          community.alias +
-          '/' +
-          app.user.username.toLowerCase())
+              community.alias +
+              '/' +
+              app.user.username.toLowerCase())
           .remove();
     } else {
       // If it's not starred, time to star it.
@@ -81,9 +80,9 @@ class JoinButton extends PolymerElement  {
       // Update the list of users who starred.
       f
           .child('/users_who_starred/community/' +
-          community.alias +
-          '/' +
-          app.user.username.toLowerCase())
+              community.alias +
+              '/' +
+              app.user.username.toLowerCase())
           .set(true);
     }
   }
