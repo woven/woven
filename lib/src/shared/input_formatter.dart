@@ -616,6 +616,16 @@ class InputFormatter {
   }
 
   /**
+   * Formats user text like chat messages for HTML output and viewing in email.
+   */
+  static String formatUserTextForEmail(String text) {
+    applyEmojiStyles(String text) =>
+        text.replaceAll('class="emoji"','''style="display: inline-block;vertical-align: sub;width: 1.5em;height: 1.5em;background-size: 1.5em;background-repeat: no-repeat;text-indent: -9999px;"''');
+
+    return applyEmojiStyles(formatUserText(text));
+  }
+
+  /**
   * Tries to choose the proper article ("a" or "an" or none) for a given string.
   */
   static String formatWordArticle(String word) {

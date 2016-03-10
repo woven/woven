@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:shelf/shelf.dart' as shelf;
+import 'package:mustache/mustache.dart' as mustache;
 
 import '../app.dart';
 import '../firebase.dart';
@@ -13,7 +14,10 @@ import '../mailer/mailer.dart';
 import 'package:woven/src/shared/response.dart';
 import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/util.dart';
+import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/regex.dart';
+import 'package:woven/src/server/model/user.dart';
+
 
 class MailController {
   static sendNotificationsForItem(App app, shelf.Request request) {
@@ -95,6 +99,13 @@ class MailController {
       });
     }
 
+    Future findCommunityInfo(_) async {
+      Map userData = await Firebase
+          .get('/communities/${notificationData['community']}.json');
+
+      notificationData['communityName'] = userData['name'];
+    }
+
     Future findCommentInfo() {
       if (isItem) return null;
       return Firebase
@@ -111,6 +122,7 @@ class MailController {
         notificationData['message'] = messageData['message'];
         notificationData['messageAuthor'] =
             (messageData['user'] as String).toLowerCase();
+        notificationData['community'] = messageData['community'];
         notificationData['itemLink'] =
             "http://${config['server']['displayDomain']}/${messageData['community']}";
       });
@@ -150,7 +162,7 @@ class MailController {
     }
     if (isMessage) {
       return findMessage()
-          .then((_) => Future.wait([findMessageAuthorInfo(_)]))
+          .then((_) => Future.wait([findMessageAuthorInfo(_), findCommunityInfo(_)]))
           // TODO: Get the community details, like the name.
           .then(notify)
           .catchError((error, stack) =>
@@ -293,52 +305,75 @@ http://woven.co
           'itemAuthorMentioned'] = true;
 
       // Get the user data. TODO: Address case sensitivity of usernames.
-      Firebase.get('/users/$user.json').then((userData) {
+      Firebase.get('/users/$user.json').then((userData) async {
         if (userData == null) return;
 
         var firstName = userData['firstName'];
         var lastName = userData['lastName'];
         var email = userData['email'];
+        var postAuthor;
         var postAuthorFirstName;
         var postAuthorLastName;
         var notificationText;
 
         if (isItem) {
           notificationText = '';
+          postAuthor = notificationData['itemAuthor'];
           postAuthorFirstName = notificationData['itemAuthorFirstName'];
           postAuthorLastName = notificationData['itemAuthorLastName'];
         }
 
         if (isComment) {
-          notificationText = '\n${notificationData['commentBody']}\n';
+          notificationText = '${notificationData['commentBody']}';
+          postAuthor = notificationData['commentAuthor'];
           postAuthorFirstName = notificationData['commentAuthorFirstName'];
           postAuthorLastName = notificationData['commentAuthorLastName'];
         }
 
         if (isMessage) {
-          notificationText = '\n${notificationData['message']}\n';
+          notificationText = InputFormatter.formatUserTextForEmail(notificationData['message']);
+          postAuthor = notificationData['messageAuthor'];
           postAuthorFirstName = notificationData['messageAuthorFirstName'];
           postAuthorLastName = notificationData['messageAuthorLastName'];
         }
+
+        // Build the HTML template for notifications.
+        List messages = [];
+        Map message = {};
+        // TODO: Later, we can show more messages for better context.
+        List items = [{'message': notificationText}];
+        var templateValues = {};
+
+        print(notificationText);
+
+        message['usernameForDisplay'] = await UserModel.usernameForDisplay(postAuthor);
+        var getPicture = await UserModel.getFullPathToPicture(postAuthor);
+        message['fullPathToPicture'] = (getPicture != null ? getPicture : null);
+        message['items'] = items;
+
+        messages.add(message);
+
+        templateValues['communityName'] = notificationData['communityName'];
+        templateValues['community'] = notificationData['community'];
+        templateValues['leaderText'] = '$postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post.' : '.'}';
+        templateValues['messages'] = messages;
+        templateValues['has_messages'] = true;
+
+        String contents = await new File('web/static/templates/user_mentioned_email.mustache').readAsString();
+
+        // Parse the template.
+        var template = mustache.parse(contents);
+        var output = template.renderString(templateValues);
+
+        var subject = '$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}';
 
         // Send notification.
         var envelope = new Envelope()
           ..from = "Woven <hello@woven.co>"
           ..to = ['$firstName $lastName <$email>']
           ..bcc = ['David Notik <davenotik@gmail.com>']
-          ..subject =
-              "$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}"
-          ..text = '''
-Hey $firstName,
-
-$postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post:' : ':'}
-
-${notificationData['itemLink']}
-
---
-Woven
-http://woven.co
-''';
+          ..subject = subject
+          ..html = output;
         Mailgun.send(envelope);
       });
     });

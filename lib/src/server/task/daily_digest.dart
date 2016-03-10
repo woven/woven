@@ -195,15 +195,12 @@ class DailyDigestTask extends Task {
 
       if (itemsMap == null) return null;
 
-      applyEmojiStyles(String text) =>
-        text.replaceAll('class="emoji"','''style="display: inline-block;vertical-align: sub;width: 1.5em;height: 1.5em;background-size: 1.5em;background-repeat: no-repeat;text-indent: -9999px;"''');
-
       itemsMap.forEach((k, v) {
         // Add the key, which is the item ID, the map as well.
         Message message = new Message.fromJson(v);
         message.id = k;
         if (message.type != 'notification' && message.message.isNotEmpty) {
-          message.message = applyEmojiStyles(InputFormatter.formatUserText(message.message));
+          message.message = InputFormatter.formatUserTextForEmail(message.message);
           messages.add(message);
         }
       });
