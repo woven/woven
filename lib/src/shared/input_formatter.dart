@@ -16,10 +16,37 @@ import 'util.dart' as sharedUtil;
  * Can be used to e.g. strip away HTML.
  */
 class InputFormatter {
-  static List<String> weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  static List<String> months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  static List<String> weekdays = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+  static List<String> months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
 
-  static List<RegExp> rules = [new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false), new RegExp('<object.*?</object>', caseSensitive: false), new RegExp('<video.*?</video>', caseSensitive: false), new RegExp('<iframe.*?</iframe>', caseSensitive: false)];
+  static List<RegExp> rules = [
+    new RegExp('<img.*?src="(.*?)".*?>', caseSensitive: false),
+    new RegExp('<object.*?</object>', caseSensitive: false),
+    new RegExp('<video.*?</video>', caseSensitive: false),
+    new RegExp('<iframe.*?</iframe>', caseSensitive: false)
+  ];
 
   static DateFormat timeFormatter = new DateFormat('ha');
   static DateFormat timeFormatterSpaced = new DateFormat('h a');
@@ -29,7 +56,8 @@ class InputFormatter {
   /**
    * Formats a moment-based date.
    */
-  static String formatMomentDate(DateTime date, {bool noText: false, bool short: false, bool momentsAgo: false, t}) {
+  static String formatMomentDate(DateTime date,
+      {bool noText: false, bool short: false, bool momentsAgo: false, t}) {
     if (date == null) return '';
 
     var todayPrecise = new DateTime.now();
@@ -70,37 +98,56 @@ class InputFormatter {
     } else if (diff.inMinutes.abs() < 60) {
       var s = diff.inMinutes.abs() == 1 || short ? '' : 's';
 
-      if (diff.inMinutes < 0) return '${-diff.inMinutes}$minuteText$s $ago'; else return 'in ${diff.inMinutes}$minuteText$s';
+      if (diff.inMinutes < 0)
+        return '${-diff.inMinutes}$minuteText$s $ago';
+      else
+        return 'in ${diff.inMinutes}$minuteText$s';
     } else if (diff.inHours.abs() < 24) {
       var s = diff.inHours.abs() == 1 || short ? '' : 's';
 
-      if (diff.inHours < 0) return '${-diff.inHours}$hourText$s $ago'; else return 'in ${diff.inHours}$hourText$s';
+      if (diff.inHours < 0)
+        return '${-diff.inHours}$hourText$s $ago';
+      else
+        return 'in ${diff.inHours}$hourText$s';
     } else if (diff.inDays.abs() < 365) {
       var s = diff.inDays.abs() == 1 || short ? '' : 's';
 
-      if (diff.inDays < 0) return '${-diff.inDays}$dayText$s $ago'; else return 'in ${diff.inDays}$dayText$s';
+      if (diff.inDays < 0)
+        return '${-diff.inDays}$dayText$s $ago';
+      else
+        return 'in ${diff.inDays}$dayText$s';
     } else if (diff.inDays.abs() < 365) {
       var s = -diff.inDays ~/ 30 == 1 ? '' : 's';
 
-      if (diff.inDays < 0) return '${-diff.inDays ~/ 30} month$s $ago'; else return 'in ${diff.inDays ~/ 30} month$s';
+      if (diff.inDays < 0)
+        return '${-diff.inDays ~/ 30} month$s $ago';
+      else
+        return 'in ${diff.inDays ~/ 30} month$s';
     } else {
       var s = diff.inDays.abs() < 365 * 2 || short ? '' : 's';
 
-      if (diff.inDays < 0) return '${-diff.inDays ~/ 365}$yearText$s $ago'; else return 'in ${diff.inDays ~/ 365} $yearText$s';
+      if (diff.inDays < 0)
+        return '${-diff.inDays ~/ 365}$yearText$s $ago';
+      else
+        return 'in ${diff.inDays ~/ 365} $yearText$s';
     }
   }
 
-  static String linkify(String text, {bool noExternalIcon: false, bool absolute: true, String internalHost}) {
+  static String linkify(String text,
+      {bool noExternalIcon: false, bool absolute: true, String internalHost}) {
     if (text == null) text = '';
 
-    text = text.replaceAllMapped(new RegExp(RegexHelper.linkOrEmail), (Match match) {
+    text = text.replaceAllMapped(new RegExp(RegexHelper.linkOrEmail),
+        (Match match) {
       var address = match.group(0);
       var label = match.group(0);
       bool isInternal = false;
 
       var isEmail = address.contains('@') && !address.contains('://');
-      if (!isEmail  && address.startsWith('http') == false) address = 'http://$address';
-      if (isEmail && address.startsWith('mailto:') == false) address = ' mailto:$address';
+      if (!isEmail && address.startsWith('http') == false)
+        address = 'http://$address';
+      if (isEmail && address.startsWith('mailto:') == false)
+        address = ' mailto:$address';
 
       var uri = Uri.parse(address);
       if (uri.host == internalHost) {
@@ -125,30 +172,31 @@ class InputFormatter {
 
     if (now.compareTo(startDate) < 0) {
       return 'When';
-    } else if (endDate != null && now.compareTo(startDate) >= 0 && now.compareTo(endDate) < 0) {
+    } else if (endDate != null &&
+        now.compareTo(startDate) >= 0 &&
+        now.compareTo(endDate) < 0) {
       return 'Happening';
     } else {
       return 'Happened';
     }
   }
 
-  static String formatDate(DateTime date, {
-  DateTime endDate,
-  direction: 'future',
-  hideHappened: false,
-  hideTime: false,
-  bool showTime: false,
-  hideMonth: false,
-  detailed: false,
-  useStaticDate: false,
-  hideDay: false,
-  compactDay: false,
-  trimPast: false,
-  expandPast: false,
-  int timeZoneOffset,
-  bool showHappenedPrefix: false,
-  Function t
-  }) {
+  static String formatDate(DateTime date,
+      {DateTime endDate,
+      direction: 'future',
+      hideHappened: false,
+      hideTime: false,
+      bool showTime: false,
+      hideMonth: false,
+      detailed: false,
+      useStaticDate: false,
+      hideDay: false,
+      compactDay: false,
+      trimPast: false,
+      expandPast: false,
+      int timeZoneOffset,
+      bool showHappenedPrefix: false,
+      Function t}) {
     if (date == null) return '';
 
     if (endDate != null && endDate.compareTo(date) <= 0) endDate = null;
@@ -166,18 +214,31 @@ class InputFormatter {
 
     // Some initialization first.
     var today = new DateTime(now.year, now.month, now.day);
-    var tomorrow = DateTime.parse(today.toString()).add(const Duration(days: 1));
-    var yesterday = DateTime.parse(today.toString()).subtract(const Duration(days: 1));
-    var monthAgo = DateTime.parse(today.toString()).subtract(const Duration(days: 30));
-    var yearAgo = DateTime.parse(today.toString()).subtract(const Duration(days: 365));
+    var tomorrow =
+        DateTime.parse(today.toString()).add(const Duration(days: 1));
+    var yesterday =
+        DateTime.parse(today.toString()).subtract(const Duration(days: 1));
+    var monthAgo =
+        DateTime.parse(today.toString()).subtract(const Duration(days: 30));
+    var yearAgo =
+        DateTime.parse(today.toString()).subtract(const Duration(days: 365));
 
     var dayPart = '', monthPart = '', timePart;
 
     // Create first part.
-    if (date.year == today.year && date.month == today.month && date.day == today.day) dayPart = 'Today';
-    else if (date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day) dayPart = 'Yesterday';
-    else if (date.year == tomorrow.year && date.month == tomorrow.month && date.day == tomorrow.day) dayPart = 'Tomorrow';
-      else if (compactDay == false) dayPart = weekdays[date.weekday];
+    if (date.year == today.year &&
+        date.month == today.month &&
+        date.day == today.day)
+      dayPart = 'Today';
+    else if (date.year == yesterday.year &&
+        date.month == yesterday.month &&
+        date.day == yesterday.day)
+      dayPart = 'Yesterday';
+    else if (date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day)
+      dayPart = 'Tomorrow';
+    else if (compactDay == false) dayPart = weekdays[date.weekday];
 
     if (t != null) dayPart = t(dayPart);
 
@@ -185,7 +246,10 @@ class InputFormatter {
 
     // Create month part.
     var groupName = DateGroup.getDateGroupName(date, forward: endDate != null);
-    if (useStaticDate || (groupName != 'Today' && groupName != 'Yesterday' && groupName != 'Tomorrow')) {
+    if (useStaticDate ||
+        (groupName != 'Today' &&
+            groupName != 'Yesterday' &&
+            groupName != 'Tomorrow')) {
       var postfix = getDayPostfix(date.day);
 
       monthPart = ' ${months[date.month - 1]} ${date.day}$postfix';
@@ -212,7 +276,11 @@ class InputFormatter {
     timePart = ', $timePart$postfix$timeZonePart';
 
     // Hide time if it's 00:00
-    if (date.hour == 0 && date.minute == 0 && (endDate == null || (endDate != null && endDate.hour == 00 && endDate.minute == 0))) hideTime = true;
+    if (date.hour == 0 &&
+        date.minute == 0 &&
+        (endDate == null ||
+            (endDate != null && endDate.hour == 00 && endDate.minute == 0)))
+      hideTime = true;
 
     // Hide time if it's in the past and we want to trimPast.
     if (trimPast) {
@@ -228,7 +296,9 @@ class InputFormatter {
     var extra = '', showEndTime = false, addEndTime = false;
 
     // Events happening now.
-    if (endDate != null && now.compareTo(date) >= 0 && now.compareTo(endDate) < 1) {
+    if (endDate != null &&
+        now.compareTo(date) >= 0 &&
+        now.compareTo(endDate) < 1) {
       extra = 'Happening now';
       if (t != null) extra = t(extra);
       hideDay = true;
@@ -240,15 +310,20 @@ class InputFormatter {
       if (endDate.difference(date).inHours.abs() > 24) {
         hideTime = true;
         hideDay = false;
-        dayPart = ' ${weekdays[date.weekday].substring(0, 3)}-${weekdays[endDate.weekday].substring(0, 3)}';
+        dayPart =
+            ' ${weekdays[date.weekday].substring(0, 3)}-${weekdays[endDate.weekday].substring(0, 3)}';
       }
     }
 
     // Events happened today.
-    if (endDate != null && now.compareTo(date) == 1 && now.compareTo(endDate) == 1 && tomorrow.compareTo(endDate) == 1) {
+    if (endDate != null &&
+        now.compareTo(date) == 1 &&
+        now.compareTo(endDate) == 1 &&
+        tomorrow.compareTo(endDate) == 1) {
       var formatter = new DateFormat('MMMM d');
       extra = 'Happened';
-      if (dayPart == 'Today' || dayPart == 'Yesterday') dayPart = dayPart.toLowerCase();
+      if (dayPart == 'Today' || dayPart == 'Yesterday')
+        dayPart = dayPart.toLowerCase();
       hideTime = false;
       addEndTime = true;
       showEndTime = true;
@@ -257,10 +332,12 @@ class InputFormatter {
       if (date.year != now.year) hideDay = true;
     }
 
-    if ((endDate == null && date.compareTo(now) == -1) || (endDate != null && endDate.compareTo(now) == -1)) {
+    if ((endDate == null && date.compareTo(now) == -1) ||
+        (endDate != null && endDate.compareTo(now) == -1)) {
       if (trimPast && !hideHappened) {
         extra = 'Happened ';
-        if (dayPart == 'Today' || dayPart == 'Yesterday') dayPart = dayPart.toLowerCase();
+        if (dayPart == 'Today' || dayPart == 'Yesterday')
+          dayPart = dayPart.toLowerCase();
       }
     }
 
@@ -282,22 +359,26 @@ class InputFormatter {
     }
 
     if ((expandPast || trimPast) && !detailed) {
-      if (direction == 'future' && new DateTime(now.year, now.month, now.day + 7).compareTo(date) < 0) {
+      if (direction == 'future' &&
+          new DateTime(now.year, now.month, now.day + 7).compareTo(date) < 0) {
         timePart = '';
       }
 
-      if (direction == 'past' && new DateTime(now.year, now.month, now.day - 7).compareTo(date) > 0) {
+      if (direction == 'past' &&
+          new DateTime(now.year, now.month, now.day - 7).compareTo(date) > 0) {
         timePart = '';
       }
     }
 
     if ((expandPast || trimPast)) {
-      if (direction == 'future' && new DateTime(now.year, now.month, now.day + 14).compareTo(date) < 0) {
+      if (direction == 'future' &&
+          new DateTime(now.year, now.month, now.day + 14).compareTo(date) < 0) {
         dayPart = '';
         monthPart = monthPart.trim();
       }
 
-      if (direction == 'past' && new DateTime(now.year, now.month, now.day - 14).compareTo(date) > 0) {
+      if (direction == 'past' &&
+          new DateTime(now.year, now.month, now.day - 14).compareTo(date) > 0) {
         dayPart = '';
         monthPart = monthPart.trim();
       }
@@ -306,7 +387,8 @@ class InputFormatter {
     if (expandPast || trimPast) {
       if (extra != '') {
         if (direction == 'future') {
-          if (new DateTime(now.year, now.month, now.day - 7).compareTo(date) < 0) {
+          if (new DateTime(now.year, now.month, now.day - 7).compareTo(date) <
+              0) {
             monthPart = '';
           } else {
             dayPart = '';
@@ -314,7 +396,8 @@ class InputFormatter {
         }
 
         if (direction == 'past') {
-          if (new DateTime(now.year, now.month, now.day + 7).compareTo(date) > 0) {
+          if (new DateTime(now.year, now.month, now.day + 7).compareTo(date) >
+              0) {
             monthPart = '';
           } else {
             dayPart = '';
@@ -323,11 +406,15 @@ class InputFormatter {
       }
     }
 
-    if (trimPast && new DateTime(now.year, now.month, now.day + 7).compareTo(date) > 0 && direction == 'future') {
+    if (trimPast &&
+        new DateTime(now.year, now.month, now.day + 7).compareTo(date) > 0 &&
+        direction == 'future') {
       //monthPart = '';
     }
 
-    if (trimPast && new DateTime(now.year, now.month, now.day - 7).compareTo(date) < 0 && direction == 'past') {
+    if (trimPast &&
+        new DateTime(now.year, now.month, now.day - 7).compareTo(date) < 0 &&
+        direction == 'past') {
       monthPart = '';
     }
 
@@ -346,10 +433,14 @@ class InputFormatter {
   static String getDayPostfix(int day) {
     var postfix;
 
-    if (day == 1 || day == 21 || day == 31) postfix = 'st';
-    else if (day == 2 || day == 22) postfix = 'nd';
-    else if (day == 3 || day == 23) postfix = 'rd';
-      else postfix = 'th';
+    if (day == 1 || day == 21 || day == 31)
+      postfix = 'st';
+    else if (day == 2 || day == 22)
+      postfix = 'nd';
+    else if (day == 3 || day == 23)
+      postfix = 'rd';
+    else
+      postfix = 'th';
 
     return postfix;
   }
@@ -435,7 +526,10 @@ class InputFormatter {
   static String stripHtml(String html, [List<String> exclude = const []]) {
     if (html == null) return '';
 
-    var tagOpen = false, stripped = '', tagName, letterRegExp = new RegExp('^[a-zA-Z]\$');
+    var tagOpen = false,
+        stripped = '',
+        tagName,
+        letterRegExp = new RegExp('^[a-zA-Z]\$');
 
     for (var i = 0, length = html.length; i < length; i++) {
       if (html[i] == '<') {
@@ -445,7 +539,7 @@ class InputFormatter {
         if (i + 1 < html.length) {
           var a = 1;
 
-          if (html[i+1] == '/') {
+          if (html[i + 1] == '/') {
             a++;
           }
 
@@ -464,7 +558,7 @@ class InputFormatter {
           }
         }
 
-        tagName =  tagName.toLowerCase();
+        tagName = tagName.toLowerCase();
       }
 
       if (tagOpen == false || exclude.contains(tagName)) {
@@ -483,7 +577,8 @@ class InputFormatter {
   /**
    * Create intelligent teasers.
    */
-  static String createIntelligentTeaser(String contents, {int length: 200, int minLength: 75}) {
+  static String createIntelligentTeaser(String contents,
+      {int length: 200, int minLength: 75}) {
     if (contents == null) return '';
 
     contents = sharedUtil.htmlDecode(contents);
@@ -498,7 +593,9 @@ class InputFormatter {
     var lastSingleDotPosition = 0;
     for (var i = length; i > minLength; i--) {
       // This is it!
-      if (contents[i] == '.' && contents[i - 1] != '.' && (i == length || contents[i + 1] != '.')) {
+      if (contents[i] == '.' &&
+          contents[i - 1] != '.' &&
+          (i == length || contents[i + 1] != '.')) {
         // Don't accept this if in the middle of a link!
         var isLink = false;
         linkMatches.forEach((match) {
@@ -516,15 +613,18 @@ class InputFormatter {
     if (lastSingleDotPosition == 0) {
       var index = contents.indexOf('.');
       if (index != -1) {
-        if (contents.length > index + 1 && contents[index + 1] == '.') lastSingleDotPosition = index + 3;
-        else lastSingleDotPosition = index + 1;
+        if (contents.length > index + 1 && contents[index + 1] == '.')
+          lastSingleDotPosition = index + 3;
+        else
+          lastSingleDotPosition = index + 1;
       }
     }
 
     var cutPosition = min(min(lastSingleDotPosition, contents.length), length);
 
     // Cut.
-    if (lastSingleDotPosition != 0) contents = contents.substring(0, cutPosition);
+    if (lastSingleDotPosition != 0)
+      contents = contents.substring(0, cutPosition);
 
     // Replace <br>'s with an empty space.
     contents = contents.replaceAll(new RegExp('<br ?/?>'), ' ');
@@ -533,7 +633,8 @@ class InputFormatter {
     contents = contents.replaceAll('\\', '');
 
     // Get rid of &nbsp;
-    contents = contents.replaceAll(new RegExp('&nbsp;?', caseSensitive: false), '');
+    contents =
+        contents.replaceAll(new RegExp('&nbsp;?', caseSensitive: false), '');
 
     // Make sure there's no crazy whitespace.
     contents = contents.replaceAll(new RegExp(' {2,}'), ' ');
@@ -559,21 +660,25 @@ class InputFormatter {
 
     if (originalContent == null) return '';
 
-    contents = contents != null ? nl2br(cutText(stripHtml(contents).trim(), length)) : '';
+    contents = contents != null
+        ? nl2br(cutText(stripHtml(contents).trim(), length))
+        : '';
 
     // Replace <br>'s with an empty space.
     contents = contents.replaceAll(new RegExp('<br ?/?>'), ' ');
 
     // Strip non-letters from the end.
     if (originalContent.length > length) {
-      contents = contents.replaceAll(new RegExp('[^a-zA-Z]+\$', multiLine: false), '');
+      contents =
+          contents.replaceAll(new RegExp('[^a-zA-Z]+\$', multiLine: false), '');
     }
 
     // Weird stuff on Meetup...
     contents = contents.replaceAll('\\', '');
 
     // Get rid of &nbsp;
-    contents = contents.replaceAll(new RegExp('&nbsp;?', caseSensitive: false), '');
+    contents =
+        contents.replaceAll(new RegExp('&nbsp;?', caseSensitive: false), '');
 
     // Make sure there's no crazy whitespace.
     contents = contents.replaceAll(new RegExp(' {2,}'), ' ');
@@ -595,7 +700,10 @@ class InputFormatter {
 
     var regExp = new RegExp(RegexHelper.mention, caseSensitive: false);
 
-    content = content.replaceAllMapped(regExp, (Match m) => '${m.group(1)}<span class="mention">${m.group(2)}</span>${m.group(3)}');
+    content = content.replaceAllMapped(
+        regExp,
+        (Match m) =>
+            '${m.group(1)}<span class="mention">${m.group(2)}</span>${m.group(3)}');
 
     return content;
   }
@@ -606,21 +714,17 @@ class InputFormatter {
   static String formatUserText(String text) {
     var sanitizer = new HtmlEscape(HtmlEscapeMode.ELEMENT);
 
-    return replaceEmojiCodesWithGlyphs(
-        InputFormatter.formatMentions(
-            InputFormatter.linkify(
-                sanitizer.convert(replaceEmoticonsWithEmojiCodes(text))
-            )
-        )
-    );
+    return replaceEmojiCodesWithGlyphs(InputFormatter.formatMentions(
+        InputFormatter
+            .linkify(sanitizer.convert(replaceEmoticonsWithEmojiCodes(text)))));
   }
 
   /**
    * Formats user text like chat messages for HTML output and viewing in email.
    */
   static String formatUserTextForEmail(String text) {
-    applyEmojiStyles(String text) =>
-        text.replaceAll('class="emoji"','''style="display: inline-block;vertical-align: sub;width: 1.5em;height: 1.5em;background-size: 1.5em;background-repeat: no-repeat;text-indent: -9999px;"''');
+    applyEmojiStyles(String text) => text.replaceAll('class="emoji"',
+        '''style="display: inline-block;vertical-align: sub;width: 1.5em;height: 1.5em;background-size: 1.5em;background-repeat: no-repeat;text-indent: -9999px;"''');
 
     return applyEmojiStyles(formatUserText(text));
   }

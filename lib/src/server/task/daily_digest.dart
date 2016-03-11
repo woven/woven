@@ -19,7 +19,8 @@ import 'package:woven/src/server/model/user.dart';
 
 class DailyDigestTask extends Task {
   bool runImmediately = false;
-  DateTime runAtDailyTime = new DateTime.utc(1900, 1, 1, 12, 00); // Equivalent to 7 or 8am EST depending on DST.
+  DateTime runAtDailyTime = new DateTime.utc(
+      1900, 1, 1, 12, 00); // Equivalent to 7 or 8am EST depending on DST.
 
   List<ItemGroup> groups = [];
   List groupsB = [];
@@ -42,22 +43,30 @@ class DailyDigestTask extends Task {
       if (users == null) return;
 
       // Hardcode EST (UTC-5) for now.
-      DateTime startOfDay = new DateTime.utc(now.year, now.month, now.day).add(new Duration(hours:5));
-      DateTime endOfDay = startOfDay.add(new Duration(hours: 23, minutes: 59, seconds: 59));
+      DateTime startOfDay = new DateTime.utc(now.year, now.month, now.day)
+          .add(new Duration(hours: 5));
+      DateTime endOfDay =
+          startOfDay.add(new Duration(hours: 23, minutes: 59, seconds: 59));
 //        print("startOf: $startOfDay, endOf: $endOfDay");
 
       try {
-        String output = await generateDigest(community.alias, from: startOfDay, to: endOfDay);
+        String output = await generateDigest(community.alias,
+            from: startOfDay, to: endOfDay);
 
         // If the digest returned nothing, we're done here.
         if (output == null) return;
         // Send the digest to each user in the community.
         users.forEach((user) async {
           if (user == null) return;
-          if (user.username != 'dave') return; // TODO: Temporarily limited to Dave.
+          if (user.username != 'dave')
+            return; // TODO: Temporarily limited to Dave.
 
-          var firstName = (user.firstName != null ? user.firstName : '[oops, we don\'t have your first name]');
-          var lastName = (user.lastName != null ? user.lastName : '[egad, we don\'t have your last name]');
+          var firstName = (user.firstName != null
+              ? user.firstName
+              : '[oops, we don\'t have your first name]');
+          var lastName = (user.lastName != null
+              ? user.lastName
+              : '[egad, we don\'t have your last name]');
 
           if (user.email == null) {
             print('Skipped ${user.username} due to no email address...');
@@ -67,9 +76,9 @@ class DailyDigestTask extends Task {
           // Personalize the output using merge tokens.
           // We based our merge tokens off of MailChimp: http://goo.gl/xagsyk
           var mergedDigest = output
-          .replaceAll(r'*|FNAME|*', firstName)
-          .replaceAll(r'*|LNAME|*', lastName)
-          .replaceAll(r'*|EMAIL|*', user.email);
+              .replaceAll(r'*|FNAME|*', firstName)
+              .replaceAll(r'*|LNAME|*', lastName)
+              .replaceAll(r'*|EMAIL|*', user.email);
 
           DateTime now = new DateTime.now();
           var formatter = new DateFormat('E M/d/yy');
@@ -79,17 +88,18 @@ class DailyDigestTask extends Task {
           var envelope = new Envelope()
             ..from = "Woven <hello@woven.co>"
             ..to = ['${firstName} ${lastName} <${user.email}>']
-            ..subject = '${community.name} – Today\'s activity – $formattedToday'
+            ..subject =
+                '${community.name} – Today\'s activity – $formattedToday'
             ..html = '$mergedDigest';
 
           Map res = await Mailgun.send(envelope);
           if (res['status'] == 200) return;
           // Success.
           print('Daily digest failed to send. Response was:\n$res');
-
         });
-      } catch(error, stack) {
-        print("Exception caught generating and sending digest:\n$error\n\n$stack");
+      } catch (error, stack) {
+        print(
+            "Exception caught generating and sending digest:\n$error\n\n$stack");
       }
     });
   }
@@ -122,7 +132,8 @@ class DailyDigestTask extends Task {
 
       var startAt = from.millisecondsSinceEpoch;
       var endAt = to.millisecondsSinceEpoch;
-      var query = '/items_by_community_by_type/$community/event.json?orderBy="priority"&startAt="$startAt"&endAt="$endAt"';
+      var query =
+          '/items_by_community_by_type/$community/event.json?orderBy="priority"&startAt="$startAt"&endAt="$endAt"';
 
       Map itemsMap = await Firebase.get(query);
 
@@ -141,7 +152,8 @@ class DailyDigestTask extends Task {
         String teaser = InputFormatter.createTeaser(i['body'], 100);
         // Convert the UTC start date to EST (UTC-5) for the newsletter.
         // TODO: Later, consider more timezones.
-        DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 4)); // TODO: Adjust for DST. Automate later.
+        DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(
+            new Duration(hours: 4)); // TODO: Adjust for DST. Automate later.
         // TODO: Revisit this, it was causing exception as News don't have subjects now.
         if (i['subject'] == null) i['subject'] = '';
         i['body'] = teaser;
@@ -153,9 +165,12 @@ class DailyDigestTask extends Task {
     }
 
     Future<List> findNews() async {
-      var startAt = new DateTime.utc(yesterday.year, yesterday.month, yesterday.day, 12, 00, 00);
-      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59, 00); // TODO: Set back to 12 UTC.
-      var query = '/items_by_community_by_type/$community/news.json?orderBy="createdDate"&startAt="$startAt"&endAt="$endAt"';
+      var startAt = new DateTime.utc(
+          yesterday.year, yesterday.month, yesterday.day, 12, 00, 00);
+      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59,
+          00); // TODO: Set back to 12 UTC.
+      var query =
+          '/items_by_community_by_type/$community/news.json?orderBy="createdDate"&startAt="$startAt"&endAt="$endAt"';
 
       Map itemsMap = await Firebase.get(query);
 
@@ -173,7 +188,8 @@ class DailyDigestTask extends Task {
         String teaser = InputFormatter.createTeaser(i['body'], 100);
 
         // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
-        DateTime createdDate = DateTime.parse(i['createdDate']).subtract(new Duration(hours: 5));
+        DateTime createdDate =
+            DateTime.parse(i['createdDate']).subtract(new Duration(hours: 5));
 
         // TODO: Revisit this, it was causing exception as News don't have subjects now.
         if (i['subject'] == null) i['subject'] = '';
@@ -187,9 +203,12 @@ class DailyDigestTask extends Task {
     }
 
     Future<List> findMessages() async {
-      var startAt = new DateTime.utc(yesterday.year, yesterday.month, yesterday.day, 12, 00, 00);
-      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59, 00); // TODO: Set back to 12 UTC.
-      var query = '/messages_by_community/$community.json?orderBy="createdDate"&startAt="$startAt"&endAt="$endAt"';
+      var startAt = new DateTime.utc(
+          yesterday.year, yesterday.month, yesterday.day, 12, 00, 00);
+      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59,
+          00); // TODO: Set back to 12 UTC.
+      var query =
+          '/messages_by_community/$community.json?orderBy="createdDate"&startAt="$startAt"&endAt="$endAt"';
 
       Map itemsMap = await Firebase.get(query);
 
@@ -200,7 +219,8 @@ class DailyDigestTask extends Task {
         Message message = new Message.fromJson(v);
         message.id = k;
         if (message.type != 'notification' && message.message.isNotEmpty) {
-          message.message = InputFormatter.formatUserTextForEmail(message.message);
+          message.message =
+              InputFormatter.formatUserTextForEmail(message.message);
           messages.add(message);
         }
       });
@@ -211,9 +231,11 @@ class DailyDigestTask extends Task {
 
       await Future.forEach(groups, (ItemGroup group) async {
         Map groupMap = group.toJson();
-        groupMap['usernameForDisplay'] = await UserModel.usernameForDisplay(groupMap['user']);
+        groupMap['usernameForDisplay'] =
+            await UserModel.usernameForDisplay(groupMap['user']);
         var getPicture = await UserModel.getFullPathToPicture(groupMap['user']);
-        groupMap['fullPathToPicture'] = (getPicture != null ? getPicture : null);
+        groupMap['fullPathToPicture'] =
+            (getPicture != null ? getPicture : null);
 
         groupsB.add(groupMap);
       });
@@ -231,7 +253,9 @@ class DailyDigestTask extends Task {
     jsonForTemplate['messages'] = groupsB;
     jsonForTemplate['has_messages'] = groupsB.isNotEmpty;
 
-    String contents = await new File('web/static/templates/daily_digest.mustache').readAsString();
+    String contents =
+        await new File('web/static/templates/daily_digest.mustache')
+            .readAsString();
 
     // Parse the template.
     var template = mustache.parse(contents);
@@ -258,7 +282,9 @@ class DailyDigestTask extends Task {
     if (item.createdDate.isAfter(localTime)) item.createdDate = localTime;
 
     // Retrieve the group that this item belongs to, if any.
-    var group = groups.firstWhere((group) => group.isDateWithin(item.createdDate), orElse: () => null);
+    var group = groups.firstWhere(
+        (group) => group.isDateWithin(item.createdDate),
+        orElse: () => null);
 
     if (group != null) {
       if (!group.needsNewGroup(item)) {
@@ -273,7 +299,8 @@ class DailyDigestTask extends Task {
         var topHalf = group.items.sublist(0, intersection);
         var bottomHalf = group.items.sublist(intersection);
 
-        groups.remove(group); // Get rid of the old group, we need to split this thing!
+        groups.remove(
+            group); // Get rid of the old group, we need to split this thing!
 
         groups.insert(groupIndex, new ItemGroup.fromItems(bottomHalf));
         groups.insert(groupIndex, new ItemGroup(item));
@@ -286,8 +313,12 @@ class DailyDigestTask extends Task {
       // 2) The item needs its own new group.
 
       // Fetch the first groups that are after/before this item. i.e. surrounding the item.
-      var groupBefore = groups.reversed.firstWhere((group) => item.createdDate.isAfter(group.getLatestDate()), orElse: () => null);
-      var groupAfter = groups.firstWhere((group) => item.createdDate.isBefore(group.getOldestDate()), orElse: () => null);
+      var groupBefore = groups.reversed.firstWhere(
+          (group) => item.createdDate.isAfter(group.getLatestDate()),
+          orElse: () => null);
+      var groupAfter = groups.firstWhere(
+          (group) => item.createdDate.isBefore(group.getOldestDate()),
+          orElse: () => null);
 
       if (groupBefore == null && groupAfter == null) {
         // No groups at all!

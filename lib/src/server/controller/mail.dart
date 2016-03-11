@@ -18,7 +18,6 @@ import 'package:woven/src/shared/input_formatter.dart';
 import 'package:woven/src/shared/regex.dart';
 import 'package:woven/src/server/model/user.dart';
 
-
 class MailController {
   static sendNotificationsForItem(App app, shelf.Request request) {
     Map data = request.requestedUri.queryParameters;
@@ -162,7 +161,8 @@ class MailController {
     }
     if (isMessage) {
       return findMessage()
-          .then((_) => Future.wait([findMessageAuthorInfo(_), findCommunityInfo(_)]))
+          .then((_) =>
+              Future.wait([findMessageAuthorInfo(_), findCommunityInfo(_)]))
           // TODO: Get the community details, like the name.
           .then(notify)
           .catchError((error, stack) =>
@@ -280,8 +280,9 @@ http://woven.co
 
     // Combine message and item body fields for purpose of parsing all @mentions in either.
     String postText;
-    if (isItem) postText =
-        '${notificationData['message']}\n===\n${notificationData['itemBody']}';
+    if (isItem)
+      postText =
+          '${notificationData['message']}\n===\n${notificationData['itemBody']}';
     if (isComment) postText = notificationData['commentBody'];
     if (isMessage) postText = notificationData['message'];
 
@@ -301,8 +302,8 @@ http://woven.co
       if (user == notificationData['commentAuthor']) return;
 
       // If the item author is mentioned, remember it so we don't also send other notifications.
-      if (user == notificationData['itemAuthor']) notificationData[
-          'itemAuthorMentioned'] = true;
+      if (user == notificationData['itemAuthor'])
+        notificationData['itemAuthorMentioned'] = true;
 
       // Get the user data. TODO: Address case sensitivity of usernames.
       Firebase.get('/users/$user.json').then((userData) async {
@@ -331,7 +332,8 @@ http://woven.co
         }
 
         if (isMessage) {
-          notificationText = InputFormatter.formatUserTextForEmail(notificationData['message']);
+          notificationText = InputFormatter
+              .formatUserTextForEmail(notificationData['message']);
           postAuthor = notificationData['messageAuthor'];
           postAuthorFirstName = notificationData['messageAuthorFirstName'];
           postAuthorLastName = notificationData['messageAuthorLastName'];
@@ -341,12 +343,15 @@ http://woven.co
         List messages = [];
         Map message = {};
         // TODO: Later, we can show more messages for better context.
-        List items = [{'message': notificationText}];
+        List items = [
+          {'message': notificationText}
+        ];
         var templateValues = {};
 
         print(notificationText);
 
-        message['usernameForDisplay'] = await UserModel.usernameForDisplay(postAuthor);
+        message['usernameForDisplay'] =
+            await UserModel.usernameForDisplay(postAuthor);
         var getPicture = await UserModel.getFullPathToPicture(postAuthor);
         message['fullPathToPicture'] = (getPicture != null ? getPicture : null);
         message['items'] = items;
@@ -355,17 +360,21 @@ http://woven.co
 
         templateValues['communityName'] = notificationData['communityName'];
         templateValues['community'] = notificationData['community'];
-        templateValues['leaderText'] = '$postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post.' : '.'}';
+        templateValues['leaderText'] =
+            '$postAuthorFirstName $postAuthorLastName mentioned you${(notificationData['itemAuthor'] == user) ? ' on your post.' : '.'}';
         templateValues['messages'] = messages;
         templateValues['has_messages'] = true;
 
-        String contents = await new File('web/static/templates/user_mentioned_email.mustache').readAsString();
+        String contents =
+            await new File('web/static/templates/user_mentioned_email.mustache')
+                .readAsString();
 
         // Parse the template.
         var template = mustache.parse(contents);
         var output = template.renderString(templateValues);
 
-        var subject = '$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}';
+        var subject =
+            '$postAuthorFirstName $postAuthorLastName mentioned you on ${(notificationData['itemAuthor'] == user) ? 'your post' : 'Woven'}';
 
         // Send notification.
         var envelope = new Envelope()
@@ -393,8 +402,9 @@ http://woven.co
 
     var checkForExistingEmail = await Firebase
         .get('/email_index/${encodeFirebaseKey(data['email'])}.json');
-    if (checkForExistingEmail != null) return respond(Response.fromError(
-        'There\'s already an account associated with that email address.'));
+    if (checkForExistingEmail != null)
+      return respond(Response.fromError(
+          'There\'s already an account associated with that email address.'));
 
     // Kill any existing session if the user signs up again.
 //    app.sessionManager.deleteCookie(request);
@@ -441,8 +451,9 @@ http://woven.co
   static inviteUserToChannel(App app, shelf.Request request) async {
     Map data = JSON.decode(await request.readAsString());
 
-    if (!isValidEmail(data['email'])) return Response
-        .fromError('That doesn\'t look like a valid email address.');
+    if (!isValidEmail(data['email']))
+      return Response
+          .fromError('That doesn\'t look like a valid email address.');
 
     var getData = await Future.wait([
       Firebase.get('/users/${data['fromUser']}.json'),
