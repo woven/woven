@@ -348,8 +348,6 @@ http://woven.co
         ];
         var templateValues = {};
 
-        print(notificationText);
-
         message['usernameForDisplay'] =
             await UserModel.usernameForDisplay(postAuthor);
         var getPicture = await UserModel.getFullPathToPicture(postAuthor);
