@@ -25,27 +25,12 @@ class RssReader {
    */
   Future<List<RssItem>> getItems() {
     logger.fine('Getting items from $url');
+
     return new Future(() async {
       if (contents == null) return [];
 
-      // First we have to get rid of some data, because of the lack of support in the XML package.
-      // TODO: Still needed now that we're using the new xml lib?
-
-      // Get rid of the top-level <?xml ?> line.
-//      contents = contents.replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '');
-//
-//      // Get rid of some stuff like "atom:link" and turn it into "link".
-//      contents = contents.replaceAll(new RegExp('<content:.*?>'), '<content>');
-//      contents =
-//          contents.replaceAll(new RegExp('</content:.*?>'), '</content>');
-//      contents = contents.replaceAll(new RegExp('<[a-zA-Z0-9]+:'), '<');
-//      contents = contents.replaceAll(new RegExp('</[a-zA-Z0-9]+:'), '</');
-//      contents = contents.replaceAll(new RegExp('xml:base=".*?"'), '');
-//      contents = contents.replaceAll(new RegExp('xmlns:atom=".*?"'), '');
-
       // Parse the RSS message.
       var rssItems = [];
-//      var futures = [];
 
       try {
         xml = parse(contents);
@@ -129,13 +114,12 @@ class RssReader {
             // No publication date, so let's just skip this item.
             logger.warning("No publication date for item: ${item.link}");
             return;
-//              item.publicationDate = new DateTime.now();
           }
 
           // We don't want published dates to be in the future.
           DateTime now = new DateTime.now().toUtc();
-          if (item.publicationDate.compareTo(now) == 1) item.publicationDate =
-              now;
+          if (item.publicationDate.compareTo(now) == 1)
+            item.publicationDate = now;
 
           if (item.title != null &&
               item.title != '' &&
@@ -145,7 +129,6 @@ class RssReader {
         logger.fine('RSS reader returned ${rssItems.length} items for $url');
         return rssItems;
       } catch (error, stack) {
-//        throw 'Exception during parsing of RSS feed: $error\n\n$stack';
         logger.severe('Exception during parsing of RSS feed', error, stack);
         return new Future.value([]);
       }

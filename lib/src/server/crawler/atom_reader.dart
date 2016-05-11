@@ -21,23 +21,6 @@ class AtomReader {
     return new Future(() {
       if (contents == null) return [];
 
-      // First we have to get rid of some data, because of the lack of support in the XML package.
-
-      // Get rid of the top-level <?xml ?> line.
-//      contents = contents.replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '');
-//
-//      // Get rid of some stuff like "atom:link" and turn it into "link".
-//      contents = contents.replaceAll(new RegExp('<content:.*?>'), '<content>');
-//      contents =
-//          contents.replaceAll(new RegExp('</content:.*?>'), '</content>');
-//      contents = contents.replaceAll(new RegExp('<[a-zA-Z0-9]+:'), '<');
-//      contents = contents.replaceAll(new RegExp('</[a-zA-Z0-9]+:'), '</');
-//      contents = contents.replaceAll(new RegExp('xml:([a-zA-Z]+)=".*?"'), '');
-//      contents = contents.replaceAll(new RegExp('xmlns:atom=".*?"'), '');
-//      contents = contents.replaceAll(new RegExp('xmlns=".*?"'), '');
-//      contents = contents.replaceAll(new RegExp('xmlns:([a-zA-Z]+)=".*?"'), '');
-//      contents = contents.replaceAll(new RegExp('thr:([a-zA-Z]+)=".*?"'), '');
-
       // Parse the ATOM message.
       var atomItems = [];
       var futures = [];
@@ -47,8 +30,8 @@ class AtomReader {
 
         xml.findAllElements('entry').toList().forEach((XmlElement element) {
           var content = element.findElements('content').single.text;
-          if (content == null) content =
-              element.findElements('summary').single.text;
+          if (content == null)
+            content = element.findElements('summary').single.text;
 
           // Try to find images.
           var logo = (element.findElements('logo').length > 0)

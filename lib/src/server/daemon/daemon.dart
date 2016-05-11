@@ -9,7 +9,6 @@ import '../util/cloud_storage_util.dart';
 import 'package:googleapis/storage/v1.dart' as storage;
 import 'package:googleapis_auth/auth_io.dart' as auth;
 
-
 import 'package:logging/logging.dart';
 
 class Daemon {

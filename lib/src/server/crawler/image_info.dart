@@ -18,8 +18,6 @@ class ImageInfo {
 
   static final Logger logger = new Logger('AtomReader');
 
-//  Map imageSizes = {};
-
   static Future<ImageInfo> parse(String url) async {
     if (!isValidUrl(url)) return null;
 

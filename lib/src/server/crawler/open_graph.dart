@@ -104,52 +104,6 @@ class OpenGraph {
       }
     }
 
-    /*Document dom;
-    try {
-      dom = htmlParser.parse(contents);
-    } catch (e) {
-      print(e);
-      return null;
-    }
-    dom.queryAll('meta').forEach((Element meta) {
-      var property = meta.attributes['property'];
-      var value = meta.attributes['content'];
-      if (property == null || value == null) return;
-      if (property == 'og:title') og.title = value;
-      if (property == 'og:url') og.url = value;
-      if (property == 'og:description') og.description = value;
-      if (property == 'og:image') og.imageUrl = value;
-      if (property == 'og:type') og.type = value;
-      if (property == 'og:locality') og.locality = value;
-      if (property == 'og:region') og.region = value;
-      if (property == 'og:country_name') og.countryName = value;
-      if (property == 'og:postal_code') og.postalCode = value;
-      if (property == 'og:latitude') og.latitude = value;
-      if (property == 'og:longitude') og.longitude = value;
-      if (property == 'og:site_name') og.siteName = value;
-    });
-    if (og.title == null) {
-      var title = dom.query('title');
-      if (title != null) {
-        og.title = title.innerHtml;
-      }
-    }*/
-
-    /*if (og.latitude == null || og.longitude == null) {
-      // Look for Google static maps.
-      var matches = new RegExp('maps.google.com/maps/api/staticmap([^"]+)').allMatches(contents).toList();
-      matches.forEach((Match match) {
-        var url = matches.first.group(0);
-        try {
-          var components = Uri.parse(url);
-          print(components.queryParameters['markers']);
-        } catch (e) {
-          print(e);
-        }
-        return;
-      });
-    }*/
-
     return og;
   }
 }

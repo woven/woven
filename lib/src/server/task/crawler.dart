@@ -31,8 +31,8 @@ import 'package:woven/src/shared/util.dart' as util;
 class CrawlerTask extends Task {
   Daemon app;
 
-//  bool runImmediately = true;
-  Duration interval = const Duration(seconds: 120);
+  bool runImmediately = true;
+//  Duration interval = const Duration(seconds: 120);
 
   final Logger logger = new Logger('CrawlerTask');
 
@@ -63,9 +63,7 @@ class CrawlerTask extends Task {
     Future.forEach(feedsAsList, (FeedModel feed) async {
       var crawler = new Crawler(feed.url);
 
-      // Turns it into an actual feed URL, if it isn't already.
-      // TODO: Store the feed URL or the user-entered URL or both in db?
-
+      // Turn the given URL into an actual feed URL, if it isn't already.
       var feedUrl = await crawler.findFeedUrl();
 
       if (feedUrl == null) {
@@ -83,12 +81,8 @@ class CrawlerTask extends Task {
 
       var count = 0;
 
-      // TODO: This the right async approach?
       for (FeedItem feedItem in feedItems) {
         var encodedKey = util.encodeFirebaseKey(feedItem.link);
-        // TODO: Tell kevmoo his encodeKey() not encoding properly.
-//          print('$firebaseUrl/url_index/$encodedKey.json');
-//          print('$firebaseUrl/url_index/${encodeKey(feedItem.link)}.json');
 
         try {
           var checkIfUrlExists = await firebase
@@ -103,7 +97,6 @@ class CrawlerTask extends Task {
             firebase.put(Uri.parse('$firebaseUrl/url_index/$encodedKey.json'),
                 {'lastCrawledDate': new DateTime.now().toUtc().toString()});
 
-            // TODO: Crawl the feed item's URL, generate a uriPreview, etc.
             NewsModel newsItem = new NewsModel();
             newsItem
               ..url = feedItem.link
@@ -116,7 +109,6 @@ class CrawlerTask extends Task {
               ..feedId = feed.id
               ..priority = priority;
 
-            // TODO: Use firebase_io lib in ItemModel?
             var itemId = await Item.add(feed.communities.keys,
                 newsItem.toJson(), config['datastore']['firebaseSecret']);
 

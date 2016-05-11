@@ -1,11 +1,6 @@
 library crawler;
 
-import 'dart:io';
-import 'dart:isolate';
-import 'dart:convert';
 import 'dart:math';
-import 'dart:mirrors';
-import 'dart:collection';
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
@@ -13,30 +8,13 @@ import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 import 'package:logging/logging.dart';
 
-//import 'package:html5lib/parser.dart' as htmlParser;
-//import 'package:html5lib/dom.dart';
-//import 'package:html5lib/parser_console.dart';
-//import 'package:path/path.dart' as path;
-//import 'package:query_string/query_string.dart';
-
 import '../util.dart' as util;
 
-import 'package:woven/config/config.dart';
 import 'package:woven/src/shared/util.dart';
-import 'package:woven/src/server/util/image_util.dart';
-import 'package:woven/src/server/util/file_util.dart';
 import 'package:woven/src/shared/util.dart' as sharedUtil;
-import 'package:woven/src/shared/model/uri_preview.dart';
-import 'package:woven/src/shared/response.dart';
 import 'package:woven/src/server/crawler/open_graph.dart';
 import 'package:woven/src/server/crawler/image_info.dart';
 import 'package:woven/src/server/crawler/crawl_info.dart';
-
-//import 'readability.dart';
-//import 'open_graph/open_graph.dart';
-//import 'model/server/models.dart' as model;
-//import 'rss/rss.dart';
-//import 'ical/ical.dart';
 
 class Crawler {
   var app;
@@ -90,20 +68,19 @@ class Crawler {
       metaTags.forEach((Element metaTag) {
         var property = metaTag.attributes['property'];
 
-        if (property == 'og:title') crawlInfo.title =
-            metaTag.attributes['content'];
+        if (property == 'og:title')
+          crawlInfo.title = metaTag.attributes['content'];
 
-        if (property == 'og:description') crawlInfo.teaser =
-            metaTag.attributes['content'];
+        if (property == 'og:description')
+          crawlInfo.teaser = metaTag.attributes['content'];
 
         if (metaTag.attributes['name'] == 'description' &&
-            crawlInfo.teaser == null) crawlInfo.teaser =
-            metaTag.attributes['content'];
+            crawlInfo.teaser == null)
+          crawlInfo.teaser = metaTag.attributes['content'];
       });
 
-      if (crawlInfo.title == null &&
-          document.querySelector('title') != null) crawlInfo.title =
-          document.querySelector('title').innerHtml;
+      if (crawlInfo.title == null && document.querySelector('title') != null)
+        crawlInfo.title = document.querySelector('title').innerHtml;
 
       // Let's get the best image ourselves, not from OG tags.
       crawlInfo.bestImage = await getBestImageFromHtml(contents);
@@ -113,109 +90,6 @@ class Crawler {
       logger.severe('Exception in crawl()', error, stack);
     }
   }
-
-//  Future<Response> getPreview() async {
-//    Response response = new Response();
-//    Uri uri = Uri.parse(this.url);
-//
-//    try {
-//      String contents = await http.read(uri);
-//
-//      UriPreview preview = new UriPreview(uri: uri);
-//      var document = parse(contents);
-//      List<Element> metaTags = document.querySelectorAll('meta');
-//
-//      metaTags.forEach((Element metaTag) {
-//        var property = metaTag.attributes['property'];
-//        if (property == 'og:title') preview.title =
-//            metaTag.attributes['content'];
-//        if (property == 'og:description') preview.teaser =
-//            metaTag.attributes['content'];
-//        if (property == 'og:image') preview.imageOriginalUrl =
-//            metaTag.attributes['content'];
-//
-//        if (metaTag.attributes['name'] == 'description' &&
-//            preview.teaser == null) preview.teaser =
-//            metaTag.attributes['content'];
-//      });
-//
-//      if (preview.title == null &&
-//          document.querySelector('title') != null) preview.title =
-//          document.querySelector('title').innerHtml;
-//
-//      response.data = preview.toJson();
-//      return response;
-//    } catch (error) {
-//      return Response.fromError(error);
-//    }
-//  }
-//
-//  Future<Response> getPreviewOld() async {
-//    Response response = new Response();
-//    Uri uri = Uri.parse(this.url);
-//
-//    try {
-//      // Visit the URL of this item and get the best image from its page.
-//      var content = await http.get(this.url);
-//      ImageInfo imageInfo = await getBestImageFromHtml(content.body);
-//
-//      // Download the image locally to our temporary file.
-//      File imageFile = await downloadFileTo(imageInfo.url,
-//          await createTemporaryFile(suffix: '.' + imageInfo.extension));
-//
-//      var imageUtil = new ImageUtil();
-//      File croppedFile =
-//          await imageUtil.resize(imageFile, width: 245, height: 120);
-//
-//      var extension = imageInfo.extension;
-//      var gsBucket = config['google']['cloudStorage']['bucket'];
-//      var gsPath = 'public/images/item/$itemId';
-//
-//      var filename = 'main-photo.$extension';
-//      var cloudStorageResponse = await app.cloudStorageUtil.uploadFile(
-//          croppedFile.path, gsBucket, '$gsPath/$filename',
-//          public: true);
-//
-//      String contents = await http.read(uri);
-//
-//      UriPreview preview = new UriPreview(uri: uri);
-//
-//      // Get some basic info from the OG tags.
-//      // TODO: Decouple to getOgInfo(String content)?
-//      var document = parse(contents);
-//      List<Element> metaTags = document.querySelectorAll('meta');
-//
-//      metaTags.forEach((Element metaTag) {
-//        var property = metaTag.attributes['property'];
-//
-//        if (property == 'og:title') preview.title =
-//            metaTag.attributes['content'];
-//
-//        if (property == 'og:description') preview.teaser =
-//            metaTag.attributes['content'];
-//
-//        if (metaTag.attributes['name'] == 'description' &&
-//            preview.teaser == null) preview.teaser =
-//            metaTag.attributes['content'];
-//      });
-//
-//      // Let's use the best image we found, not from the OG tags.
-//      preview.imageOriginalUrl = imageInfo.url;
-//
-//      preview.imageSmallLocation = (cloudStorageResponse.name != null)
-//          ? cloudStorageResponse.name
-//          : null;
-//
-//      if (preview.title == null &&
-//          document.querySelector('title') != null) preview.title =
-//          document.querySelector('title').innerHtml;
-//
-//      response.data = preview.toJson();
-//      return response;
-//    } catch (error) {
-//      return Response.fromError(error);
-//    }
-//  }
 
   static String findGoogleCalendarUrlFromPage(String contents) {
     if (contents == null || contents == '') return null;
@@ -232,81 +106,6 @@ class Crawler {
     return iCalUrl;
   }
 
-//  Future<model.Event> findEventDetails(String contents) {
-//    return new Future(() {
-//      var og = OpenGraph.parse(contents);
-//
-//      if (url.contains('facebook.com/events')) {
-//        var match = new RegExp('facebook.com/events/([0-9]+)').firstMatch(url);
-//        if (match != null) {
-//          var eventId = match.group(1);
-//
-//          var clientId = Uri.encodeComponent(config['authentication']['facebook']['appId']);
-//          var clientSecret = Uri.encodeComponent(config['authentication']['facebook']['appSecret']);
-//
-//          var url = 'https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=$clientId&client_secret=$clientSecret';
-//
-//          return http.read(url).then((contents) {
-//            var accessToken = Uri.encodeComponent(QueryString.parse('?$contents')['access_token']);
-//
-//            // Try to gather user info.
-//            return http.read('https://graph.facebook.com/$eventId?access_token=$accessToken').then((contents) {
-//              contents = JSON.decode(contents);
-//
-//              var futures = [];
-//
-//              var e = platform.databaseInstance.newInstance(model.Event)
-//                ..title = contents['name']
-//                ..description = contents['description'];
-//
-//              try {
-//                e.location = contents['venue']['street'] + contents['venue']['city'];
-//              } catch (e) {
-//                print(e);
-//              }
-//
-//              futures.add(util.parseDate(contents['start_time']).then((d) {
-//                e.startDate = d;
-//              }));
-//
-//              futures.add(util.parseDate(contents['end_time']).then((d) {
-//                e.endDate = d;
-//              }));
-//
-//              return Future.wait(futures).then((_) {
-//                return e;
-//              });
-//            });
-//          });
-//        }
-//      }
-//
-//      if (og == null) return;
-//
-//      if (og.siteName.toLowerCase() == 'eventbrite') {
-//        // Probably a single event.
-//        if (og.type != 'eventbriteog:organizer') {
-//          var match = new RegExp('calendar\\?eid=([0-9]{5,})').firstMatch(contents);
-//          if (match == null) return;
-//
-//          var eventId = match.group(1);
-//          return util.readHttp('http://www.eventbrite.com/calendar.ics?eid=$eventId&calendar=ical').then((c) {
-//            return iCal.parse(c).then((iCal ical) {
-//              if (ical.events.length == 0) return;
-//
-//              iCalEvent e = ical.events.first;
-//
-//              return platform.databaseInstance.newInstance(model.Event)
-//                ..startDate = e.startDate
-//                ..endDate = e.endDate
-//                ..location = e.location;
-//            });
-//          });
-//        }
-//      }
-//    });
-//  }
-
   /**
    * Tries to find the RSS/ATOM feed URL.
    *
@@ -320,23 +119,15 @@ class Crawler {
       if (contents.startsWith('BEGIN:VCALENDAR')) return url;
 
       // Try to look for RSS tag.
-      var matchRss = new RegExp("<rss(.|[\n\r])*?version=\".*?\"",
-          caseSensitive: false).firstMatch(contents);
-      var matchAtom = new RegExp("<feed xmlns=[^]+?/Atom.",
-          caseSensitive: false).firstMatch(contents);
+      var matchRss =
+          new RegExp("<rss(.|[\n\r])*?version=\".*?\"", caseSensitive: false)
+              .firstMatch(contents);
+      var matchAtom =
+          new RegExp("<feed xmlns=[^]+?/Atom.", caseSensitive: false)
+              .firstMatch(contents);
 
       // The URL was a direct hit, return the url.
       if (matchRss != null || matchAtom != null) return url;
-
-      // eventbrite.com/rss/organizer_list_events/4448338919
-//      var og = OpenGraph.parse(contents);
-//      if (og != null && og.siteName.toLowerCase() == 'eventbrite' && og.type == 'eventbriteog:organizer') {
-//        // Find organizer ID.
-//        var match = new RegExp('org/([0-9]+)').firstMatch(og.url);
-//        if (match != null) {
-//          return 'http://www.eventbrite.com/rss/organizer_list_events/${match.group(1)}';
-//        }
-//      }
 
       // Let's see if we can find a RSS/ATOM URL from the output.
       // We find all <link> tags and then we check if any of them has "application/rss", etc.
@@ -474,18 +265,6 @@ class Crawler {
             }
           });
 
-          if (logoWanted) {
-            /*cssFutures.add(Crawler.getEntireCss(url: url, contents: contents).then((css) {
-              var matches = new RegExp('url\\(["\']([^]*?)["\']\\)').allMatches(css);
-              matches.forEach((match) {
-                var url = match.group(1);
-                if (url.contains('logo.')) {
-                  logoUrls.add(url);
-                }
-              });
-            }).catchError((e) {}));*/
-          }
-
           // Links to other HTML pages such as frames, etc.
           var htmlUrls = [];
           matches = new RegExp('frame src="(http://.*?)"').allMatches(contents);
@@ -537,8 +316,8 @@ class Crawler {
 
               var f = http.head(foundUrl).then((response) {
                 // Skip 404, etc.
-                if (util.isSuccessStatusCode(response.statusCode) ==
-                    false) return null;
+                if (util.isSuccessStatusCode(response.statusCode) == false)
+                  return null;
 
                 if (response.headers['content-type'] == 'text/html') {
                   htmlUrls.add(foundUrl);
@@ -588,96 +367,6 @@ class Crawler {
     });
   }
 
-//  static Future findImage({item, platform, skipImages: const []}) {
-//
-//  }
-
-//  static Future fetchImage({article, event, platform, skipImages: const []}) {
-//    return new Future(() {
-//      var url;
-//      if (article != null) url = article.url;
-//      if (event != null) url = event.url;
-//
-//      if (url is List && url.length > 0) url = url.first;
-//
-//      if (url is List && url.length == 0) url = null;
-//
-//      if (url == null) return true;
-//
-//      return http.read(url).then((contents) {
-//        OpenGraph og = OpenGraph.parse(contents);
-//
-//        var image;
-//
-//        Future process() {
-//          return new Future(() {
-//            return util.setItemImage(article: article, event: event, url: url, imagePath: image, platform: platform, skipImages: skipImages).then((_) => true).catchError((e) => false);
-//          });
-//        }
-//
-//        if (image == null || image.isEmpty || contents == null) {
-//          return new Readability().parseFromUrl(url).then((r) {
-//            image = r.imageUrl;
-//            return process();
-//          });
-//        }
-//
-//        return process();
-//      });
-//    });
-//  }
-
-//  /**
-//   * Returns all CSS for the site.
-//   */
-//  static Future getEntireCss({String url, String contents}) {
-//    return new Future(() {
-//      var css = '';
-//
-//      Future process() {
-//        return new Future(() {
-//          var futures = [];
-//
-//          var matches = new RegExp('<link([^]*?)>', caseSensitive: false).allMatches(contents);
-//
-//          matches.forEach((match) {
-//            var urlMatch = new RegExp('href="(.*?)"').firstMatch(match.group(1));
-//            if (urlMatch != null) {
-//              var cssUrl = urlMatch.group(1);
-//
-//              if (Uri.parse(cssUrl).isAbsolute == false) {
-//                var absoluteUrl = cssUrl;
-//
-//                if (url != null) {
-//                  var uri = Uri.parse(url);
-//                  absoluteUrl = uri.resolve(cssUrl);
-//                }
-//
-//                futures.add(http.read(absoluteUrl).then((content) {
-//                  css = '$css$content';
-//                }));
-//              }
-//            }
-//          });
-//
-//          return Future.wait(futures).then((_) => css).catchError((e) => css);
-//        });
-//      }
-//
-//      if (contents == null) {
-//        url = util.prefixHttp(url);
-//
-//        return http.read(url).then((c) {
-//          contents = c;
-//
-//          return process();
-//        });
-//      } else {
-//        return process();
-//      }
-//    });
-//  }
-
   /**
    * Finds the best image related to the content.
    */
@@ -725,8 +414,8 @@ class Crawler {
           if (isValidUrl(href)) images.add(href);
         }
 
-        if (isValidUrl(img.attributes['src'])) images
-            .add(img.attributes['src']);
+        if (isValidUrl(img.attributes['src']))
+          images.add(img.attributes['src']);
       });
     }
 
@@ -762,27 +451,12 @@ class Crawler {
     });
   }
 
-//  static List<String> removeImagesWithBadExtensions(List<String> images) {
-//    images.removeWhere((image) {
-//      var sourcePath = Uri.parse(image).path;
-//
-//      if (path.extension(sourcePath) == '' || path.extension(sourcePath) == null) return false;
-//
-//      var mime = util.getMimeTypeFromExtension(sourcePath);
-//      return mime.startsWith('image') == false;
-//    });
-//
-//    return images;
-//  }
-
   static Future<List<String>> removeSmallImages(List<String> images) {
     return new Future(() {
       var list = [];
 
       return Future.forEach(images, (image) async {
-        var response = await http
-            .head(image)
-            .catchError((_) {
+        var response = await http.head(image).catchError((_) {
           return;
         });
 

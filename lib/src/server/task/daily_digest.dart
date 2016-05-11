@@ -7,7 +7,6 @@ import 'package:mustache/mustache.dart' as mustache;
 import 'package:intl/intl.dart';
 
 import 'task.dart';
-import '../task_scheduler.dart';
 import 'package:woven/src/server/model/community.dart';
 import 'package:woven/src/server/mailer/mailer.dart';
 import 'package:woven/src/shared/model/item_group.dart';
@@ -32,7 +31,7 @@ class DailyDigestTask extends Task {
    */
   Future run() async {
     DateTime now = new DateTime.now().toUtc();
-//    TaskScheduler.log("Running the daily digest task");
+
     List<Map> usersByCommunity = await CommunityModel.getCommunitiesWithUsers();
 
     // Loop over each community/users map.
@@ -42,12 +41,10 @@ class DailyDigestTask extends Task {
 
       if (users == null) return;
 
-      // Hardcode EST (UTC-5) for now.
       DateTime startOfDay = new DateTime.utc(now.year, now.month, now.day)
           .add(new Duration(hours: 5));
       DateTime endOfDay =
           startOfDay.add(new Duration(hours: 23, minutes: 59, seconds: 59));
-//        print("startOf: $startOfDay, endOf: $endOfDay");
 
       try {
         String output = await generateDigest(community.alias,
@@ -122,10 +119,10 @@ class DailyDigestTask extends Task {
     DateTime yesterday = now.subtract(new Duration(days: 1));
 
     Future<List> findEvents() async {
-      // Handle empty to/from.
       if (from == null) {
         from = new DateTime.utc(now.year, now.month, now.day);
       }
+
       if (to == null) {
         to = new DateTime.utc(from.year, from.month, from.day, 23, 59, 59, 999);
       }
@@ -150,11 +147,11 @@ class DailyDigestTask extends Task {
       // Do some pre-processing.
       events.forEach((i) {
         String teaser = InputFormatter.createTeaser(i['body'], 100);
+
         // Convert the UTC start date to EST (UTC-5) for the newsletter.
-        // TODO: Later, consider more timezones.
-        DateTime startDateTime = DateTime.parse(i['startDateTime']).subtract(
-            new Duration(hours: 4)); // TODO: Adjust for DST. Automate later.
-        // TODO: Revisit this, it was causing exception as News don't have subjects now.
+        DateTime startDateTime =
+            DateTime.parse(i['startDateTime']).subtract(new Duration(hours: 4));
+
         if (i['subject'] == null) i['subject'] = '';
         i['body'] = teaser;
         i['startDateTime'] = InputFormatter.formatDate(startDateTime);
@@ -187,11 +184,10 @@ class DailyDigestTask extends Task {
       news.forEach((i) {
         String teaser = InputFormatter.createTeaser(i['body'], 100);
 
-        // Convert the UTC start date to EST (UTC-5). TODO: Later, consider more timezones.
+        // Convert the UTC start date to EST (UTC-5).
         DateTime createdDate =
             DateTime.parse(i['createdDate']).subtract(new Duration(hours: 5));
 
-        // TODO: Revisit this, it was causing exception as News don't have subjects now.
         if (i['subject'] == null) i['subject'] = '';
 
         i['body'] = teaser;
@@ -205,8 +201,7 @@ class DailyDigestTask extends Task {
     Future<List> findMessages() async {
       var startAt = new DateTime.utc(
           yesterday.year, yesterday.month, yesterday.day, 12, 00, 00);
-      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59,
-          00); // TODO: Set back to 12 UTC.
+      var endAt = new DateTime.utc(now.year, now.month, now.day, 23, 59, 00);
       var query =
           '/messages_by_community/$community.json?orderBy="createdDate"&startAt="$startAt"&endAt="$endAt"';
 
@@ -272,7 +267,6 @@ class DailyDigestTask extends Task {
     DateTime now = new DateTime.now().toUtc();
 
     // If no updated date, use the created date.
-    // TODO: We assume createdDate is never null!
     if (item.updatedDate == null) item.updatedDate = item.createdDate;
 
     // If the message timestamp is after our local time,

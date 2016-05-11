@@ -23,7 +23,6 @@ class FeedReader {
 
   // TODO: Not respecting limit?
   Future<List<FeedItem>> load({int limit: 10}) {
-//    if (!url.contains('knightfoundation')) return new Future.value([]); // TODO: Kill me.
     return new Future(() async {
       var contents;
       contents = await util.readHttp(url);
@@ -33,7 +32,7 @@ class FeedReader {
         return new Future.value([]);
       }
 
-      // ATOM.
+      // Atom.
       if (contents
           .replaceAll(new RegExp('<\\?xml[^]+?\\?>'), '')
           .substring(0, 10)
